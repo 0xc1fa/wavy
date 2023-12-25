@@ -1,0 +1,18 @@
+.container {
+  width: var(--width);
+  height: var(--height);
+}
+
+.lyric {
+  box-sizing: border-box;
+  position: absolute;
+  top: var(--top);
+  left: var(--left);
+  width: var(--width);
+  height: var(--height);
+  text-align: left;
+  background: transparent;
+  color: white;
+  padding: 0 7px;
+  border: none;
+}

@@ -1,0 +1,12 @@
+.piano-roll-lane {
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+  background-color: #232323;
+
+  & > *:not(:last-child) {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+  }
+}
