@@ -7,7 +7,8 @@ import PianoRollThemeContext  from "../contexts/piano-roll-theme-context";
 import styles from "./piano-roll.module.scss";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import usePianoRollMouseHandler from "../hooks/usePianoRollMouseHandler";
-import PianoRollSelectionArea from "./PianoRollSelectionArea/PianoRollSelectionArea";
+// import PianoRollSelectionArea from "./PianoRollSelectionArea/PianoRollSelectionArea";
+import PianoRollSelectionArea from "./PianoRollSelectionArea/DivPianoRollSelectionArea";
 import PianoRollEventsReceiver from "./PianoRollActionReceiver/PianoRollActionReceiver";
 import PianoRollLanesBackground from "./PianoRollLanesBackground/DivPianoRollLanesBackground";
 
