@@ -7,10 +7,14 @@ import { memo } from "react";
 
 interface PianoRollNotesLyricsProps extends React.HTMLAttributes<HTMLDivElement> {}
 function PianoRollNotesLyrics({ style, ...other }: PianoRollNotesLyricsProps) {
+
   const { pianoRollStore } = useStore();
 
+  console.log(pianoRollStore.pianoRollNotes)
+
   return (
-    <div className={styles['container']}
+    <div aria-label="piano-roll-notes-lyrics"
+      className={styles['lyric-container']}
       style={{
         '--width': pianoRollStore.laneLength,
         '--height': pianoRollStore.canvasHeight,
@@ -19,7 +23,7 @@ function PianoRollNotesLyrics({ style, ...other }: PianoRollNotesLyricsProps) {
       {...other}
     >
       {pianoRollStore.pianoRollNotes.map(note =>
-        <Lyric data-index={note.id} note={note} />
+        <Lyric key={note.id} note={note} />
       )}
     </div>
   )
@@ -30,21 +34,26 @@ interface LyricProps extends React.HTMLAttributes<HTMLInputElement> {
 }
 function Lyric({ note, style, ...other }: LyricProps) {
 
-  const { pianoRollStore } = useStore();
+  const { pianoRollStore, dispatch } = useStore();
+
   const handleKeyPress: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === 'Enter') (event.target as HTMLInputElement).blur()
   };
+
   const handleBlur: React.FocusEventHandler<HTMLInputElement> = (event) => {
-    const target = event.target as HTMLInputElement
+    const target = event.currentTarget as HTMLInputElement
     const trimValue = () => { target.value = target.value.trim() }
     const getTargetId = () => { return target.dataset.index! }
-    // const applyChanges = () => {
-    //   const id = getTargetId();
-    //   state.note.notes = withNoteLyricsChanged(state.note.notes, id, target.value)
-    // }
+    const applyChanges = () => {
+      const id = getTargetId();
+      dispatch({ type: 'updateNoteLyric', payload: { noteId: id, lyric: target.value } })
+    }
     trimValue();
-    // applyChanges();
+    applyChanges();
   };
+
+  const onChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+  }
 
   return (
     <input type="text"
@@ -56,7 +65,7 @@ function Lyric({ note, style, ...other }: LyricProps) {
         '--height': `${pianoRollStore.laneWidth}px`,
         ...style,
       } as React.CSSProperties}
-      value={note.lyric} onBlur={handleBlur} onKeyDown={handleKeyPress}
+      value={note.lyric} onBlur={handleBlur} onKeyDown={handleKeyPress} onChange={onChange}
       {...other}
     />
   )

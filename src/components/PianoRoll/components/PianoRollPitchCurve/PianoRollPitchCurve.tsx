@@ -120,7 +120,7 @@ function PianoRollPitchCurve({ style, ...other }: PianoRollPitchCurveProps) {
   }
 
   return (
-    <Canvas
+    <Canvas aria-label="piano-roll-pitch-curve"
       style={style}
       width={pianoRollStore.laneLength}
       height={pianoRollStore.canvasHeight}

@@ -3,7 +3,7 @@ import { debug } from "../../helpers";
 import { PianoRollLanesMouseHandlerMode, PianoRollMouseHandlersStates } from "../../hooks/usePianoRollMouseHandler";
 import useTheme from "../../hooks/useTheme";
 import useStore from "../../hooks/useStore";
-import { memo } from "react";
+import { memo, useMemo } from "react";
 
 interface PianoRollSelectionAreaProps extends React.HTMLAttributes<HTMLCanvasElement> {
   mouseHandlersStates: PianoRollMouseHandlersStates
@@ -13,10 +13,11 @@ function PianoRollSelectionArea({ mouseHandlersStates, style, ...other }: PianoR
   const { pianoRollStore } = useStore();
   const theme = useTheme();
 
+  function drawPianoRollSelectionArea(ctx: CanvasRenderingContext2D){
 
-  function useDrawPianoRollSelectionArea(
-    ctx: CanvasRenderingContext2D,
-  ) {
+    if (mouseHandlersStates.mouseHandlerMode !== PianoRollLanesMouseHandlerMode.MarqueeSelection) {
+      return;
+    }
 
     const fillStyle = theme.selection.selectionAreaFillColor;
     const strokeStyle = theme.selection.selectionAreaBorderColor;
@@ -31,6 +32,7 @@ function PianoRollSelectionArea({ mouseHandlersStates, style, ...other }: PianoR
       ctx.fillStyle = fillStyle;
       ctx.strokeStyle = strokeStyle;
     }
+    
     const calculateBorderPositions = () => {
       const left = Math.min(startingPositionX, ongoingPositionX);
       const right = Math.max(startingPositionX, ongoingPositionX);
@@ -38,6 +40,7 @@ function PianoRollSelectionArea({ mouseHandlersStates, style, ...other }: PianoR
       const bottom = Math.max(startingPositionY, ongoingPositionY);
       return { left, right, top, bottom }
     }
+
     const calculateDimensions = () => {
       const width = right - left;
       const height = bottom - top;
@@ -45,10 +48,8 @@ function PianoRollSelectionArea({ mouseHandlersStates, style, ...other }: PianoR
     }
     const drawSelectionArea = () => { ctx.fillRect(left, top, width, height) }
 
-    debug(useDrawPianoRollSelectionArea.name);
+    debug(drawPianoRollSelectionArea.name);
     pianoRollStore.clearCanvas(ctx);
-
-    if (mouseHandlersStates.mouseHandlerMode !== PianoRollLanesMouseHandlerMode.MarqueeSelection) return;
 
     configCtx();
     const { left, right, top, bottom } = calculateBorderPositions();
@@ -57,16 +58,15 @@ function PianoRollSelectionArea({ mouseHandlersStates, style, ...other }: PianoR
 
   }
 
-
   return (
-    <Canvas
-    style={style}
-    width={pianoRollStore.laneLength}
-    height={pianoRollStore.canvasHeight}
-    draw={useDrawPianoRollSelectionArea}
-    resolution={pianoRollStore.resolution}
-    {...other}
-  />
+    <Canvas aria-label="piano-roll-selection-area"
+      style={style}
+      width={pianoRollStore.laneLength}
+      height={pianoRollStore.canvasHeight}
+      draw={drawPianoRollSelectionArea}
+      resolution={pianoRollStore.resolution}
+      {...other}
+    />
   )
 }
 

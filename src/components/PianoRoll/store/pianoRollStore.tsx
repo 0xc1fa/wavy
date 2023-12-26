@@ -32,6 +32,7 @@ type PianoRollStoreAction =
     startingPosition: {x: number, y: number},
     ongoingPosition: {x: number, y: number},
   }}
+  | { type: 'updateNoteLyric', payload: { noteId: string, lyric: string } }
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   function createNote(ticks: number, noteNum: number): TrackNoteEvent {
@@ -163,12 +164,23 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
         })
 
       }
+    case 'updateNoteLyric':
+      return {
+        ...state,
+        pianoRollNotes: state.pianoRollNotes.map(note => {
+          if (note.id === action.payload.noteId) {
+            return { ...note, lyric: action.payload.lyric };
+          } else {
+            return note;
+          }
+        })
+      }
     default:
       throw new Error();
   }
 }
 
-export default function usePianoRollStore(
+function usePianoRollStore(
   initialState?: PianoRollStore,
 ) {
   const [pianoRollStore, dispatch] = useReducer(
@@ -176,91 +188,9 @@ export default function usePianoRollStore(
     initialState ? initialState : defaultPianoRollStore(),
   );
 
-  const addNote = (ticks: number, noteNum: number) => dispatch(
-    {
-      type: 'addNote',
-      payload: {ticks, noteNum}
-    }
-  );
-
-  const unselectAllNotes = () => dispatch(
-    {
-      type: 'unselectAllNotes',
-    }
-  );
-
-  const setNoteAsSelected = (noteId: string) => dispatch(
-    {
-      type: 'setNoteAsSelected',
-      payload: {noteId}
-    }
-  );
-
-  const toggleSelectedNoteVibratoMode = () => dispatch(
-    {
-      type: 'toggleSelectedNoteVibratoMode',
-    }
-  );
-
-  const trimSelectedNote = (deltaTicks: number) => dispatch(
-    {
-      type: 'trimSelectedNote',
-      payload: {deltaTicks}
-    }
-  );
-
-  const extendSelectedNote = (deltaTicks: number) => dispatch(
-    {
-      type: 'extendSelectedNote',
-      payload: {deltaTicks}
-    }
-  );
-
-  const shiftSelectedNote = (deltaPitch: number, deltaTicks: number) => dispatch(
-    {
-      type: 'shiftSelectedNote',
-      payload: {deltaPitch, deltaTicks}
-    }
-  );
-
-  const vibratoDepthDelayChangeSelectedNote = (depthOffset: number, delayOffset: number) => dispatch(
-    {
-      type: 'vibratoDepthDelayChangeSelectedNote',
-      payload: {depthOffset, delayOffset}
-    }
-  );
-
-  const vibratoRateChangeSelectedNote = (rateOffset: number) => dispatch(
-    {
-      type: 'vibratoRateChangeSelectedNote',
-      payload: {rateOffset}
-    }
-  );
-
-  const setNoteInMarqueeAsSelected = (
-    startingPosition: {x: number, y: number},
-    ongoingPosition: {x: number, y: number},
-  ) => dispatch(
-    {
-      type: 'setNoteInMarqueeAsSelected',
-      payload: {startingPosition, ongoingPosition}
-    }
-  );
-
-
-
   return {
     pianoRollStore,
-    addNote,
-    unselectAllNotes,
-    setNoteAsSelected,
-    toggleSelectedNoteVibratoMode,
-    trimSelectedNote,
-    extendSelectedNote,
-    shiftSelectedNote,
-    vibratoDepthDelayChangeSelectedNote,
-    vibratoRateChangeSelectedNote,
-    setNoteInMarqueeAsSelected,
+    dispatch
   };
 
 }
@@ -283,25 +213,17 @@ function defaultPianoRollStore() {
     keyLength: 50,
     keyWidth: 25,
     blackKeyLengthRatio: 0.5,
-    // Mouse handler states
-    // isSelecting: false,
-    // settingVibrato: false,
-    // noteCreating: null,
-    // notePitchDragging: null,
-    // noteLeftMarginDragging: null,
-    // noteRightMarginDragging: null,
 
-    // configuration
     startingOctave: 2,
     endingOctave: 7,
     laneWidth: 25,
     laneLength: 1500,
     pixelPerBeat: 70,
     tickPerBeat: 480,
-    resolution: 1,
     defaultNoteLyric: "啦",
     draggableBoundaryPixel: 10,
 
+    resolution: 1,
     scrollTop: 0,
 
     get canvasWidth() {
@@ -364,6 +286,9 @@ function defaultPianoRollStore() {
     },
 
     getNoteFromPosition(offsetX: number, offsetY: number): TrackNoteEvent | null {
+      console.log(this.pianoRollNotes)
+      console.log(this.getNoteNumFromOffsetY(offsetY))
+      console.log(this.getTickFromOffsetX(offsetX))
       for (const note of this.pianoRollNotes) {
         if (
           this.getNoteNumFromOffsetY(offsetY) == note.noteNumber
@@ -424,7 +349,6 @@ function defaultPianoRollStore() {
     clearCanvas(ctx: CanvasRenderingContext2D) {
       ctx.clearRect(0, 0, this.laneLength, this.canvasHeight)
     },
-
 
     isInnerKeyboard(x: number) {
       const blackKeyLength = this.keyLength * this.blackKeyLengthRatio

@@ -1,4 +1,4 @@
-.container {
+.lyric-container {
   width: var(--width);
   height: var(--height);
 }
@@ -11,6 +11,7 @@
   width: var(--width);
   height: var(--height);
   text-align: left;
+  pointer-events: none;
   background: transparent;
   color: white;
   padding: 0 7px;

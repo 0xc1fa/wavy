@@ -11,11 +11,12 @@ interface PianoRollKeysProps extends React.HTMLAttributes<HTMLCanvasElement> {
 }
 export default function PianoRollKeys(props: PianoRollKeysProps) {
 
+
   // const audioContext = useContext(GlobalAudioContext);
   const mouseHandler = new pianoKeyMouseHandler(props.state, audioContext!)
 
   return (
-    <Canvas
+    <Canvas aria-label="piano-roll-keys"
       style={props.style}
       width={props.state.keyLength}
       height={props.state.laneWidth * props.state.numOfKeys}

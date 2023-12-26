@@ -9,5 +9,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <PianoRollStoreProvider>
       <App />
     </PianoRollStoreProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
+  ,
 )

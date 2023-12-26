@@ -5,12 +5,14 @@ import useStore from "../../hooks/useStore";
 
 interface PianoRollNotesProps extends React.HTMLAttributes<HTMLDivElement> {}
 function PianoRollNotes({ style, ...other}: PianoRollNotesProps) {
+
   const theme = useTheme();
   const { pianoRollStore } = useStore();
 
   return (
     <div
-      className={styles['container']}
+      aria-label="piano-roll-notes"
+      className={styles['note-container']}
       style={{
         '--width': pianoRollStore.laneLength,
         '--height': pianoRollStore.canvasHeight,
@@ -19,8 +21,7 @@ function PianoRollNotes({ style, ...other}: PianoRollNotesProps) {
       {...other}
     >
       {pianoRollStore.pianoRollNotes.map(item =>
-        <div
-          data-index={item.id}
+        <div aria-label="piano-roll-note"
           key={item.id}
           className={styles['note']}
           style={{

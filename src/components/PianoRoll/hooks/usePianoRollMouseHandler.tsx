@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { focusNote } from "../helpers/notes";
+import { usePianoRollTransform } from "./usePianoRollTransform";
+import { usePianoRollDispatch } from "./usePianoRollDispatch";
 import useStore from "./useStore";
 
 export enum PianoRollLanesMouseHandlerMode {
@@ -19,7 +21,9 @@ export type PianoRollMouseHandlersStates = {
 
 export default function usePianoRollMouseHandler() {
 
-  const { pianoRollStore, ...actions } = useStore()
+  const { pianoRollStore } = useStore();
+  const transform = usePianoRollTransform()
+  const dispatch = usePianoRollDispatch()
 
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None)
   const [startingPosition, setStartingPosition] = useState({x: 0, y: 0})
@@ -32,7 +36,8 @@ export default function usePianoRollMouseHandler() {
   }
 
   const onPointerDown: React.PointerEventHandler = (event) => {
-    console.log("pointer down")
+    event.currentTarget.setPointerCapture(event.nativeEvent.pointerId)
+    console.log("pointer down", event.nativeEvent.offsetX, event.nativeEvent.offsetY)
     const setMouseHandlerModeForNote = () => {
       if (pianoRollStore.isNoteLeftMarginClicked(noteClicked!, event.nativeEvent.offsetX, event.nativeEvent.offsetY)) {
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesTrimming);
@@ -43,29 +48,31 @@ export default function usePianoRollMouseHandler() {
       } else {
         // this.oscillatorController.startOscillator(getFrequencyFromNoteNum(noteClicked!.noteNumber));
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
+        console.log("drag and drop")
       }
     }
 
     const setNoteSelection = () => {
       if (!noteClicked!.isSelected && !event.nativeEvent.shiftKey) {
-        actions.unselectAllNotes();
-        actions.setNoteAsSelected(noteClicked?.id!);
+        dispatch({ type: 'unselectAllNotes' })
+        dispatch({ type: 'setNoteAsSelected', payload: { noteId: noteClicked?.id! }})
         // pianoRollStore.unselectAllNotesAndSelect(noteClicked!);
       } else {
-        actions.setNoteAsSelected(noteClicked?.id!);
+        dispatch({ type: 'setNoteAsSelected', payload: { noteId: noteClicked?.id! }})
       }
     }
 
     const noteClicked = pianoRollStore.getNoteFromEvent(event.nativeEvent);
     event.currentTarget.setPointerCapture(event.nativeEvent.pointerId)
+    console.log("note clicked", noteClicked)
     if (noteClicked) {
       setMouseHandlerModeForNote();
       setNoteSelection();
     } else {
-      if (!event.shiftKey) actions.unselectAllNotes();
+      if (!event.shiftKey) dispatch({ type: 'unselectAllNotes' });
       if (event.metaKey) {
         const { ticks, noteNum } = getTickAndNoteNumFromEvent(event.nativeEvent)
-        actions.addNote(ticks, noteNum);
+        dispatch({ type: 'addNote', payload: { ticks, noteNum }})
         // this.oscillatorController.startOscillator(getFrequencyFromNoteNum(newNote.noteNumber));
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
       } else {
@@ -81,18 +88,24 @@ export default function usePianoRollMouseHandler() {
     const {deltaPitch, deltaTicks, deltaY, deltaX} = calculateDeltas(event.nativeEvent)
     switch (mouseHandlerMode) {
       case PianoRollLanesMouseHandlerMode.None:
-        updateCursorStyle(event.nativeEvent); break;
+        updateCursorStyle(event.nativeEvent);
+        break;
       case PianoRollLanesMouseHandlerMode.NotesTrimming:
-        actions.trimSelectedNote(deltaTicks); break;
+        dispatch({ type: 'trimSelectedNote', payload: { deltaTicks }});
+        break;
       case PianoRollLanesMouseHandlerMode.NotesExtending:
-        actions.extendSelectedNote(deltaTicks); break;
+        dispatch({ type: 'extendSelectedNote', payload: { deltaTicks }});
+        break;
       case PianoRollLanesMouseHandlerMode.DragAndDrop:
-        actions.shiftSelectedNote(deltaPitch, deltaTicks);
+        dispatch({ type: 'shiftSelectedNote', payload: { deltaPitch, deltaTicks }});
         // this.oscillatorController.changeFrequency(getFrequencyFromNoteNum(this.state.getNoteFromEvent(e)!.noteNumber));
         break;
       case PianoRollLanesMouseHandlerMode.Vibrato:
-        event.shiftKey ? actions.vibratoRateChangeSelectedNote(deltaY)
-          : actions.vibratoDepthDelayChangeSelectedNote(deltaY, deltaX);
+
+        event.shiftKey ?
+        dispatch({ type: 'vibratoRateChangeSelectedNote', payload: { rateOffset: deltaY }})
+        :
+        dispatch({ type: 'vibratoDepthDelayChangeSelectedNote', payload: { depthOffset: deltaY, delayOffset: deltaX }})
         break;
     }
     setOngoingPosition({x: event.nativeEvent.offsetX, y: event.nativeEvent.offsetY})
@@ -101,8 +114,7 @@ export default function usePianoRollMouseHandler() {
   const onPointerUp: React.PointerEventHandler = () => {
     switch (mouseHandlerMode) {
       case PianoRollLanesMouseHandlerMode.MarqueeSelection:
-        actions.setNoteInMarqueeAsSelected(
-          startingPosition, ongoingPosition)
+        dispatch({ type: 'setNoteInMarqueeAsSelected', payload: { startingPosition, ongoingPosition }})
         break;
       case PianoRollLanesMouseHandlerMode.DragAndDrop:
         // this.oscillatorController.stopOscillator();
@@ -114,25 +126,36 @@ export default function usePianoRollMouseHandler() {
     setMouseHandlerMode(PianoRollLanesMouseHandlerMode.None);
   }
 
-  const onDoubleClick: React.MouseEventHandler = (event) => () => {
+  const onDoubleClick: React.MouseEventHandler = (event) => {
     const noteClicked = pianoRollStore.getNoteFromPosition(event.nativeEvent.offsetX, event.nativeEvent.offsetY);
     if (noteClicked === null) {
       console.log('no note clicked')
     } else if (event.altKey) {
-      actions.toggleSelectedNoteVibratoMode()
+      dispatch({ type: 'toggleSelectedNoteVibratoMode' })
     } else {
       focusNote(event.nativeEvent, noteClicked.id)
     }
   }
 
-  const onWheel: React.WheelEventHandler = (event) => () => {
+  const onClick: React.MouseEventHandler = (event) => {
+    switch(event.detail) {
+      case 1:
+        break;
+      case 2:
+        onDoubleClick(event)
+        break;
+    }
+  }
+
+  const onWheel: React.WheelEventHandler = (event) => {
+    // change the pianoLanScaleX to a reducer
     if (event.ctrlKey) {
       event.preventDefault()
       const componentRef = event.currentTarget as HTMLCanvasElement;
-      if (pianoRollStore.pianoLaneScaleX * (1 + event.deltaY * 0.01) * pianoRollStore.laneLength > componentRef!.clientWidth) {
-        pianoRollStore.pianoLaneScaleX = pianoRollStore.pianoLaneScaleX * (1 + event.deltaY * 0.01)
+      if (transform.pianoLaneScaleX * (1 + event.deltaY * 0.01) * transform.laneLength > componentRef!.clientWidth) {
+        transform.pianoLaneScaleX = transform.pianoLaneScaleX * (1 + event.deltaY * 0.01)
       } else if (event.deltaY < 0) {
-        pianoRollStore.pianoLaneScaleX = pianoRollStore.pianoLaneScaleX * (1 + event.deltaY * 0.01)
+        transform.pianoLaneScaleX = transform.pianoLaneScaleX * (1 + event.deltaY * 0.01)
       }
     }
   }
