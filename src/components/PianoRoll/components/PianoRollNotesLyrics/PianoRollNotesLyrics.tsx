@@ -53,11 +53,14 @@ function Lyric({ note, style, ...other }: LyricProps) {
   };
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    dispatch({ type: 'updateNoteLyric', payload: { noteId: note.id, lyric: event.target.value } })
   }
 
   return (
     <input type="text"
+      data-index={note.id}
       className={styles['lyric']}
+      placeholder="[no lyric]"
       style={{
         '--top': `${pianoRollStore.getMinYFromNoteNum(note.noteNumber)}px`,
         '--left': `${pianoRollStore.getOffsetXFromTick(note.tick)}px`,

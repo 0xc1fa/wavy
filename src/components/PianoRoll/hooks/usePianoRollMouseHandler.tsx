@@ -137,16 +137,6 @@ export default function usePianoRollMouseHandler() {
     }
   }
 
-  const onClick: React.MouseEventHandler = (event) => {
-    switch(event.detail) {
-      case 1:
-        break;
-      case 2:
-        onDoubleClick(event)
-        break;
-    }
-  }
-
   const onWheel: React.WheelEventHandler = (event) => {
     // change the pianoLanScaleX to a reducer
     if (event.ctrlKey) {
