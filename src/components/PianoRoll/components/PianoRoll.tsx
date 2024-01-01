@@ -1,35 +1,42 @@
-import PianoRollGrids from "./PianoRollGrids/PianoRollGrids";
+import PianoRollGrids from "./PianoRollGrids";
 import { PianoRollTheme, defaultPianoRollTheme } from "@/components/PianoRoll/store/pianoRollTheme";
-import PianoRollNotes from "./PianoRollNotes/PianoRollNotes";
-import PianoRollNotesLyrics from "./PianoRollNotesLyrics/PianoRollNotesLyrics";
-import PianoRollPitchCurve from "./PianoRollPitchCurve/PianoRollPitchCurve";
+import PianoRollNotes from "./PianoRollNotes";
+import PianoRollNotesLyrics from "./PianoRollNotesLyrics";
+import PianoRollPitchCurve from "./PianoRollPitchCurve";
 import PianoRollThemeContext  from "../contexts/piano-roll-theme-context";
 import styles from "./piano-roll.module.scss";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import usePianoRollMouseHandler from "../hooks/usePianoRollMouseHandler";
 // import PianoRollSelectionArea from "./PianoRollSelectionArea/PianoRollSelectionArea";
-import PianoRollSelectionArea from "./PianoRollSelectionArea/DivPianoRollSelectionArea";
-import PianoRollEventsReceiver from "./PianoRollActionReceiver/PianoRollActionReceiver";
-import PianoRollLanesBackground from "./PianoRollLanesBackground/DivPianoRollLanesBackground";
+import PianoRollSelectionArea from "./PianoRollSelectionArea";
+import PianoRollLanesBackground from "./PianoRollLanesBackground";
+import useStore from "../hooks/useStore";
 
 interface PianoRollProps extends React.HTMLAttributes<HTMLDivElement> {
-  note?: TrackNoteEvent[];
+  notes?: TrackNoteEvent[];
   theme?: PianoRollTheme
 };
-export default function PianoRoll({ theme, note, children, ...other }: PianoRollProps) {
+export default function PianoRoll({ theme, notes, children, ...other }: PianoRollProps) {
 
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandler();
+  const { pianoRollStore } = useStore()
+
 
   return (
     <PianoRollThemeContext.Provider value={theme ? theme : defaultPianoRollTheme()}>
       <div className={styles['piano-roll-lane']} {...other} {...pianoRollMouseHandlers}>
-        {/* <PianoRollEventsReceiver style={{ zIndex: 21 }} /> */}
-        {/* {children} */}
-        <PianoRollSelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} style={{ zIndex: 21 }} />
-        <PianoRollNotesLyrics style={{ zIndex: 20 }} />
-        <PianoRollPitchCurve style={{ zIndex: 19 }} />
-        <PianoRollNotes style={{ zIndex: 18 }} />
-        <PianoRollGrids style={{ zIndex: 17 }} />
+        <PianoRollGrids />
+        <div>
+        {pianoRollStore.pianoRollNotes.map(note =>
+          <div style={{ position: 'absolute' }}>
+            <PianoRollNotes note={note} />
+            <PianoRollNotesLyrics note={note} />
+            <PianoRollPitchCurve note={note} />
+          </div>
+        )}
+        </div>
+        <PianoRollSelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
+        {children}
         <PianoRollLanesBackground />
       </div>
     </PianoRollThemeContext.Provider>

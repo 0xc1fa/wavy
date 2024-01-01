@@ -1,38 +1,13 @@
-// import { Component, For, batch } from "solid-js";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
-// import { styled } from "solid-styled-components";
 import styles from "./piano-roll-notes-lyrics.module.scss";
 import useStore from "../../hooks/useStore";
 import { memo } from "react";
 
-interface PianoRollNotesLyricsProps extends React.HTMLAttributes<HTMLDivElement> {}
-function PianoRollNotesLyrics({ style, ...other }: PianoRollNotesLyricsProps) {
 
-  const { pianoRollStore } = useStore();
-
-  console.log(pianoRollStore.pianoRollNotes)
-
-  return (
-    <div aria-label="piano-roll-notes-lyrics"
-      className={styles['lyric-container']}
-      style={{
-        '--width': pianoRollStore.laneLength,
-        '--height': pianoRollStore.canvasHeight,
-        ...style,
-      } as React.CSSProperties}
-      {...other}
-    >
-      {pianoRollStore.pianoRollNotes.map(note =>
-        <Lyric key={note.id} note={note} />
-      )}
-    </div>
-  )
-}
-
-interface LyricProps extends React.HTMLAttributes<HTMLInputElement> {
+interface PianoRollNotesLyricProps extends React.HTMLAttributes<HTMLInputElement> {
   note: TrackNoteEvent,
 }
-function Lyric({ note, style, ...other }: LyricProps) {
+function PianoRollNotesLyric({ note, style, ...other }: PianoRollNotesLyricProps) {
 
   const { pianoRollStore, dispatch } = useStore();
 
@@ -58,7 +33,7 @@ function Lyric({ note, style, ...other }: LyricProps) {
 
   return (
     <input type="text"
-      data-index={note.id}
+      key={note.id}
       className={styles['lyric']}
       placeholder="[no lyric]"
       style={{
@@ -74,8 +49,8 @@ function Lyric({ note, style, ...other }: LyricProps) {
   )
 };
 
-function withNoteLyricsChanged(notes: TrackNoteEvent[], noteId: string, lyric: string) {
-  return notes.map(note => (note.id === noteId) ? { ...note, lyric: lyric } : note)
-}
+// function withNoteLyricsChanged(notes: TrackNoteEvent[], noteId: string, lyric: string) {
+//   return notes.map(note => (note.id === noteId) ? { ...note, lyric: lyric } : note)
+// }
 
-export default memo(PianoRollNotesLyrics)
+export default memo(PianoRollNotesLyric)

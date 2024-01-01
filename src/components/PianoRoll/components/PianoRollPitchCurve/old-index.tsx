@@ -116,6 +116,7 @@ function PianoRollPitchCurve({ style, ...other }: PianoRollPitchCurveProps) {
 
     debug(drawPianoRollPitchCurve.name);
     pianoRollStore.clearCanvas(ctx);
+    
     for (const note of pianoRollStore.pianoRollNotes) drawPitchCurve(note);
   }
 

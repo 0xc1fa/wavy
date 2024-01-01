@@ -6,7 +6,13 @@
 
   & > *:not(:last-child) {
     position: absolute;
-    left: 0px;
-    top: 0px;
+    inset: 0;
+    // left: 0px;
+    // top: 0px;
   }
+}
+
+.notes-container {
+  width: var(--width);
+  height: var(--height);
 }
