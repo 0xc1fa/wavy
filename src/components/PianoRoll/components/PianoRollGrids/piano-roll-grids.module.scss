@@ -1,6 +1,5 @@
 .grid {
-  width: var(--lane-length);
-  height: var(--canvas-height);
+  inset: 0;
   background-image:
     linear-gradient(to right, var(--primary-grid-color) 1px, transparent 1px),
     linear-gradient(to right, var(--secondary-grid-color) 1px, transparent 1px);

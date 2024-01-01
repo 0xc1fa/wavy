@@ -33,6 +33,7 @@ type PianoRollStoreAction =
     ongoingPosition: {x: number, y: number},
   }}
   | { type: 'updateNoteLyric', payload: { noteId: string, lyric: string } }
+  | { type: 'moveNoteAsLatestModified', payload: { noteId: string } }
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   function createNote(ticks: number, noteNum: number): TrackNoteEvent {
@@ -175,6 +176,11 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
           }
         })
       }
+    case 'moveNoteAsLatestModified':
+      return {
+        ...state,
+        pianoRollNotes: state.pianoRollNotes.filter(note => note.id !== action.payload.noteId).concat(state.pianoRollNotes.filter(note => note.id === action.payload.noteId))
+      }
     default:
       throw new Error();
   }
@@ -289,7 +295,7 @@ function defaultPianoRollStore() {
       console.log(this.pianoRollNotes)
       console.log(this.getNoteNumFromOffsetY(offsetY))
       console.log(this.getTickFromOffsetX(offsetX))
-      for (const note of this.pianoRollNotes) {
+      for (const note of this.pianoRollNotes.slice().reverse()) {
         if (
           this.getNoteNumFromOffsetY(offsetY) == note.noteNumber
           && this.getTickFromOffsetX(offsetX) >= note.tick

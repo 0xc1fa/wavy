@@ -7,7 +7,6 @@ import PianoRollThemeContext  from "../contexts/piano-roll-theme-context";
 import styles from "./piano-roll.module.scss";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import usePianoRollMouseHandler from "../hooks/usePianoRollMouseHandler";
-// import PianoRollSelectionArea from "./PianoRollSelectionArea/PianoRollSelectionArea";
 import PianoRollSelectionArea from "./PianoRollSelectionArea";
 import PianoRollLanesBackground from "./PianoRollLanesBackground";
 import useStore from "../hooks/useStore";
@@ -24,7 +23,13 @@ export default function PianoRoll({ theme, notes, children, ...other }: PianoRol
 
   return (
     <PianoRollThemeContext.Provider value={theme ? theme : defaultPianoRollTheme()}>
-      <div className={styles['piano-roll-lane']} {...other} {...pianoRollMouseHandlers}>
+      <div
+        style={{
+          '--lane-length': `${pianoRollStore.laneLength}px`,
+          '--canvas-height': `${pianoRollStore.canvasHeight}px`,
+        } as React.CSSProperties}
+        className={styles['piano-roll-lane']} {...other} {...pianoRollMouseHandlers}
+      >
         <PianoRollGrids />
         <div>
         {pianoRollStore.pianoRollNotes.map(note =>

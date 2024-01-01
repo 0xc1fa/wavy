@@ -66,6 +66,7 @@ export default function usePianoRollMouseHandler() {
     event.currentTarget.setPointerCapture(event.nativeEvent.pointerId)
     console.log("note clicked", noteClicked)
     if (noteClicked) {
+      dispatch({ type: 'moveNoteAsLatestModified', payload: { noteId: noteClicked.id } })
       setMouseHandlerModeForNote();
       setNoteSelection();
     } else {

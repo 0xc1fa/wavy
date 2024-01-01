@@ -1,6 +1,6 @@
 .lanes {
-  width: var(--canvas-width);
-  height: var(--canvas-height);
+  height: 100%;
+  width: 100%;
   background-image: linear-gradient(
     to bottom,
     var(--white-lane-color) calc(var(--lane-width) *  0), var(--white-lane-color) calc(var(--lane-width) *  1),
