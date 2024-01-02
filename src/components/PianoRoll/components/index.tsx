@@ -42,14 +42,12 @@ export default function PianoRoll({
         </div>
         <div className={styles['lower-container']}>
           <PianoRollKeys />
-          <div className={styles['h-scroll']}>
-            <div className={styles['pianoroll-lane']}{...pianoRollMouseHandlers}>
-              <PianoRollGrids />
-              <PianoRollNotes lyric={lyric} />
-              <div style={{ width: '100%', height: '100%' }}>P</div>
-              <PianoRollSelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
-              <PianoRollLanesBackground />
-            </div>
+          <div className={styles['pianoroll-lane']}{...pianoRollMouseHandlers}>
+            <PianoRollGrids />
+            <PianoRollNotes lyric={lyric} />
+            <div style={{ width: '100%', height: '100%' }}></div>
+            <PianoRollSelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
+            <PianoRollLanesBackground />
           </div>
         </div>
       </div>
