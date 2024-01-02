@@ -1,8 +1,5 @@
 import PianoRollGrids from "./PianoRollGrids";
-import { PianoRollTheme, defaultPianoRollTheme } from "@/components/PianoRoll/store/pianoRollTheme";
-import PianoRollNoteBlock from "./PianoRollNoteBlock";
-import PianoRollNoteLyric from "./PianoRollNoteLyric";
-import PianoRollPitchCurve from "./PianoRollPitchCurve";
+import { defaultPianoRollTheme } from "@/components/PianoRoll/store/pianoRollTheme";
 import PianoRollThemeContext  from "../contexts/piano-roll-theme-context";
 import styles from "./index.module.scss";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
@@ -10,10 +7,10 @@ import usePianoRollMouseHandler from "../hooks/usePianoRollMouseHandler";
 import PianoRollSelectionArea from "./PianoRollSelectionArea";
 import PianoRollLanesBackground from "./PianoRollLanesBackground";
 import useStore from "../hooks/useStore";
-import { PianoRollStoreProvider } from "../store/pianoRollStore";
 import PianoRollKeys from "./PianoRollKeys";
 import usePreventZoom from "../hooks/usePreventZoom";
 import PianoRollRuler from "./PianoRollRuler";
+import PianoRollNotes from "./PianoRollNotes";
 
 interface PianoRollProps extends React.HTMLAttributes<HTMLDivElement> {
   notes: TrackNoteEvent[];
@@ -33,7 +30,6 @@ export default function PianoRoll({
 
 
   return (
-    // <PianoRollStoreProvider>
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
       <div className={styles['container']}
         style={{
@@ -49,15 +45,8 @@ export default function PianoRoll({
           <div className={styles['h-scroll']}>
             <div className={styles['pianoroll-lane']}{...pianoRollMouseHandlers}>
               <PianoRollGrids />
-              <div>
-              {pianoRollStore.pianoRollNotes.map(note =>
-                <div className={styles['note']}>
-                  <PianoRollNoteBlock note={note} />
-                  {lyric && <PianoRollNoteLyric note={note} />}
-                </div>
-              )}
-              </div>
-              <div style={{ width: '100%', height: '100%' }}></div>
+              <PianoRollNotes lyric={lyric} />
+              <div style={{ width: '100%', height: '100%' }}>P</div>
               <PianoRollSelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
               <PianoRollLanesBackground />
             </div>
@@ -65,7 +54,6 @@ export default function PianoRoll({
         </div>
       </div>
     </PianoRollThemeContext.Provider>
-    // </PianoRollStoreProvider>
   )
 
 }
