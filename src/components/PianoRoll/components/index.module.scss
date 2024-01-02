@@ -1,6 +1,7 @@
 
 .container {
   position: relative;
+  overflow: auto;
 
   width: 800px;
   height: 500px;
@@ -13,9 +14,19 @@
   display: none;
 }
 
-.lower {
+.ruler-container {
+  position: sticky;
+  height: 1.5rem;
+  z-index: 999;
   display: flex;
+  left: 50px;
+  align-items: stretch;
+  top: 0;
+  width: fit-content;
+}
 
+.lower-container {
+  display: flex;
 }
 
 .h-scroll{

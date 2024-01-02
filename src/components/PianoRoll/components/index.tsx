@@ -35,26 +35,19 @@ export default function PianoRoll({
   return (
     // <PianoRollStoreProvider>
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
-      <div className={styles['container']} style={{ overflow: 'auto' }}>
-        <div style={{ position: "sticky", height: '1.5rem', gridColumn: '2', zIndex: 999, display: 'flex', left:'50px', alignItems: 'stretch', top: 0, width: 'fit-content' }}>
-          <PianoRollRuler style={{
-                '--lane-length': `${pianoRollStore.laneLength}px`,
-              } as React.CSSProperties} />
+      <div className={styles['container']}
+        style={{
+          '--lane-length': `${pianoRollStore.laneLength}px`,
+          '--canvas-height': `${pianoRollStore.canvasHeight}px`,
+        } as React.CSSProperties}
+      >
+        <div className={styles['ruler-container']}>
+          <PianoRollRuler />
         </div>
-        <div className={styles['lower']}>
-          <PianoRollKeys style={{ position: "sticky", gridRow: 2,
-              '--canvas-height': `${pianoRollStore.canvasHeight}px`,
-            } as React.CSSProperties}
-          />
-          <div className={styles['h-scroll']} style={{ gridRow: 2, gridColumn: 2 }}>
-
-            <div className={styles['pianoroll-lane']}
-              style={{
-                '--lane-length': `${pianoRollStore.laneLength}px`,
-                '--canvas-height': `${pianoRollStore.canvasHeight}px`,
-              } as React.CSSProperties}
-              {...pianoRollMouseHandlers}
-            >
+        <div className={styles['lower-container']}>
+          <PianoRollKeys />
+          <div className={styles['h-scroll']}>
+            <div className={styles['pianoroll-lane']}{...pianoRollMouseHandlers}>
               <PianoRollGrids />
               <div>
               {pianoRollStore.pianoRollNotes.map(note =>
