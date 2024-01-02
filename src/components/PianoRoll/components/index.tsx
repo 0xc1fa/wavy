@@ -39,7 +39,7 @@ export default function PianoRoll({
         style={{
           '--lane-length': `${pianoRollStore.laneLength}px`,
           '--canvas-height': `${pianoRollStore.canvasHeight}px`,
-        } as React.CSSProperties}
+        } as React.CSSProperties }
       >
         <div className={styles['ruler-container']}>
           <PianoRollRuler />

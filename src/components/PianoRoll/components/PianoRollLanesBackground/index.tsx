@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import useTheme from "../../hooks/useTheme";
-import styles from "./piano-roll-lanes-background.module.scss";
+import styles from "./index.module.scss";
 
 interface PianoRollLanesBackgroundProps extends React.HTMLAttributes<HTMLDivElement> {}
 function PianoRollLanesBackground({ style, ...other } : PianoRollLanesBackgroundProps) {
