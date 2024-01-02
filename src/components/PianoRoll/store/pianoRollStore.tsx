@@ -34,6 +34,7 @@ type PianoRollStoreAction =
   }}
   | { type: 'updateNoteLyric', payload: { noteId: string, lyric: string } }
   | { type: 'moveNoteAsLatestModified', payload: { noteId: string } }
+  | { type: 'setPianoLaneScaleX', payload: { pianoLaneScaleX: number } }
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   function createNote(ticks: number, noteNum: number): TrackNoteEvent {
@@ -181,6 +182,11 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
         ...state,
         pianoRollNotes: state.pianoRollNotes.filter(note => note.id !== action.payload.noteId).concat(state.pianoRollNotes.filter(note => note.id === action.payload.noteId))
       }
+    case 'setPianoLaneScaleX':
+      return {
+        ...state,
+        pianoLaneScaleX: action.payload.pianoLaneScaleX
+      }
     default:
       throw new Error();
   }
@@ -277,6 +283,13 @@ function defaultPianoRollStore() {
 
     getCenterYFromNoteNum(noteNum: number) {
       return (this.getMinYFromNoteNum(noteNum) + this.getMaxYFromNoteNum(noteNum)) / 2
+    },
+
+    getNoteNameFromNoteNum(noteNum: number) {
+      const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+      const noteNameIndex = noteNum % 12;
+      const octave = Math.floor(noteNum / 12);
+      return `${noteNames[noteNameIndex]}${octave}`;
     },
 
     getMinYFromNoteNum(noteNum: number,) {

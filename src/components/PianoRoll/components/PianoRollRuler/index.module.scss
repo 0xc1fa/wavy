@@ -1,0 +1,9 @@
+.ruler {
+  position: sticky;
+  // width: 1500px;
+  // height: 1500px;
+  top: 0;
+  pointer-events: none;
+  z-index: 10;
+  flex-shrink: 0;
+}

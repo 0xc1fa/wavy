@@ -139,15 +139,19 @@ export default function usePianoRollMouseHandler() {
   }
 
   const onWheel: React.WheelEventHandler = (event) => {
-    // change the pianoLanScaleX to a reducer
     if (event.ctrlKey) {
-      event.preventDefault()
+      console.log(event.deltaX, event.deltaY)
+      console.log("on wheel")
       const componentRef = event.currentTarget as HTMLCanvasElement;
       if (transform.pianoLaneScaleX * (1 + event.deltaY * 0.01) * transform.laneLength > componentRef!.clientWidth) {
-        transform.pianoLaneScaleX = transform.pianoLaneScaleX * (1 + event.deltaY * 0.01)
+        const newPianoRollScaleX = transform.pianoLaneScaleX * (1 + event.deltaY * 0.01)
+        console.log('newPianoRollScaleX', newPianoRollScaleX)
+        dispatch({ type: 'setPianoLaneScaleX' , payload: { pianoLaneScaleX: newPianoRollScaleX } })
       } else if (event.deltaY < 0) {
-        transform.pianoLaneScaleX = transform.pianoLaneScaleX * (1 + event.deltaY * 0.01)
+        const newPianoRollScaleX = transform.pianoLaneScaleX * (1 + event.deltaY * 0.01)
+        dispatch({ type: 'setPianoLaneScaleX' , payload: { pianoLaneScaleX: newPianoRollScaleX } })
       }
+      event.preventDefault()
     }
   }
 

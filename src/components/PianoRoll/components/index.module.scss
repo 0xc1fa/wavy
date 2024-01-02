@@ -1,0 +1,46 @@
+.container {
+  position: relative;
+}
+.v-scroll {
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  display: flex;
+  flex: 0 0 auto;
+  width: 800px;
+  height: 500px;
+  user-select: none;
+}
+
+.h-scroll{
+  position: relative;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  width: 100%;
+  height: fit-content;
+  flex: 0 0 auto;
+}
+
+.pianoroll-lane {
+  position: relative;
+
+  width: var(--lane-length);
+  height: var(--canvas-height);
+  background-color: #232323;
+
+  & > *:not(:last-child) {
+    position: absolute;
+    inset: 0;
+    // left: 0px;
+    // top: 0px;
+  }
+}
+
+.notes-container {
+  width: var(--width);
+  height: var(--height);
+}
+
+.note {
+  position: absolute;
+}

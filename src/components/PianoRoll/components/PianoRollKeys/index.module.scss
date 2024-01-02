@@ -1,0 +1,66 @@
+.container {
+  --key-border-radius: 4px;
+
+  --white-key-width: 50px;
+  --white-key-height: calc(25px * (12 / 7));
+  --white-key-color: #d9d9db;
+  --white-key-pressed-color: #aeaeaf;
+
+  --black-key-width: 25px;
+  --black-key-height: 25px;
+  --black-key-color: #232323;
+  --black-key-pressed-color: #444444;
+
+  --key-label-color: #232323;
+  --key-label-size: 13px;
+
+  position: relative;
+
+  height: 100%;
+  width: 50px;
+  flex-shrink: 0;
+  font-weight: bold;
+  user-select: none;
+}
+
+.key {
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  position: absolute;
+  border-radius: 0 var(--key-border-radius) var(--key-border-radius) 0;
+  top: var(--key-top);
+  border: 0.5px solid var(--black-key-color);
+  // padding: 10% 10% 10% 50%;
+}
+
+.black__key {
+  width: var(--black-key-width);
+  height: var(--black-key-height);
+  background-color: var(--black-key-color);
+  z-index: 2;
+  color: var(--white-key-color);
+
+}
+
+.key__key-label {
+  display: grid;
+  place-items: center;
+}
+
+.black__key.key--pressed {
+  background-color: var(--black-key-pressed-color);
+}
+
+.white__key {
+  width: var(--white-key-width);
+  height: var(--white-key-height);
+  background-color: var(--white-key-color);
+  color: var(--key-label-color);
+  font-size: var(--key-label-size);
+  z-index: 1;
+}
+
+.white__key.key--pressed {
+  background-color: var(--white-key-pressed-color);
+}

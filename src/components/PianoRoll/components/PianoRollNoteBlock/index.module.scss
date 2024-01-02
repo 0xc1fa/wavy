@@ -1,0 +1,12 @@
+.note {
+  box-sizing: border-box;
+  position: absolute;
+  top: var(--top);
+  left: var(--left);
+  width: var(--note-width);
+  height: var(--note-height);
+  padding: 0 7px;
+  background: var(--background);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+}

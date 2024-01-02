@@ -1,0 +1,20 @@
+.lanes {
+  height: 100%;
+  width: 100%;
+  background-image: linear-gradient(
+    to bottom,
+    var(--white-lane-color) calc(var(--lane-width) *  0), var(--white-lane-color) calc(var(--lane-width) *  1),
+    var(--black-lane-color) calc(var(--lane-width) *  1), var(--black-lane-color) calc(var(--lane-width) *  2),
+    var(--white-lane-color) calc(var(--lane-width) *  2), var(--white-lane-color) calc(var(--lane-width) *  3),
+    var(--black-lane-color) calc(var(--lane-width) *  3), var(--black-lane-color) calc(var(--lane-width) *  4),
+    var(--white-lane-color) calc(var(--lane-width) *  4), var(--white-lane-color) calc(var(--lane-width) *  5),
+    var(--black-lane-color) calc(var(--lane-width) *  5), var(--black-lane-color) calc(var(--lane-width) *  6),
+    var(--white-lane-color) calc(var(--lane-width) *  6), var(--white-lane-color) calc(var(--lane-width) *  7),
+    var(--white-lane-color) calc(var(--lane-width) *  7), var(--white-lane-color) calc(var(--lane-width) *  8),
+    var(--black-lane-color) calc(var(--lane-width) *  8), var(--black-lane-color) calc(var(--lane-width) *  9),
+    var(--white-lane-color) calc(var(--lane-width) *  9), var(--white-lane-color) calc(var(--lane-width) * 10),
+    var(--black-lane-color) calc(var(--lane-width) * 10), var(--black-lane-color) calc(var(--lane-width) * 11),
+    var(--white-lane-color) calc(var(--lane-width) * 11), var(--white-lane-color) calc(var(--lane-width) * 12)
+  );
+  background-size: var(--canvas-width) calc(var(--lane-width) *  12);
+}
