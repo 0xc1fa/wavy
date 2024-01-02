@@ -1,17 +1,21 @@
+
 .container {
   position: relative;
-}
-.v-scroll {
-  // display: grid;
-  // grid-template-columns: auto 1fr;
-  // grid-template-rows: auto 1fr;
-  position: relative;
-  // overflow-x: scroll;
-  // overflow-y: scroll;
 
   width: 800px;
   height: 500px;
   user-select: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+.lower {
+  display: flex;
+
 }
 
 .h-scroll{

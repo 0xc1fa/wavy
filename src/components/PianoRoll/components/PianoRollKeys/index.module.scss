@@ -17,10 +17,12 @@
   position: sticky;
   left: 0;
 
-  height: 100%;
-  width: 50px;
+  height: 1500px;
+  width: var(--white-key-width);
   flex: 0 0 auto;
   z-index: 999;
+
+  background-color: #232323;
 
   font-weight: bold;
   user-select: none;

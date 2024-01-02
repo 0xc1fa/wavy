@@ -35,40 +35,42 @@ export default function PianoRoll({
   return (
     // <PianoRollStoreProvider>
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
-      {/* <div className={styles['container']}> */}
+      <div className={styles['container']} style={{ overflow: 'auto' }}>
+        <div style={{ position: "sticky", height: '1.5rem', gridColumn: '2', zIndex: 999, display: 'flex', left:'50px', alignItems: 'stretch', top: 0, width: 'fit-content' }}>
+          <PianoRollRuler style={{
+                '--lane-length': `${pianoRollStore.laneLength}px`,
+              } as React.CSSProperties} />
+        </div>
+        <div className={styles['lower']}>
+          <PianoRollKeys style={{ position: "sticky", gridRow: 2,
+              '--canvas-height': `${pianoRollStore.canvasHeight}px`,
+            } as React.CSSProperties}
+          />
+          <div className={styles['h-scroll']} style={{ gridRow: 2, gridColumn: 2 }}>
 
-        <div className={styles['v-scroll']} style={{ overflow: 'auto' }}>
-          <div style={{ position: "sticky", height: '30px', gridColumn: '2', zIndex: 999, display: 'flex', alignItems: 'stretch', top: 0 }}>
-            <PianoRollRuler />
-          </div>
-          <div>
-            <PianoRollKeys style={{ position: "sticky", gridRow: 2 }} />
-            <div className={styles['h-scroll']} style={{ gridRow: 2, gridColumn: 2 }}>
-
-              <div className={styles['pianoroll-lane']}
-                style={{
-                  '--lane-length': `${pianoRollStore.laneLength}px`,
-                  '--canvas-height': `${pianoRollStore.canvasHeight}px`,
-                } as React.CSSProperties}
-                {...pianoRollMouseHandlers}
-              >
-                <PianoRollGrids />
-                <div>
-                {pianoRollStore.pianoRollNotes.map(note =>
-                  <div className={styles['note']}>
-                    <PianoRollNoteBlock note={note} />
-                    {lyric && <PianoRollNoteLyric note={note} />}
-                  </div>
-                )}
+            <div className={styles['pianoroll-lane']}
+              style={{
+                '--lane-length': `${pianoRollStore.laneLength}px`,
+                '--canvas-height': `${pianoRollStore.canvasHeight}px`,
+              } as React.CSSProperties}
+              {...pianoRollMouseHandlers}
+            >
+              <PianoRollGrids />
+              <div>
+              {pianoRollStore.pianoRollNotes.map(note =>
+                <div className={styles['note']}>
+                  <PianoRollNoteBlock note={note} />
+                  {lyric && <PianoRollNoteLyric note={note} />}
                 </div>
-                <div style={{ width: '100%', height: '100%' }}></div>
-                <PianoRollSelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
-                <PianoRollLanesBackground />
+              )}
               </div>
+              <div style={{ width: '100%', height: '100%' }}></div>
+              <PianoRollSelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
+              <PianoRollLanesBackground />
             </div>
           </div>
         </div>
-      {/* </div> */}
+      </div>
     </PianoRollThemeContext.Provider>
     // </PianoRollStoreProvider>
   )

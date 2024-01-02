@@ -1,9 +1,18 @@
 .ruler {
   position: sticky;
-  // width: 1500px;
-  // height: 1500px;
+  width: var(--lane-length);
+  height: 1.5rem;
+  // border-radius: 0.5rem 0.5rem 0 0;
   top: 0;
   pointer-events: none;
   z-index: 10;
   flex-shrink: 0;
+  background-color: #b99e42;
+  border-bottom: 1px solid #232323;
+}
+
+.text {
+  font-weight: 500;
+  font-size: 13px;
+  font-family: inherit;
 }
