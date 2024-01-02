@@ -35,9 +35,9 @@ export default function PianoRoll({
   return (
     // <PianoRollStoreProvider>
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
-      <div className={styles['container']}>
+      {/* <div className={styles['container']}> */}
         <div className={styles['v-scroll']}>
-          <PianoRollKeys className={styles['pianoroll-key']}/>
+          <PianoRollKeys />
           <div className={styles['h-scroll']}>
             <div className={styles['pianoroll-lane']}
               style={{
@@ -61,7 +61,7 @@ export default function PianoRoll({
             </div>
           </div>
         </div>
-      </div>
+      {/* </div> */}
     </PianoRollThemeContext.Provider>
     // </PianoRollStoreProvider>
   )

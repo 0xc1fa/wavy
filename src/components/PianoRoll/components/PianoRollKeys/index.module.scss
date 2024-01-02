@@ -14,11 +14,14 @@
   --key-label-color: #232323;
   --key-label-size: 13px;
 
-  position: relative;
+  position: sticky;
+  left: 0;
 
   height: 100%;
   width: 50px;
-  flex-shrink: 0;
+  flex: 0 0 auto;
+  z-index: 999;
+
   font-weight: bold;
   user-select: none;
 }

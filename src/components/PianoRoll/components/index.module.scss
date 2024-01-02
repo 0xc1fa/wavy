@@ -3,10 +3,9 @@
 }
 .v-scroll {
   position: relative;
-  overflow-x: hidden;
+  overflow-x: scroll;
   overflow-y: scroll;
   display: flex;
-  flex: 0 0 auto;
   width: 800px;
   height: 500px;
   user-select: none;
@@ -14,9 +13,10 @@
 
 .h-scroll{
   position: relative;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  width: 100%;
+  // overflow-x: scroll;
+  // overflow-y: scroll;
+  // width: 100%;
+  width: fit-content;
   height: fit-content;
   flex: 0 0 auto;
 }
