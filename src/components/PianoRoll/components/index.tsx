@@ -36,28 +36,35 @@ export default function PianoRoll({
     // <PianoRollStoreProvider>
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
       {/* <div className={styles['container']}> */}
-        <div className={styles['v-scroll']}>
-          <PianoRollKeys />
-          <div className={styles['h-scroll']}>
-            <div className={styles['pianoroll-lane']}
-              style={{
-                '--lane-length': `${pianoRollStore.laneLength}px`,
-                '--canvas-height': `${pianoRollStore.canvasHeight}px`,
-              } as React.CSSProperties}
-              {...pianoRollMouseHandlers}
-            >
-              <PianoRollGrids />
-              <div>
-              {pianoRollStore.pianoRollNotes.map(note =>
-                <div className={styles['note']}>
-                  <PianoRollNoteBlock note={note} />
-                  {lyric && <PianoRollNoteLyric note={note} />}
+
+        <div className={styles['v-scroll']} style={{ overflow: 'auto' }}>
+          <div style={{ position: "sticky", height: '30px', gridColumn: '2', zIndex: 999, display: 'flex', alignItems: 'stretch', top: 0 }}>
+            <PianoRollRuler />
+          </div>
+          <div>
+            <PianoRollKeys style={{ position: "sticky", gridRow: 2 }} />
+            <div className={styles['h-scroll']} style={{ gridRow: 2, gridColumn: 2 }}>
+
+              <div className={styles['pianoroll-lane']}
+                style={{
+                  '--lane-length': `${pianoRollStore.laneLength}px`,
+                  '--canvas-height': `${pianoRollStore.canvasHeight}px`,
+                } as React.CSSProperties}
+                {...pianoRollMouseHandlers}
+              >
+                <PianoRollGrids />
+                <div>
+                {pianoRollStore.pianoRollNotes.map(note =>
+                  <div className={styles['note']}>
+                    <PianoRollNoteBlock note={note} />
+                    {lyric && <PianoRollNoteLyric note={note} />}
+                  </div>
+                )}
                 </div>
-              )}
+                <div style={{ width: '100%', height: '100%' }}></div>
+                <PianoRollSelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
+                <PianoRollLanesBackground />
               </div>
-              <div style={{ width: '100%', height: '100%' }}></div>
-              <PianoRollSelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
-              <PianoRollLanesBackground />
             </div>
           </div>
         </div>
