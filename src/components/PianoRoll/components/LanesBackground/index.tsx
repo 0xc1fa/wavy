@@ -3,8 +3,8 @@ import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import useTheme from "../../hooks/useTheme";
 import styles from "./index.module.scss";
 
-interface PianoRollLanesBackgroundProps extends React.HTMLAttributes<HTMLDivElement> {}
-function PianoRollLanesBackground({ style, ...other } : PianoRollLanesBackgroundProps) {
+interface LanesBackgroundProps extends React.HTMLAttributes<HTMLDivElement> {}
+function LanesBackground({ style, ...other } : LanesBackgroundProps) {
 
   // const { pianoRollStore } = useStore();
   const transform = usePianoRollTransform();
@@ -27,4 +27,4 @@ function PianoRollLanesBackground({ style, ...other } : PianoRollLanesBackground
   )
 }
 
-export default memo(PianoRollLanesBackground)
+export default memo(LanesBackground)

@@ -4,10 +4,10 @@ import useTheme from "../../hooks/useTheme";
 import styles from "./index.module.scss";
 import { PianoRollLanesMouseHandlerMode, PianoRollMouseHandlersStates } from "../../handlers/usePianoRollMouseHandlers";
 
-interface PianoRollSelectionAreaProps extends React.HTMLAttributes<HTMLDivElement> {
+interface SelectionAreaProps extends React.HTMLAttributes<HTMLDivElement> {
   mouseHandlersStates: PianoRollMouseHandlersStates
 }
-function PianoRollSelectionArea({ mouseHandlersStates, style, ...other }: PianoRollSelectionAreaProps) {
+function SelectionArea({ mouseHandlersStates, style, ...other }: SelectionAreaProps) {
 
   // const transform = usePianoRollTransform();
   const theme = useTheme();
@@ -45,4 +45,4 @@ function PianoRollSelectionArea({ mouseHandlersStates, style, ...other }: PianoR
   )
 }
 
-export default memo(PianoRollSelectionArea)
+export default memo(SelectionArea)

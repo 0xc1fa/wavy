@@ -3,10 +3,10 @@ import styles from "./index.module.scss";
 import useStore from "../../hooks/useStore";
 import { memo } from "react";
 
-interface PianoRollNoteLyricProps extends React.HTMLAttributes<HTMLInputElement> {
+interface NoteLyricProps extends React.HTMLAttributes<HTMLInputElement> {
   note: TrackNoteEvent,
 }
-function PianoRollNoteLyric({ note, style, ...other }: PianoRollNoteLyricProps) {
+function NoteLyric({ note, style, ...other }: NoteLyricProps) {
 
   const { pianoRollStore, dispatch } = useStore();
 
@@ -54,4 +54,4 @@ function PianoRollNoteLyric({ note, style, ...other }: PianoRollNoteLyricProps) 
 //   return notes.map(note => (note.id === noteId) ? { ...note, lyric: lyric } : note)
 // }
 
-export default memo(PianoRollNoteLyric)
+export default memo(NoteLyric)

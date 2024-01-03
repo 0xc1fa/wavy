@@ -3,9 +3,9 @@ import useTheme from "../../hooks/useTheme";
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import styles from './index.module.scss';
 
-interface PianoRollGridsProps extends React.HTMLAttributes<SVGElement> {}
+interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {}
 
-const PianoRollGrids: React.FC<PianoRollGridsProps> = ({ ...other }) => {
+const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
   const theme = useTheme();
   const { laneLength, canvasHeight, pixelPerBeat, pianoLaneScaleX } = usePianoRollTransform();
 
@@ -50,4 +50,4 @@ const PianoRollGrids: React.FC<PianoRollGridsProps> = ({ ...other }) => {
   );
 };
 
-export default memo(PianoRollGrids);
+export default memo(LaneGrids);

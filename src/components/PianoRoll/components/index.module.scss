@@ -42,6 +42,8 @@
 .pianoroll-lane {
   position: relative;
   flex: 0 0 auto;
+  // z-index: 3;
+
 
   width: var(--lane-length);
   height: var(--canvas-height);

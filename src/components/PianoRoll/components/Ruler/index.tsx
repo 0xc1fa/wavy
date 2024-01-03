@@ -3,9 +3,9 @@ import useTheme from "../../hooks/useTheme";
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import styles from './index.module.scss'
 
-interface PianoRollRulerProps extends React.HTMLAttributes<SVGElement> {}
+interface RulerProps extends React.HTMLAttributes<SVGElement> {}
 
-const PianoRollRuler: React.FC<PianoRollRulerProps> = ({ ...other }) => {
+const Ruler: React.FC<RulerProps> = ({ ...other }) => {
   const theme = useTheme();
   const { laneLength, canvasHeight, pixelPerBeat, pianoLaneScaleX } = usePianoRollTransform();
 
@@ -64,4 +64,4 @@ const PianoRollRuler: React.FC<PianoRollRulerProps> = ({ ...other }) => {
   );
 };
 
-export default memo(PianoRollRuler);
+export default memo(Ruler);

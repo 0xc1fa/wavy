@@ -4,11 +4,11 @@ import useTheme from "../../hooks/useTheme";
 import useStore from "../../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 
-interface PianoRollPitchCurveProps extends React.SVGProps<SVGSVGElement> {
+interface NotePitchCurveProps extends React.SVGProps<SVGSVGElement> {
   note: TrackNoteEvent;
 }
 
-const PianoRollPitchCurve: React.FC<PianoRollPitchCurveProps> = ({ note, ...other }) => {
+const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
   const theme = useTheme();
   const { pianoRollStore } = useStore();
 
@@ -66,4 +66,4 @@ const PianoRollPitchCurve: React.FC<PianoRollPitchCurveProps> = ({ note, ...othe
   );
 };
 
-export default memo(PianoRollPitchCurve);
+export default memo(NotePitchCurve);

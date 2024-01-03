@@ -1,10 +1,10 @@
 import useStore from "../../hooks/useStore";
 import styles from './index.module.scss';
 
-interface PianoRollPlayHeadProps extends React.HTMLAttributes<HTMLDivElement> {
+interface PlayheadProps extends React.HTMLAttributes<HTMLDivElement> {
   // ticks: number;
 }
-export default function PianoRollPlayHead({  }: PianoRollPlayHeadProps) {
+export default function Playhead({  }: PlayheadProps) {
   const { pianoRollStore } = useStore();
 
   return (

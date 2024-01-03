@@ -4,10 +4,10 @@ import useTheme from "../../hooks/useTheme";
 import useStore from "../../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 
-interface PianoRollNoteBlockProps extends React.HTMLAttributes<HTMLDivElement> {
+interface NoteBlockProps extends React.HTMLAttributes<HTMLDivElement> {
   note: TrackNoteEvent,
 }
-function PianoRollNoteBlock({ style, note, ...other }: PianoRollNoteBlockProps) {
+function NoteBlock({ style, note, ...other }: NoteBlockProps) {
 
   const theme = useTheme();
   const { pianoRollStore } = useStore();
@@ -29,4 +29,4 @@ function PianoRollNoteBlock({ style, note, ...other }: PianoRollNoteBlockProps) 
   )
 }
 
-export default memo(PianoRollNoteBlock)
+export default memo(NoteBlock)
