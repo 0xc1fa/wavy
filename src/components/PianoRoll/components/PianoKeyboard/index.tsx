@@ -46,7 +46,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
           <span hidden={keyNum % 12 !== 0}>{pianoRollStore.getNoteNameFromNoteNum(keyNum)}</span>
         </div>
       )
-      else {
+      else if (keyNum !== 127) {
         currentY -= pianoRollStore.whiteKeyWidth
         return (
           <div className={`${styles['key']} ${styles['white__key']}`}
@@ -56,6 +56,19 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
               paddingLeft: '40%',
               paddingTop: `${pianoRollStore.getMinYFromNoteNum(keyNum) - currentY}px`,
               paddingBottom: `${(25 * (12/7)) - (pianoRollStore.getMinYFromNoteNum(keyNum) - currentY) - 25}px`,
+            } as React.CSSProperties}
+            onPointerDown={handlerPointerDown}
+          >
+            <span hidden={keyNum % 12 !== 0}>{pianoRollStore.getNoteNameFromNoteNum(keyNum)}</span>
+          </div>
+        )
+      } else {
+        return (
+          <div className={`${styles['key']} ${styles['white__key']}`}
+            data-keynum={keyNum}
+            style={{
+              '--key-top': `0px`,
+              '--white-key-height': `${currentY}px`,
             } as React.CSSProperties}
             onPointerDown={handlerPointerDown}
           >
