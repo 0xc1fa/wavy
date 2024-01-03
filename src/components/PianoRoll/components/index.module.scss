@@ -2,13 +2,14 @@
 .container {
   position: relative;
   overflow: auto;
-
+  margin: 0;
 
   width: 800px;
   height: 500px;
   user-select: none;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  background-color: #232323;
 }
 
 .container::-webkit-scrollbar {
