@@ -2,7 +2,9 @@
   --marker-color: #ffffff22;
   position: absolute;
   border-left: 1px solid var(--marker-color);
+  border-right: 1px solid var(--marker-color);
+  background-color: #ffffff09;
   height: var(--canvas-height);
-  width: 0;
-  left: var(--position-marker-position);
+  left: var(--left-marker-position);
+  width: var(--selection-width);
 }

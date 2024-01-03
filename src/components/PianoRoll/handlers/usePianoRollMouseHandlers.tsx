@@ -17,6 +17,7 @@ export type PianoRollMouseHandlersStates = {
   mouseHandlerMode: PianoRollLanesMouseHandlerMode
   startingPosition: {x: number, y: number}
   ongoingPosition: {x: number, y: number}
+  // selectionRange: { start: number, end: number }
 }
 
 export default function usePianoRollMouseHandlers() {
@@ -28,6 +29,7 @@ export default function usePianoRollMouseHandlers() {
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None)
   const [startingPosition, setStartingPosition] = useState({x: 0, y: 0})
   const [ongoingPosition, setOngoingPosition] = useState({x: 0, y: 0})
+  // const [selectionRange, setSelectionRange] = useState({ start: 0, end: 0 })
 
   const getTickAndNoteNumFromEvent = (e: PointerEvent) => {
     const noteNum = pianoRollStore.getNoteNumFromEvent(e);

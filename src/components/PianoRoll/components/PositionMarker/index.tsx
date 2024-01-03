@@ -9,7 +9,10 @@ export default function PositionMarker({  }: PositionMarkerProps) {
 
   return (
     <div className={styles['position-marker']}
-      style={{ '--position-marker-position': `${pianoRollStore.selectionTicks * pianoRollStore.pixelsPerTick}px` } as React.CSSProperties}
+      style={{
+        '--left-marker-position': `${pianoRollStore.selectionRange.start * pianoRollStore.pixelsPerTick}px`,
+        '--selection-width': `${(pianoRollStore.selectionRange.end - pianoRollStore.selectionRange.start) * pianoRollStore.pixelsPerTick}px`
+      } as React.CSSProperties}
     />
   )
 }

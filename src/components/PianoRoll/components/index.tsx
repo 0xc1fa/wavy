@@ -15,6 +15,7 @@ import Playhead from "./Playhead";
 import usePianoRollKeyboardHandlers from "../handlers/usePianoRollKeyboardHandlers";
 import PositionMarker from "./PositionMarker";
 import TempoInfo from "./TempoInfo";
+import usePianoRollClipboardHandlers from "../handlers/usePianoRollClipboardHandlers";
 
 interface PianoRollProps extends React.HTMLAttributes<HTMLDivElement> {
   notes: TrackNoteEvent[];
@@ -29,6 +30,7 @@ export default function PianoRoll({
 
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const pianoRollKeyboardHandlers = usePianoRollKeyboardHandlers();
+  const clipboardHandlers = usePianoRollClipboardHandlers();
   const { pianoRollStore } = useStore()
 
   usePreventZoom();
@@ -55,10 +57,11 @@ export default function PianoRoll({
           >
             <LaneGrids />
             <Notes lyric={lyric} />
-            <div style={{ position:'absolute', inset: '0', width: '100%', height: '100%' }} />
+
             <SelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
-            <Playhead />
             <PositionMarker />
+            <Playhead />
+            <div style={{ position:'absolute', inset: '0', width: '100%', height: '100%' }} />
             <LanesBackground />
           </div>
         </div>

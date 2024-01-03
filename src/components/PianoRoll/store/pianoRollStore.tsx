@@ -285,6 +285,7 @@ function defaultPianoRollStore() {
     isPlaying: false,
     currentTicks: 0,
     selectionTicks: 460,
+    selectionRange: { start: 300, end: 400 },
 
     get canvasWidth() {
       return this.laneLength * this.pianoLaneScaleX;
