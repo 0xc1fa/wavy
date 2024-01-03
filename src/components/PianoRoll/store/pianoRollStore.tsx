@@ -288,18 +288,13 @@ function defaultPianoRollStore() {
 
     get canvasWidth() {
       return this.laneLength * this.pianoLaneScaleX;
-      // const lastNoteTick = this.pianoRollNotes[this.pianoRollNotes.length - 1].tick + this.pianoRollNotes[this.pianoRollNotes.length - 1].duration;
-      // return getOffsetXFromTick(lastNoteTick, this);
     },
 
     get startingNoteNum() {
       return 0;
     },
     get numOfKeys() {
-      return 120
-    },
-    get numOfWhiteKeys() {
-      return this.numOfKeys * 7 / 12;
+      return 128
     },
     get pixelsPerTick() {
       return this.pixelPerBeat / this.tickPerBeat;
