@@ -40,9 +40,7 @@ export default function PianoRoll({
         } as React.CSSProperties }
         tabIndex={0}
       >
-        <div className={styles['ruler-container']}>
-          <Ruler />
-        </div>
+        <Ruler />
         <div className={styles['lower-container']}>
           <PianoRollKeys />
           <div className={styles['pianoroll-lane']} {...pianoRollMouseHandlers}

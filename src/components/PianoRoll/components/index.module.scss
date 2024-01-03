@@ -3,6 +3,7 @@
   position: relative;
   overflow: auto;
 
+
   width: 800px;
   height: 500px;
   user-select: none;
@@ -12,17 +13,6 @@
 
 .container::-webkit-scrollbar {
   display: none;
-}
-
-.ruler-container {
-  position: sticky;
-  height: 1.5rem;
-  z-index: 999;
-  display: flex;
-  left: 50px;
-  align-items: stretch;
-  top: 0;
-  width: fit-content;
 }
 
 .lower-container {
