@@ -10,7 +10,11 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
   const { pianoRollStore } = useStore();
 
   const keyNums = [];
-  for (let i = pianoRollStore.numOfKeys - 1; i >= pianoRollStore.startingNoteNum; i--) {
+  for (
+    let i = pianoRollStore.startingNoteNum;
+    i < pianoRollStore.startingNoteNum + pianoRollStore.numOfKeys;
+    i++
+  ) {
     keyNums.push(i);
   }
 
@@ -26,7 +30,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
     currentTarget.addEventListener('mouseleave', handleMouseLeave);
   }
 
-  let currentY = -pianoRollStore.whiteKeyWidth
+  let currentY = pianoRollStore.canvasHeight
 
   return (
     <div className={styles['container']}>
@@ -43,7 +47,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
         </div>
       )
       else {
-        currentY += pianoRollStore.whiteKeyWidth
+        currentY -= pianoRollStore.whiteKeyWidth
         return (
           <div className={`${styles['key']} ${styles['white__key']}`}
             data-keynum={keyNum}
