@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { focusNote } from "../helpers/notes";
-import { usePianoRollTransform } from "./usePianoRollTransform";
-import { usePianoRollDispatch } from "./usePianoRollDispatch";
-import useStore from "./useStore";
+import { usePianoRollTransform } from "../hooks/usePianoRollTransform";
+import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
+import useStore from "../hooks/useStore";
 
 export enum PianoRollLanesMouseHandlerMode {
   DragAndDrop,
@@ -19,7 +19,7 @@ export type PianoRollMouseHandlersStates = {
   ongoingPosition: {x: number, y: number}
 }
 
-export default function usePianoRollMouseHandler() {
+export default function usePianoRollMouseHandlers() {
 
   const { pianoRollStore } = useStore();
   const transform = usePianoRollTransform()

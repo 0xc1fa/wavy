@@ -1,0 +1,7 @@
+.playhead {
+  --playhead-color: #ff0000;
+  position: absolute;
+  border-left: 1px solid var(--playhead-color);
+  height: var(--canvas-height);
+  left: calc(var(--ticks) * var(--pixels-per-tick));
+}

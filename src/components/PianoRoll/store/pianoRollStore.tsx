@@ -35,6 +35,7 @@ type PianoRollStoreAction =
   | { type: 'updateNoteLyric', payload: { noteId: string, lyric: string } }
   | { type: 'moveNoteAsLatestModified', payload: { noteId: string } }
   | { type: 'setPianoLaneScaleX', payload: { pianoLaneScaleX: number } }
+  | { type: 'updateTicks', payload: { ticks: number } }
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   function createNote(ticks: number, noteNum: number): TrackNoteEvent {
@@ -187,6 +188,11 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
         ...state,
         pianoLaneScaleX: action.payload.pianoLaneScaleX
       }
+    case 'updateTicks':
+      return {
+        ...state,
+        currentTicks: action.payload.ticks
+      }
     default:
       throw new Error();
   }
@@ -214,7 +220,7 @@ function defaultPianoRollStore() {
   return {
     keyPressed: new Array(),
     keySelected: new Array(),
-    pianoRollNotes: new Array(),
+    pianoRollNotes: new Array<TrackNoteEvent>(),
     pitchBendEvent: new Array(),
 
     pianoLaneScaleX: 1,
@@ -237,6 +243,8 @@ function defaultPianoRollStore() {
 
     resolution: 1,
     scrollTop: 0,
+
+    currentTicks: 0,
 
     get canvasWidth() {
       return this.laneLength * this.pianoLaneScaleX;

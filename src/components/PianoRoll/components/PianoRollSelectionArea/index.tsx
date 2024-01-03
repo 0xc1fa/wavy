@@ -2,7 +2,7 @@ import { memo } from "react";
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import useTheme from "../../hooks/useTheme";
 import styles from "./index.module.scss";
-import { PianoRollLanesMouseHandlerMode, PianoRollMouseHandlersStates } from "../../hooks/usePianoRollMouseHandler";
+import { PianoRollLanesMouseHandlerMode, PianoRollMouseHandlersStates } from "../../handlers/usePianoRollMouseHandlers";
 
 interface PianoRollSelectionAreaProps extends React.HTMLAttributes<HTMLDivElement> {
   mouseHandlersStates: PianoRollMouseHandlersStates
