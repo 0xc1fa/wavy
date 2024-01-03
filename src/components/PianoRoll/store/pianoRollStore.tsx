@@ -292,11 +292,8 @@ function defaultPianoRollStore() {
       // return getOffsetXFromTick(lastNoteTick, this);
     },
 
-    // get numOfKeys() {
-    //   return (this.endingOctave - this.startingOctave) * 12;
-    // },
     get startingNoteNum() {
-      return (this.startingOctave + 1) * 12;
+      return 0;
     },
     get numOfKeys() {
       return 120
