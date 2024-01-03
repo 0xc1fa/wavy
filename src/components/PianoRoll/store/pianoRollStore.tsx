@@ -270,8 +270,8 @@ function defaultPianoRollStore() {
     keyWidth: 25,
     blackKeyLengthRatio: 0.5,
 
-    startingOctave: 2,
-    endingOctave: 7,
+    startingOctave: -1,
+    endingOctave: 10,
     laneWidth: 25,
     laneLength: 1500,
     pixelPerBeat: 70,
@@ -336,7 +336,7 @@ function defaultPianoRollStore() {
     getNoteNameFromNoteNum(noteNum: number) {
       const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
       const noteNameIndex = noteNum % 12;
-      const octave = Math.floor(noteNum / 12);
+      const octave = Math.floor(noteNum / 12) - 1;
       return `${noteNames[noteNameIndex]}${octave}`;
     },
 

@@ -47,8 +47,6 @@ export default function TempoInfo() {
     setIsDragging(false);
   }
 
-
-
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === 'Enter') {
       const value = parseFloat(inputValue);
