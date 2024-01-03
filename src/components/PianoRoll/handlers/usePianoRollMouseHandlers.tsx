@@ -77,6 +77,8 @@ export default function usePianoRollMouseHandlers() {
         // this.oscillatorController.startOscillator(getFrequencyFromNoteNum(newNote.noteNumber));
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
       } else {
+        const selectionTicks = pianoRollStore.getTickFromOffsetX(event.nativeEvent.offsetX)
+        dispatch({ type: 'setSelectionTicks', payload: { ticks: selectionTicks } })
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.MarqueeSelection);
       }
     }

@@ -2,7 +2,6 @@
 .container {
   position: relative;
   overflow: auto;
-  margin: 0;
 
   width: 800px;
   height: 500px;
@@ -14,6 +13,14 @@
 
 .container::-webkit-scrollbar {
   display: none;
+}
+
+.upper-container {
+  display: flex;
+  align-items: stretch;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .lower-container {

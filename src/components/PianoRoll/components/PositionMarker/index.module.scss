@@ -1,0 +1,8 @@
+.position-marker {
+  --marker-color: #ffffff22;
+  position: absolute;
+  border-left: 1px solid var(--marker-color);
+  height: var(--canvas-height);
+  width: 0;
+  left: var(--position-marker-position);
+}

@@ -1,6 +1,5 @@
 .ruler {
   height: 1.5rem;
-  position: sticky;
   border-radius: 0 0.5rem 0 0;
   top: 0;
   left: 50px;
@@ -9,7 +8,6 @@
   flex-shrink: 0;
   background-color: #b99e42;
   border-bottom: 1px solid #232323;
-  margin: 0;
 }
 
 .text {

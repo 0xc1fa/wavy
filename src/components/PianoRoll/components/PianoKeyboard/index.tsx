@@ -3,9 +3,9 @@ import useStore from "../../hooks/useStore";
 import useTheme from "../../hooks/useTheme";
 import styles from './index.module.scss'
 
-interface PianoRollKeysProps extends React.HTMLAttributes<HTMLCanvasElement> {
+interface PianoKeyboardProps extends React.HTMLAttributes<HTMLCanvasElement> {
 }
-export default function PianoRollKeys(props: PianoRollKeysProps) {
+export default function PianoKeyboard(props: PianoKeyboardProps) {
 
   const { pianoRollStore } = useStore();
 

@@ -7,12 +7,14 @@ import usePianoRollMouseHandlers from "../handlers/usePianoRollMouseHandlers";
 import SelectionArea from "./SelectionArea";
 import LanesBackground from "./LanesBackground";
 import useStore from "../hooks/useStore";
-import PianoRollKeys from "./PianoRollKeys";
+import PianoKeyboard from "./PianoKeyboard";
 import usePreventZoom from "../hooks/usePreventZoom";
 import Ruler from "./Ruler";
 import Notes from "./Notes";
 import Playhead from "./Playhead";
 import usePianoRollKeyboardHandlers from "../handlers/usePianoRollKeyboardHandlers";
+import PositionMarker from "./PositionMarker";
+import TempoInfo from "./TempoInfo";
 
 interface PianoRollProps extends React.HTMLAttributes<HTMLDivElement> {
   notes: TrackNoteEvent[];
@@ -33,6 +35,7 @@ export default function PianoRoll({
 
   return (
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
+
       <div className={styles['container']}
         style={{
           '--lane-length': `${pianoRollStore.laneLength}px`,
@@ -40,9 +43,12 @@ export default function PianoRoll({
         } as React.CSSProperties }
         tabIndex={0}
       >
-        <Ruler />
+        <div className={styles['upper-container']}>
+          <TempoInfo />
+          <Ruler />
+        </div>
         <div className={styles['lower-container']}>
-          <PianoRollKeys />
+          <PianoKeyboard />
           <div className={styles['pianoroll-lane']} {...pianoRollMouseHandlers}
             tabIndex={0}
             {...pianoRollKeyboardHandlers}
@@ -52,6 +58,7 @@ export default function PianoRoll({
             <div style={{ position:'absolute', inset: '0', width: '100%', height: '100%' }} />
             <SelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
             <Playhead />
+            <PositionMarker />
             <LanesBackground />
           </div>
         </div>
