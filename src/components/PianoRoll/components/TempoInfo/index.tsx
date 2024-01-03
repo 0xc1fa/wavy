@@ -8,16 +8,22 @@ export default function TempoInfo() {
   const { pianoRollStore } = useStore();
   const dispatch = usePianoRollDispatch();
 
-  // Use local state to manage the input value
   const [inputValue, setInputValue] = useState(pianoRollStore.bpm.toString());
 
-  // Update local state when the store's BPM value changes
   useEffect(() => {
     setInputValue(pianoRollStore.bpm.toString());
   }, [pianoRollStore.bpm]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setInputValue(event.currentTarget.value);
+  }
+
+  const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => {
+    event?.currentTarget.focus()
+  }
+
+  const handlePointerDown: React.MouseEventHandler<HTMLInputElement> = (event) => {
+    event.preventDefault()
   }
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
@@ -36,6 +42,8 @@ export default function TempoInfo() {
 
   return (
     <input className={styles['tempo-info']} value={inputValue}
-      onChange={handleChange} onKeyDown={handleKeyDown} />
+      onChange={handleChange} onKeyDown={handleKeyDown}
+      onPointerDown={handlePointerDown} onDoubleClick={handleDoubleClick}
+    />
   );
 }
