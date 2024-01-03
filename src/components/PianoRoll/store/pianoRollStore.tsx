@@ -292,14 +292,14 @@ function defaultPianoRollStore() {
       // return getOffsetXFromTick(lastNoteTick, this);
     },
 
-    get numOfKeys() {
-      return (this.endingOctave - this.startingOctave) * 12;
-    },
+    // get numOfKeys() {
+    //   return (this.endingOctave - this.startingOctave) * 12;
+    // },
     get startingNoteNum() {
       return (this.startingOctave + 1) * 12;
     },
-    get endingNoteNum() {
-      return (this.endingOctave + 1) * 12;
+    get numOfKeys() {
+      return 120
     },
     get numOfWhiteKeys() {
       return this.numOfKeys * 7 / 12;
@@ -326,7 +326,7 @@ function defaultPianoRollStore() {
     },
 
     getNoteNumFromOffsetY(offsetY: number) {
-      return Math.floor(this.endingNoteNum - offsetY / this.laneWidth);
+      return Math.floor(this.numOfKeys - offsetY / this.laneWidth);
     },
 
     getCenterYFromNoteNum(noteNum: number) {
@@ -341,11 +341,11 @@ function defaultPianoRollStore() {
     },
 
     getMinYFromNoteNum(noteNum: number,) {
-      return (this.endingNoteNum - noteNum - 1) * this.laneWidth;
+      return (this.numOfKeys - noteNum - 1) * this.laneWidth;
     },
 
     getMaxYFromNoteNum(noteNum: number) {
-      return (this.endingNoteNum - noteNum) * this.laneWidth;
+      return (this.numOfKeys - noteNum) * this.laneWidth;
     },
 
     getOffsetXFromTick(tick: number) {
@@ -370,7 +370,7 @@ function defaultPianoRollStore() {
 
     getWhiteKeyNumFromPosition(y: number) {
       let currentY = 0
-      for (let keyNum = this.endingNoteNum - 1; keyNum >= this.startingNoteNum; keyNum--) {
+      for (let keyNum = this.numOfKeys - 1; keyNum >= this.startingNoteNum; keyNum--) {
         if (isBlackKey(keyNum)) {
           continue
         }
@@ -383,7 +383,7 @@ function defaultPianoRollStore() {
     },
 
     getBlackKeyNumFromPosition(y: number) {
-      return Math.floor(this.endingNoteNum - y / this.keyWidth);
+      return Math.floor(this.numOfKeys - y / this.keyWidth);
     },
 
     getPianoKeyNumFromPosition(x: number, y: number) {

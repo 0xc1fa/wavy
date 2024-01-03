@@ -70,7 +70,7 @@ export default function PianoRollKeys(props: PianoRollKeysProps) {
       const drawCLabel = (keyNum: number) => drawLabels(ctx, pianoRollStore.keyLength - 22, currentY + pianoRollStore.whiteKeyWidth - 7, `C${getOctave(keyNum)}`)
 
       let currentY = 0
-      for (let keyNum = pianoRollStore.endingNoteNum - 1; keyNum >= pianoRollStore.startingNoteNum; keyNum--) {
+      for (let keyNum = pianoRollStore.numOfKeys - 1; keyNum >= pianoRollStore.startingNoteNum; keyNum--) {
         if (isBlackKey(keyNum)) continue;
         drawWhiteKey(keyNum);
         if (isC(keyNum)) drawCLabel(keyNum);
@@ -79,7 +79,7 @@ export default function PianoRollKeys(props: PianoRollKeysProps) {
     }
 
     const drawBlackKeys = () => {
-      for (let keyNum = pianoRollStore.endingNoteNum - 1; keyNum >= pianoRollStore.startingNoteNum; keyNum--) {
+      for (let keyNum = pianoRollStore.numOfKeys - 1; keyNum >= pianoRollStore.startingNoteNum; keyNum--) {
         if (isBlackKey(keyNum)) drawBlackKey(keyNum);
       }
     }

@@ -18,7 +18,7 @@ export function usePianoRollTransform() {
     pixelPerBeat: pianoRollStore.pixelPerBeat,
     pianoLaneScaleX: pianoRollStore.pianoLaneScaleX,
     startingNoteNum: pianoRollStore.startingNoteNum,
-    endingNoteNum: pianoRollStore.endingNoteNum,
+    numOfKeys: pianoRollStore.numOfKeys,
     resolution: pianoRollStore.resolution,
     clearCanvas: pianoRollStore.clearCanvas,
     getMaxYFromNoteNum: pianoRollStore.getMaxYFromNoteNum,

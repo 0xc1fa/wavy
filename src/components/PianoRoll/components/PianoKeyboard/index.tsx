@@ -10,7 +10,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
   const { pianoRollStore } = useStore();
 
   const keyNums = [];
-  for (let i = pianoRollStore.endingNoteNum - 1; i >= pianoRollStore.startingNoteNum; i--) {
+  for (let i = pianoRollStore.numOfKeys - 1; i >= pianoRollStore.startingNoteNum; i--) {
     keyNums.push(i);
   }
 
