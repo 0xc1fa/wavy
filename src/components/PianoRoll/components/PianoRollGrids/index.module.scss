@@ -1,10 +1,4 @@
 .grid {
+  position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(to right, var(--primary-grid-color) 1px, transparent 1px),
-    linear-gradient(to right, var(--secondary-grid-color) 1px, transparent 1px);
-  background-size:
-    calc(var(--pixel-per-beat) * var(--piano-lane-scale-x) * 4),
-    calc(var(--pixel-per-beat) * var(--piano-lane-scale-x));
-  image-rendering: crisp-edges;
 }

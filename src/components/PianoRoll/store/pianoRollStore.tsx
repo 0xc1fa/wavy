@@ -19,7 +19,7 @@ export function PianoRollStoreProvider({ children }: PianoRollStoreProviderProps
 }
 
 type PianoRollStoreAction =
-  | { type: 'addNote', payload: {ticks: number, noteNum: number} }
+  | { type: 'addNote', payload: { ticks: number, noteNum: number} }
   | { type: 'unselectAllNotes' }
   | { type: 'setNoteAsSelected', payload: { noteId: string } }
   | { type: 'toggleSelectedNoteVibratoMode' }
@@ -35,7 +35,11 @@ type PianoRollStoreAction =
   | { type: 'updateNoteLyric', payload: { noteId: string, lyric: string } }
   | { type: 'moveNoteAsLatestModified', payload: { noteId: string } }
   | { type: 'setPianoLaneScaleX', payload: { pianoLaneScaleX: number } }
+  | { type: 'deleteSelectedNotes' }
   | { type: 'updateTicks', payload: { ticks: number } }
+  | { type: 'incrementTicksByOne' }
+  | { type: 'play' }
+  | { type: 'stop' }
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   function createNote(ticks: number, noteNum: number): TrackNoteEvent {
@@ -193,6 +197,26 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
         ...state,
         currentTicks: action.payload.ticks
       }
+    case 'incrementTicksByOne':
+      return {
+        ...state,
+        currentTicks: state.currentTicks + 1
+      }
+    case 'deleteSelectedNotes':
+      return {
+        ...state,
+        pianoRollNotes: state.pianoRollNotes.filter(note => !note.isSelected)
+      }
+    case 'play':
+      return {
+        ...state,
+        isPlaying: true
+      }
+    case 'stop':
+      return {
+        ...state,
+        isPlaying: false
+      }
     default:
       throw new Error();
   }
@@ -223,6 +247,8 @@ function defaultPianoRollStore() {
     pianoRollNotes: new Array<TrackNoteEvent>(),
     pitchBendEvent: new Array(),
 
+    bpm: 120,
+
     pianoLaneScaleX: 1,
     pianoLaneScaleY: 1,
     defaultVelocity: 64,
@@ -244,6 +270,7 @@ function defaultPianoRollStore() {
     resolution: 1,
     scrollTop: 0,
 
+    isPlaying: false,
     currentTicks: 0,
 
     get canvasWidth() {

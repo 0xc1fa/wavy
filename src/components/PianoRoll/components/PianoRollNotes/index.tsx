@@ -10,7 +10,7 @@ export default function PianoRollNotes(
   const { pianoRollStore } = useStore()
 
   return (
-    <div>
+    <div className={styles['notes-container']}>
     {pianoRollStore.pianoRollNotes.map(note =>
       <div className={styles['note']}>
         <PianoRollNoteBlock note={note} />

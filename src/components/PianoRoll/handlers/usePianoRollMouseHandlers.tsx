@@ -130,10 +130,12 @@ export default function usePianoRollMouseHandlers() {
   const onDoubleClick: React.MouseEventHandler = (event) => {
     const noteClicked = pianoRollStore.getNoteFromPosition(event.nativeEvent.offsetX, event.nativeEvent.offsetY);
     if (noteClicked === null) {
-      console.log('no note clicked')
+      console.log('no note double clicked')
     } else if (event.altKey) {
+      console.log('note double clicked with alt key')
       dispatch({ type: 'toggleSelectedNoteVibratoMode' })
     } else {
+      console.log('note double clicked')
       focusNote(event.nativeEvent, noteClicked.id)
     }
   }

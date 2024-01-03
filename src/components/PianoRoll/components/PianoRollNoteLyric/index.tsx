@@ -33,8 +33,10 @@ function PianoRollNoteLyric({ note, style, ...other }: PianoRollNoteLyricProps) 
   return (
     <input type="text"
       key={note.id}
+      data-noteid={note.id}
       className={styles['lyric']}
-      placeholder="[no lyric]"
+      placeholder=" - "
+      // onKeyDown={event => event.stopPropagation()}
       style={{
         '--top': `${pianoRollStore.getMinYFromNoteNum(note.noteNumber)}px`,
         '--left': `${pianoRollStore.getOffsetXFromTick(note.tick)}px`,

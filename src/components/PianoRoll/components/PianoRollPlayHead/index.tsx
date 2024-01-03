@@ -9,7 +9,7 @@ export default function PianoRollPlayHead({  }: PianoRollPlayHeadProps) {
 
   return (
     <div className={styles['playhead']}
-      style={{ '--ticks': pianoRollStore.currentTicks, '--pixel-per-tick': pianoRollStore.pixelsPerTick } as React.CSSProperties}
+      style={{ '--playhead-position': `${pianoRollStore.currentTicks * pianoRollStore.pixelsPerTick}px` } as React.CSSProperties}
     />
   )
 }

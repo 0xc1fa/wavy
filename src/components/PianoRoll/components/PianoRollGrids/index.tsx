@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import useTheme from "../../hooks/useTheme";
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
+import styles from './index.module.scss';
 
 interface PianoRollGridsProps extends React.HTMLAttributes<SVGElement> {}
 
@@ -37,6 +38,7 @@ const PianoRollGrids: React.FC<PianoRollGridsProps> = ({ ...other }) => {
 
   return (
     <svg
+      className={styles['grid']}
       aria-label="pianoroll-grids"
       width={laneLength}
       height={canvasHeight}

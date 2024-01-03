@@ -47,10 +47,10 @@
   height: var(--canvas-height);
   background-color: #232323;
 
-  & > *:not(:last-child) {
-    position: absolute;
-    inset: 0;
-  }
+  // & > *:not(:last-child) {
+  //   position: absolute;
+  //   inset: 0;
+  // }
 }
 
 .notes-container {
