@@ -17,6 +17,7 @@ import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import Selections from "./Selections";
 import { KeyboardEvent, useEffect, useRef } from "react";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
+import VelocityEditor from "./VelocityEditor";
 
 interface PianoRollProps extends React.HTMLAttributes<HTMLDivElement> {
   playheadPosition?: number;
@@ -88,9 +89,11 @@ export default function PianoRoll({
             {playheadPosition !== undefined && <Playhead playheadPosition={playheadPosition}/>}
             <div style={{ position:'absolute', inset: '0', width: '100%', height: '100%' }} />
             <LanesBackground />
+            <VelocityEditor />
           </div>
         </div>
       </div>
+
     </PianoRollThemeContext.Provider>
   )
 

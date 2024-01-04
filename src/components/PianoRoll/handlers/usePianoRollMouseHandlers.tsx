@@ -126,7 +126,6 @@ export default function usePianoRollMouseHandlers() {
         updateCursorStyle(event.nativeEvent);
         break;
       case PianoRollLanesMouseHandlerMode.NotesTrimming: {
-        // const setNOtes = pianoRollStore.noteModificationBuffer.notesSelected.map
         const newNotes = pianoRollStore.noteModificationBuffer.notesSelected.map(bufferedNote => ({
           ...bufferedNote,
           tick: bufferedNote.tick + deltaTicks,
