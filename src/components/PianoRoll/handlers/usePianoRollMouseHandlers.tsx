@@ -29,7 +29,6 @@ export default function usePianoRollMouseHandlers() {
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None)
   const [startingPosition, setStartingPosition] = useState({x: 0, y: 0})
   const [ongoingPosition, setOngoingPosition] = useState({x: 0, y: 0})
-  // const [selectionRange, setSelectionRange] = useState({ start: 0, end: 0 })
 
   const getTickAndNoteNumFromEvent = (e: PointerEvent) => {
     const noteNum = pianoRollStore.getNoteNumFromEvent(e);
@@ -48,7 +47,6 @@ export default function usePianoRollMouseHandlers() {
       } else if (event.nativeEvent.altKey) {
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.Vibrato);
       } else {
-        // this.oscillatorController.startOscillator(getFrequencyFromNoteNum(noteClicked!.noteNumber));
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
         console.log("drag and drop")
       }
@@ -72,11 +70,13 @@ export default function usePianoRollMouseHandlers() {
       setMouseHandlerModeForNote();
       setNoteSelection();
     } else {
-      if (!event.shiftKey) dispatch({ type: 'unselectAllNotes' });
+      if (!event.shiftKey) {
+        dispatch({ type: 'unselectAllNotes' });
+        dispatch({ type: 'setSelectionPoint', payload: { start: event.nativeEvent.offsetX / pianoRollStore.pixelsPerTick } })
+      }
       if (event.metaKey) {
         const { ticks, noteNum } = getTickAndNoteNumFromEvent(event.nativeEvent)
         dispatch({ type: 'addNote', payload: { ticks, noteNum }})
-        // this.oscillatorController.startOscillator(getFrequencyFromNoteNum(newNote.noteNumber));
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
       } else {
         const selectionTicks = pianoRollStore.getTickFromOffsetX(event.nativeEvent.offsetX)
@@ -103,10 +103,11 @@ export default function usePianoRollMouseHandlers() {
         break;
       case PianoRollLanesMouseHandlerMode.DragAndDrop:
         dispatch({ type: 'shiftSelectedNote', payload: { deltaPitch, deltaTicks }});
-        // this.oscillatorController.changeFrequency(getFrequencyFromNoteNum(this.state.getNoteFromEvent(e)!.noteNumber));
+        break;
+      case PianoRollLanesMouseHandlerMode.MarqueeSelection:
+        dispatch({ type: 'setSelectionRange', payload: { start: Math.min(startingPosition.x, ongoingPosition.x) / pianoRollStore.pixelsPerTick, range: Math.abs(startingPosition.x - ongoingPosition.x) / pianoRollStore.pixelsPerTick } } )
         break;
       case PianoRollLanesMouseHandlerMode.Vibrato:
-
         event.shiftKey ?
         dispatch({ type: 'vibratoRateChangeSelectedNote', payload: { rateOffset: deltaY }})
         :

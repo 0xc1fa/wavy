@@ -42,6 +42,9 @@ type PianoRollStoreAction =
   | { type: 'stop' }
   | { type: 'setSelectionTicks', payload: { ticks: number } }
   | { type: 'setBpm', payload: { bpm: number } }
+  | { type: 'setSelectionPoint', payload: { start: number }}
+  | { type: 'setSelectionRange', payload: { start: number, range: number }  }
+  | { type: 'inactiveSelectionRange' }
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   function createNote(ticks: number, noteNum: number): TrackNoteEvent {
@@ -229,6 +232,21 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
         ...state,
         bpm: action.payload.bpm
       }
+    case 'setSelectionRange':
+      return {
+        ...state,
+        selectionRange: { mode: 'range', start: action.payload.start, range: action.payload.range }
+      }
+    case 'setSelectionPoint':
+      return {
+        ...state,
+        selectionRange: { mode: 'point', start: action.payload.start, range: 0 }
+      }
+    case 'inactiveSelectionRange':
+      return {
+        ...state,
+        selectionRange: { mode: 'none', start: 0, range: 0 }
+      }
     default:
       throw new Error();
   }
@@ -285,7 +303,7 @@ function defaultPianoRollStore() {
     isPlaying: false,
     currentTicks: 0,
     selectionTicks: 460,
-    selectionRange: { start: 300, end: 400 },
+    selectionRange: { mode: 'range', start: 300, range: 400 },
 
     get canvasWidth() {
       return this.laneLength * this.pianoLaneScaleX;
