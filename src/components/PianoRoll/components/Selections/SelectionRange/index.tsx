@@ -16,8 +16,8 @@ export default function SelectionRange() {
   return (
     <div className={styles['selection--range']}
       style={{
-        '--left-marker-position': `${selectionStart * pixelsPerTick}px`,
-        '--range-width': `${selectionWidth * pixelsPerTick}px`
+        '--left-marker-position': `${selectionStart * pixelsPerTick * pianoRollStore.pianoLaneScaleX}px`,
+        '--range-width': `${selectionWidth * pixelsPerTick * pianoRollStore.pianoLaneScaleX}px`
       } as React.CSSProperties}
     />
   )

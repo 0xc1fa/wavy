@@ -8,7 +8,7 @@ export default function SelectionPoint() {
   return (
     <div className={styles['selection--point']}
       style={{
-        '--marker-position': `${pianoRollStore.selectionTicks * pixelsPerTick}px`,
+        '--marker-position': `${pianoRollStore.selectionTicks * pixelsPerTick * pianoRollStore.pianoLaneScaleX}px`,
       } as React.CSSProperties}
     />
   )
