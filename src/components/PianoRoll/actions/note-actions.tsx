@@ -68,16 +68,14 @@ type ModifiedNotesAction = {
   payload: { notes: TrackNoteEvent[] }
 }
 export function modifiedNotes(state: PianoRollStore, action: ModifiedNotesAction) {
+  const notesIdsToBeModified = action.payload.notes.map(note => note.id)
+  const notesNotModified = state.pianoRollNotes.filter(note => !notesIdsToBeModified.includes(note.id))
   return {
     ...state,
-    pianoRollNotes: state.pianoRollNotes.map(note => {
-      const modifiedNote = action.payload.notes.find(n => n.id === note.id)
-      if (modifiedNote) {
-        return modifiedNote
-      } else {
-        return note
-      }
-    })
+    pianoRollNotes: [
+      ...notesNotModified,
+      ...action.payload.notes
+    ]
   }
 }
 
