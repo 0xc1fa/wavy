@@ -22,6 +22,7 @@ export type PianoRollMouseHandlersStates = {
 
 export type NotesModificationBuffer = {
   notesSelected: TrackNoteEvent[]
+  initY: number
   initX: number
 }
 
@@ -37,6 +38,7 @@ export default function usePianoRollMouseHandlers() {
 
   const [notesModificationBuffer, setNotesModificationBuffer] = useState<NotesModificationBuffer>({
     notesSelected: [],
+    initY: 0,
     initX: 0,
   })
 
@@ -54,10 +56,6 @@ export default function usePianoRollMouseHandlers() {
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesTrimming);
       } else if (pianoRollStore.isNoteRightMarginClicked(noteClicked!, event.nativeEvent.offsetX, event.nativeEvent.offsetY)) {
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesExtending);
-        setNotesModificationBuffer({
-          notesSelected: getSelectedNotes(pianoRollStore.pianoRollNotes),
-          initX: event.nativeEvent.offsetX,
-        })
       } else if (event.nativeEvent.altKey) {
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.Vibrato);
       } else {
@@ -83,10 +81,14 @@ export default function usePianoRollMouseHandlers() {
       dispatch({ type: 'moveNoteAsLatestModified', payload: { noteId: noteClicked.id } })
       setMouseHandlerModeForNote();
       setNoteSelection();
+      setNotesModificationBuffer({
+        notesSelected: getSelectedNotes(pianoRollStore.pianoRollNotes),
+        initY: event.nativeEvent.offsetY,
+        initX: event.nativeEvent.offsetX,
+      })
     } else {
       if (!event.shiftKey) {
         dispatch({ type: 'unselectAllNotes' });
-
       }
       if (event.metaKey) {
         const { ticks, noteNum } = getTickAndNoteNumFromEvent(event.nativeEvent)
@@ -106,7 +108,11 @@ export default function usePianoRollMouseHandlers() {
 
   const onPointerMove: React.PointerEventHandler = (event) => {
     console.log(`pointer move ${PianoRollLanesMouseHandlerMode[mouseHandlerMode]} ${event.nativeEvent.offsetX} ${event.nativeEvent.offsetY}`)
-    const {deltaPitch, deltaTicks, deltaY, deltaX} = calculateDeltas(event.nativeEvent)
+    // const {deltaPitch, deltaTicks, deltaY, deltaX} = calculateDeltas(event.nativeEvent)
+    const deltaY = event.nativeEvent.offsetY - notesModificationBuffer.initY
+    const deltaX = event.nativeEvent.offsetX - notesModificationBuffer.initX
+    const deltaTicks = pianoRollStore.getTickFromOffsetX(deltaX)
+    const deltaPitch = pianoRollStore.getNoteNumFromOffsetY(event.nativeEvent.offsetY) - pianoRollStore.getNoteNumFromOffsetY(notesModificationBuffer.initY)
     switch (mouseHandlerMode) {
       case PianoRollLanesMouseHandlerMode.None:
         updateCursorStyle(event.nativeEvent);
@@ -115,15 +121,19 @@ export default function usePianoRollMouseHandlers() {
         dispatch({ type: 'trimSelectedNote', payload: { deltaTicks }});
         break;
       case PianoRollLanesMouseHandlerMode.NotesExtending:
-        const tickOffset = pianoRollStore.getTickFromOffsetX(event.nativeEvent.offsetX - notesModificationBuffer.initX)
         const newNotes = notesModificationBuffer.notesSelected.map(bufferedNote => ({
           ...bufferedNote,
-          duration: Math.max(10, bufferedNote.duration + tickOffset)
+          duration: Math.max(10, bufferedNote.duration + deltaTicks)
         }))
         dispatch({ type: 'modifiedNotes', payload: { notes: newNotes }})
         break;
       case PianoRollLanesMouseHandlerMode.DragAndDrop:
-        dispatch({ type: 'shiftSelectedNote', payload: { deltaPitch, deltaTicks }});
+        const shiftedNotes = notesModificationBuffer.notesSelected.map(bufferedNote => ({
+          ...bufferedNote,
+          noteNumber: Math.min(127, Math.max(0, bufferedNote.noteNumber + deltaPitch)),
+          tick: bufferedNote.tick + deltaTicks
+        }))
+        dispatch({ type: 'modifiedNotes', payload: { notes: shiftedNotes }});
         break;
       case PianoRollLanesMouseHandlerMode.MarqueeSelection:
         // dispatch({ type: 'setSelectionRange', payload: { start: Math.min(startingPosition.x, ongoingPosition.x) / pianoRollStore.pixelsPerTick, range: Math.abs(startingPosition.x - ongoingPosition.x) / pianoRollStore.pixelsPerTick } } )
