@@ -1,30 +1,54 @@
-# React + TypeScript + Vite
+# ReactPianoRoll
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a component library for pianoroll in React. Functionalities included:
 
-Currently, two official plugins are available:
+- Note creation, dragging and deletion
+- Multiple notes selection
+- Copying, cutting, pasting
+- Undo, redo
+- Zooming
+- Scrolling
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Examples
 
-## Expanding the ESLint configuration
+`import Pianoroll, { PianorollProvider } from 'react-piano-roll';`
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Wrap your component with `<PianorollProvider />` and then use `<Pianoroll />` inside it.
 
-- Configure the top-level `parserOptions` property like this:
+Inside main.js:
+```
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.tsx'
+import './index.css'
+import { PianoRollProvider } from "react-piano-roll";
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <PianorollProvider>
+      <App />
+    </PianorollProvider>
+  </React.StrictMode>
+  ,
+)
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Inside App.tsx:
+```
+import PianoRoll from "react-piano-roll";
+
+function App() {
+  return (
+    <>
+      <PianoRoll />
+    <>
+  )
+}
+
+export default App
+``````
+
+Multiple hooks are provided to access the state of the pianoroll. A breif description of each hook is provided below. For more details, please refer to the source code.
+
+`usePianorollNotes()` returns the notes in the pianoroll.
+

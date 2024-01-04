@@ -46,6 +46,7 @@ export default function PianoRoll({
     const containerHeight = containerRef.current?.offsetHeight
     const c4KeyElement = document.querySelector('[data-keynum="60"]') as HTMLDivElement;
     const c4KeyTop = c4KeyElement.getBoundingClientRect().top;
+
     // Thanks to strict mode rendering twice, we need to prevent the second scrolling which reset it to top
     if (c4KeyTop > 300) {
       containerRef.current?.scroll(0, c4KeyTop - containerHeight! / 2);
@@ -54,7 +55,6 @@ export default function PianoRoll({
 
   return (
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
-
       <div className={styles['container']}
         ref={containerRef}
         style={{
