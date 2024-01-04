@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { usePianoRollNotes } from "../../helpers/notes";
 import useStore from "../../hooks/useStore";
 import styles from './index.module.scss'
+import LaneGrids from "../LaneGrids";
 
 export default function VelocityEditor() {
   const { pianoRollStore } = useStore();
@@ -48,14 +49,19 @@ export default function VelocityEditor() {
       />
       <div className={styles['note-bar-container']}>
       {pianoRollNotes.map(note =>
-        <div className={styles['note-bar']}
+        <div className={styles['marker-container']}
           style={{
-            '--note-bar-left': `${pianoRollStore.getOffsetXFromTick(note.tick)}px`,
-            '--note-bar-height': `${note.velocity / 128}`,
+            '--marker-left': `${pianoRollStore.getOffsetXFromTick(note.tick)}px`,
+            '--marker-top': `${note.velocity / 128}`,
+            '--marker-width': `${pianoRollStore.getOffsetXFromTick(note.duration)}px`,
           } as React.CSSProperties}
-        />
+        >
+          <div className={styles['velocity-marker']} />
+          <div className={styles['length-marker']} />
+        </div>
       )}
       </div>
+      <LaneGrids />
     </div>
   )
 }

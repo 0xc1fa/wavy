@@ -5,18 +5,32 @@
   bottom: 0;
   width: 100%;
   height: var(--container-height);
-  background-color: #333333;
+  background-color: #232323;
 }
 
-.note-bar {
+.marker-container {
   position: absolute;
+  left: var(--marker-left);
+  top: calc((var(--container-height) - var(--resize-bar-height)) * var(--marker-top));
+  width: var(--marker-width);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.velocity-marker {
   width: 8px;
-  left: var(--note-bar-left);
-  height: calc((var(--container-height) - var(--resize-bar-height)) * var(--note-bar-height));
-  bottom: 0;
-  background-color: aquamarine;
-  border-radius: 2px 2px 0 0;
+  aspect-ratio: 1;
+  border: 2px solid aquamarine;
+  border-radius: 50%;
   box-sizing: border-box;
+}
+
+.length-marker {
+  width: 100%;
+  height: 2px;
+  background-color: aquamarine;
+  flex: 1 1 auto;
 }
 
 .note-bar-container {
@@ -29,5 +43,5 @@
   box-sizing: border-box;
   z-index: 30;
   height: var(--resize-bar-height);
-  background-color: white;
+  background-color: #191919;
 }
