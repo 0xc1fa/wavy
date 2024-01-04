@@ -1,11 +1,35 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
+import { getEndingTickFromNotes, getSelectedNotes, getStartingTickFromNotes, usePianoRollNotes } from "../helpers/notes";
+
+type SelectionRegion = {
+  start: number,
+  width: number,
+}
 
 type Clipboard = {
-  notes: TrackNoteEvent[]
-  region: { start: number, end: number }
+  notes: TrackNoteEvent[],
+  selectionRegion: SelectionRegion,
+}
+
+type ClipboardAction =
+  | { type: 'setNote', payload: { notes: TrackNoteEvent[] } }
+
+function clipboardReducer(state: Clipboard, action: ClipboardAction) {
+  switch (action.type) {
+    case 'setNote':
+      return {
+        notes: action.payload.notes,
+        selectionRegion: {
+          start: getStartingTickFromNotes(action.payload.notes),
+          width: getEndingTickFromNotes(action.payload.notes) - getStartingTickFromNotes(action.payload.notes)
+        }
+      }
+    default:
+      throw new Error('Invalid action type');
+  }
 }
 
 export default function usePianoRollKeyboardHandlers(
@@ -14,37 +38,10 @@ export default function usePianoRollKeyboardHandlers(
 
   const dispatch = usePianoRollDispatch()
   const { pianoRollStore } = useStore();
-  const [clipboard, setClipboard] = useState<Clipboard>({ notes: [], region: { start: 0, end: 0 } });
+  const pianoRollNotes = usePianoRollNotes()
+  const [clipboard, clipboardDispatch] = useReducer(clipboardReducer, { notes: [], selectionRegion: { start: 0, width: 0 } })
+
   let spaceDown = useRef(false)
-
-  let intervalRef = useRef<NodeJS.Timeout>();
-
-  // const calculateInterval = () => ((1 / pianoRollStore.tickPerBeat) /pianoRollStore.bpm) * 600000
-
-  const calculateInterval = () => 1
-
-  useEffect(() => {
-    if (pianoRollStore.isPlaying) {
-
-      const tickInterval = calculateInterval();
-      intervalRef.current = setInterval(() => {
-        console.log(pianoRollStore.currentTicks)
-        dispatch({ type: 'incrementTicksByOne' })
-      }, tickInterval);
-    } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = undefined;
-      }
-    }
-
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [pianoRollStore.isPlaying, pianoRollStore.bpm, pianoRollStore.tickPerBeat]);
 
   const onKeyDown: React.KeyboardEventHandler = (event) => {
     console.log(event)
@@ -58,7 +55,6 @@ export default function usePianoRollKeyboardHandlers(
         case "KeyX": onCut(event); break;
         case "KeyC": onCopy(event); break;
         case "KeyV": onPaste(event); break;
-
       }
     }
   }
@@ -72,6 +68,8 @@ export default function usePianoRollKeyboardHandlers(
   const onDeleteDown = (event: React.KeyboardEvent) => {
     // event.preventDefault()
     // event.stopPropagation()
+    // event.currentTarget.
+    dispatch({ type: 'deleteSelectedNotes' })
   }
 
   const onSpaceDown = (event: React.KeyboardEvent) => {
@@ -84,10 +82,10 @@ export default function usePianoRollKeyboardHandlers(
     console.log('copying...')
     event.preventDefault();
     event.stopPropagation();
-    const selectedNotes = pianoRollStore.pianoRollNotes.filter(note => note.isSelected);
-    if (selectedNotes.length > 0) {
 
-      // setClipboard(selectedNotes)
+    const selectedNotes = getSelectedNotes(pianoRollNotes)
+    if (selectedNotes.length > 0) {
+      clipboardDispatch({ type: 'setNote', payload: { notes: selectedNotes } })
     }
   }
 
@@ -95,10 +93,10 @@ export default function usePianoRollKeyboardHandlers(
     console.log('copying...')
     event.preventDefault();
     event.stopPropagation();
-    const selectedNotes = pianoRollStore.pianoRollNotes.filter(note => note.isSelected);
+    const selectedNotes = getSelectedNotes(pianoRollNotes)
 
     if (selectedNotes.length > 0) {
-
+      clipboardDispatch({ type: 'setNote', payload: { notes: selectedNotes } })
     }
     dispatch({ type: 'deleteSelectedNotes' })
   }
@@ -107,9 +105,18 @@ export default function usePianoRollKeyboardHandlers(
     console.log('copying...')
     event.preventDefault();
     event.stopPropagation();
+
+    if (clipboard.notes.length === 0) {
+      return;
+    }
+    const shiftedNotes = clipboard.notes
+      .map(note => ({
+        ...note,
+        tick: pianoRollStore.selectionTicks + (note.tick - clipboard.selectionRegion.start)
+      }))
+    dispatch({ type: 'unselectAllNotes' })
+    dispatch({ type: 'addNotes', payload: { notes: shiftedNotes } })
   }
-
-
 
   return {
     onKeyDown,

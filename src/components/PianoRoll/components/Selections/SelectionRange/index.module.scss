@@ -1,10 +1,10 @@
-.selection {
+.selection--range {
   --marker-color: #ffffff22;
   position: absolute;
-  border-left: 1px solid var(--marker-color);
   height: var(--canvas-height);
+  border-left: 1px solid var(--marker-color);
   left: var(--left-marker-position);
   border-right: 1px solid var(--marker-color);
   background-color: #ffffff09;
-  width: var(--selection-width);
+  width: var(--range-width);
 }

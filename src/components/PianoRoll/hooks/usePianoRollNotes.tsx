@@ -1,14 +1,14 @@
-import { useContext, useMemo } from "react";
-import { PianoRollStoreContext } from "../store/pianoRollStore";
+// import { useContext, useMemo } from "react";
+// import { PianoRollStoreContext } from "../store/pianoRollStore";
 
-export function usePianoRollNotes() {
-  const context = useContext(PianoRollStoreContext);
+// export function usePianoRollNotes() {
+//   const context = useContext(PianoRollStoreContext);
 
-  if (!context) {
-    throw new Error("usePianoRollNotes must be used within a PianoRollStoreProvider");
-  }
+//   if (!context) {
+//     throw new Error("usePianoRollNotes must be used within a PianoRollStoreProvider");
+//   }
 
-  const { pianoRollStore } = context;
+//   const { pianoRollStore } = context;
 
-  return useMemo(() => pianoRollStore.pianoRollNotes, [pianoRollStore.pianoRollNotes]);
-}
+//   return useMemo(() => pianoRollStore.pianoRollNotes, [pianoRollStore.pianoRollNotes]);
+// }

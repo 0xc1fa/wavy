@@ -4,7 +4,7 @@ import PianoRollThemeContext  from "../contexts/piano-roll-theme-context";
 import styles from "./index.module.scss";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import usePianoRollMouseHandlers from "../handlers/usePianoRollMouseHandlers";
-import SelectionArea from "./SelectionArea";
+import SelectionArea from "./SelectionMarquee";
 import LanesBackground from "./LanesBackground";
 import useStore from "../hooks/useStore";
 import PianoKeyboard from "./PianoKeyboard";
@@ -13,10 +13,10 @@ import Ruler from "./Ruler";
 import Notes from "./Notes";
 import Playhead from "./Playhead";
 import usePianoRollKeyboardHandlers from "../handlers/usePianoRollKeyboardHandlers";
-import PositionMarker from "./SelectionMarker";
 import TempoInfo from "./TempoInfo";
 import usePianoRollClipboardHandlers from "../handlers/usePianoRollClipboardHandlers";
 import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
+import Selections from "./Selections";
 
 interface PianoRollProps extends React.HTMLAttributes<HTMLDivElement> {
   notes: TrackNoteEvent[];
@@ -46,7 +46,6 @@ export default function PianoRoll({
           '--canvas-height': `${pianoRollStore.canvasHeight}px`,
         } as React.CSSProperties }
         tabIndex={0}
-        // onBlur={() => dispatch({ type: 'unsetSelectionRange' })}
       >
         <div className={styles['upper-container']}>
           <TempoInfo />
@@ -59,10 +58,9 @@ export default function PianoRoll({
             {...pianoRollKeyboardHandlers}
           >
             <LaneGrids />
+            <Selections />
             <Notes lyric={lyric} />
-
             <SelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
-            <PositionMarker />
             <Playhead />
             <div style={{ position:'absolute', inset: '0', width: '100%', height: '100%' }} />
             <LanesBackground />

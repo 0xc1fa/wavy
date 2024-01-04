@@ -19,7 +19,8 @@ export function PianoRollStoreProvider({ children }: PianoRollStoreProviderProps
 }
 
 type PianoRollStoreAction =
-  | { type: 'addNote', payload: { ticks: number, noteNum: number} }
+  | { type: 'addNote', payload: { ticks: number, noteNum: number } }
+  | { type: 'addNotes', payload: { notes: TrackNoteEvent[] } }
   | { type: 'unselectAllNotes' }
   | { type: 'setNoteAsSelected', payload: { noteId: string } }
   | { type: 'toggleSelectedNoteVibratoMode' }
@@ -42,9 +43,6 @@ type PianoRollStoreAction =
   | { type: 'stop' }
   | { type: 'setSelectionTicks', payload: { ticks: number } }
   | { type: 'setBpm', payload: { bpm: number } }
-  // | { type: 'setSelectionPoint', payload: { start: number }}
-  // | { type: 'setSelectionRange', payload: { start: number, range: number }  }
-  // | { type: 'unsetSelectionRange' }
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   function createNote(ticks: number, noteNum: number): TrackNoteEvent {
@@ -68,6 +66,14 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
     case 'addNote':
       const newNote = createNote(action.payload.ticks, action.payload.noteNum)
       return {...state, pianoRollNotes: [...state.pianoRollNotes, newNote]}
+    case 'addNotes':
+      return {
+        ...state,
+        pianoRollNotes: [
+          ...state.pianoRollNotes,
+          ...action.payload.notes.map(note => ({...note, id: uuidv4()}))
+        ]
+      }
     case 'unselectAllNotes':
       return {...state, pianoRollNotes: state.pianoRollNotes.map(note => ({...note, isSelected: false}))}
     case 'setNoteAsSelected':
@@ -232,21 +238,6 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
         ...state,
         bpm: action.payload.bpm
       }
-    // case 'setSelectionRange':
-    //   return {
-    //     ...state,
-    //     selectionRange: { mode: 'range', start: action.payload.start, range: action.payload.range }
-    //   }
-    // case 'setSelectionPoint':
-    //   return {
-    //     ...state,
-    //     selectionRange: { mode: 'point', start: action.payload.start, range: 0 }
-    //   }
-    // case 'unsetSelectionRange':
-    //   return {
-    //     ...state,
-    //     selectionRange: { mode: 'none', start: 0, range: 0 }
-    //   }
     default:
       throw new Error();
   }
@@ -303,7 +294,6 @@ function defaultPianoRollStore() {
     isPlaying: false,
     currentTicks: 0,
     selectionTicks: 460,
-    selectionRange: { mode: 'range', start: 300, range: 400 },
 
     get canvasWidth() {
       return this.laneLength * this.pianoLaneScaleX;

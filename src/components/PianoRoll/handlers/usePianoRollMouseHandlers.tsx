@@ -81,7 +81,7 @@ export default function usePianoRollMouseHandlers() {
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
       } else {
         const selectionTicks = pianoRollStore.getTickFromOffsetX(event.nativeEvent.offsetX)
-        // dispatch({ type: 'setSelectionTicks', payload: { ticks: selectionTicks } })
+        dispatch({ type: 'setSelectionTicks', payload: { ticks: selectionTicks } })
         // dispatch({ type: 'setSelectionPoint', payload: { start: event.nativeEvent.offsetX / pianoRollStore.pixelsPerTick } })
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.MarqueeSelection);
       }
