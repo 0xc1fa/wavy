@@ -42,9 +42,9 @@ type PianoRollStoreAction =
   | { type: 'stop' }
   | { type: 'setSelectionTicks', payload: { ticks: number } }
   | { type: 'setBpm', payload: { bpm: number } }
-  | { type: 'setSelectionPoint', payload: { start: number }}
-  | { type: 'setSelectionRange', payload: { start: number, range: number }  }
-  | { type: 'unsetSelectionRange' }
+  // | { type: 'setSelectionPoint', payload: { start: number }}
+  // | { type: 'setSelectionRange', payload: { start: number, range: number }  }
+  // | { type: 'unsetSelectionRange' }
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   function createNote(ticks: number, noteNum: number): TrackNoteEvent {
@@ -232,21 +232,21 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
         ...state,
         bpm: action.payload.bpm
       }
-    case 'setSelectionRange':
-      return {
-        ...state,
-        selectionRange: { mode: 'range', start: action.payload.start, range: action.payload.range }
-      }
-    case 'setSelectionPoint':
-      return {
-        ...state,
-        selectionRange: { mode: 'point', start: action.payload.start, range: 0 }
-      }
-    case 'unsetSelectionRange':
-      return {
-        ...state,
-        selectionRange: { mode: 'none', start: 0, range: 0 }
-      }
+    // case 'setSelectionRange':
+    //   return {
+    //     ...state,
+    //     selectionRange: { mode: 'range', start: action.payload.start, range: action.payload.range }
+    //   }
+    // case 'setSelectionPoint':
+    //   return {
+    //     ...state,
+    //     selectionRange: { mode: 'point', start: action.payload.start, range: 0 }
+    //   }
+    // case 'unsetSelectionRange':
+    //   return {
+    //     ...state,
+    //     selectionRange: { mode: 'none', start: 0, range: 0 }
+    //   }
     default:
       throw new Error();
   }

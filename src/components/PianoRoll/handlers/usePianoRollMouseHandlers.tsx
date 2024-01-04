@@ -72,15 +72,17 @@ export default function usePianoRollMouseHandlers() {
     } else {
       if (!event.shiftKey) {
         dispatch({ type: 'unselectAllNotes' });
-        dispatch({ type: 'setSelectionPoint', payload: { start: event.nativeEvent.offsetX / pianoRollStore.pixelsPerTick } })
+
       }
       if (event.metaKey) {
         const { ticks, noteNum } = getTickAndNoteNumFromEvent(event.nativeEvent)
         dispatch({ type: 'addNote', payload: { ticks, noteNum }})
+        // dispatch({ type: 'unsetSelectionRange' })
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
       } else {
         const selectionTicks = pianoRollStore.getTickFromOffsetX(event.nativeEvent.offsetX)
-        dispatch({ type: 'setSelectionTicks', payload: { ticks: selectionTicks } })
+        // dispatch({ type: 'setSelectionTicks', payload: { ticks: selectionTicks } })
+        // dispatch({ type: 'setSelectionPoint', payload: { start: event.nativeEvent.offsetX / pianoRollStore.pixelsPerTick } })
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.MarqueeSelection);
       }
     }
@@ -105,7 +107,7 @@ export default function usePianoRollMouseHandlers() {
         dispatch({ type: 'shiftSelectedNote', payload: { deltaPitch, deltaTicks }});
         break;
       case PianoRollLanesMouseHandlerMode.MarqueeSelection:
-        dispatch({ type: 'setSelectionRange', payload: { start: Math.min(startingPosition.x, ongoingPosition.x) / pianoRollStore.pixelsPerTick, range: Math.abs(startingPosition.x - ongoingPosition.x) / pianoRollStore.pixelsPerTick } } )
+        // dispatch({ type: 'setSelectionRange', payload: { start: Math.min(startingPosition.x, ongoingPosition.x) / pianoRollStore.pixelsPerTick, range: Math.abs(startingPosition.x - ongoingPosition.x) / pianoRollStore.pixelsPerTick } } )
         break;
       case PianoRollLanesMouseHandlerMode.Vibrato:
         event.shiftKey ?

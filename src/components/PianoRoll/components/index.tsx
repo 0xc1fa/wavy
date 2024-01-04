@@ -13,7 +13,7 @@ import Ruler from "./Ruler";
 import Notes from "./Notes";
 import Playhead from "./Playhead";
 import usePianoRollKeyboardHandlers from "../handlers/usePianoRollKeyboardHandlers";
-import PositionMarker from "./PositionMarker";
+import PositionMarker from "./SelectionMarker";
 import TempoInfo from "./TempoInfo";
 import usePianoRollClipboardHandlers from "../handlers/usePianoRollClipboardHandlers";
 import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
@@ -46,7 +46,7 @@ export default function PianoRoll({
           '--canvas-height': `${pianoRollStore.canvasHeight}px`,
         } as React.CSSProperties }
         tabIndex={0}
-        onBlur={() => dispatch({ type: 'unsetSelectionRange' })}
+        // onBlur={() => dispatch({ type: 'unsetSelectionRange' })}
       >
         <div className={styles['upper-container']}>
           <TempoInfo />

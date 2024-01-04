@@ -4,12 +4,6 @@
   border-left: 1px solid var(--marker-color);
   height: var(--canvas-height);
   left: var(--left-marker-position);
-}
-
-.selection--point {
-}
-
-.selection--range {
   border-right: 1px solid var(--marker-color);
   background-color: #ffffff09;
   width: var(--selection-width);
