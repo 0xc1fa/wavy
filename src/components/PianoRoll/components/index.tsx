@@ -16,6 +16,7 @@ import usePianoRollKeyboardHandlers from "../handlers/usePianoRollKeyboardHandle
 import PositionMarker from "./PositionMarker";
 import TempoInfo from "./TempoInfo";
 import usePianoRollClipboardHandlers from "../handlers/usePianoRollClipboardHandlers";
+import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 
 interface PianoRollProps extends React.HTMLAttributes<HTMLDivElement> {
   notes: TrackNoteEvent[];
@@ -34,6 +35,7 @@ export default function PianoRoll({
   const { pianoRollStore } = useStore()
 
   usePreventZoom();
+  const dispatch = usePianoRollDispatch();
 
   return (
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
@@ -44,6 +46,7 @@ export default function PianoRoll({
           '--canvas-height': `${pianoRollStore.canvasHeight}px`,
         } as React.CSSProperties }
         tabIndex={0}
+        onBlur={() => dispatch({ type: 'unsetSelectionRange' })}
       >
         <div className={styles['upper-container']}>
           <TempoInfo />

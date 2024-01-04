@@ -44,7 +44,7 @@ type PianoRollStoreAction =
   | { type: 'setBpm', payload: { bpm: number } }
   | { type: 'setSelectionPoint', payload: { start: number }}
   | { type: 'setSelectionRange', payload: { start: number, range: number }  }
-  | { type: 'inactiveSelectionRange' }
+  | { type: 'unsetSelectionRange' }
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   function createNote(ticks: number, noteNum: number): TrackNoteEvent {
@@ -242,7 +242,7 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
         ...state,
         selectionRange: { mode: 'point', start: action.payload.start, range: 0 }
       }
-    case 'inactiveSelectionRange':
+    case 'unsetSelectionRange':
       return {
         ...state,
         selectionRange: { mode: 'none', start: 0, range: 0 }
