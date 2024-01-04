@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { focusNote, getSelectedNotes } from "../helpers/notes";
 import { usePianoRollTransform } from "../hooks/usePianoRollTransform";
 import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
@@ -31,16 +31,26 @@ export default function usePianoRollMouseHandlers() {
   const { pianoRollStore } = useStore();
   const transform = usePianoRollTransform()
   const dispatch = usePianoRollDispatch()
+  // const shouldUpdateBuffer = useRef(false);
+
+  // useEffect(() => {
+  //   if (!shouldUpdateBuffer) {
+  //     return;
+  //   }
+
+
+
+  // }, [pianoRollStore.pianoRollNotes])
 
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None)
   const [startingPosition, setStartingPosition] = useState({x: 0, y: 0})
   const [ongoingPosition, setOngoingPosition] = useState({x: 0, y: 0})
 
-  const [notesModificationBuffer, setNotesModificationBuffer] = useState<NotesModificationBuffer>({
-    notesSelected: [],
-    initY: 0,
-    initX: 0,
-  })
+  // const [notesModificationBuffer, setNotesModificationBuffer] = useState<NotesModificationBuffer>({
+  //   notesSelected: [],
+  //   initY: 0,
+  //   initX: 0,
+  // })
 
   const getTickAndNoteNumFromEvent = (e: PointerEvent) => {
     const noteNum = pianoRollStore.getNoteNumFromEvent(e);
@@ -81,11 +91,9 @@ export default function usePianoRollMouseHandlers() {
       dispatch({ type: 'moveNoteAsLatestModified', payload: { noteId: noteClicked.id } })
       setMouseHandlerModeForNote();
       setNoteSelection();
-      setNotesModificationBuffer({
-        notesSelected: getSelectedNotes(pianoRollStore.pianoRollNotes),
-        initY: event.nativeEvent.offsetY,
-        initX: event.nativeEvent.offsetX,
-      })
+      dispatch({ type: 'setNoteModificationBuffer', payload: { initX: event.nativeEvent.offsetX, initY: event.nativeEvent.offsetY}})
+
+
     } else {
       if (!event.shiftKey) {
         dispatch({ type: 'unselectAllNotes' });
@@ -109,16 +117,17 @@ export default function usePianoRollMouseHandlers() {
   const onPointerMove: React.PointerEventHandler = (event) => {
     console.log(`pointer move ${PianoRollLanesMouseHandlerMode[mouseHandlerMode]} ${event.nativeEvent.offsetX} ${event.nativeEvent.offsetY}`)
     // const {deltaPitch, deltaTicks, deltaY, deltaX} = calculateDeltas(event.nativeEvent)
-    const deltaY = event.nativeEvent.offsetY - notesModificationBuffer.initY
-    const deltaX = event.nativeEvent.offsetX - notesModificationBuffer.initX
+    const deltaY = event.nativeEvent.offsetY - pianoRollStore.noteModificationBuffer.initY
+    const deltaX = event.nativeEvent.offsetX - pianoRollStore.noteModificationBuffer.initX
     const deltaTicks = pianoRollStore.getTickFromOffsetX(deltaX)
-    const deltaPitch = pianoRollStore.getNoteNumFromOffsetY(event.nativeEvent.offsetY) - pianoRollStore.getNoteNumFromOffsetY(notesModificationBuffer.initY)
+    const deltaPitch = pianoRollStore.getNoteNumFromOffsetY(event.nativeEvent.offsetY) - pianoRollStore.getNoteNumFromOffsetY(pianoRollStore.noteModificationBuffer.initY)
     switch (mouseHandlerMode) {
       case PianoRollLanesMouseHandlerMode.None:
         updateCursorStyle(event.nativeEvent);
         break;
       case PianoRollLanesMouseHandlerMode.NotesTrimming: {
-        const newNotes = notesModificationBuffer.notesSelected.map(bufferedNote => ({
+        // const setNOtes = pianoRollStore.noteModificationBuffer.notesSelected.map
+        const newNotes = pianoRollStore.noteModificationBuffer.notesSelected.map(bufferedNote => ({
           ...bufferedNote,
           tick: bufferedNote.tick + deltaTicks,
           duration: Math.max(10, bufferedNote.duration - deltaTicks)
@@ -127,7 +136,7 @@ export default function usePianoRollMouseHandlers() {
         break;
       }
       case PianoRollLanesMouseHandlerMode.NotesExtending: {
-        const newNotes = notesModificationBuffer.notesSelected.map(bufferedNote => ({
+        const newNotes = pianoRollStore.noteModificationBuffer.notesSelected.map(bufferedNote => ({
           ...bufferedNote,
           duration: Math.max(10, bufferedNote.duration + deltaTicks)
         }))
@@ -135,7 +144,7 @@ export default function usePianoRollMouseHandlers() {
         break;
       }
       case PianoRollLanesMouseHandlerMode.DragAndDrop: {
-        const newNotes = notesModificationBuffer.notesSelected.map(bufferedNote => ({
+        const newNotes = pianoRollStore.noteModificationBuffer.notesSelected.map(bufferedNote => ({
           ...bufferedNote,
           noteNumber: Math.min(127, Math.max(0, bufferedNote.noteNumber + deltaPitch)),
           tick: bufferedNote.tick + deltaTicks

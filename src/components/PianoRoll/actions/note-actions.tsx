@@ -15,6 +15,7 @@ export type NoteAction =
   | UpdateNoteLyricAction
   | MoveNoteAsLatestModifiedAction
   | DeleteSelectedNotesAction
+  | setNoteModificationBufferAction
 
 
 function createNote(state: PianoRollStore, ticks: number, noteNum: number): TrackNoteEvent {
@@ -198,5 +199,21 @@ export function deleteSelectedNotes(state: PianoRollStore, action: DeleteSelecte
   return {
     ...state,
     pianoRollNotes: state.pianoRollNotes.filter(note => !note.isSelected)
+  }
+}
+
+
+type setNoteModificationBufferAction = {
+  type: 'setNoteModificationBuffer'
+  payload: { initX: number,  initY: number }
+}
+export function setNoteModificationBuffer(state: PianoRollStore, action: setNoteModificationBufferAction) {
+  return {
+    ...state,
+    noteModificationBuffer: {
+      notesSelected: state.pianoRollNotes.filter(note => note.isSelected),
+      initX: action.payload.initX,
+      initY: action.payload.initY,
+    }
   }
 }

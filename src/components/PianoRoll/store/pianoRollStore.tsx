@@ -3,7 +3,7 @@ import { VibratoMode } from "@/types/VibratoMode";
 import { isBlackKey } from "../helpers";
 import { v4 as uuidv4 } from 'uuid';
 import { createContext, useReducer } from "react";
-import { NoteAction, addNote, addNotes, deleteSelectedNotes, modifiedNotes, moveNoteAsLatestModified, setNoteInMarqueeAsSelected, toggleSelectedNoteVibratoMode, updateNoteLyric, vibratoDepthDelayChangeSelectedNote, vibratoRateChangeSelectedNote } from "../actions/note-actions";
+import { NoteAction, addNote, addNotes, deleteSelectedNotes, modifiedNotes, moveNoteAsLatestModified, setNoteInMarqueeAsSelected, setNoteModificationBuffer, toggleSelectedNoteVibratoMode, updateNoteLyric, vibratoDepthDelayChangeSelectedNote, vibratoRateChangeSelectedNote } from "../actions/note-actions";
 import { TransformAction, setPianoLaneScaleX } from "../actions/transform-actions";
 import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
 
@@ -39,6 +39,7 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
     case 'setPianoLaneScaleX': return setPianoLaneScaleX(state, action);
     case 'setSelectionTicks': return setSelectionTicks(state, action);
     case 'deleteSelectedNotes': return deleteSelectedNotes(state, action);
+    case 'setNoteModificationBuffer': return setNoteModificationBuffer(state, action)
     case 'setBpm':
       return {
         ...state,
@@ -73,6 +74,17 @@ function defaultPianoRollStore() {
     keySelected: new Array(),
     pianoRollNotes: new Array<TrackNoteEvent>(),
     pitchBendEvent: new Array(),
+    noteModificationBuffer: {
+      notesSelected: new Array<TrackNoteEvent>(),
+      initX: 0,
+      initY: 0,
+    },
+
+    // setNotesModificationBuffer({
+    //   notesSelected: getSelectedNotes(pianoRollStore.pianoRollNotes),
+    //   initY: event.nativeEvent.offsetY,
+    //   initX: event.nativeEvent.offsetX,
+    // })
 
     bpm: 120,
 
