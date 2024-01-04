@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { focusNote } from "../helpers/notes";
+import { focusNote, getSelectedNotes } from "../helpers/notes";
 import { usePianoRollTransform } from "../hooks/usePianoRollTransform";
 import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import useStore from "../hooks/useStore";
+import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 
 export enum PianoRollLanesMouseHandlerMode {
   DragAndDrop,
@@ -17,7 +18,11 @@ export type PianoRollMouseHandlersStates = {
   mouseHandlerMode: PianoRollLanesMouseHandlerMode
   startingPosition: {x: number, y: number}
   ongoingPosition: {x: number, y: number}
-  // selectionRange: { start: number, end: number }
+}
+
+export type NotesModificationBuffer = {
+  notesSelected: TrackNoteEvent[]
+  initX: number
 }
 
 export default function usePianoRollMouseHandlers() {
@@ -29,6 +34,11 @@ export default function usePianoRollMouseHandlers() {
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None)
   const [startingPosition, setStartingPosition] = useState({x: 0, y: 0})
   const [ongoingPosition, setOngoingPosition] = useState({x: 0, y: 0})
+
+  const [notesModificationBuffer, setNotesModificationBuffer] = useState<NotesModificationBuffer>({
+    notesSelected: [],
+    initX: 0,
+  })
 
   const getTickAndNoteNumFromEvent = (e: PointerEvent) => {
     const noteNum = pianoRollStore.getNoteNumFromEvent(e);
@@ -44,6 +54,10 @@ export default function usePianoRollMouseHandlers() {
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesTrimming);
       } else if (pianoRollStore.isNoteRightMarginClicked(noteClicked!, event.nativeEvent.offsetX, event.nativeEvent.offsetY)) {
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesExtending);
+        setNotesModificationBuffer({
+          notesSelected: getSelectedNotes(pianoRollStore.pianoRollNotes),
+          initX: event.nativeEvent.offsetX,
+        })
       } else if (event.nativeEvent.altKey) {
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.Vibrato);
       } else {
@@ -101,7 +115,12 @@ export default function usePianoRollMouseHandlers() {
         dispatch({ type: 'trimSelectedNote', payload: { deltaTicks }});
         break;
       case PianoRollLanesMouseHandlerMode.NotesExtending:
-        dispatch({ type: 'extendSelectedNote', payload: { deltaTicks }});
+        const tickOffset = pianoRollStore.getTickFromOffsetX(event.nativeEvent.offsetX - notesModificationBuffer.initX)
+        const newNotes = notesModificationBuffer.notesSelected.map(bufferedNote => ({
+          ...bufferedNote,
+          duration: Math.max(10, bufferedNote.duration + tickOffset)
+        }))
+        dispatch({ type: 'modifiedNotes', payload: { notes: newNotes }})
         break;
       case PianoRollLanesMouseHandlerMode.DragAndDrop:
         dispatch({ type: 'shiftSelectedNote', payload: { deltaPitch, deltaTicks }});

@@ -3,6 +3,9 @@ import { VibratoMode } from "@/types/VibratoMode";
 import { isBlackKey } from "../helpers";
 import { v4 as uuidv4 } from 'uuid';
 import { createContext, useReducer } from "react";
+import { NoteAction, addNote, addNotes, deleteSelectedNotes, extendSelectedNote, modifiedNotes, moveNoteAsLatestModified, setNoteInMarqueeAsSelected, shiftSelectedNote, toggleSelectedNoteVibratoMode, trimSelectedNote, updateNoteLyric, vibratoDepthDelayChangeSelectedNote, vibratoRateChangeSelectedNote } from "../actions/note-actions";
+import { TransformAction, setPianoLaneScaleX } from "../actions/transform-actions";
+import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
 
 export const PianoRollStoreContext = createContext<ReturnType<typeof usePianoRollStore> | undefined>(undefined)
 
@@ -18,221 +21,27 @@ export function PianoRollStoreProvider({ children }: PianoRollStoreProviderProps
   )
 }
 
-type PianoRollStoreAction =
-  | { type: 'addNote', payload: { ticks: number, noteNum: number } }
-  | { type: 'addNotes', payload: { notes: TrackNoteEvent[] } }
-  | { type: 'unselectAllNotes' }
-  | { type: 'setNoteAsSelected', payload: { noteId: string } }
-  | { type: 'toggleSelectedNoteVibratoMode' }
-  | { type: 'trimSelectedNote', payload: { deltaTicks: number } }
-  | { type: 'extendSelectedNote', payload: { deltaTicks: number } }
-  | { type: 'shiftSelectedNote', payload: { deltaPitch: number, deltaTicks: number } }
-  | { type: 'vibratoDepthDelayChangeSelectedNote', payload: { depthOffset: number, delayOffset: number } }
-  | { type: 'vibratoRateChangeSelectedNote', payload: { rateOffset: number } }
-  | { type: 'setNoteInMarqueeAsSelected', payload: {
-    startingPosition: {x: number, y: number},
-    ongoingPosition: {x: number, y: number},
-  }}
-  | { type: 'updateNoteLyric', payload: { noteId: string, lyric: string } }
-  | { type: 'moveNoteAsLatestModified', payload: { noteId: string } }
-  | { type: 'setPianoLaneScaleX', payload: { pianoLaneScaleX: number } }
-  | { type: 'deleteSelectedNotes' }
-  | { type: 'setPlayheadTicks', payload: { ticks: number } }
-  | { type: 'incrementTicksByOne' }
-  | { type: 'play' }
-  | { type: 'stop' }
-  | { type: 'setSelectionTicks', payload: { ticks: number } }
-  | { type: 'setBpm', payload: { bpm: number } }
+type PianoRollStoreAction = NoteAction | TransformAction | SelectionAction
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
-  function createNote(ticks: number, noteNum: number): TrackNoteEvent {
-    return {
-      id: uuidv4(),
-      tick: ticks,
-      noteNumber: noteNum,
-      velocity: state.defaultVelocity,
-      lyric: state.defaultNoteLyric,
-      duration: state.defaultDuration,
-      isSelected: true,
-      isActive: true,
-      vibratoDepth: 10,
-      vibratoRate: 30,
-      vibratoDelay: state.defaultDuration * 0.3,
-      vibratoMode: VibratoMode.Normal,
-    }
-  }
-
   switch (action.type) {
-    case 'addNote':
-      const newNote = createNote(action.payload.ticks, action.payload.noteNum)
-      return {...state, pianoRollNotes: [...state.pianoRollNotes, newNote]}
-    case 'addNotes':
-      return {
-        ...state,
-        pianoRollNotes: [
-          ...state.pianoRollNotes,
-          ...action.payload.notes.map(note => ({...note, id: uuidv4()}))
-        ]
-      }
-    case 'unselectAllNotes':
-      return {...state, pianoRollNotes: state.pianoRollNotes.map(note => ({...note, isSelected: false}))}
-    case 'setNoteAsSelected':
-      return {...state, pianoRollNotes: state.pianoRollNotes.map(note => ({...note, isSelected: note.isSelected || note.id === action.payload.noteId}))}
-    case 'toggleSelectedNoteVibratoMode':
-      return {...state, pianoRollNotes: state.pianoRollNotes.map(note => ({...note, vibratoMode: note.isSelected ? (note.vibratoMode + 1) % 2 : note.vibratoMode}))}
-    case 'trimSelectedNote':
-      return {
-        ...state,
-        pianoRollNotes: state.pianoRollNotes.map(note => {
-          if (note.isSelected && (state.getOffsetXFromTick(note.duration - action.payload.deltaTicks) > 10)) {
-            return {
-              ...note,
-              tick: note.tick + action.payload.deltaTicks,
-              duration: note.duration - action.payload.deltaTicks,
-              vibratoDelay: Math.min(note.vibratoDelay, note.duration * 0.5)
-            };
-          } else {
-            return note
-          }
-        })
-      }
-    case 'extendSelectedNote':
-      return {
-        ...state,
-        pianoRollNotes: state.pianoRollNotes.map(note => {
-          if (note.isSelected && (state.getOffsetXFromTick(note.duration + action.payload.deltaTicks) > 10)) {
-            return {
-              ...note,
-              duration: note.duration + action.payload.deltaTicks,
-              vibratoDelay: Math.min(note.vibratoDelay, note.duration * 0.5)
-            };
-          } else {
-            return note
-          }
-        })
-      }
-    case 'shiftSelectedNote':
-      return {
-        ...state,
-        pianoRollNotes: state.pianoRollNotes.map(note => {
-          if (note.isSelected) {
-            return {
-              ...note,
-              noteNumber: note.noteNumber + action.payload.deltaPitch,
-              tick: note.tick + action.payload.deltaTicks,
-            };
-          } else {
-            return note
-          }
-        })
-      }
-    case 'vibratoDepthDelayChangeSelectedNote':
-      return {
-        ...state,
-        pianoRollNotes: state.pianoRollNotes.map(note => {
-          if (note.isSelected) {
-            const newVibratoDepth = note.vibratoDepth + 0.6 * action.payload.depthOffset
-            const newVibratoDelay = note.vibratoDelay - 4 * action.payload.delayOffset
-            return {
-              ...note,
-              vibratoDelay: Math.max(Math.min(newVibratoDelay, note.duration * 0.9), 0),
-              vibratoDepth: Math.min(Math.max(newVibratoDepth, 0), 200),
-            };
-          } else {
-            return note
-          }
-        })
-      }
-    case 'vibratoRateChangeSelectedNote':
-      return {
-        ...state,
-        pianoRollNotes: state.pianoRollNotes.map(note => {
-          if (note.isSelected) {
-            const newVibratoRate = note.vibratoRate - 0.15 * action.payload.rateOffset
-            // const newVibratoRate = note.vibratoRate + 1 * (this.state.ongoingPosition.x - e.offsetX);
-            console.log(`newVibratoRate: ${newVibratoRate}`);
-            return {
-              ...note,
-              // vibratoDelay: Math.max(Math.min(newVibratoDelay, note.duration * 0.9), 0),
-              vibratoRate: Math.min(Math.max(newVibratoRate, 5), 200),
-            };
-          } else {
-            return note
-          }
-        })
-      }
-    case 'setNoteInMarqueeAsSelected':
-      const [selectedMinNoteNum, selectedMaxNoteNum] = [
-        state.getNoteNumFromOffsetY(action.payload.startingPosition.y),
-          state.getNoteNumFromOffsetY(action.payload.ongoingPosition.y)].sort((a, b) => a - b)
-      const [selectedMinTick, selectedMaxTick] = [
-        state.getTickFromOffsetX(action.payload.startingPosition.x),
-        state.getTickFromOffsetX(action.payload.ongoingPosition.x)].sort((a, b) => a - b);
-      return {
-        ...state,
-        pianoRollNotes: state.pianoRollNotes.map(note => {
-          if (note.noteNumber >= selectedMinNoteNum
-            && note.noteNumber <= selectedMaxNoteNum
-            && note.tick + note.duration >= selectedMinTick
-            && note.tick <= selectedMaxTick) {
-            return { ...note, isSelected: true};
-          } else {
-            return note;
-          }
-        })
-
-      }
-    case 'updateNoteLyric':
-      return {
-        ...state,
-        pianoRollNotes: state.pianoRollNotes.map(note => {
-          if (note.id === action.payload.noteId) {
-            return { ...note, lyric: action.payload.lyric };
-          } else {
-            return note;
-          }
-        })
-      }
-    case 'moveNoteAsLatestModified':
-      return {
-        ...state,
-        pianoRollNotes: state.pianoRollNotes.filter(note => note.id !== action.payload.noteId).concat(state.pianoRollNotes.filter(note => note.id === action.payload.noteId))
-      }
-    case 'setPianoLaneScaleX':
-      return {
-        ...state,
-        pianoLaneScaleX: action.payload.pianoLaneScaleX
-      }
-    case 'setPlayheadTicks':
-      return {
-        ...state,
-        currentTicks: action.payload.ticks
-      }
-    case 'setSelectionTicks':
-      return {
-        ...state,
-        selectionTicks: action.payload.ticks
-      }
-    case 'incrementTicksByOne':
-      return {
-        ...state,
-        currentTicks: state.currentTicks + 1
-      }
-    case 'deleteSelectedNotes':
-      return {
-        ...state,
-        pianoRollNotes: state.pianoRollNotes.filter(note => !note.isSelected)
-      }
-    case 'play':
-      return {
-        ...state,
-        isPlaying: true
-      }
-    case 'stop':
-      return {
-        ...state,
-        isPlaying: false
-      }
+    case 'addNote': return addNote(state, action);
+    case 'addNotes': return addNotes(state, action);
+    case 'modifiedNotes': return modifiedNotes(state, action);
+    case 'unselectAllNotes': return unselectAllNotes(state, action);
+    case 'setNoteAsSelected': return setNoteAsSelected(state, action);
+    case 'toggleSelectedNoteVibratoMode': return toggleSelectedNoteVibratoMode(state, action);
+    case 'trimSelectedNote': return trimSelectedNote(state, action);
+    case 'extendSelectedNote': return extendSelectedNote(state, action);
+    case 'shiftSelectedNote': return shiftSelectedNote(state, action);
+    case 'vibratoDepthDelayChangeSelectedNote': return vibratoDepthDelayChangeSelectedNote(state, action);
+    case 'vibratoRateChangeSelectedNote': return vibratoRateChangeSelectedNote(state, action);
+    case 'setNoteInMarqueeAsSelected': return setNoteInMarqueeAsSelected(state, action);
+    case 'updateNoteLyric': return updateNoteLyric(state, action);
+    case 'moveNoteAsLatestModified': return moveNoteAsLatestModified(state, action);
+    case 'setPianoLaneScaleX': return setPianoLaneScaleX(state, action);
+    case 'setSelectionTicks': return setSelectionTicks(state, action);
+    case 'deleteSelectedNotes': return deleteSelectedNotes(state, action);
     case 'setBpm':
       return {
         ...state,
@@ -291,7 +100,6 @@ function defaultPianoRollStore() {
     resolution: 1,
     scrollTop: 0,
 
-    isPlaying: false,
     currentTicks: 0,
     selectionTicks: 0,
 
