@@ -78,17 +78,20 @@ export default function PianoRoll({
         </div>
         <div className={styles['lower-container']}>
           <PianoKeyboard />
-          <div className={styles['pianoroll-lane']} {...pianoRollMouseHandlers}
-            tabIndex={0}
-            {...pianoRollKeyboardHandlers}
-          >
-            <LaneGrids />
-            <Selections />
-            <Notes attachLyric={attachLyric} />
-            <SelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
-            {playheadPosition !== undefined && <Playhead playheadPosition={playheadPosition}/>}
-            <div style={{ position:'absolute', inset: '0', width: '100%', height: '100%' }} />
-            <LanesBackground />
+          <div>
+            <div className={styles['pianoroll-lane']} {...pianoRollMouseHandlers}
+              tabIndex={0}
+              {...pianoRollKeyboardHandlers}
+            >
+              <LaneGrids />
+              <Selections />
+              <Notes attachLyric={attachLyric} />
+              <SelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
+              {playheadPosition !== undefined && <Playhead playheadPosition={playheadPosition}/>}
+              <div style={{ position:'absolute', inset: '0', width: '100%', height: '100%' }} />
+              <LanesBackground />
+
+            </div>
             <VelocityEditor />
           </div>
         </div>

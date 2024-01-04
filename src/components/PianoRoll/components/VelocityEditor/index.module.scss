@@ -1,21 +1,33 @@
 .container {
+  --resize-bar-height: 3px;
+
   position: sticky;
   bottom: 0;
   width: 100%;
-  height: 200px;
-  pointer-events: none;
-  background-color: black;
+  height: var(--container-height);
+  background-color: #333333;
 }
 
 .note-bar {
   position: absolute;
-  width: 10px;
+  width: 8px;
   left: var(--note-bar-left);
-  height: var(--note-bar-height);
+  height: calc((var(--container-height) - var(--resize-bar-height)) * var(--note-bar-height));
   bottom: 0;
   background-color: aquamarine;
+  border-radius: 2px 2px 0 0;
+  box-sizing: border-box;
+}
+
+.note-bar-container {
+  height: calc(var(--container-height) - var(--resize-bar-height));
 }
 
 .resize-bar {
-  width: 1005
+  width: 100%;
+  cursor: ns-resize;
+  box-sizing: border-box;
+  z-index: 30;
+  height: var(--resize-bar-height);
+  background-color: white;
 }
