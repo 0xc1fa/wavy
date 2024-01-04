@@ -3,7 +3,7 @@ import { VibratoMode } from "@/types/VibratoMode";
 import { isBlackKey } from "../helpers";
 import { v4 as uuidv4 } from 'uuid';
 import { createContext, useReducer } from "react";
-import { NoteAction, addNote, addNotes, deleteSelectedNotes, extendSelectedNote, modifiedNotes, moveNoteAsLatestModified, setNoteInMarqueeAsSelected, shiftSelectedNote, toggleSelectedNoteVibratoMode, trimSelectedNote, updateNoteLyric, vibratoDepthDelayChangeSelectedNote, vibratoRateChangeSelectedNote } from "../actions/note-actions";
+import { NoteAction, addNote, addNotes, deleteSelectedNotes, modifiedNotes, moveNoteAsLatestModified, setNoteInMarqueeAsSelected, toggleSelectedNoteVibratoMode, updateNoteLyric, vibratoDepthDelayChangeSelectedNote, vibratoRateChangeSelectedNote } from "../actions/note-actions";
 import { TransformAction, setPianoLaneScaleX } from "../actions/transform-actions";
 import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
 
@@ -31,9 +31,6 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
     case 'unselectAllNotes': return unselectAllNotes(state, action);
     case 'setNoteAsSelected': return setNoteAsSelected(state, action);
     case 'toggleSelectedNoteVibratoMode': return toggleSelectedNoteVibratoMode(state, action);
-    case 'trimSelectedNote': return trimSelectedNote(state, action);
-    case 'extendSelectedNote': return extendSelectedNote(state, action);
-    case 'shiftSelectedNote': return shiftSelectedNote(state, action);
     case 'vibratoDepthDelayChangeSelectedNote': return vibratoDepthDelayChangeSelectedNote(state, action);
     case 'vibratoRateChangeSelectedNote': return vibratoRateChangeSelectedNote(state, action);
     case 'setNoteInMarqueeAsSelected': return setNoteInMarqueeAsSelected(state, action);

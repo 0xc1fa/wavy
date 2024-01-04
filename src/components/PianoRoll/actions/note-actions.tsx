@@ -2,15 +2,12 @@ import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import { VibratoMode } from "@/types/VibratoMode";
 import { PianoRollStore } from "../store/pianoRollStore";
 import { v4 as uuidv4 } from 'uuid';
-import { getSelectedNotes } from "../helpers/notes";
+
 
 export type NoteAction =
   | AddNoteAction
   | AddNotesAction
   | ModifiedNotesAction
-  | TrimSelectedNoteAction
-  | ExtendSelectedNoteAction
-  | ShiftSelectedNoteAction
   | ToggleSelectedNoteVibratoModeAction
   | VibratoDepthDelayChangeSelectedNoteAction
   | VibratoRateChangeSelectedNoteAction
@@ -18,7 +15,6 @@ export type NoteAction =
   | UpdateNoteLyricAction
   | MoveNoteAsLatestModifiedAction
   | DeleteSelectedNotesAction
-
 
 
 function createNote(state: PianoRollStore, ticks: number, noteNum: number): TrackNoteEvent {
@@ -89,81 +85,6 @@ export function modifiedNotes(state: PianoRollStore, action: ModifiedNotesAction
 type ToggleSelectedNoteVibratoModeAction = { type: 'toggleSelectedNoteVibratoMode' }
 export function toggleSelectedNoteVibratoMode(state: PianoRollStore, action: ToggleSelectedNoteVibratoModeAction) {
   return {...state, pianoRollNotes: state.pianoRollNotes.map(note => ({...note, vibratoMode: note.isSelected ? (note.vibratoMode + 1) % 2 : note.vibratoMode}))}
-}
-
-
-type TrimSelectedNoteAction = {
-  type: 'trimSelectedNote',
-  payload: { deltaTicks: number }
-}
-export function trimSelectedNote(state: PianoRollStore, action: TrimSelectedNoteAction) {
-  // add logic to mount note to a certain minimum duration
-
-  // const selectedNote = getSelectedNotes(state.pianoRollNotes)
-  // const modifiedSelectedNote = selectedNote.map(note => ({
-  //   ...note
-  // })
-
-  // )
-  return {
-    ...state,
-    pianoRollNotes: state.pianoRollNotes.map(note => {
-      if (note.isSelected && (state.getOffsetXFromTick(note.duration - action.payload.deltaTicks) > 10)) {
-        return {
-          ...note,
-          tick: note.tick + action.payload.deltaTicks,
-          duration: note.duration - action.payload.deltaTicks,
-          vibratoDelay: Math.min(note.vibratoDelay, note.duration * 0.5)
-        };
-      } else {
-        return note
-      }
-    })
-  }
-}
-
-
-type ExtendSelectedNoteAction = {
-  type: 'extendSelectedNote',
-  payload: { deltaTicks: number }
-}
-export function extendSelectedNote(state: PianoRollStore, action: ExtendSelectedNoteAction) {
-  return {
-    ...state,
-    pianoRollNotes: state.pianoRollNotes.map(note => {
-      if (note.isSelected && (state.getOffsetXFromTick(note.duration + action.payload.deltaTicks) > 10)) {
-        return {
-          ...note,
-          duration: note.duration + action.payload.deltaTicks,
-          vibratoDelay: Math.min(note.vibratoDelay, note.duration * 0.5)
-        };
-      } else {
-        return note
-      }
-    })
-  }
-}
-
-
-type ShiftSelectedNoteAction = {
-  type: 'shiftSelectedNote',
-  payload: { deltaPitch: number, deltaTicks: number }
-}
-export function shiftSelectedNote(state: PianoRollStore, action: ShiftSelectedNoteAction) {
-  return {
-    ...state,
-    pianoRollNotes: state.pianoRollNotes.map(note => {
-      if (note.isSelected) {
-        return {
-          ...note,
-          noteNumber: note.noteNumber + action.payload.deltaPitch,
-          tick: note.tick + action.payload.deltaTicks,
-        };
-      } else {
-        return note
-      }
-    })
-  }
 }
 
 

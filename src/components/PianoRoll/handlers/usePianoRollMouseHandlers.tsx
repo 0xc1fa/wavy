@@ -117,26 +117,33 @@ export default function usePianoRollMouseHandlers() {
       case PianoRollLanesMouseHandlerMode.None:
         updateCursorStyle(event.nativeEvent);
         break;
-      case PianoRollLanesMouseHandlerMode.NotesTrimming:
-        dispatch({ type: 'trimSelectedNote', payload: { deltaTicks }});
+      case PianoRollLanesMouseHandlerMode.NotesTrimming: {
+        const newNotes = notesModificationBuffer.notesSelected.map(bufferedNote => ({
+          ...bufferedNote,
+          tick: bufferedNote.tick + deltaTicks,
+          duration: Math.max(10, bufferedNote.duration - deltaTicks)
+        }))
+        dispatch({ type: 'modifiedNotes', payload: { notes: newNotes }});
         break;
-      case PianoRollLanesMouseHandlerMode.NotesExtending:
+      }
+      case PianoRollLanesMouseHandlerMode.NotesExtending: {
         const newNotes = notesModificationBuffer.notesSelected.map(bufferedNote => ({
           ...bufferedNote,
           duration: Math.max(10, bufferedNote.duration + deltaTicks)
         }))
         dispatch({ type: 'modifiedNotes', payload: { notes: newNotes }})
         break;
-      case PianoRollLanesMouseHandlerMode.DragAndDrop:
-        const shiftedNotes = notesModificationBuffer.notesSelected.map(bufferedNote => ({
+      }
+      case PianoRollLanesMouseHandlerMode.DragAndDrop: {
+        const newNotes = notesModificationBuffer.notesSelected.map(bufferedNote => ({
           ...bufferedNote,
           noteNumber: Math.min(127, Math.max(0, bufferedNote.noteNumber + deltaPitch)),
           tick: bufferedNote.tick + deltaTicks
         }))
-        dispatch({ type: 'modifiedNotes', payload: { notes: shiftedNotes }});
+        dispatch({ type: 'modifiedNotes', payload: { notes: newNotes }});
         break;
+      }
       case PianoRollLanesMouseHandlerMode.MarqueeSelection:
-        // dispatch({ type: 'setSelectionRange', payload: { start: Math.min(startingPosition.x, ongoingPosition.x) / pianoRollStore.pixelsPerTick, range: Math.abs(startingPosition.x - ongoingPosition.x) / pianoRollStore.pixelsPerTick } } )
         break;
       case PianoRollLanesMouseHandlerMode.Vibrato:
         event.shiftKey ?
