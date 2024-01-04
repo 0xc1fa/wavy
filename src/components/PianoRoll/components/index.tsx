@@ -2,7 +2,6 @@ import LaneGrids from "./LaneGrids";
 import { defaultPianoRollTheme } from "@/components/PianoRoll/store/pianoRollTheme";
 import PianoRollThemeContext  from "../contexts/piano-roll-theme-context";
 import styles from "./index.module.scss";
-import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import usePianoRollMouseHandlers from "../handlers/usePianoRollMouseHandlers";
 import SelectionArea from "./SelectionMarquee";
 import LanesBackground from "./LanesBackground";
@@ -14,21 +13,30 @@ import Notes from "./Notes";
 import Playhead from "./Playhead";
 import usePianoRollKeyboardHandlers from "../handlers/usePianoRollKeyboardHandlers";
 import TempoInfo from "./TempoInfo";
-import usePianoRollClipboardHandlers from "../handlers/usePianoRollClipboardHandlers";
 import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import Selections from "./Selections";
-import { useEffect, useRef } from "react";
+import { KeyboardEvent, useEffect, useRef } from "react";
+import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 
 interface PianoRollProps extends React.HTMLAttributes<HTMLDivElement> {
-  notes: TrackNoteEvent[];
-  playing?: boolean;
-  lyric?: boolean;
+  playheadPosition?: number;
+  attachLyric?: boolean;
+  initialScrollMiddleNote?: number;
+  onSpace?: (event: KeyboardEvent<HTMLDivElement>) => void,
+  onNoteCreate?: (notes: TrackNoteEvent[]) => void,
+  onNoteUpdate?: (notes: TrackNoteEvent[]) => void,
+  onNoteSelect?: (notes: TrackNoteEvent[]) => void,
 }
 export default function PianoRoll({
-  notes,
-  playing = false,
-  lyric = false
+  playheadPosition,
+  attachLyric = false,
+  initialScrollMiddleNote = 60,
+  onSpace,
 }: PianoRollProps) {
+
+  if (initialScrollMiddleNote < 0 || initialScrollMiddleNote > 127) {
+    initialScrollMiddleNote = 60;
+  }
 
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const pianoRollKeyboardHandlers = usePianoRollKeyboardHandlers();
@@ -44,7 +52,7 @@ export default function PianoRoll({
       return
     }
     const containerHeight = containerRef.current?.offsetHeight
-    const c4KeyElement = document.querySelector('[data-keynum="60"]') as HTMLDivElement;
+    const c4KeyElement = document.querySelector(`[data-keynum="${initialScrollMiddleNote}"]`) as HTMLDivElement;
     const c4KeyTop = c4KeyElement.getBoundingClientRect().top;
 
     // Thanks to strict mode rendering twice, we need to prevent the second scrolling which reset it to top
@@ -75,9 +83,9 @@ export default function PianoRoll({
           >
             <LaneGrids />
             <Selections />
-            <Notes lyric={lyric} />
+            <Notes attachLyric={attachLyric} />
             <SelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
-            <Playhead />
+            {playheadPosition !== undefined && <Playhead playheadPosition={playheadPosition}/>}
             <div style={{ position:'absolute', inset: '0', width: '100%', height: '100%' }} />
             <LanesBackground />
           </div>

@@ -1,6 +1,6 @@
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import styles from "./index.module.scss";
-import useStore from "../../hooks/useStore";
+import useStore from "../../../hooks/useStore";
 import { memo } from "react";
 
 interface NoteLyricProps extends React.HTMLAttributes<HTMLInputElement> {

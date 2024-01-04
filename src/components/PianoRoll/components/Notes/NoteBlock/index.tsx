@@ -1,13 +1,13 @@
 import React, { memo } from 'react';
 import styles from './index.module.scss'
-import useTheme from "../../hooks/useTheme";
-import useStore from "../../hooks/useStore";
+import useTheme from "../../../hooks/useTheme";
+import useStore from "../../../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 
 interface NoteBlockProps extends React.HTMLAttributes<HTMLDivElement> {
   note: TrackNoteEvent,
 }
-function NoteBlock({ style, note, ...other }: NoteBlockProps) {
+function NoteBlock({ note, ...other }: NoteBlockProps) {
 
   const theme = useTheme();
   const { pianoRollStore } = useStore();

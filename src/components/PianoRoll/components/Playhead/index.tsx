@@ -2,14 +2,14 @@ import useStore from "../../hooks/useStore";
 import styles from './index.module.scss';
 
 interface PlayheadProps extends React.HTMLAttributes<HTMLDivElement> {
-  // ticks: number;
+  playheadPosition: number
 }
-export default function Playhead({  }: PlayheadProps) {
+export default function Playhead({ playheadPosition }: PlayheadProps) {
   const { pianoRollStore } = useStore();
 
   return (
     <div className={styles['playhead']}
-      style={{ '--playhead-position': `${pianoRollStore.currentTicks * pianoRollStore.pixelsPerTick}px` } as React.CSSProperties}
+      style={{ '--playhead-position': `${playheadPosition * pianoRollStore.pixelsPerTick}px` } as React.CSSProperties}
     />
   )
 }

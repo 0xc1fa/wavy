@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import useTheme from "../../hooks/useTheme";
-import styles from "./index.module.scss";
 import useStore from "../../hooks/useStore";
 
 interface LanesBackgroundProps extends React.HTMLAttributes<SVGElement> {}
@@ -63,7 +62,6 @@ function LanesBackground({ ...other }: LanesBackgroundProps) {
   return (
     <svg
       aria-label="piano-roll-lanes-background"
-      className={styles['lanes']}
       width={transform.canvasWidth}
       height={transform.canvasHeight}
       {...other}

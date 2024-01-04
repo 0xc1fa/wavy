@@ -1,10 +1,10 @@
 import useStore from "../../hooks/useStore";
-import NoteBlock from "../NoteBlock";
-import NoteLyric from "../NoteLyric";
+import NoteBlock from "./NoteBlock";
+import NoteLyric from "./NoteLyric";
 import styles from "./index.module.scss";
 
 export default function Notes(
-  { lyric = false }: { lyric?: boolean }
+  { attachLyric }: { attachLyric?: boolean }
 ) {
 
   const { pianoRollStore } = useStore()
@@ -19,7 +19,7 @@ export default function Notes(
         data-velocity={note.velocity}
       >
         <NoteBlock note={note} />
-        {lyric && <NoteLyric note={note} />}
+        {attachLyric && <NoteLyric note={note} />}
       </div>
     )}
     </div>

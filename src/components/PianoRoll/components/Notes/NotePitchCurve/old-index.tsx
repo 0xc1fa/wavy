@@ -1,10 +1,10 @@
-import { debug } from "../../helpers";
+import { debug } from "../../../helpers";
 import Canvas from "@/common/components/Canvas";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import { memo, useCallback } from "react";
-import useTheme from "../../hooks/useTheme";
+import useTheme from "../../../hooks/useTheme";
 import { VibratoMode } from "@/types/VibratoMode";
-import useStore from "../../hooks/useStore";
+import useStore from "../../../hooks/useStore";
 
 interface PianoRollPitchCurveProps extends React.HTMLAttributes<HTMLCanvasElement> {
 }
@@ -116,7 +116,7 @@ function PianoRollPitchCurve({ style, ...other }: PianoRollPitchCurveProps) {
 
     debug(drawPianoRollPitchCurve.name);
     pianoRollStore.clearCanvas(ctx);
-    
+
     for (const note of pianoRollStore.pianoRollNotes) drawPitchCurve(note);
   }
 

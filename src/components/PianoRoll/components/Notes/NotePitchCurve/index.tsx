@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 // import { TrackNoteEvent, VibratoMode } from "@/types"; // Update these imports as necessary
-import useTheme from "../../hooks/useTheme";
-import useStore from "../../hooks/useStore";
+import useTheme from "../../../hooks/useTheme";
+import useStore from "../../../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 
 interface NotePitchCurveProps extends React.SVGProps<SVGSVGElement> {
