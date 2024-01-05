@@ -11,6 +11,7 @@ export enum PianoRollLanesMouseHandlerMode {
   NotesTrimming,
   NotesExtending,
   Vibrato,
+  Velocity,
   None,
 }
 
@@ -68,6 +69,8 @@ export default function usePianoRollMouseHandlers() {
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesExtending);
       } else if (event.nativeEvent.altKey) {
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.Vibrato);
+      } else if (event.nativeEvent.metaKey) {
+        setMouseHandlerMode(PianoRollLanesMouseHandlerMode.Velocity);
       } else {
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
         console.log("drag and drop")
@@ -159,6 +162,13 @@ export default function usePianoRollMouseHandlers() {
         :
         dispatch({ type: 'vibratoDepthDelayChangeSelectedNote', payload: { depthOffset: deltaY, delayOffset: deltaX }})
         break;
+      case PianoRollLanesMouseHandlerMode.Velocity: {
+        const newNotes = pianoRollStore.noteModificationBuffer.notesSelected.map(bufferedNote => ({
+          ...bufferedNote,
+          velocity: Math.max(0, Math.min(127,bufferedNote.velocity + deltaY))
+        }))
+        dispatch({ type: 'modifiedNotes', payload: { notes: newNotes } })
+      }
     }
     setOngoingPosition({x: event.nativeEvent.offsetX, y: event.nativeEvent.offsetY})
   }

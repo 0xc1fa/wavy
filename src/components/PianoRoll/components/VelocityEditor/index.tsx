@@ -61,7 +61,7 @@ export default function VelocityEditor() {
         </div>
       )}
       </div>
-      <LaneGrids />
+      <LaneGrids style={{ zIndex: -100 }} />
     </div>
   )
 }
