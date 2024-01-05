@@ -186,6 +186,10 @@ function defaultPianoRollStore() {
       return null;
     },
 
+    getNotesFromOffsetX(offsetX: number) {
+      return this.pianoRollNotes.filter(note => note.tick <= this.getTickFromOffsetX(offsetX) && (note.tick + note.duration) >= this.getTickFromOffsetX(offsetX) )
+    },
+
     getWhiteKeyNumFromPosition(y: number) {
       let currentY = 0
       for (let keyNum = this.numOfKeys - 1; keyNum >= this.startingNoteNum; keyNum--) {

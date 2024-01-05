@@ -71,11 +71,18 @@ type ModifiedNotesAction = {
 export function modifiedNotes(state: PianoRollStore, action: ModifiedNotesAction) {
   const notesIdsToBeModified = action.payload.notes.map(note => note.id)
   const notesNotModified = state.pianoRollNotes.filter(note => !notesIdsToBeModified.includes(note.id))
+  const notesModifiedWithClampValue = action.payload.notes.map(note => ({
+    ...note,
+    noteNumber: Math.max(0, Math.min(127, note.noteNumber)),
+    velocity: Math.max(0, Math.min(127, note.velocity)),
+    duration: Math.max(10, note.duration),
+    
+  }))
   return {
     ...state,
     pianoRollNotes: [
       ...notesNotModified,
-      ...action.payload.notes
+      ...notesModifiedWithClampValue
     ]
   }
 }

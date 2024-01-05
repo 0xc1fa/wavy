@@ -1,9 +1,10 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { usePianoRollNotes } from "../../helpers/notes";
 import useStore from "../../hooks/useStore";
 import styles from './index.module.scss'
 import LaneGrids from "../LaneGrids";
+import useVelocityEditorMouseHandlers from "../../handlers/useVelocityEditorMouseHandlers";
 
 export default function VelocityEditor() {
   const { pianoRollStore } = useStore();
@@ -16,6 +17,8 @@ export default function VelocityEditor() {
     initHeight: 0,
   })
 
+  const mouseHandlers = useVelocityEditorMouseHandlers();
+
   const handlePointerDown: React.PointerEventHandler = (event) => {
     event.currentTarget.setPointerCapture(event.pointerId)
     setIsDragging(true)
@@ -26,7 +29,6 @@ export default function VelocityEditor() {
   }
 
   const handlePointerMove: React.PointerEventHandler<HTMLDivElement> = (event) => {
-    console.log(event.currentTarget.getClientRects()[2])
     if (isDragging) {
       setContainerHeight(resizeBuffer.initHeight - (event.clientY - resizeBuffer.initY))
     }
@@ -47,7 +49,7 @@ export default function VelocityEditor() {
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
       />
-      <div className={styles['note-bar-container']}>
+      <div className={styles['note-bar-container']} {...mouseHandlers}>
       {pianoRollNotes.map(note =>
         <div className={styles['marker-container']}
           style={{
