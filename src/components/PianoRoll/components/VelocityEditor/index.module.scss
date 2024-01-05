@@ -6,6 +6,7 @@
   width: 100%;
   height: var(--container-height);
   background-color: #232323;
+  z-index: 10;
 }
 
 .marker-container {
@@ -16,12 +17,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: ns-resize;
 }
 
 .velocity-marker {
   width: 8px;
   aspect-ratio: 1;
-  border: 2px solid aquamarine;
+  border: 2px solid var(--marker-color);
   border-radius: 50%;
   box-sizing: border-box;
 }
@@ -29,7 +31,7 @@
 .length-marker {
   width: 100%;
   height: 2px;
-  background-color: aquamarine;
+  background-color: var(--marker-color);
   flex: 1 1 auto;
 }
 

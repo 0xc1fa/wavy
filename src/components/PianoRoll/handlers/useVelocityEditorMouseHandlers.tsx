@@ -22,7 +22,6 @@ export default function useVelocityEditorMouseHandlers(containerHeight: number) 
     const offsetY = event.nativeEvent.offsetY
     switch (mouseHandlerMode) {
       case VelocityEditorMouseHandlerMode.Pencil: {
-        console.log('pencil mode')
         const notesInPosition = pianoRollStore.getNotesFromOffsetX(offsetX);
         const newVelocityInPercent = offsetY / containerHeight
         const newVelocity = (newVelocityInPercent * 127)
@@ -33,6 +32,20 @@ export default function useVelocityEditorMouseHandlers(containerHeight: number) 
         }))
         console.log(modifiedNotes)
         dispatch({ type: 'modifiedNotes', payload: { notes: modifiedNotes }})
+      }
+      case VelocityEditorMouseHandlerMode.SelectAndDrag: {
+        const noteClicked = pianoRollStore.getNotesFromOffsetX(offsetX)[0];
+        const noteClickedIsSelected = noteClicked?.isSelected
+        if (noteClicked) {
+          if (!noteClicked.isSelected) {
+            dispatch({ type: 'unselectAllNotes' })
+            dispatch({ type: 'setNoteAsSelected', payload: { noteId: noteClicked.id }})
+          }
+          dispatch({ type: 'setNoteModificationBuffer',
+            payload: { initX: event.nativeEvent.offsetX, initY: event.nativeEvent.offsetY }
+          })
+        }
+
       }
     }
     dispatch({ type: 'setNoteModificationBuffer',
@@ -48,7 +61,6 @@ export default function useVelocityEditorMouseHandlers(containerHeight: number) 
     const offsetY = event.nativeEvent.offsetY
     switch (mouseHandlerMode) {
       case VelocityEditorMouseHandlerMode.Pencil: {
-        console.log('pencil mode')
         const notesInPosition = pianoRollStore.getNotesFromOffsetX(offsetX);
         const newVelocityInPercent = offsetY / containerHeight
         const newVelocity = (newVelocityInPercent * 127)
@@ -61,8 +73,6 @@ export default function useVelocityEditorMouseHandlers(containerHeight: number) 
         dispatch({ type: 'modifiedNotes', payload: { notes: modifiedNotes }})
       }
     }
-
-
   }
 
   const onPointerUp: React.PointerEventHandler = (event) => {
