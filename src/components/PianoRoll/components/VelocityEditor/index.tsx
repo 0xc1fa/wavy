@@ -17,7 +17,7 @@ export default function VelocityEditor() {
     initHeight: 0,
   })
 
-  const mouseHandlers = useVelocityEditorMouseHandlers();
+  const mouseHandlers = useVelocityEditorMouseHandlers(containerHeight);
 
   const handlePointerDown: React.PointerEventHandler = (event) => {
     event.currentTarget.setPointerCapture(event.pointerId)

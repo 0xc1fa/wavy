@@ -8,13 +8,12 @@ enum VelocityEditorMouseHandlerMode {
   Pencil,
 }
 
-export default function useVelocityEditorMouseHandlers() {
+export default function useVelocityEditorMouseHandlers(containerHeight: number) {
 
   const [isDragging, setIsDragging] = useState(false);
   const [mouseHandlerMode, setMouseHandlerMode] = useState(VelocityEditorMouseHandlerMode.Pencil)
   const dispatch = usePianoRollDispatch();
   const { pianoRollStore } = useStore();
-  const dummyContainerHeight = 200
 
   const onPointerDown: React.PointerEventHandler = (event) => {
     setIsDragging(true)
@@ -25,7 +24,7 @@ export default function useVelocityEditorMouseHandlers() {
       case VelocityEditorMouseHandlerMode.Pencil: {
         console.log('pencil mode')
         const notesInPosition = pianoRollStore.getNotesFromOffsetX(offsetX);
-        const newVelocityInPercent = offsetY / dummyContainerHeight
+        const newVelocityInPercent = offsetY / containerHeight
         const newVelocity = (newVelocityInPercent * 127)
         console.log(offsetX)
         const modifiedNotes = notesInPosition.map(note => ({
@@ -51,7 +50,7 @@ export default function useVelocityEditorMouseHandlers() {
       case VelocityEditorMouseHandlerMode.Pencil: {
         console.log('pencil mode')
         const notesInPosition = pianoRollStore.getNotesFromOffsetX(offsetX);
-        const newVelocityInPercent = offsetY / dummyContainerHeight
+        const newVelocityInPercent = offsetY / containerHeight
         const newVelocity = (newVelocityInPercent * 127)
         console.log(offsetX)
         const modifiedNotes = notesInPosition.map(note => ({
