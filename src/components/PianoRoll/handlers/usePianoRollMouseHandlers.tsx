@@ -105,6 +105,7 @@ export default function usePianoRollMouseHandlers() {
         const { ticks, noteNum } = getTickAndNoteNumFromEvent(event.nativeEvent)
         dispatch({ type: 'addNote', payload: { ticks, noteNum }})
         // dispatch({ type: 'unsetSelectionRange' })
+        dispatch({ type: 'setNoteModificationBuffer', payload: { initX: event.nativeEvent.offsetX, initY: event.nativeEvent.offsetY}})
         setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
       } else {
         const selectionTicks = pianoRollStore.getTickFromOffsetX(event.nativeEvent.offsetX)

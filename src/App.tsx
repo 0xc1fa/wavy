@@ -4,12 +4,20 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import PianoRoll from "@/components/PianoRoll/components";
 import usePreventZoom from "./components/PianoRoll/hooks/usePreventZoom";
+import { usePianoRollNotes } from "./components/PianoRoll/helpers/notes";
 
 function App() {
   const [count, setCount] = useState(0)
 
+  function useExportMidi() {
+    const pianoRollNote = usePianoRollNotes();
+    
+
+  }
+
   return (
     <>
+      <button onClick={useExportMidi}></button>
       <PianoRoll attachLyric />
       <div>
         <a href="https://vitejs.dev" target="_blank">
