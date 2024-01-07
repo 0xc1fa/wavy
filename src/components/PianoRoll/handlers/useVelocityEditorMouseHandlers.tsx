@@ -23,7 +23,7 @@ export default function useVelocityEditorMouseHandlers(containerHeight: number) 
     switch (mouseHandlerMode) {
       case VelocityEditorMouseHandlerMode.Pencil: {
         const notesInPosition = pianoRollStore.getNotesFromOffsetX(offsetX);
-        const newVelocityInPercent = offsetY / containerHeight
+        const newVelocityInPercent = 100 - (offsetY / containerHeight)
         const newVelocity = (newVelocityInPercent * 127)
         console.log(offsetX)
         const modifiedNotes = notesInPosition.map(note => ({
@@ -62,7 +62,7 @@ export default function useVelocityEditorMouseHandlers(containerHeight: number) 
     switch (mouseHandlerMode) {
       case VelocityEditorMouseHandlerMode.Pencil: {
         const notesInPosition = pianoRollStore.getNotesFromOffsetX(offsetX);
-        const newVelocityInPercent = offsetY / containerHeight
+        const newVelocityInPercent = 1 - (offsetY / containerHeight)
         const newVelocity = (newVelocityInPercent * 127)
         console.log(offsetX)
         const modifiedNotes = notesInPosition.map(note => ({

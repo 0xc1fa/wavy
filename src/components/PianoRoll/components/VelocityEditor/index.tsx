@@ -56,7 +56,7 @@ export default function VelocityEditor() {
         <div className={styles['marker-container']}
           style={{
             '--marker-left': `${pianoRollStore.getOffsetXFromTick(note.tick)}px`,
-            '--marker-top': `${note.velocity / 128}`,
+            '--marker-top': `${1 - (note.velocity / 128)}`,
             '--marker-width': `${pianoRollStore.getOffsetXFromTick(note.duration)}px`,
             '--marker-color': note.isSelected? theme.note.noteSelectedBackgroundColor : theme.note.noteBackgroundColor,
             '--cursor': isDragging? 'grabbing' : 'grab'
