@@ -7,6 +7,8 @@
   height: var(--container-height);
   background-color: #232323;
   z-index: 10;
+  min-height: 30px;
+  max-height: 100%;
 }
 
 .marker-container {

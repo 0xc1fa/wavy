@@ -35,10 +35,6 @@ export default function PianoRoll({
   onSpace,
 }: PianoRollProps) {
 
-  if (initialScrollMiddleNote < 0 || initialScrollMiddleNote > 127) {
-    initialScrollMiddleNote = 60;
-  }
-
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const pianoRollKeyboardHandlers = usePianoRollKeyboardHandlers();
   const { pianoRollStore } = useStore()
@@ -47,20 +43,7 @@ export default function PianoRoll({
 
   usePreventZoom();
   const dispatch = usePianoRollDispatch();
-
-  useEffect(() => {
-    if (!containerRef) {
-      return
-    }
-    const containerHeight = containerRef.current?.offsetHeight
-    const c4KeyElement = document.querySelector(`[data-keynum="${initialScrollMiddleNote}"]`) as HTMLDivElement;
-    const c4KeyTop = c4KeyElement.getBoundingClientRect().top;
-
-    // Thanks to strict mode rendering twice, we need to prevent the second scrolling which reset it to top
-    if (c4KeyTop > 300) {
-      containerRef.current?.scroll(0, c4KeyTop - containerHeight! / 2);
-    }
-  }, [])
+  useScrollToNote(containerRef, initialScrollMiddleNote);
 
   return (
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
@@ -100,4 +83,23 @@ export default function PianoRoll({
     </PianoRollThemeContext.Provider>
   )
 
+}
+
+function useScrollToNote(containerRef: React.RefObject<HTMLElement>, initialScrollMiddleNote: number) {
+  if (initialScrollMiddleNote < 0 || initialScrollMiddleNote > 127) {
+    initialScrollMiddleNote = 60;
+  }
+  useEffect(() => {
+    if (!containerRef) {
+      return
+    }
+    const containerHeight = containerRef.current?.offsetHeight
+    const c4KeyElement = document.querySelector(`[data-keynum="${initialScrollMiddleNote}"]`) as HTMLDivElement;
+    const c4KeyTop = c4KeyElement.getBoundingClientRect().top;
+
+    // Thanks to strict mode rendering twice, we need to prevent the second scrolling which reset it to top
+    if (c4KeyTop > 300) {
+      containerRef.current?.scroll(0, c4KeyTop - containerHeight! / 2);
+    }
+  }, [])
 }

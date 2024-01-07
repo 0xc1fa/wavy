@@ -19,7 +19,7 @@ export default function VelocityEditor() {
     initHeight: 0,
   })
 
-  const mouseHandlers = useVelocityEditorMouseHandlers(containerHeight);
+  const mouseHandlers = useVelocityEditorMouseHandlers();
 
   const handlePointerDown: React.PointerEventHandler = (event) => {
     event.currentTarget.setPointerCapture(event.pointerId)
@@ -32,7 +32,8 @@ export default function VelocityEditor() {
 
   const handlePointerMove: React.PointerEventHandler<HTMLDivElement> = (event) => {
     if (isDragging) {
-      setContainerHeight(resizeBuffer.initHeight - (event.clientY - resizeBuffer.initY))
+      const newHeight = resizeBuffer.initHeight - (event.clientY - resizeBuffer.initY)
+      setContainerHeight(Math.max(50, Math.min(300, newHeight)))
     }
   }
 
@@ -51,6 +52,10 @@ export default function VelocityEditor() {
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
       />
+      {/* <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'stretch', gap: '10px', backgroundColor: 'black' }}>
+        <button style={{ borderRadius: '5px 5px 0 0'}}>Velocity</button>
+        <button style={{ borderRadius: '5px 5px 0 0'}}>Aftertouch</button>
+      </div> */}
       <div className={styles['note-bar-container']} {...mouseHandlers}>
       {pianoRollNotes.map(note =>
         <div className={styles['marker-container']}

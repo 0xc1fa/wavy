@@ -8,7 +8,7 @@ enum VelocityEditorMouseHandlerMode {
   Pencil,
 }
 
-export default function useVelocityEditorMouseHandlers(containerHeight: number) {
+export default function useVelocityEditorMouseHandlers() {
 
   const [isDragging, setIsDragging] = useState(false);
   const [mouseHandlerMode, setMouseHandlerMode] = useState(VelocityEditorMouseHandlerMode.Pencil)
@@ -16,6 +16,7 @@ export default function useVelocityEditorMouseHandlers(containerHeight: number) 
   const { pianoRollStore } = useStore();
 
   const onPointerDown: React.PointerEventHandler = (event) => {
+    const containerHeight = event.currentTarget.clientHeight
     setIsDragging(true)
     event.currentTarget.setPointerCapture(event.pointerId)
     const offsetX = event.nativeEvent.offsetX
@@ -57,6 +58,7 @@ export default function useVelocityEditorMouseHandlers(containerHeight: number) 
     if (!isDragging) {
       return;
     }
+    const containerHeight = event.currentTarget.clientHeight
     const offsetX = event.nativeEvent.offsetX
     const offsetY = event.nativeEvent.offsetY
     switch (mouseHandlerMode) {
