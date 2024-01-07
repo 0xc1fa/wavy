@@ -17,14 +17,15 @@ function NoteBlock({ note, ...other }: NoteBlockProps) {
       key={note.id}
       className={styles['note']}
       style={{
-        '--saturation': `${note.velocity / 1.28}%`,
+        '--saturation': `${0.3 + (note.velocity / 127) * 0.7}`,
         '--top': `${pianoRollStore.getMinYFromNoteNum(note.noteNumber)}px`,
         '--left': `${pianoRollStore.getOffsetXFromTick(note.tick)}px`,
         '--note-width': `${pianoRollStore.getOffsetXFromTick(note.duration)}px`,
         '--note-height': `${pianoRollStore.laneWidth}px`,
-        '--background': note.isSelected? theme.note.noteSelectedBackgroundColor : theme.note.noteBackgroundColor,
-        '--border-color': note.isSelected? theme.note.noteSelectedBorderColor : theme.note.noteBorderColor,
+        '--background': note.isSelected? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
+        '--border-color': note.isSelected? theme.note.noteBorderColor : theme.note.noteBorderColor,
         '--border-radius': `${theme.note.noteBorderRadius}px`,
+        outline: note.isSelected? `3px solid #ffffff33` : 'none',
       } as React.CSSProperties}
     />
   )
