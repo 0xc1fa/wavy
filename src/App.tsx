@@ -7,10 +7,12 @@ import usePreventZoom from "./components/PianoRoll/hooks/usePreventZoom";
 import { usePianoRollNotes } from "./components/PianoRoll/helpers/notes";
 
 import midi from '@/components/PianoRoll/helpers/midi';
+import { usePianoRollDispatch } from "./components/PianoRoll/hooks/usePianoRollDispatch";
 
 function App() {
   const [count, setCount] = useState(0)
   const pianoRollNote = usePianoRollNotes();
+  const dispatch = usePianoRollDispatch();
 
   const downloadMidi = () => {
 
@@ -30,9 +32,19 @@ function App() {
     URL.revokeObjectURL(url);
   }
 
+  const setLegato = () => {
+    let selectedNote = pianoRollNote.filter(note => note.isSelected).sort((a, b) => a.tick - b.tick)
+    for (let i = 0; i < selectedNote.length - 1; i++) {
+      selectedNote[i].duration = selectedNote[i + 1].tick - selectedNote[i].tick
+    }
+    dispatch({ type: 'modifiedNotes', payload: { notes: selectedNote }})
+    console.log('set legato')
+  }
+
   return (
     <>
       <button onClick={downloadMidi}>Download</button>
+      <button onClick={setLegato}>Set Legato</button>
       <PianoRoll attachLyric />
       <div>
         <a href="https://vitejs.dev" target="_blank">

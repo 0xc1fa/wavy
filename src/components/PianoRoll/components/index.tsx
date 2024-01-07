@@ -78,7 +78,7 @@ export default function PianoRoll({
         </div>
         <div className={styles['lower-container']}>
           <PianoKeyboard />
-          <div>
+          <div className={styles['lane-container']}>
             <div className={styles['pianoroll-lane']} {...pianoRollMouseHandlers}
               tabIndex={0}
               {...pianoRollKeyboardHandlers}

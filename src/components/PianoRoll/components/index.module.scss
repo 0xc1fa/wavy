@@ -27,14 +27,9 @@
   display: flex;
 }
 
-.lanes-container{
-  position: relative;
-  // overflow-x: scroll;
-  // overflow-y: scroll;
-  // width: 100%;
-  width: fit-content;
-  height: fit-content;
-  flex: 0 0 auto;
+.lane-container{
+  height: var(--canvas-height);
+  z-index: 0;
 }
 
 .pianoroll-lane {
