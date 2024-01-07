@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -6,18 +6,33 @@ import PianoRoll from "@/components/PianoRoll/components";
 import usePreventZoom from "./components/PianoRoll/hooks/usePreventZoom";
 import { usePianoRollNotes } from "./components/PianoRoll/helpers/notes";
 
+import midi from '@/components/PianoRoll/helpers/midi';
+
 function App() {
   const [count, setCount] = useState(0)
+  const pianoRollNote = usePianoRollNotes();
 
-  function useExportMidi() {
-    const pianoRollNote = usePianoRollNotes();
-    
+  const downloadMidi = () => {
 
+    const buffer = midi(pianoRollNote)
+    const blob = new Blob([buffer], { type: 'audio/midi' });
+    const url = URL.createObjectURL(blob);
+
+    // Create a link and trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'music.mid';
+    document.body.appendChild(a);
+    a.click();
+
+    // Clean up
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   return (
     <>
-      <button onClick={useExportMidi}></button>
+      <button onClick={downloadMidi}>Download</button>
       <PianoRoll attachLyric />
       <div>
         <a href="https://vitejs.dev" target="_blank">
