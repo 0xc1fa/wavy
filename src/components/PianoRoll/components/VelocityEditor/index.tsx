@@ -58,12 +58,12 @@ export default function VelocityEditor() {
             '--marker-left': `${pianoRollStore.getOffsetXFromTick(note.tick)}px`,
             '--marker-top': `${1 - (note.velocity / 128)}`,
             '--marker-width': `${pianoRollStore.getOffsetXFromTick(note.duration)}px`,
-            '--marker-color': note.isSelected? theme.note.noteSelectedBackgroundColor : theme.note.noteBackgroundColor,
-            '--cursor': isDragging? 'grabbing' : 'grab'
+            '--marker-color': note.isSelected? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
+            '--cursor': isDragging? 'grabbing' : 'grab',
           } as React.CSSProperties}
         >
           <div className={styles['velocity-marker']} />
-          <div className={styles['length-marker']} />
+          <div className={styles['length-marker']} style={{ outline: note.isSelected? `3px solid #ffffff33` : 'none' }}/>
         </div>
       )}
       </div>

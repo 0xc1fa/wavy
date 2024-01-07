@@ -17,7 +17,7 @@ function NoteBlock({ note, ...other }: NoteBlockProps) {
       key={note.id}
       className={styles['note']}
       style={{
-        '--saturation': `${0.3 + (note.velocity / 127) * 0.7}`,
+        '--saturation': `${0.2 + (note.velocity / 127) * 0.8}`,
         '--top': `${pianoRollStore.getMinYFromNoteNum(note.noteNumber)}px`,
         '--left': `${pianoRollStore.getOffsetXFromTick(note.tick)}px`,
         '--note-width': `${pianoRollStore.getOffsetXFromTick(note.duration)}px`,
