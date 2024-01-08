@@ -28,6 +28,8 @@ interface PianoRollProps extends React.HTMLAttributes<HTMLDivElement> {
   onNoteCreate?: (notes: TrackNoteEvent[]) => void,
   onNoteUpdate?: (notes: TrackNoteEvent[]) => void,
   onNoteSelect?: (notes: TrackNoteEvent[]) => void,
+  staringTick?: number,
+  endingTick?: number,
 }
 export default function PianoRoll({
   playheadPosition,

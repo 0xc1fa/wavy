@@ -4,7 +4,7 @@ type VelocityRulerProps = React.HTMLAttributes<SVGSVGElement> & {
   height: number
 }
 export default function VelocityRuler({ height }: VelocityRulerProps) {
-  const markers = [0, 32, 64, 96, 127]
+  const markers = [1, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 127]
   const markerHeight = markers.map(marker => height * (marker / 127))
 
   return (

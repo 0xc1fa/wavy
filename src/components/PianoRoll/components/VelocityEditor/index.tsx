@@ -66,7 +66,7 @@ export default function VelocityEditor() {
                 '--marker-left': `${pianoRollStore.getOffsetXFromTick(note.tick)}px`,
                 '--marker-top': `${1 - (note.velocity / 128)}`,
                 '--marker-width': `${pianoRollStore.getOffsetXFromTick(note.duration)}px`,
-                '--marker-color': note.isSelected? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
+                '--marker-color': note.isSelected ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
                 '--cursor': isDragging? 'grabbing' : 'grab',
               } as React.CSSProperties}
               data-id={note.id}

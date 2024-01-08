@@ -14,11 +14,13 @@
 
 .left-container {
   flex: 0 0 auto;
-  position: relative;
+  position: sticky;
+  left: 0;
   width: 50px;
   height: 100%;
+  z-index: 10;
   background-color: #2c2c2c;
-  border-right: 1px solid #191919;
+  border-right: 1px solid white;
   box-sizing: border-box;
 }
 
