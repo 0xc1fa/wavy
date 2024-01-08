@@ -8,8 +8,8 @@ interface RulerProps extends React.HTMLAttributes<SVGElement> {}
 const Ruler: React.FC<RulerProps> = ({ ...other }) => {
   const { laneLength, canvasHeight, pixelPerBeat, pianoLaneScaleX } = usePianoRollTransform();
 
-  const numberOfBeatMarkers = Math.ceil(laneLength / (pixelPerBeat * pianoLaneScaleX * 4));
-  const numberOfBarMarkers = Math.ceil(laneLength / (pixelPerBeat * pianoLaneScaleX));
+  const numberOfBeatMarkers = Math.ceil(laneLength / (pixelPerBeat * 4));
+  const numberOfBarMarkers = Math.ceil(laneLength / (pixelPerBeat));
 
   const rulerHeight = 30
 

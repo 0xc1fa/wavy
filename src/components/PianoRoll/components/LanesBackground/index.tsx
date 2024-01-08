@@ -51,7 +51,7 @@ function LanesBackground({ ...other }: LanesBackgroundProps) {
         key={noteNumber}
         x={0}
         y={yPosition}
-        width={transform.canvasWidth}
+        width={transform.pianoLaneScaleX * pianoRollStore.laneLength}
         height={transform.laneWidth}
         fill={keyColor}
       />

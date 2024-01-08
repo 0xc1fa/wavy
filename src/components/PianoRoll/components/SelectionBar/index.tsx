@@ -5,9 +5,9 @@ interface RulerProps extends React.HTMLAttributes<SVGElement> {}
 export default function SelectionBar({ ...other }: RulerProps) {
   const { laneLength, canvasHeight, pixelPerBeat, pianoLaneScaleX } = usePianoRollTransform();
 
-  const numberOfBeatMarkers = Math.ceil(laneLength / (pixelPerBeat * pianoLaneScaleX * 4));
-  const numberOfHalfBarMarkers = Math.ceil(laneLength / (pixelPerBeat * pianoLaneScaleX));
-  const numberOfBarMarkers = Math.ceil(laneLength / (pixelPerBeat * pianoLaneScaleX));
+  const numberOfBeatMarkers = Math.ceil(laneLength / (pixelPerBeat * 4));
+  const numberOfHalfBarMarkers = Math.ceil(laneLength / (pixelPerBeat));
+  const numberOfBarMarkers = Math.ceil(laneLength / (pixelPerBeat));
 
   const rulerHeight = 30
 

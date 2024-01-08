@@ -206,6 +206,7 @@ export default function usePianoRollMouseHandlers() {
     console.log(pianoRollStore.pianoLaneScaleX)
     console.log('width', pianoRollStore.canvasWidth)
     console.log('calculated width', pianoRollStore.pianoLaneScaleX * pianoRollStore.laneLength)
+    const minScaleX = (800 - 50) / pianoRollStore.laneLength;
     if (event.ctrlKey) {
       console.log(event.deltaX, event.deltaY)
       console.log("on wheel")
@@ -213,10 +214,10 @@ export default function usePianoRollMouseHandlers() {
       if (transform.pianoLaneScaleX * (1 + event.deltaY * 0.01) * transform.laneLength > componentRef!.clientWidth) {
         const newPianoRollScaleX = transform.pianoLaneScaleX * (1 + event.deltaY * 0.01)
         console.log('newPianoRollScaleX', newPianoRollScaleX)
-        dispatch({ type: 'setPianoLaneScaleX' , payload: { pianoLaneScaleX: newPianoRollScaleX } })
+        dispatch({ type: 'setPianoLaneScaleX' , payload: { pianoLaneScaleX: Math.max(minScaleX, newPianoRollScaleX) } })
       } else if (event.deltaY < 0) {
         const newPianoRollScaleX = transform.pianoLaneScaleX * (1 + event.deltaY * 0.01)
-        dispatch({ type: 'setPianoLaneScaleX' , payload: { pianoLaneScaleX: newPianoRollScaleX } })
+        dispatch({ type: 'setPianoLaneScaleX' , payload: { pianoLaneScaleX: Math.max(minScaleX, newPianoRollScaleX) } })
       }
       event.preventDefault()
     }

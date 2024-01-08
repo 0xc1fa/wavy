@@ -31,12 +31,16 @@ interface PianoRollProps extends React.HTMLAttributes<HTMLDivElement> {
   onNoteSelect?: (notes: TrackNoteEvent[]) => void,
   staringTick?: number,
   endingTick?: number,
+  width?: number,
+  height?: number,
 }
 export default function PianoRoll({
   playheadPosition,
   attachLyric = false,
   initialScrollMiddleNote = 60,
   onSpace,
+  width = 800,
+  height = 600,
 }: PianoRollProps) {
 
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
@@ -49,7 +53,6 @@ export default function PianoRoll({
   const dispatch = usePianoRollDispatch();
   useScrollToNote(containerRef, initialScrollMiddleNote);
 
-
   return (
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
       <div className={styles['container']}
@@ -58,6 +61,8 @@ export default function PianoRoll({
           '--lane-length': `${pianoRollStore.laneLength}px`,
           '--canvas-width': `${pianoRollStore.laneLength * pianoRollStore.pianoLaneScaleX}px`,
           '--canvas-height': `${pianoRollStore.canvasHeight}px`,
+          '--width': `${width}px`,
+          '--height': `${height}px`,
         } as React.CSSProperties }
         tabIndex={0}
       >

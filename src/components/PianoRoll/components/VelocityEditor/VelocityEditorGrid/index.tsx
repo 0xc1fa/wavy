@@ -10,8 +10,8 @@ const VelocityEditorGrids: React.FC<VelocityEditorGridsProps> = ({ height, ...ot
   const theme = useTheme();
   const { laneLength, canvasHeight, pixelPerBeat, pianoLaneScaleX } = usePianoRollTransform();
 
-  const numberOfPrimaryLines = Math.ceil(laneLength / (pixelPerBeat * pianoLaneScaleX * 4));
-  const numberOfSecondaryLines = Math.ceil(laneLength / (pixelPerBeat * pianoLaneScaleX));
+  const numberOfPrimaryLines = Math.ceil(laneLength / (pixelPerBeat * 4));
+  const numberOfSecondaryLines = Math.ceil(laneLength / (pixelPerBeat));
 
   const primaryLines = Array.from({ length: numberOfPrimaryLines }, (_, index) => (
     <line

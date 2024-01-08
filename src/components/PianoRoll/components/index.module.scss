@@ -3,12 +3,11 @@
   --white: #d9d9db;
   --black: #232323;
 
-
   position: relative;
   overflow: auto;
 
-  width: 800px;
-  height: 500px;
+  width: var(--width);
+  height: var(--height);
   user-select: none;
   -ms-overflow-style: none;
   scrollbar-width: none;
