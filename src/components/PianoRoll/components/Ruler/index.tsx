@@ -51,16 +51,18 @@ const Ruler: React.FC<RulerProps> = ({ ...other }) => {
   ));
 
   return (
-    <svg
-      aria-label="pianoroll-ruler"
-      width={laneLength}
-      height={canvasHeight}
-      {...other}
-      className={styles['ruler']}
-    >
-      {beatMarkers}
-      {/* {barMarkers} */}
-    </svg>
+    <div onClick={(event) => console.log(event.nativeEvent.offsetX)}>
+      <svg
+        aria-label="pianoroll-ruler"
+        width={laneLength}
+        height={canvasHeight}
+        {...other}
+        className={styles['ruler']}
+      >
+        {beatMarkers}
+        {/* {barMarkers} */}
+      </svg>
+    </div>
   );
 };
 

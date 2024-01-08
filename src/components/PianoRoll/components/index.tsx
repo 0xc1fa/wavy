@@ -59,7 +59,7 @@ export default function PianoRoll({
         } as React.CSSProperties }
         tabIndex={0}
       >
-        <div className={styles['upper-container']}>
+        <div className={styles['upper-container']} onClick={(event) => console.log(event.clientX)}>
           <TempoInfo />
           <Ruler />
         </div>
