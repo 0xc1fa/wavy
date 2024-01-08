@@ -4,7 +4,7 @@
   --black: #232323;
 
   position: relative;
-  overflow: auto;
+  overflow: scroll;
 
   width: var(--width);
   height: var(--height);
@@ -12,7 +12,6 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
   background-color: var(--black);
-
 }
 
 .container::-webkit-scrollbar {

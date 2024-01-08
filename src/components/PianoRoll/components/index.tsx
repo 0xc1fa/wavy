@@ -91,10 +91,9 @@ export default function PianoRoll({
           </div>
         </div>
         <div className={styles['lower-container']}>
-            <VelocityEditor />
-          </div>
+          <VelocityEditor />
+        </div>
       </div>
-
     </PianoRollThemeContext.Provider>
   )
 
