@@ -1,18 +1,19 @@
 .ruler-container {
   height: 1.5rem;
   width: var(--lane-length);
-  border-bottom: 1px solid var(--black);
+  // border-bottom: 1px solid #232323;
+  box-shadow: 0px 0px 20px #ffffff33;
 }
 
 .ruler {
-  border-radius: 0.5rem 0.5rem 0 0;
   margin: 0;
   top: 0;
   left: 50px;
   pointer-events: none;
   z-index: 10;
   flex-shrink: 0;
-  background-color: #b99e42;
+  background-color: #ffffff55;
+  backdrop-filter: blur(7px);
 }
 
 .text {

@@ -19,6 +19,7 @@ import Selections from "./Selections";
 import { KeyboardEvent, useEffect, useRef } from "react";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import VelocityEditor from "./VelocityEditor";
+import SelectionBar from "./SelectionBar";
 
 interface PianoRollProps extends React.HTMLAttributes<HTMLDivElement> {
   playheadPosition?: number;
@@ -61,7 +62,10 @@ export default function PianoRoll({
       >
         <div className={styles['upper-container']} onClick={(event) => console.log(event.clientX)}>
           <TempoInfo />
-          <Ruler />
+          <div>
+            <Ruler />
+            <SelectionBar />
+          </div>
         </div>
         <div className={styles['middle-container']}>
           <PianoKeyboard />

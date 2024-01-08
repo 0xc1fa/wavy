@@ -6,7 +6,6 @@ import styles from './index.module.scss'
 interface RulerProps extends React.HTMLAttributes<SVGElement> {}
 
 const Ruler: React.FC<RulerProps> = ({ ...other }) => {
-  const theme = useTheme();
   const { laneLength, canvasHeight, pixelPerBeat, pianoLaneScaleX } = usePianoRollTransform();
 
   const numberOfBeatMarkers = Math.ceil(laneLength / (pixelPerBeat * pianoLaneScaleX * 4));
@@ -51,11 +50,13 @@ const Ruler: React.FC<RulerProps> = ({ ...other }) => {
   ));
 
   return (
-    <div onClick={(event) => console.log(event.nativeEvent.offsetX)}>
+    <div onClick={(event) => console.log(event.nativeEvent.offsetX)}
+      className={styles['ruler-container']}
+    >
       <svg
         aria-label="pianoroll-ruler"
-        width={laneLength}
-        height={canvasHeight}
+        width="100%"
+        height="100%"
         {...other}
         className={styles['ruler']}
       >

@@ -3,6 +3,8 @@ export type PianoRollTheme = ReturnType<typeof defaultPianoRollTheme>
 
 export function defaultPianoRollTheme() {
   return {
+    whiteColor: "#d9d9db",
+    blackColor: "#232323",
     key: {
       whiteKeyColor: "#d9d9db",
       blackKeyColor: "#232323",
