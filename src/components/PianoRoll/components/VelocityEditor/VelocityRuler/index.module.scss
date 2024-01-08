@@ -1,0 +1,15 @@
+.marker:first-child text {
+  dominant-baseline: auto;
+}
+
+.marker:last-child text {
+  dominant-baseline: hanging;
+}
+
+.marker:nth-child(2n) text {
+  visibility: hidden;
+}
+
+.marker:nth-child(2n) line {
+  x1: 45;
+}
