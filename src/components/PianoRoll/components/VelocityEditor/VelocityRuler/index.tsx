@@ -10,7 +10,7 @@ export default function VelocityRuler({ height }: VelocityRulerProps) {
   return (
     <svg width="100%" height="100%" viewBox={`0 0 50 ${height}`} style={{ zIndex: 10 }} preserveAspectRatio="none">
       {markers.map((marker, index) => {
-        const markerHeight = height * (marker / 127)
+        const markerHeight = height - (height * (marker / 127))
         return (
           <g key={index}>
             <line y1={markerHeight} y2={markerHeight} x1={40} x2={50} strokeWidth={1} stroke="white" />

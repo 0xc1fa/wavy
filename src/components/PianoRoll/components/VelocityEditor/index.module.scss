@@ -32,7 +32,7 @@
 .marker-container {
   position: absolute;
   left: var(--marker-left);
-  top: calc((var(--container-height) - var(--resize-bar-height)) * var(--marker-top));
+  top: calc((var(--container-height) - var(--resize-bar-height)) * var(--marker-top) - 4px);
   width: var(--marker-width);
   display: flex;
   justify-content: center;

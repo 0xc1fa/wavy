@@ -69,6 +69,7 @@ export default function VelocityEditor() {
                 '--marker-color': note.isSelected? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
                 '--cursor': isDragging? 'grabbing' : 'grab',
               } as React.CSSProperties}
+              data-id={note.id}
               data-velocity={note.velocity}
             >
               <div className={styles['velocity-marker']} />
