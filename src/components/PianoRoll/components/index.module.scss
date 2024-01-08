@@ -22,17 +22,17 @@
 
 .upper-container {
   display: flex;
-  align-items: stretch;
   position: sticky;
   top: 0;
   z-index: 2;
-  width: calc(var(--lane-length) + 50px);
+  width: calc(var(--canvas-width) + 50px);
 }
 
 .middle-container {
   display: flex;
   position: relative;
-  width: calc(var(--lane-length) + 50px);
+  width: calc(var(--canvas-width) + 50px);
+  z-index: 1;
 }
 
 .lower-container {
@@ -45,6 +45,7 @@
 
 .lane-container {
   height: var(--canvas-height);
+  width: var(--canvas-width);
   z-index: 0;
   position: relative;
 }
@@ -53,7 +54,7 @@
   position: relative;
   flex: 0 0 auto;
 
-  width: var(--lane-length);
+  width: var(--canvas-width);
   height: var(--canvas-height);
   background-color: var(--black);
 

@@ -119,7 +119,7 @@ function defaultPianoRollStore() {
     },
 
     get canvasWidth() {
-      return this.laneLength * this.pianoLaneScaleX;
+      return this.pianoLaneScaleX * this.laneLength;
     },
 
     get startingNoteNum() {

@@ -203,6 +203,9 @@ export default function usePianoRollMouseHandlers() {
   }
 
   const onWheel: React.WheelEventHandler = (event) => {
+    console.log(pianoRollStore.pianoLaneScaleX)
+    console.log('width', pianoRollStore.canvasWidth)
+    console.log('calculated width', pianoRollStore.pianoLaneScaleX * pianoRollStore.laneLength)
     if (event.ctrlKey) {
       console.log(event.deltaX, event.deltaY)
       console.log("on wheel")

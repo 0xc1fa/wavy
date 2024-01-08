@@ -40,7 +40,7 @@ const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
     <svg
       className={styles['grid']}
       aria-label="pianoroll-grids"
-      width={laneLength}
+      width={laneLength * pianoLaneScaleX}
       height={canvasHeight}
       {...other}
     >

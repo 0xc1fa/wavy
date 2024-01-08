@@ -41,7 +41,7 @@ const VelocityEditorGrids: React.FC<VelocityEditorGridsProps> = ({ height, ...ot
     <svg
       className={styles['grid']}
       aria-label="pianoroll-grids"
-      width={laneLength}
+      width={laneLength * pianoLaneScaleX}
       height={height}
       {...other}
     >

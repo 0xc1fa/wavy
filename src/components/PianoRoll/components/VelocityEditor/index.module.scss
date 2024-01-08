@@ -5,7 +5,7 @@
 .inner-container {
   position: relative;
   display: flex;
-  width: calc(var(--lane-length) + 50px);
+  width: calc(var(--canvas-width) + 50px);
   height: var(--container-height);
   background-color: #232323;
   z-index: 10;

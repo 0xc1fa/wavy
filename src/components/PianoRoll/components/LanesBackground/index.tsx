@@ -4,7 +4,6 @@ import useTheme from "../../hooks/useTheme";
 import useStore from "../../hooks/useStore";
 
 interface LanesBackgroundProps extends React.HTMLAttributes<SVGElement> {}
-
 function LanesBackground({ ...other }: LanesBackgroundProps) {
   const transform = usePianoRollTransform();
   const theme = useTheme();
@@ -62,7 +61,7 @@ function LanesBackground({ ...other }: LanesBackgroundProps) {
   return (
     <svg
       aria-label="piano-roll-lanes-background"
-      width={transform.canvasWidth}
+      width={transform.pianoLaneScaleX * pianoRollStore.laneLength}
       height={transform.canvasHeight}
       {...other}
     >

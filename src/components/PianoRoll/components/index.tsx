@@ -56,6 +56,7 @@ export default function PianoRoll({
         ref={containerRef}
         style={{
           '--lane-length': `${pianoRollStore.laneLength}px`,
+          '--canvas-width': `${pianoRollStore.laneLength * pianoRollStore.pianoLaneScaleX}px`,
           '--canvas-height': `${pianoRollStore.canvasHeight}px`,
         } as React.CSSProperties }
         tabIndex={0}
