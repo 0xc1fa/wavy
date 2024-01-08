@@ -100,7 +100,7 @@ function defaultPianoRollStore() {
     startingOctave: -1,
     endingOctave: 10,
     laneWidth: 25,
-    laneLength: 1500,
+    // laneLength: 1500,
     pixelPerBeat: 70,
     tickPerBeat: 480,
     defaultNoteLyric: "啦",
@@ -111,6 +111,12 @@ function defaultPianoRollStore() {
 
     currentTicks: 0,
     selectionTicks: 0,
+    startingTick: 0,
+    endingTick: 480 * 4 * 8,
+
+    get laneLength() {
+      return (this.endingTick - this.startingTick) * this.pixelsPerTick
+    },
 
     get canvasWidth() {
       return this.laneLength * this.pianoLaneScaleX;

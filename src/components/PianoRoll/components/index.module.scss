@@ -21,11 +21,13 @@
   position: sticky;
   top: 0;
   z-index: 2;
+  width: calc(var(--lane-length) + 50px);
 }
 
 .middle-container {
   display: flex;
   position: relative;
+  width: calc(var(--lane-length) + 50px);
 }
 
 .lower-container {
@@ -36,7 +38,7 @@
   height: fit-content;
 }
 
-.lane-container{
+.lane-container {
   height: var(--canvas-height);
   z-index: 0;
   position: relative;
@@ -45,20 +47,9 @@
 .pianoroll-lane {
   position: relative;
   flex: 0 0 auto;
-  // z-index: 3;
-
 
   width: var(--lane-length);
   height: var(--canvas-height);
   background-color: #232323;
 
-  // & > *:not(:last-child) {
-  //   position: absolute;
-  //   inset: 0;
-  // }
-}
-
-.notes-container {
-  width: var(--width);
-  height: var(--height);
 }
