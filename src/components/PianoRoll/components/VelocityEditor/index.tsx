@@ -43,13 +43,15 @@ export default function VelocityEditor() {
     setIsDragging(false)
   }
 
+  const resizeBarHandlers = {
+    onPointerDown: handlePointerDown,
+    onPointerMove: handlePointerMove,
+    onPointerUp: handlePointerUp,
+  }
+
   return (
     <div className={styles['outer-container']}>
-      <div className={styles['resize-bar']}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-      />
+      <div className={styles['resize-bar']} {...resizeBarHandlers} />
       <div className={styles['inner-container']}
         style={{
           '--container-height': `${containerHeight}px`
