@@ -74,9 +74,9 @@ export function modifiedNotes(state: PianoRollStore, action: ModifiedNotesAction
   const notesModifiedWithClampValue = action.payload.notes.map(note => ({
     ...note,
     noteNumber: Math.max(0, Math.min(127, note.noteNumber)),
-    velocity: Math.max(0, Math.min(127, note.velocity)),
+    velocity: Math.round(Math.max(0, Math.min(127, note.velocity))),
     duration: Math.max(10, note.duration),
-    
+
   }))
   return {
     ...state,

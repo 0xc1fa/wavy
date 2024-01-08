@@ -1,3 +1,4 @@
+'use client';
 import LaneGrids from "./LaneGrids";
 import { defaultPianoRollTheme } from "@/components/PianoRoll/store/pianoRollTheme";
 import PianoRollThemeContext  from "../contexts/piano-roll-theme-context";
@@ -45,6 +46,7 @@ export default function PianoRoll({
   const dispatch = usePianoRollDispatch();
   useScrollToNote(containerRef, initialScrollMiddleNote);
 
+
   return (
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
       <div className={styles['container']}
@@ -59,7 +61,7 @@ export default function PianoRoll({
           <TempoInfo />
           <Ruler />
         </div>
-        <div className={styles['lower-container']}>
+        <div className={styles['middle-container']}>
           <PianoKeyboard />
           <div className={styles['lane-container']}>
             <div className={styles['pianoroll-lane']} {...pianoRollMouseHandlers}
@@ -73,11 +75,12 @@ export default function PianoRoll({
               {playheadPosition !== undefined && <Playhead playheadPosition={playheadPosition}/>}
               <div style={{ position:'absolute', inset: '0', width: '100%', height: '100%' }} />
               <LanesBackground />
-
             </div>
-            <VelocityEditor />
           </div>
         </div>
+        <div className={styles['lower-container']}>
+            <VelocityEditor />
+          </div>
       </div>
 
     </PianoRollThemeContext.Provider>

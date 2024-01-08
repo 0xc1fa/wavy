@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -8,11 +8,13 @@ import { usePianoRollNotes } from "./components/PianoRoll/helpers/notes";
 
 import midi from '@/components/PianoRoll/helpers/midi';
 import { usePianoRollDispatch } from "./components/PianoRoll/hooks/usePianoRollDispatch";
+import useStore from "./components/PianoRoll/hooks/useStore";
 
 function App() {
   const [count, setCount] = useState(0)
   const pianoRollNote = usePianoRollNotes();
   const dispatch = usePianoRollDispatch();
+  const { pianoRollStore } = useStore()
 
   const downloadMidi = () => {
 
@@ -41,8 +43,54 @@ function App() {
     console.log('set legato')
   }
 
+
+  const [json, setJson] = useState(JSON.stringify({}))
+  const [audio, setAudio] = useState("")
+  const audioRef = useRef<HTMLAudioElement>(null)
+  const synthesis: React.MouseEventHandler = (event) => {
+    console.log("trigger send")
+
+    const newpianoRollLanesState = pianoRollStore.pianoRollNotes.map((note) => ({
+      time: note.tick,
+      duration: note.duration,
+      lyric: note.lyric,
+      noteNumber: note.noteNumber,
+    }))
+
+    const message = {
+      bpm: pianoRollStore.bpm,
+      notes: newpianoRollLanesState,
+    }
+
+    const newJsonMessage = JSON.stringify(message)
+    if (newJsonMessage === json) {
+      return
+    }
+    setJson(newJsonMessage)
+    console.log(json)
+    const ws = new WebSocket("ws://localhost:8000/ws");
+    ws.onopen = () => {
+      ws.send(json);
+    };
+
+    let blob: Blob | undefined;
+    let audioURL: string | undefined;
+
+    ws.onmessage = (event) => {
+      const arrayBuffer = event.data;
+      blob = new Blob([arrayBuffer], { type: "audio/wav" });
+      audioURL = URL.createObjectURL(blob);
+      setAudio(audioURL)
+    };
+
+    console.log("message sent")
+  }
+  // }, [pianoRollStore.pianoRollNotes, pianoRollStore.bpm])
+
   return (
     <>
+      <audio controls src={audio} ref={audioRef} />
+      <button onClick={synthesis}>Synthesis</button>
       <button onClick={downloadMidi}>Download</button>
       <button onClick={setLegato}>Set Legato</button>
       <PianoRoll attachLyric />

@@ -15,7 +15,7 @@ const Ruler: React.FC<RulerProps> = ({ ...other }) => {
   const rulerHeight = 30
 
   const beatMarkers = Array.from({ length: numberOfBeatMarkers }, (_, index) => (
-    <Fragment key={index}>
+    <g key={index}>
       <line
         key={index}
         x1={index * pixelPerBeat * pianoLaneScaleX * 4}
@@ -35,7 +35,7 @@ const Ruler: React.FC<RulerProps> = ({ ...other }) => {
       >
         {index + 1}
       </text>
-    </Fragment>
+    </g>
   ));
 
   const barMarkers = Array.from({ length: numberOfBarMarkers }, (_, index) => (

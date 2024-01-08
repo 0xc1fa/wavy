@@ -12,3 +12,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </React.StrictMode>
   ,
 )
+
+import { Workbox } from 'workbox-window';
+
+if ('serviceWorker' in navigator) {
+  const wb = new Workbox('/sw.js');
+  wb.register();
+}

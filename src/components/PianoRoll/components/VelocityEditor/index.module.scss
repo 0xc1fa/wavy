@@ -1,14 +1,32 @@
-.container {
+.outer-container {
   --resize-bar-height: 3px;
+}
 
-  position: sticky;
-  bottom: 0;
-  width: 100%;
+.inner-container {
+  position: relative;
+  display: flex;
+  width: var(--lane-length);
   height: var(--container-height);
   background-color: #232323;
   z-index: 10;
-  min-height: 30px;
-  max-height: 100%;
+  max-height: var(--container-height);
+}
+
+.left-container {
+  flex: 0 0 auto;
+  position: relative;
+  width: 50px;
+  height: 100%;
+  background-color: #2c2c2c;
+  border-right: 1px solid #191919;
+  box-sizing: border-box;
+}
+
+.right-container {
+  position: relative;
+  width: var(--lane-length);
+  flex: 0 0 auto;
+  height: 100%;
 }
 
 .marker-container {
@@ -20,6 +38,27 @@
   justify-content: center;
   align-items: center;
   cursor: ns-resize;
+
+  &::after {
+    visibility: hidden;
+    content: attr(data-velocity);
+    position: absolute;
+    z-index: 40;
+    overflow: hidden;
+    background-color: #232323;
+    padding: 2px;
+    border: 1px solid #191919;
+    font-size: 12px;
+    width: fit-content;
+    height: fit-content;
+    transition-delay: 0s;
+  }
+
+  &:hover::after, &:focus::after {
+    visibility: visible;
+    transition-delay: 0.5s;
+  }
+
 }
 
 .velocity-marker {
@@ -45,7 +84,7 @@
   width: 100%;
   cursor: ns-resize;
   box-sizing: border-box;
-  z-index: 30;
+  z-index: 50;
   height: var(--resize-bar-height);
   background-color: #191919;
 }

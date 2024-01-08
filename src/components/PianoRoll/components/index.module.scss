@@ -23,13 +23,23 @@
   z-index: 2;
 }
 
+.middle-container {
+  display: flex;
+  position: relative;
+}
+
 .lower-container {
   display: flex;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  height: fit-content;
 }
 
 .lane-container{
   height: var(--canvas-height);
   z-index: 0;
+  position: relative;
 }
 
 .pianoroll-lane {
