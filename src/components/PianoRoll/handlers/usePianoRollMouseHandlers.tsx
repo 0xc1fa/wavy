@@ -166,7 +166,7 @@ export default function usePianoRollMouseHandlers() {
       case PianoRollLanesMouseHandlerMode.Velocity: {
         const newNotes = pianoRollStore.noteModificationBuffer.notesSelected.map(bufferedNote => ({
           ...bufferedNote,
-          velocity: Math.max(1, Math.min(127,bufferedNote.velocity + deltaY))
+          velocity: Math.max(1, Math.min(127,bufferedNote.velocity - deltaY / 3))
         }))
         dispatch({ type: 'modifiedNotes', payload: { notes: newNotes } })
       }

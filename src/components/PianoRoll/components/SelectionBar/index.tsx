@@ -3,7 +3,7 @@ import styles from './index.module.scss'
 
 interface RulerProps extends React.HTMLAttributes<SVGElement> {}
 export default function SelectionBar({ ...other }: RulerProps) {
-  const { laneLength, canvasHeight, pixelPerBeat, pianoLaneScaleX } = usePianoRollTransform();
+  const { laneLength, pixelPerBeat, pianoLaneScaleX } = usePianoRollTransform();
 
   const numberOfBeatMarkers = Math.ceil(laneLength / (pixelPerBeat * 4));
   const numberOfHalfBarMarkers = Math.ceil(laneLength / (pixelPerBeat));

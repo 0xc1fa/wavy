@@ -48,10 +48,15 @@ export default function PianoRoll({
   const { pianoRollStore } = useStore()
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const minScaleX = (800 - 50) / pianoRollStore.laneLength;
 
   usePreventZoom();
   const dispatch = usePianoRollDispatch();
   useScrollToNote(containerRef, initialScrollMiddleNote);
+
+  // useEffect(() => {
+  //   dispatch({ type: 'setPianoLaneScaleX' , payload: { pianoLaneScaleX: minScaleX } })
+  // }, [])
 
   return (
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
