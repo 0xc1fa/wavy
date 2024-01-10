@@ -9,14 +9,13 @@ export type NoteAction =
   | AddNoteAction
   | AddNotesAction
   | ModifiedNotesAction
-  | ReplaceAllNotesAction
+  | DeleteSelectedNotesAction
+  | UpdateNoteLyricAction
   | ToggleSelectedNoteVibratoModeAction
   | VibratoDepthDelayChangeSelectedNoteAction
   | VibratoRateChangeSelectedNoteAction
   | SetNoteInMarqueeAsSelectedAction
-  | UpdateNoteLyricAction
   | MoveNoteAsLatestModifiedAction
-  | DeleteSelectedNotesAction
   | setNoteModificationBufferAction
 
 
@@ -100,18 +99,34 @@ export function modifiedNotes(state: PianoRollStore, action: ModifiedNotesAction
     pianoRollNotes: [
       ...notesNotModified,
       ...notesModifiedWithClampValue
-    ]
+    ],
+    notesHistory: {
+      head: state.notesHistory.head + 1,
+      history: [
+        ...getChoppedHistoryAfterHead(state.notesHistory),
+        { type: PianoRollHistoryItemType.MODIFY_NOTE, note: notesModifiedWithClampValue }
+      ]
+    }
   }
 }
 
 
-type ReplaceAllNotesAction = { type: 'replaceAllNotes', payload: { notes: TrackNoteEvent[] } }
-export function replaceAllNotes(state: PianoRollStore, action: ReplaceAllNotesAction) {
+type DeleteSelectedNotesAction = { type: 'deleteSelectedNotes' }
+export function deleteSelectedNotes(state: PianoRollStore, action: DeleteSelectedNotesAction) {
+  const notesToBeDeleted = state.pianoRollNotes.filter(note => note.isSelected)
   return {
     ...state,
-    pianoRollNotes: action.payload.notes
+    pianoRollNotes: state.pianoRollNotes.filter(note => !note.isSelected),
+    notesHistory: {
+      head: state.notesHistory.head + 1,
+      history: [
+        ...getChoppedHistoryAfterHead(state.notesHistory),
+        { type: PianoRollHistoryItemType.DELETE_NOTE, note: notesToBeDeleted }
+      ]
+    }
   }
 }
+
 
 
 type ToggleSelectedNoteVibratoModeAction = { type: 'toggleSelectedNoteVibratoMode' }
@@ -224,14 +239,6 @@ export function moveNoteAsLatestModified(state: PianoRollStore, action: MoveNote
   return {
     ...state,
     pianoRollNotes: state.pianoRollNotes.filter(note => note.id !== action.payload.noteId).concat(state.pianoRollNotes.filter(note => note.id === action.payload.noteId))
-  }
-}
-
-type DeleteSelectedNotesAction = { type: 'deleteSelectedNotes' }
-export function deleteSelectedNotes(state: PianoRollStore, action: DeleteSelectedNotesAction) {
-  return {
-    ...state,
-    pianoRollNotes: state.pianoRollNotes.filter(note => !note.isSelected)
   }
 }
 
