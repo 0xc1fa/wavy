@@ -119,7 +119,7 @@ export default function usePianoRollMouseHandlers() {
           tick: bufferedNote.tick + deltaTicks,
           duration: Math.max(10, bufferedNote.duration - deltaTicks)
         }))
-        dispatch({ type: 'modifiedNotes', payload: { notes: newNotes }});
+        dispatch({ type: 'MODIFYING_NOTES', payload: { notes: newNotes }});
         break;
       }
       case PianoRollLanesMouseHandlerMode.NotesExtending: {
@@ -127,7 +127,7 @@ export default function usePianoRollMouseHandlers() {
           ...bufferedNote,
           duration: Math.max(10, bufferedNote.duration + deltaTicks)
         }))
-        dispatch({ type: 'modifiedNotes', payload: { notes: newNotes }})
+        dispatch({ type: 'MODIFYING_NOTES', payload: { notes: newNotes }})
         break;
       }
       case PianoRollLanesMouseHandlerMode.DragAndDrop: {
@@ -136,7 +136,7 @@ export default function usePianoRollMouseHandlers() {
           noteNumber: Math.min(127, Math.max(0, bufferedNote.noteNumber + deltaPitch)),
           tick: bufferedNote.tick + deltaTicks
         }))
-        dispatch({ type: 'modifiedNotes', payload: { notes: newNotes }});
+        dispatch({ type: 'MODIFYING_NOTES', payload: { notes: newNotes }});
         break;
       }
       case PianoRollLanesMouseHandlerMode.MarqueeSelection:
@@ -152,7 +152,7 @@ export default function usePianoRollMouseHandlers() {
           ...bufferedNote,
           velocity: Math.max(1, Math.min(127,bufferedNote.velocity - deltaY / 3))
         }))
-        dispatch({ type: 'modifiedNotes', payload: { notes: newNotes } })
+        dispatch({ type: 'MODIFYING_NOTES', payload: { notes: newNotes } })
       }
     }
     setOngoingPosition({x: event.nativeEvent.offsetX, y: event.nativeEvent.offsetY})

@@ -1,9 +1,7 @@
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
-import { VibratoMode } from "@/types/VibratoMode";
 import { isBlackKey } from "../helpers";
-import { v4 as uuidv4 } from 'uuid';
 import { createContext, useReducer } from "react";
-import { NoteAction, addNote, addNotes, deleteSelectedNotes, modifiedNotes, moveNoteAsLatestModified, setNoteInMarqueeAsSelected, setNoteModificationBuffer, toggleSelectedNoteVibratoMode, updateNoteLyric, vibratoDepthDelayChangeSelectedNote, vibratoRateChangeSelectedNote } from "../actions/note-actions";
+import { NoteAction, addNote, addNotes, deleteSelectedNotes, modifyingNotes, moveNoteAsLatestModified, setNoteInMarqueeAsSelected, setNoteModificationBuffer, toggleSelectedNoteVibratoMode, updateNoteLyric, vibratoDepthDelayChangeSelectedNote, vibratoRateChangeSelectedNote } from "../actions/note-actions";
 import { TransformAction, setPianoLaneScaleX } from "../actions/transform-actions";
 import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
 import { HistoryAction, PianoRollHistoryItem, redo, undo } from "../actions/history-action";
@@ -28,7 +26,9 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   switch (action.type) {
     case 'addNote': return addNote(state, action);
     case 'addNotes': return addNotes(state, action);
-    case 'modifiedNotes': return modifiedNotes(state, action);
+    case 'MODIFYING_NOTES': return modifyingNotes(state, action);
+    // case 'BEGIN_MODIFYING_NOTES': return beginModifyingNotes(state, action);
+    // case 'FINISH_MODIFYING_NOTES': return finishModifyingNotes(state, action);
     case 'unselectAllNotes': return unselectAllNotes(state, action);
     case 'setNoteAsSelected': return setNoteAsSelected(state, action);
     case 'toggleSelectedNoteVibratoMode': return toggleSelectedNoteVibratoMode(state, action);

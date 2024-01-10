@@ -3,12 +3,15 @@ import { VibratoMode } from "@/types/VibratoMode";
 import { PianoRollStore } from "../store/pianoRollStore";
 import { v4 as uuidv4 } from 'uuid';
 import { PianoRollHistoryItemType, getChoppedHistoryAfterHead } from "./history-action";
+import { arraysEqual } from "../helpers/common";
 
 
 export type NoteAction =
   | AddNoteAction
   | AddNotesAction
-  | ModifiedNotesAction
+  | ModifyingNotesAction
+  // | BeginModifyingNotesAction
+  // | FinishModifyingNotesAction
   | DeleteSelectedNotesAction
   | UpdateNoteLyricAction
   | ToggleSelectedNoteVibratoModeAction
@@ -80,11 +83,14 @@ export function addNotes(state: PianoRollStore, action: AddNotesAction) {
 }
 
 
-type ModifiedNotesAction = {
-  type: 'modifiedNotes',
+type ModifyingNotesAction = {
+  type: 'MODIFYING_NOTES',
   payload: { notes: TrackNoteEvent[] }
 }
-export function modifiedNotes(state: PianoRollStore, action: ModifiedNotesAction) {
+export function modifyingNotes(state: PianoRollStore, action: ModifyingNotesAction) {
+  const { history, head } = state.notesHistory
+  const prevHistory = history[head].note
+  
   const notesIdsToBeModified = action.payload.notes.map(note => note.id)
   const notesNotModified = state.pianoRollNotes.filter(note => !notesIdsToBeModified.includes(note.id))
   const notesModifiedWithClampValue = action.payload.notes.map(note => ({
@@ -94,21 +100,79 @@ export function modifiedNotes(state: PianoRollStore, action: ModifiedNotesAction
     duration: Math.max(10, note.duration),
 
   }))
-  return {
-    ...state,
-    pianoRollNotes: [
-      ...notesNotModified,
-      ...notesModifiedWithClampValue
-    ],
-    notesHistory: {
-      head: state.notesHistory.head + 1,
-      history: [
-        ...getChoppedHistoryAfterHead(state.notesHistory),
-        { type: PianoRollHistoryItemType.MODIFY_NOTE, note: notesModifiedWithClampValue }
-      ]
+  if (arraysEqual(prevHistory, state.noteModificationBuffer.notesSelected)) {
+    return {
+      ...state,
+      pianoRollNotes: [
+        ...notesNotModified,
+        ...notesModifiedWithClampValue
+      ],
+    }
+  } else {
+    return {
+      ...state,
+      pianoRollNotes: [
+        ...notesNotModified,
+        ...notesModifiedWithClampValue
+      ],
+      notesHistory: {
+        head: state.notesHistory.head + 1,
+        history: [
+          ...getChoppedHistoryAfterHead(state.notesHistory),
+          { type: PianoRollHistoryItemType.MODIFY_NOTE, note: state.noteModificationBuffer.notesSelected }
+        ]
+      }
     }
   }
 }
+
+// type BeginModifyingNotesAction = {
+//   type: 'BEGIN_MODIFYING_NOTES',
+//   payload: { notes: TrackNoteEvent[] }
+// }
+// export function beginModifyingNotes(state: PianoRollStore, action: BeginModifyingNotesAction) {
+//   return {
+//     ...state,
+//     notesHistory: {
+//       head: state.notesHistory.head + 1,
+//       history: [
+//         ...getChoppedHistoryAfterHead(state.notesHistory),
+//         { type: PianoRollHistoryItemType.MODIFY_NOTE, note: action.payload.notes }
+//       ]
+//     }
+//   }
+// }
+
+
+// type FinishModifyingNotesAction = {
+//   type: 'FINISH_MODIFYING_NOTES',
+//   payload: { notes: TrackNoteEvent[] }
+// }
+// export function finishModifyingNotes(state: PianoRollStore, action: FinishModifyingNotesAction) {
+//   const notesIdsToBeModified = action.payload.notes.map(note => note.id)
+//   const notesNotModified = state.pianoRollNotes.filter(note => !notesIdsToBeModified.includes(note.id))
+//   const notesModifiedWithClampValue = action.payload.notes.map(note => ({
+//     ...note,
+//     noteNumber: Math.max(0, Math.min(127, note.noteNumber)),
+//     velocity: Math.round(Math.max(1, Math.min(127, note.velocity))),
+//     duration: Math.max(10, note.duration),
+
+//   }))
+//   return {
+//     ...state,
+//     pianoRollNotes: [
+//       ...notesNotModified,
+//       ...notesModifiedWithClampValue
+//     ],
+//     notesHistory: {
+//       head: state.notesHistory.head + 1,
+//       history: [
+//         ...getChoppedHistoryAfterHead(state.notesHistory),
+//         { type: PianoRollHistoryItemType.MODIFY_NOTE, note: notesModifiedWithClampValue }
+//       ]
+//     }
+//   }
+// }
 
 
 type DeleteSelectedNotesAction = { type: 'deleteSelectedNotes' }
