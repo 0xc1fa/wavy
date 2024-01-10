@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { focusNote, getSelectedNotes } from "../helpers/notes";
+import { useState } from "react";
+import { focusNote } from "../helpers/notes";
 import { usePianoRollTransform } from "../hooks/usePianoRollTransform";
 import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import useStore from "../hooks/useStore";
@@ -216,17 +216,17 @@ export default function usePianoRollMouseHandlers() {
     target.style.cursor = isBoundaryHovered ? 'col-resize' : 'default';
   };
 
-  const calculateDeltas = (e: PointerEvent) => {
-    const previousNote = pianoRollStore.getNoteNumFromOffsetY(ongoingPosition.y)
-    const currentNote = pianoRollStore.getNoteNumFromOffsetY(e.offsetY)
-    const previousTick = pianoRollStore.getTickFromOffsetX(ongoingPosition.x)
-    const currentTick = pianoRollStore.getTickFromOffsetX(e.offsetX)
-    const deltaPitch = currentNote - previousNote
-    const deltaTicks = currentTick - previousTick
-    const deltaY = ongoingPosition.y - e.offsetY
-    const deltaX = ongoingPosition.x - e.offsetX
-    return {deltaPitch, deltaTicks, deltaY, deltaX}
-  }
+  // const calculateDeltas = (e: PointerEvent) => {
+  //   const previousNote = pianoRollStore.getNoteNumFromOffsetY(ongoingPosition.y)
+  //   const currentNote = pianoRollStore.getNoteNumFromOffsetY(e.offsetY)
+  //   const previousTick = pianoRollStore.getTickFromOffsetX(ongoingPosition.x)
+  //   const currentTick = pianoRollStore.getTickFromOffsetX(e.offsetX)
+  //   const deltaPitch = currentNote - previousNote
+  //   const deltaTicks = currentTick - previousTick
+  //   const deltaY = ongoingPosition.y - e.offsetY
+  //   const deltaX = ongoingPosition.x - e.offsetX
+  //   return {deltaPitch, deltaTicks, deltaY, deltaX}
+  // }
 
   return {
     pianoRollMouseHandlers: {

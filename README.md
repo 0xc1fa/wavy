@@ -1,5 +1,17 @@
 # ReactPianoRoll
 
+## TODOs
+- Select notes when dragging not after dragging
+- Change the staring and ending point of the midi editor
+- Add loop area
+- Add selected mode for velocity editor
+
+## Existing Problems and
+- Cannot delete lyric (as it would also delete the note)
+- Refactored PianoRollStore
+- The scrollable area does not resize upon scaling
+
+
 This is a component library for pianoroll in React. Functionalities included:
 
 - Note creation, dragging and deletion

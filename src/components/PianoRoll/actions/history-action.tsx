@@ -1,6 +1,5 @@
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import { PianoRollStore } from "../store/pianoRollStore";
-import { usePianoRollNotes } from "../helpers/notes";
 
 export enum PianoRollHistoryItemType {
   ADD_NOTE,

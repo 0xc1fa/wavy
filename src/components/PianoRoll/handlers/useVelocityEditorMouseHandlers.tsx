@@ -32,7 +32,8 @@ export default function useVelocityEditorMouseHandlers() {
           velocity: newVelocity,
         }))
         console.log(modifiedNotes)
-        dispatch({ type: 'modifiedNotes', payload: { notes: modifiedNotes }})
+        dispatch({ type: 'MODIFYING_NOTES', payload: { notes: modifiedNotes }})
+        break;
       }
       case VelocityEditorMouseHandlerMode.SelectAndDrag: {
         const noteClicked = pianoRollStore.getNotesFromOffsetX(offsetX)[0];
@@ -46,7 +47,7 @@ export default function useVelocityEditorMouseHandlers() {
             payload: { initX: event.nativeEvent.offsetX, initY: event.nativeEvent.offsetY }
           })
         }
-
+        break;
       }
     }
     dispatch({ type: 'setNoteModificationBuffer',
@@ -72,7 +73,7 @@ export default function useVelocityEditorMouseHandlers() {
           velocity: newVelocity,
         }))
         console.log(modifiedNotes)
-        dispatch({ type: 'modifiedNotes', payload: { notes: modifiedNotes }})
+        dispatch({ type: 'MODIFYING_NOTES', payload: { notes: modifiedNotes }})
       }
     }
   }

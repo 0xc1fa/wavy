@@ -10,8 +10,6 @@ export type NoteAction =
   | AddNoteAction
   | AddNotesAction
   | ModifyingNotesAction
-  // | BeginModifyingNotesAction
-  // | FinishModifyingNotesAction
   | DeleteSelectedNotesAction
   | UpdateNoteLyricAction
   | ToggleSelectedNoteVibratoModeAction
@@ -122,54 +120,6 @@ export function modifyingNotes(state: PianoRollStore, action: ModifyingNotesActi
     }
   }
 }
-
-// type BeginModifyingNotesAction = {
-//   type: 'BEGIN_MODIFYING_NOTES',
-//   payload: { notes: TrackNoteEvent[] }
-// }
-// export function beginModifyingNotes(state: PianoRollStore, action: BeginModifyingNotesAction) {
-//   return {
-//     ...state,
-//     notesHistory: {
-//       head: state.notesHistory.head + 1,
-//       history: [
-//         ...getChoppedHistoryAfterHead(state.notesHistory),
-//         { type: PianoRollHistoryItemType.MODIFY_NOTE, note: action.payload.notes }
-//       ]
-//     }
-//   }
-// }
-
-
-// type FinishModifyingNotesAction = {
-//   type: 'FINISH_MODIFYING_NOTES',
-//   payload: { notes: TrackNoteEvent[] }
-// }
-// export function finishModifyingNotes(state: PianoRollStore, action: FinishModifyingNotesAction) {
-//   const notesIdsToBeModified = action.payload.notes.map(note => note.id)
-//   const notesNotModified = state.pianoRollNotes.filter(note => !notesIdsToBeModified.includes(note.id))
-//   const notesModifiedWithClampValue = action.payload.notes.map(note => ({
-//     ...note,
-//     noteNumber: Math.max(0, Math.min(127, note.noteNumber)),
-//     velocity: Math.round(Math.max(1, Math.min(127, note.velocity))),
-//     duration: Math.max(10, note.duration),
-
-//   }))
-//   return {
-//     ...state,
-//     pianoRollNotes: [
-//       ...notesNotModified,
-//       ...notesModifiedWithClampValue
-//     ],
-//     notesHistory: {
-//       head: state.notesHistory.head + 1,
-//       history: [
-//         ...getChoppedHistoryAfterHead(state.notesHistory),
-//         { type: PianoRollHistoryItemType.MODIFY_NOTE, note: notesModifiedWithClampValue }
-//       ]
-//     }
-//   }
-// }
 
 
 type DeleteSelectedNotesAction = { type: 'deleteSelectedNotes' }
