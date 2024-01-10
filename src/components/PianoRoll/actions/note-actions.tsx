@@ -2,7 +2,7 @@ import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import { VibratoMode } from "@/types/VibratoMode";
 import { PianoRollStore } from "../store/pianoRollStore";
 import { v4 as uuidv4 } from 'uuid';
-import { PianoRollHistoryItemType } from "./history-action";
+import { PianoRollHistoryItemType, getChoppedHistoryAfterHead } from "./history-action";
 
 
 export type NoteAction =
@@ -50,7 +50,7 @@ export function addNote(state: PianoRollStore, action: AddNoteAction) {
     notesHistory: {
       head: state.notesHistory.head + 1,
       history: [
-        ...state.notesHistory.history,
+        ...getChoppedHistoryAfterHead(state.notesHistory),
         { type: PianoRollHistoryItemType.ADD_NOTE, note: [newNote] }
       ]
     },
@@ -73,7 +73,7 @@ export function addNotes(state: PianoRollStore, action: AddNotesAction) {
     notesHistory: {
       head: state.notesHistory.head + 1,
       history: [
-        ...state.notesHistory.history,
+        ...getChoppedHistoryAfterHead(state.notesHistory),
         { type: PianoRollHistoryItemType.ADD_NOTE, note: newNotes }
       ]
     }

@@ -115,3 +115,7 @@ function getNextNoteHistory(notes: TrackNoteEvent[], history: PianoRollHistory):
       throw Error('action not defined')
   }
 }
+
+export function getChoppedHistoryAfterHead(history: PianoRollHistory): PianoRollHistoryItem[] {
+  return history.history.slice(0, history.head + 1)
+}
