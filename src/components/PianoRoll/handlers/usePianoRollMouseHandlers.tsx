@@ -32,26 +32,10 @@ export default function usePianoRollMouseHandlers() {
   const { pianoRollStore } = useStore();
   const transform = usePianoRollTransform()
   const dispatch = usePianoRollDispatch()
-  // const shouldUpdateBuffer = useRef(false);
-
-  // useEffect(() => {
-  //   if (!shouldUpdateBuffer) {
-  //     return;
-  //   }
-
-
-
-  // }, [pianoRollStore.pianoRollNotes])
 
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None)
   const [startingPosition, setStartingPosition] = useState({x: 0, y: 0})
   const [ongoingPosition, setOngoingPosition] = useState({x: 0, y: 0})
-
-  // const [notesModificationBuffer, setNotesModificationBuffer] = useState<NotesModificationBuffer>({
-  //   notesSelected: [],
-  //   initY: 0,
-  //   initX: 0,
-  // })
 
   const getTickAndNoteNumFromEvent = (e: PointerEvent) => {
     const noteNum = pianoRollStore.getNoteNumFromEvent(e);

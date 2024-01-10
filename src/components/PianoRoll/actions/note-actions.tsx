@@ -2,12 +2,14 @@ import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import { VibratoMode } from "@/types/VibratoMode";
 import { PianoRollStore } from "../store/pianoRollStore";
 import { v4 as uuidv4 } from 'uuid';
+import { PianoRollHistoryItemType } from "./history-action";
 
 
 export type NoteAction =
   | AddNoteAction
   | AddNotesAction
   | ModifiedNotesAction
+  | ReplaceAllNotesAction
   | ToggleSelectedNoteVibratoModeAction
   | VibratoDepthDelayChangeSelectedNoteAction
   | VibratoRateChangeSelectedNoteAction
@@ -44,7 +46,14 @@ export function addNote(state: PianoRollStore, action: AddNoteAction) {
   const newNote = createNote(state, action.payload.ticks, action.payload.noteNum)
   return {
     ...state,
-    pianoRollNotes: [...state.pianoRollNotes, newNote]
+    pianoRollNotes: [...state.pianoRollNotes, newNote],
+    notesHistory: {
+      head: state.notesHistory.head + 1,
+      history: [
+        ...state.notesHistory.history,
+        { type: PianoRollHistoryItemType.ADD_NOTE, note: [newNote] }
+      ]
+    },
   }
 }
 
@@ -54,12 +63,20 @@ type AddNotesAction = {
   payload: { notes: TrackNoteEvent[] }
 }
 export function addNotes(state: PianoRollStore, action: AddNotesAction) {
+  const newNotes = action.payload.notes.map(note => ({...note, id: uuidv4()}))
   return {
     ...state,
     pianoRollNotes: [
       ...state.pianoRollNotes,
-      ...action.payload.notes.map(note => ({...note, id: uuidv4()}))
-    ]
+      ...newNotes
+    ],
+    notesHistory: {
+      head: state.notesHistory.head + 1,
+      history: [
+        ...state.notesHistory.history,
+        { type: PianoRollHistoryItemType.ADD_NOTE, note: newNotes }
+      ]
+    }
   }
 }
 
@@ -84,6 +101,15 @@ export function modifiedNotes(state: PianoRollStore, action: ModifiedNotesAction
       ...notesNotModified,
       ...notesModifiedWithClampValue
     ]
+  }
+}
+
+
+type ReplaceAllNotesAction = { type: 'replaceAllNotes', payload: { notes: TrackNoteEvent[] } }
+export function replaceAllNotes(state: PianoRollStore, action: ReplaceAllNotesAction) {
+  return {
+    ...state,
+    pianoRollNotes: action.payload.notes
   }
 }
 

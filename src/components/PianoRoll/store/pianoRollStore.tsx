@@ -6,6 +6,7 @@ import { createContext, useReducer } from "react";
 import { NoteAction, addNote, addNotes, deleteSelectedNotes, modifiedNotes, moveNoteAsLatestModified, setNoteInMarqueeAsSelected, setNoteModificationBuffer, toggleSelectedNoteVibratoMode, updateNoteLyric, vibratoDepthDelayChangeSelectedNote, vibratoRateChangeSelectedNote } from "../actions/note-actions";
 import { TransformAction, setPianoLaneScaleX } from "../actions/transform-actions";
 import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
+import { HistoryAction, PianoRollHistoryItem, undo } from "../actions/history-action";
 
 export const PianoRollStoreContext = createContext<ReturnType<typeof usePianoRollStore> | undefined>(undefined)
 
@@ -21,7 +22,7 @@ export function PianoRollStoreProvider({ children }: PianoRollStoreProviderProps
   )
 }
 
-type PianoRollStoreAction = NoteAction | TransformAction | SelectionAction
+type PianoRollStoreAction = NoteAction | TransformAction | SelectionAction | HistoryAction
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   switch (action.type) {
@@ -45,6 +46,8 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
         ...state,
         bpm: action.payload.bpm
       }
+    case 'UNDO':
+      return undo(state, action);
     default:
       throw new Error();
   }
@@ -70,23 +73,22 @@ export type PianoRollStoreContext = ReturnType<typeof usePianoRollStore>
 export type PianoRollStore = ReturnType<typeof defaultPianoRollStore>
 function defaultPianoRollStore() {
   return {
-    keyPressed: new Array(),
-    keySelected: new Array(),
     pianoRollNotes: new Array<TrackNoteEvent>(),
-    pitchBendEvent: new Array(),
+    notesHistory: {
+      head: -1,
+      history: new Array<PianoRollHistoryItem>(),
+    },
     noteModificationBuffer: {
       notesSelected: new Array<TrackNoteEvent>(),
       initX: 0,
       initY: 0,
     },
 
-    // setNotesModificationBuffer({
-    //   notesSelected: getSelectedNotes(pianoRollStore.pianoRollNotes),
-    //   initY: event.nativeEvent.offsetY,
-    //   initX: event.nativeEvent.offsetX,
-    // })
-
     bpm: 120,
+    scaling: {
+      scaleX: 1,
+      scaleY: 1,
+    },
 
     pianoLaneScaleX: 1,
     pianoLaneScaleY: 1,
@@ -100,7 +102,6 @@ function defaultPianoRollStore() {
     startingOctave: -1,
     endingOctave: 10,
     laneWidth: 25,
-    // laneLength: 1500,
     pixelPerBeat: 70,
     tickPerBeat: 480,
     defaultNoteLyric: "啦",
@@ -113,6 +114,10 @@ function defaultPianoRollStore() {
     selectionTicks: 0,
     startingTick: 0,
     endingTick: 480 * 4 * 8,
+
+    get scaledPixelPerBeat() {
+      return this.pixelPerBeat * this.pianoLaneScaleX
+    },
 
     get laneLength() {
       return (this.endingTick - this.startingTick) * this.pixelsPerTick

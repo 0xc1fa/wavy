@@ -55,6 +55,17 @@ export default function usePianoRollKeyboardHandlers(
         case "KeyX": onCut(event); break;
         case "KeyC": onCopy(event); break;
         case "KeyV": onPaste(event); break;
+        case "KeyZ": {
+          dispatch({ type: 'UNDO' })
+        }
+      }
+    }
+
+    if (event.metaKey && event.shiftKey) {
+      switch (event.code) {
+        case "KeyZ": {
+          dispatch({ type: 'REDO' })
+        }
       }
     }
   }
@@ -66,15 +77,10 @@ export default function usePianoRollKeyboardHandlers(
   }
 
   const onDeleteDown = (event: React.KeyboardEvent) => {
-    // event.preventDefault()
-    // event.stopPropagation()
-    // event.currentTarget.
     dispatch({ type: 'deleteSelectedNotes' })
   }
 
   const onSpaceDown = (event: React.KeyboardEvent) => {
-    // event.preventDefault()
-    // event.stopPropagation()
     onSpace?.(event)
   }
 
