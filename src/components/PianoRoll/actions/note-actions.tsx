@@ -90,7 +90,6 @@ type ModifyingNotesAction = {
 export function modifyingNotes(state: PianoRollStore, action: ModifyingNotesAction) {
   const { history, head } = state.notesHistory
   const prevHistory = history[head].note
-  
   const notesIdsToBeModified = action.payload.notes.map(note => note.id)
   const notesNotModified = state.pianoRollNotes.filter(note => !notesIdsToBeModified.includes(note.id))
   const notesModifiedWithClampValue = action.payload.notes.map(note => ({
@@ -98,23 +97,21 @@ export function modifyingNotes(state: PianoRollStore, action: ModifyingNotesActi
     noteNumber: Math.max(0, Math.min(127, note.noteNumber)),
     velocity: Math.round(Math.max(1, Math.min(127, note.velocity))),
     duration: Math.max(10, note.duration),
-
   }))
+  const newStateWithoutHistory = {
+    ...state,
+    pianoRollNotes: [
+      ...notesNotModified,
+      ...notesModifiedWithClampValue
+    ],
+  }
   if (arraysEqual(prevHistory, state.noteModificationBuffer.notesSelected)) {
     return {
-      ...state,
-      pianoRollNotes: [
-        ...notesNotModified,
-        ...notesModifiedWithClampValue
-      ],
+      ...newStateWithoutHistory,
     }
   } else {
     return {
-      ...state,
-      pianoRollNotes: [
-        ...notesNotModified,
-        ...notesModifiedWithClampValue
-      ],
+      ...newStateWithoutHistory,
       notesHistory: {
         head: state.notesHistory.head + 1,
         history: [
