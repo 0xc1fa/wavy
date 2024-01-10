@@ -50,10 +50,9 @@
 
 .pianoroll-lane {
   position: relative;
-  flex: 0 0 auto;
 
   width: var(--canvas-width);
+  // height: fit-content;
   height: var(--canvas-height);
   background-color: var(--black);
-
 }

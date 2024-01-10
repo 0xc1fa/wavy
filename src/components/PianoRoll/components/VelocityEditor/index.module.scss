@@ -79,7 +79,7 @@
 }
 
 .note-bar-container {
-  height: calc(var(--container-height) - var(--resize-bar-height));
+  height: var(--container-height);
 }
 
 .resize-bar {

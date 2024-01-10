@@ -59,14 +59,18 @@ function LanesBackground({ ...other }: LanesBackgroundProps) {
   });
 
   return (
-    <svg
-      aria-label="piano-roll-lanes-background"
-      width={transform.pianoLaneScaleX * pianoRollStore.laneLength}
-      height={transform.canvasHeight}
-      {...other}
+    <div
+      style={{ height: `${pianoRollStore.canvasHeight}px`, width: `${transform.pianoLaneScaleX * pianoRollStore.laneLength}px`, padding: '0px' }}
     >
-      {lanes}
-    </svg>
+      <svg
+        aria-label="piano-roll-lanes-background"
+        width="100%"
+        height="100%"
+        {...other}
+      >
+        {lanes}
+      </svg>
+    </div>
   );
 }
 
