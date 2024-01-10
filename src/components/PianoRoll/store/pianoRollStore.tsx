@@ -6,7 +6,7 @@ import { createContext, useReducer } from "react";
 import { NoteAction, addNote, addNotes, deleteSelectedNotes, modifiedNotes, moveNoteAsLatestModified, setNoteInMarqueeAsSelected, setNoteModificationBuffer, toggleSelectedNoteVibratoMode, updateNoteLyric, vibratoDepthDelayChangeSelectedNote, vibratoRateChangeSelectedNote } from "../actions/note-actions";
 import { TransformAction, setPianoLaneScaleX } from "../actions/transform-actions";
 import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
-import { HistoryAction, PianoRollHistoryItem, undo } from "../actions/history-action";
+import { HistoryAction, PianoRollHistoryItem, redo, undo } from "../actions/history-action";
 
 export const PianoRollStoreContext = createContext<ReturnType<typeof usePianoRollStore> | undefined>(undefined)
 
@@ -48,6 +48,8 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
       }
     case 'UNDO':
       return undo(state, action);
+    case 'REDO':
+      return redo(state, action);
     default:
       throw new Error();
   }

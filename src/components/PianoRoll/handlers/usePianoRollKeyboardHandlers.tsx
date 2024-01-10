@@ -56,15 +56,11 @@ export default function usePianoRollKeyboardHandlers(
         case "KeyC": onCopy(event); break;
         case "KeyV": onPaste(event); break;
         case "KeyZ": {
-          dispatch({ type: 'UNDO' })
-        }
-      }
-    }
-
-    if (event.metaKey && event.shiftKey) {
-      switch (event.code) {
-        case "KeyZ": {
-          dispatch({ type: 'REDO' })
+          if (event.shiftKey) {
+            dispatch({ type: 'REDO' })
+          } else {
+            dispatch({ type: 'UNDO' })
+          }
         }
       }
     }
