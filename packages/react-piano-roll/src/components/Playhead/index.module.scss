@@ -1,0 +1,8 @@
+.playhead {
+  --playhead-color: #ff0000;
+  position: absolute;
+  border-left: 1px solid var(--playhead-color);
+  height: var(--canvas-height);
+  width: 0;
+  left: var(--playhead-position);
+}

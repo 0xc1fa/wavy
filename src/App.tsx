@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import PianoRoll from "@/components/PianoRoll/components";
+import PianoRoll from "../packages/react-piano-roll/dist";
 import usePreventZoom from "./components/PianoRoll/hooks/usePreventZoom";
-import { usePianoRollNotes } from "./components/PianoRoll/helpers/notes";
+import { usePianoRollNotes } from "../packages/react-piano-roll/dist";
 
 import midi from '@/components/PianoRoll/helpers/midi';
-import { usePianoRollDispatch } from "./components/PianoRoll/hooks/usePianoRollDispatch";
-import useStore from "./components/PianoRoll/hooks/useStore";
+import { usePianoRollDispatch } from "../packages/react-piano-roll/dist";
+import { useStore } from "../packages/react-piano-roll/dist";
 
 function App() {
   const [count, setCount] = useState(0)
@@ -39,7 +39,7 @@ function App() {
     for (let i = 0; i < selectedNote.length - 1; i++) {
       selectedNote[i].duration = selectedNote[i + 1].tick - selectedNote[i].tick
     }
-    dispatch({ type: 'modifiedNotes', payload: { notes: selectedNote }})
+    dispatch({ type: 'MODIFYING_NOTES', payload: { notes: selectedNote }})
     console.log('set legato')
   }
 

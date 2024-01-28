@@ -1,0 +1,30 @@
+.container {
+  color: var(--white);
+}
+
+.marker text {
+  text-anchor: end;
+  dominant-baseline: middle;
+  fill: currentColor;
+  font-size: 10px;
+}
+
+.marker line {
+  stroke: currentColor;
+}
+
+.marker:first-child text {
+  dominant-baseline: auto;
+}
+
+.marker:last-child text {
+  dominant-baseline: hanging;
+}
+
+.marker:nth-child(2n) text {
+  visibility: hidden;
+}
+
+.marker:nth-child(2n) line {
+  width: 2px;
+}
