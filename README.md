@@ -59,7 +59,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 Inside App.tsx:
 ```
-import PianoRoll from "react-piano-roll";
+import { PianoRoll } from "react-piano-roll";
 
 function App() {
   return (
