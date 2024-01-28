@@ -17,7 +17,7 @@ export default {
   },
   external: [ 'react', 'react/jsx-runtime' ],
   plugins: [
-    // peerDepsExternal(),
+    peerDepsExternal(),
     // scss({
     //   output: false
     // }),
