@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import PianoRoll from "../packages/react-piano-roll/dist";
-import usePreventZoom from "./components/PianoRoll/hooks/usePreventZoom";
+import PianoRoll from "../packages/react-piano-roll";
+import usePreventZoom from "../packages/react-piano-roll";
 import { usePianoRollNotes } from "../packages/react-piano-roll/dist";
 
-import midi from '@/components/PianoRoll/helpers/midi';
-import { usePianoRollDispatch } from "../packages/react-piano-roll/dist";
-import { useStore } from "../packages/react-piano-roll/dist";
+import { createMIDIFile } from '../packages/react-piano-roll';
+import { usePianoRollDispatch } from "../packages/react-piano-roll";
+import { useStore } from "../packages/react-piano-roll";
 
 function App() {
   const [count, setCount] = useState(0)
@@ -18,7 +18,7 @@ function App() {
 
   const downloadMidi = () => {
 
-    const buffer = midi(pianoRollNote)
+    const buffer = createMIDIFile(pianoRollNote)
     const blob = new Blob([buffer], { type: 'audio/midi' });
     const url = URL.createObjectURL(blob);
 
