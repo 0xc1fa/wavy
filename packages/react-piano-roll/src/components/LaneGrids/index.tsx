@@ -25,13 +25,14 @@ const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
     <svg
       className={styles["grid"]}
       aria-label="pianoroll-grids"
-      width={laneLength * pianoLaneScaleX}
-      height={canvasHeight}
+      width="100%"
+      height="100%"
+      preserveAspectRatio="none"
       {...other}
     >
-      {gridLines('bar')}
-      {gridLines('quarter')}
       {gridSeparationFactor.quavers !== 1 ? gridLines('quavers') : []}
+      {gridLines('quarter')}
+      {gridLines('bar')}
     </svg>
   );
 };

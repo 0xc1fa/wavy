@@ -5,7 +5,6 @@ import styles from "./index.module.scss";
 import LaneGrids from "../LaneGrids";
 import useVelocityEditorMouseHandlers from "../../handlers/useVelocityEditorMouseHandlers";
 import useTheme from "../../hooks/useTheme";
-import VelocityEditorGrid from "./VelocityEditorGrid";
 import VelocityRuler from "./VelocityRuler";
 
 export default function VelocityEditor() {
@@ -66,6 +65,7 @@ export default function VelocityEditor() {
           <VelocityRuler height={containerHeight} />
         </div>
         <div className={styles["right-container"]}>
+          <LaneGrids />
           <div className={styles["note-bar-container"]} {...mouseHandlers}>
             {pianoRollNotes.map((note) => (
               <div
@@ -94,10 +94,6 @@ export default function VelocityEditor() {
               </div>
             ))}
           </div>
-          <VelocityEditorGrid
-            height={containerHeight}
-            style={{ zIndex: -100 }}
-          />
         </div>
       </div>
     </div>
