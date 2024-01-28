@@ -34,6 +34,7 @@ export function defaultPianoRollTheme() {
     grid: {
       primaryGridColor: "#373737",
       secondaryGridColor: "#303030",
+      ternaryGridColor: "#2a2a2a",
     },
     playhead: {
       playheadColor: "#ff0000",

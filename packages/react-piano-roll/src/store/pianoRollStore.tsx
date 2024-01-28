@@ -161,7 +161,7 @@ function defaultPianoRollStore() {
     currentTicks: 0,
     selectionTicks: 0,
     startingTick: 0,
-    endingTick: 480 * 4 * 8,
+    endingTick: 480 * 4 * 64,
 
     get scaledPixelPerBeat() {
       return this.pixelPerBeat * this.pianoLaneScaleX;
