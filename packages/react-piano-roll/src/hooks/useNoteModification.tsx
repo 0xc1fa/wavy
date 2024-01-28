@@ -1,6 +1,7 @@
 import { TrackNoteEvent } from "@/types";
-import { usePianoRollDispatch, usePianoRollNotes } from "..";
 import { PianoRollStoreAction } from "@/store/pianoRollStore";
+import { usePianoRollDispatch } from './usePianoRollDispatch'
+import { usePianoRollNotes } from "@/helpers/notes";
 
 function setSelectedNotesAsLegato(
   notes: TrackNoteEvent[],
