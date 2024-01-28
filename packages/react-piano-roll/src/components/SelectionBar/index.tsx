@@ -1,3 +1,4 @@
+import { getGridBaseSeparation, getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import styles from "./index.module.scss";
 
@@ -5,56 +6,24 @@ interface RulerProps extends React.HTMLAttributes<SVGElement> {}
 export default function SelectionBar({ ...other }: RulerProps) {
   const { laneLength, pixelPerBeat, pianoLaneScaleX } = usePianoRollTransform();
 
-  const numberOfBeatMarkers = Math.ceil(laneLength / (pixelPerBeat * 4));
-  const numberOfHalfBarMarkers = Math.ceil(laneLength / pixelPerBeat);
-  const numberOfBarMarkers = Math.ceil(laneLength / pixelPerBeat);
-
+  const numberOfGrids = getNumOfGrid(pixelPerBeat, laneLength);
+  const gridSeparationFactor = getGridSeparationFactor(pixelPerBeat, pianoLaneScaleX);
+  const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor);
   const rulerHeight = 30;
+  const markeraHeight = {
+    bar: rulerHeight - 21,
+    halfBar: rulerHeight - 24,
+    quarter: rulerHeight - 27,
+  }
 
-  const beatMarkers = Array.from(
-    { length: numberOfBeatMarkers },
-    (_, index) => (
-      <g key={index}>
-        <line
-          key={index}
-          x1={index * pixelPerBeat * pianoLaneScaleX * 4}
-          y1={0}
-          x2={index * pixelPerBeat * pianoLaneScaleX * 4}
-          y2={rulerHeight - 21}
-          // stroke={theme.grid.primaryGridColor}
-          stroke="#232323"
-          strokeWidth="1"
-        />
-      </g>
-    ),
-  );
-
-  const barMarkers = Array.from({ length: numberOfBarMarkers }, (_, index) => (
-    <line
-      x1={index * pixelPerBeat * pianoLaneScaleX}
-      y1={0}
-      x2={index * pixelPerBeat * pianoLaneScaleX}
-      y2={rulerHeight - 27}
-      // stroke={theme.grid.secondaryGridColor}
-      stroke="#232323"
-      strokeWidth="1"
-    />
-  ));
-
-  const halfBarMarkers = Array.from(
-    { length: numberOfHalfBarMarkers },
-    (_, index) => (
-      <line
-        x1={index * pixelPerBeat * pianoLaneScaleX * 2}
-        y1={0}
-        x2={index * pixelPerBeat * pianoLaneScaleX * 2}
-        y2={rulerHeight - 24}
-        // stroke={theme.grid.secondaryGridColor}
-        stroke="#232323"
-        strokeWidth="1"
-      />
-    ),
-  );
+  const markers = (gridType: 'bar' | "halfBar" | 'quarter') => {
+    const scale = pianoLaneScaleX * gridBaseSeparation[gridType];
+    return [...Array(numberOfGrids[gridType]).keys()]
+      .filter(index => index % gridSeparationFactor[gridType] === 0)
+      .map(index =>
+        <SelectionBarMarker key={index} x={index * pixelPerBeat * scale} height={markeraHeight[gridType]} />
+      );
+  }
 
   return (
     <div
@@ -69,10 +38,29 @@ export default function SelectionBar({ ...other }: RulerProps) {
         preserveAspectRatio="none"
         className={styles["ruler"]}
       >
-        {beatMarkers}
-        {barMarkers}
-        {halfBarMarkers}
+        {markers("quarter")}
+        {markers("bar")}
+        {markers("halfBar")}
       </svg>
     </div>
   );
+}
+
+
+interface SelectionBarMarkerProps {
+  x: number;
+  height: number;
+}
+function SelectionBarMarker({ x, height }: SelectionBarMarkerProps) {
+
+  return (
+    <line
+      x1={x}
+      y1={0}
+      x2={x}
+      y2={height}
+      stroke="#232323"
+      strokeWidth="1"
+    />
+  )
 }
