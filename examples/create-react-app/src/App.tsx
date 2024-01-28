@@ -6,7 +6,7 @@ import { PianoRoll } from 'react-piano-roll'
 function App() {
   return (
     <div className="App">
-      {/* <PianoRoll attachLyric /> */}
+      <PianoRoll attachLyric />
       {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
