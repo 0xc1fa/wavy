@@ -1,2 +1,7 @@
 src/
 node_modules/
+test/
+rollup.config.js
+postcss.config.cjs
+tsconfig.json
+package-lock.json
