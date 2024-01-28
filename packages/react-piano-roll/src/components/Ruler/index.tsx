@@ -2,20 +2,20 @@ import { Fragment, memo } from "react";
 import useTheme from "../../hooks/useTheme";
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import styles from "./index.module.scss";
+import { getNumOfGrid } from "@/helpers/grid";
 
 interface RulerProps extends React.HTMLAttributes<SVGElement> {}
 
 const Ruler: React.FC<RulerProps> = ({ ...other }) => {
-  const { laneLength, canvasHeight, pixelPerBeat, pianoLaneScaleX } =
+  const { laneLength, pixelPerBeat, pianoLaneScaleX } =
     usePianoRollTransform();
 
-  const numberOfBeatMarkers = Math.ceil(laneLength / (pixelPerBeat * 4));
-  const numberOfBarMarkers = Math.ceil(laneLength / pixelPerBeat);
+  const numberOfMarkers = getNumOfGrid(pixelPerBeat, laneLength)
 
   const rulerHeight = 30;
 
-  const beatMarkers = Array.from(
-    { length: numberOfBeatMarkers },
+  const barMarkers = Array.from(
+    { length: numberOfMarkers.bar },
     (_, index) => (
       <g key={index}>
         <line
@@ -24,7 +24,6 @@ const Ruler: React.FC<RulerProps> = ({ ...other }) => {
           y1={5}
           x2={index * pixelPerBeat * pianoLaneScaleX * 4}
           y2={rulerHeight}
-          // stroke={theme.grid.primaryGridColor}
           stroke="#232323"
           strokeWidth="1"
         />
@@ -41,18 +40,6 @@ const Ruler: React.FC<RulerProps> = ({ ...other }) => {
     ),
   );
 
-  const barMarkers = Array.from({ length: numberOfBarMarkers }, (_, index) => (
-    <line
-      x1={index * pixelPerBeat * pianoLaneScaleX}
-      y1={0}
-      x2={index * pixelPerBeat * pianoLaneScaleX}
-      y2={10}
-      // stroke={theme.grid.secondaryGridColor}
-      stroke="#232323"
-      strokeWidth="1"
-    />
-  ));
-
   return (
     <div
       onClick={(event) => console.log(event.nativeEvent.offsetX)}
@@ -65,8 +52,7 @@ const Ruler: React.FC<RulerProps> = ({ ...other }) => {
         {...other}
         className={styles["ruler"]}
       >
-        {beatMarkers}
-        {/* {barMarkers} */}
+        {barMarkers}
       </svg>
     </div>
   );
