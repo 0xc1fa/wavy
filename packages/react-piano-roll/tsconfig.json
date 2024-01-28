@@ -29,7 +29,7 @@
       "react/jsx-runtime": ["node_modules/react/jsx-runtime"]
     },
   },
-  "include": ["src", "modules.d.ts"],
+  "include": ["src"],
   "plugins": [{ "name": "typescript-plugin-css-modules" }]
 //   "references": [{ "path": "./tsconfig.node.json" }]
 }
