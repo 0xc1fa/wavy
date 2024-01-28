@@ -18,34 +18,17 @@ export default {
   external: [ 'react', 'react/jsx-runtime' ],
   plugins: [
     peerDepsExternal(),
-    // scss({
-    //   output: false
-    // }),
-    // scss({
-    //   output: false,
-    //   processor: css => postcss([autoprefixer])
-    //       .process(css)
-    //       .then(result => result.css)
-    // }),
-    // postcss({
-    //   preprocessor: (content, id) => new Promise((resolve, reject) => {
-    //     const result = sass.renderSync({ file: id })
-    //     resolve({ code: result.css.toString() })
-    //   }),
-    //   plugins: [
-    //     autoprefixer
-    //   ],
-    //   sourceMap: true,
-    //   extract: true,
-    //   extensions: ['.sass','.css']
-    // }),
     postcss({
+      plugins: [
+        autoprefixer
+      ],
       writeDefinitions: true,
+      sourceMap: true,
     }),
     typescript(),
-    // babel({ babelHelpers: 'bundled', exclude: 'node_modules/**' }),
-    // nodeResolve(),
-    // commonjs(),
+    babel({ babelHelpers: 'bundled', exclude: 'node_modules/**' }),
+    nodeResolve(),
+    commonjs(),
     // terser(),
   ]
 };
