@@ -2,8 +2,7 @@ import { memo } from "react";
 import useTheme from "../../hooks/useTheme";
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import styles from "./index.module.scss";
-import { minGridPixel } from "@/constants";
-import { ceilToNearestPowerOfTwo, floorToNearestPowerOfTwo } from "@/helpers/number";
+import { getGridBaseSeparation, getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
 
 interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {}
 const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
@@ -11,67 +10,16 @@ const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
   const { laneLength, canvasHeight, pixelPerBeat, pianoLaneScaleX } =
     usePianoRollTransform();
 
-  const barGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (pianoLaneScaleX * pixelPerBeat * 4));
-  const quarterGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (pianoLaneScaleX * pixelPerBeat));
-  const quaversGridSeparationFactor = floorToNearestPowerOfTwo((pianoLaneScaleX * pixelPerBeat) / minGridPixel);
+  const gridSeparationFactor = getGridSeparationFactor(pixelPerBeat, pianoLaneScaleX)
+  const numberOfGrids = getNumOfGrid(pixelPerBeat,laneLength)
+  const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor)
 
-  const numberOfBarGrids = Math.ceil(laneLength / (pixelPerBeat * 4));
-  const numberOfQuarterGrids = Math.ceil(laneLength / pixelPerBeat);
-  const numberOfQuaversGrids = Math.ceil(laneLength / pixelPerBeat);
-
-  const barGrids = Array.from(
-    { length: numberOfBarGrids },
-    (_, index) => (
-      index % barGridSeparationFactor === 0 ?
-      <line
-        key={index}
-        x1={index * pixelPerBeat * pianoLaneScaleX * 4}
-        y1={0}
-        x2={index * pixelPerBeat * pianoLaneScaleX * 4}
-        y2={canvasHeight}
-        stroke={theme.grid.primaryGridColor}
-        strokeWidth="1"
-      />
-      :
-      <></>
-    ),
-  );
-
-  const quarterGrids = Array.from(
-    { length: numberOfQuarterGrids },
-    (_, index) => (
-      index % quarterGridSeparationFactor === 0 ?
-      <line
-        key={index}
-        x1={index * pixelPerBeat * pianoLaneScaleX}
-        y1={0}
-        x2={index * pixelPerBeat * pianoLaneScaleX}
-        y2={canvasHeight}
-        stroke={theme.grid.secondaryGridColor}
-        strokeWidth="1"
-      />
-      :
-      <></>
-    ),
-  );
-
-  const quaversGrids = quaversGridSeparationFactor === 1 ?
-    []
-    :
-    Array.from(
-      { length: numberOfQuaversGrids },
-      (_, index) => (
-        <line
-          key={index}
-          x1={index * (pixelPerBeat * pianoLaneScaleX) / quaversGridSeparationFactor}
-          y1={0}
-          x2={index * (pixelPerBeat * pianoLaneScaleX) / quaversGridSeparationFactor}
-          y2={canvasHeight}
-          stroke={theme.grid.ternaryGridColor}
-          strokeWidth="1"
-        />
-      ),
-    );
+  const gridLines = (gridType: 'bar' | 'quarter' | 'quavers') => {
+    const scale = pianoLaneScaleX * gridBaseSeparation[gridType];
+    return [...Array(numberOfGrids[gridType]).keys()]
+      .filter(index => index % gridSeparationFactor[gridType] === 0 || gridType === 'quavers')
+      .map(index => <GridLine key={index} x={index * pixelPerBeat * scale} color={theme.grid.color[gridType]} />);
+  }
 
   return (
     <svg
@@ -81,11 +29,31 @@ const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
       height={canvasHeight}
       {...other}
     >
-      {quaversGrids}
-      {quarterGrids}
-      {barGrids}
+      {gridLines('bar')}
+      {gridLines('quarter')}
+      {gridSeparationFactor.quavers !== 1 ? gridLines('quavers') : []}
     </svg>
   );
 };
+
+interface GridLineProps {
+  x: number;
+  color: string;
+}
+
+const GridLine: React.FC<GridLineProps> = ({ x, color }) => {
+
+  const { canvasHeight } = usePianoRollTransform();
+
+  return <line
+    x1={x}
+    y1={0}
+    x2={x}
+    y2={canvasHeight}
+    stroke={color}
+    strokeWidth="1"
+  />
+};
+
 
 export default memo(LaneGrids);

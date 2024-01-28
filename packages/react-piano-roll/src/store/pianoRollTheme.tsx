@@ -32,6 +32,11 @@ export function defaultPianoRollTheme() {
       selectionAreaFillColor: "#00009933",
     },
     grid: {
+      color: {
+        bar: "#373737",
+        quarter: "#303030",
+        quavers: "#2a2a2a",
+      },
       primaryGridColor: "#373737",
       secondaryGridColor: "#303030",
       ternaryGridColor: "#2a2a2a",
