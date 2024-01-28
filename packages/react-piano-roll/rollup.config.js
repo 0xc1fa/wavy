@@ -25,7 +25,12 @@ export default {
       sourceMap: true,
     }),
     typescript(),
-    babel({ babelHelpers: 'bundled', exclude: 'node_modules/**' }),
+    babel({
+      extensions: ['.ts', '.tsx'], // file extensions to transpile
+      babelHelpers: 'bundled', // how to handle Babel helpers
+      exclude: 'node_modules/**', // exclude node_modules
+    }),
+    // babel({ babelHelpers: 'bundled', exclude: 'node_modules/**' }),
     nodeResolve(),
     commonjs(),
     // terser(),

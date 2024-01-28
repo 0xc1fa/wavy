@@ -1,47 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useRef, useState } from 'react'
 import './App.css'
-import PianoRoll from "../packages/react-piano-roll";
-import usePreventZoom from "../packages/react-piano-roll";
+import { PianoRoll, downloadMidi, useNoteModification } from "../packages/react-piano-roll";
 import { usePianoRollNotes } from "../packages/react-piano-roll/dist";
-
-import { createMIDIFile } from '../packages/react-piano-roll';
-import { usePianoRollDispatch } from "../packages/react-piano-roll";
 import { useStore } from "../packages/react-piano-roll";
 
 function App() {
-  const [count, setCount] = useState(0)
+
   const pianoRollNote = usePianoRollNotes();
-  const dispatch = usePianoRollDispatch();
   const { pianoRollStore } = useStore()
-
-  const downloadMidi = () => {
-
-    const buffer = createMIDIFile(pianoRollNote)
-    const blob = new Blob([buffer], { type: 'audio/midi' });
-    const url = URL.createObjectURL(blob);
-
-    // Create a link and trigger the download
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'music.mid';
-    document.body.appendChild(a);
-    a.click();
-
-    // Clean up
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-
-  const setLegato = () => {
-    let selectedNote = pianoRollNote.filter(note => note.isSelected).sort((a, b) => a.tick - b.tick)
-    for (let i = 0; i < selectedNote.length - 1; i++) {
-      selectedNote[i].duration = selectedNote[i + 1].tick - selectedNote[i].tick
-    }
-    dispatch({ type: 'MODIFYING_NOTES', payload: { notes: selectedNote }})
-    console.log('set legato')
-  }
+  const { setSelectedNotesAsLegato } = useNoteModification()
 
 
   const [json, setJson] = useState(JSON.stringify({}))
@@ -85,35 +52,14 @@ function App() {
 
     console.log("message sent")
   }
-  // }, [pianoRollStore.pianoRollNotes, pianoRollStore.bpm])
 
   return (
     <>
       <audio controls src={audio} ref={audioRef} />
       <button onClick={synthesis}>Synthesis</button>
-      <button onClick={downloadMidi}>Download</button>
-      <button onClick={setLegato}>Set Legato</button>
+      <button onClick={() => downloadMidi(pianoRollNote)}>Download</button>
+      <button onClick={setSelectedNotesAsLegato}>Set Legato</button>
       <PianoRoll attachLyric />
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }

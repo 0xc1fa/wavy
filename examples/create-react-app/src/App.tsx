@@ -1,15 +1,12 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import PianoRoll from "react-piano-roll/src";
-import { PianoRollStoreProvider } from "react-piano-roll/src/store/pianoRollStore"
+import { PianoRoll } from 'react-piano-roll'
 
 function App() {
   return (
     <div className="App">
-      <PianoRollStoreProvider>
-        <PianoRoll attachLyric />
-      </PianoRollStoreProvider>
+      {/* <PianoRoll attachLyric /> */}
       {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>

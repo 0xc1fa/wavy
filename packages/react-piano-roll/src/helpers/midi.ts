@@ -58,6 +58,23 @@ export default function createMIDIFile(notes: TrackNoteEvent[]) {
 
 }
 
+export function downloadMidi(notes: TrackNoteEvent[]) {
+  const buffer = createMIDIFile(notes)
+  const blob = new Blob([buffer], { type: 'audio/midi' });
+  const url = URL.createObjectURL(blob);
+
+  // Create a link and trigger the download
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'music.mid';
+  document.body.appendChild(a);
+  a.click();
+
+  // Clean up
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 
 function getHeaderChunk(
   format: MidiFormat,

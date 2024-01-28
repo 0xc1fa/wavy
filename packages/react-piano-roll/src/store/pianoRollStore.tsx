@@ -20,7 +20,7 @@ export function PianoRollStoreProvider({ children }: PianoRollStoreProviderProps
   )
 }
 
-type PianoRollStoreAction = NoteAction | TransformAction | SelectionAction | HistoryAction
+export type PianoRollStoreAction = NoteAction | TransformAction | SelectionAction | HistoryAction
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   switch (action.type) {
