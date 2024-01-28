@@ -26,7 +26,7 @@ function NoteLyric({ note, style, ...other }: NoteLyricProps) {
     const applyChanges = () => {
       const id = getTargetId();
       dispatch({
-        type: "updateNoteLyric",
+        type: "UPDATE_NOTE_LYRIC",
         payload: { noteId: id, lyric: target.value },
       });
     };
@@ -36,7 +36,7 @@ function NoteLyric({ note, style, ...other }: NoteLyricProps) {
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     dispatch({
-      type: "updateNoteLyric",
+      type: "UPDATE_NOTE_LYRIC",
       payload: { noteId: note.id, lyric: event.target.value },
     });
   };

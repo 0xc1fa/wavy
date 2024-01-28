@@ -62,7 +62,7 @@ export default function TempoInfo() {
       const value = parseFloat(inputValue);
       if (!isNaN(value)) {
         const clampedValue = Math.max(40, Math.min(200, value));
-        dispatch({ type: "setBpm", payload: { bpm: clampedValue } });
+        dispatch({ type: "SET_BPM", payload: { bpm: clampedValue } });
         setInputValue(clampedValue.toString());
       } else {
         setInputValue(pianoRollStore.bpm.toString());

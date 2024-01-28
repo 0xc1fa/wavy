@@ -6,7 +6,7 @@ export type SelectionAction =
   | SetSelectionTicksAction;
 
 type SetNoteAsSelectedAction = {
-  type: "setNoteAsSelected";
+  type: "SET_NOTE_AS_SELECTED";
   payload: { noteId: string };
 };
 export function setNoteAsSelected(
@@ -22,7 +22,7 @@ export function setNoteAsSelected(
   };
 }
 
-type UnselectAllNotesAction = { type: "unselectAllNotes" };
+type UnselectAllNotesAction = { type: "UNSELECTED_ALL_NOTES" };
 export function unselectAllNotes(
   state: PianoRollStore,
   action: UnselectAllNotesAction,
@@ -37,7 +37,7 @@ export function unselectAllNotes(
 }
 
 type SetSelectionTicksAction = {
-  type: "setSelectionTicks";
+  type: "SET_SELECTION_TICKS";
   payload: { ticks: number };
 };
 export function setSelectionTicks(

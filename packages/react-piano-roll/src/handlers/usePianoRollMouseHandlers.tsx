@@ -82,15 +82,15 @@ export default function usePianoRollMouseHandlers() {
 
     const setNoteSelection = () => {
       if (!noteClicked!.isSelected && !event.nativeEvent.shiftKey) {
-        dispatch({ type: "unselectAllNotes" });
+        dispatch({ type: "UNSELECTED_ALL_NOTES" });
         dispatch({
-          type: "setNoteAsSelected",
+          type: "SET_NOTE_AS_SELECTED",
           payload: { noteId: noteClicked?.id! },
         });
         // pianoRollStore.unselectAllNotesAndSelect(noteClicked!);
       } else {
         dispatch({
-          type: "setNoteAsSelected",
+          type: "SET_NOTE_AS_SELECTED",
           payload: { noteId: noteClicked?.id! },
         });
       }
@@ -101,13 +101,13 @@ export default function usePianoRollMouseHandlers() {
     console.log("note clicked", noteClicked);
     if (noteClicked) {
       dispatch({
-        type: "moveNoteAsLatestModified",
+        type: "MOVE_NOTE_AS_LATEST_MODIFIED",
         payload: { noteId: noteClicked.id },
       });
       setMouseHandlerModeForNote();
       setNoteSelection();
       dispatch({
-        type: "setNoteModificationBuffer",
+        type: "SET_NOTE_MODIFICATION_BUFFER",
         payload: {
           initX: event.nativeEvent.offsetX,
           initY: event.nativeEvent.offsetY,
@@ -115,16 +115,16 @@ export default function usePianoRollMouseHandlers() {
       });
     } else {
       if (!event.shiftKey) {
-        dispatch({ type: "unselectAllNotes" });
+        dispatch({ type: "UNSELECTED_ALL_NOTES" });
       }
       if (event.metaKey) {
         const { ticks, noteNum } = getTickAndNoteNumFromEvent(
           event.nativeEvent,
         );
-        dispatch({ type: "addNote", payload: { ticks, noteNum } });
+        dispatch({ type: "ADD_NOTE", payload: { ticks, noteNum } });
         // dispatch({ type: 'unsetSelectionRange' })
         dispatch({
-          type: "setNoteModificationBuffer",
+          type: "SET_NOTE_MODIFICATION_BUFFER",
           payload: {
             initX: event.nativeEvent.offsetX,
             initY: event.nativeEvent.offsetY,
@@ -136,7 +136,7 @@ export default function usePianoRollMouseHandlers() {
           event.nativeEvent.offsetX,
         );
         dispatch({
-          type: "setSelectionTicks",
+          type: "SET_SELECTION_TICKS",
           payload: { ticks: selectionTicks },
         });
         // dispatch({ type: 'setSelectionPoint', payload: { start: event.nativeEvent.offsetX / pianoRollStore.pixelsPerTick } })
@@ -215,11 +215,11 @@ export default function usePianoRollMouseHandlers() {
       case PianoRollLanesMouseHandlerMode.Vibrato:
         event.shiftKey
           ? dispatch({
-              type: "vibratoRateChangeSelectedNote",
+              type: "VIBRATO_RATE_CHANGE_SELECTED_NOTE",
               payload: { rateOffset: deltaY },
             })
           : dispatch({
-              type: "vibratoDepthDelayChangeSelectedNote",
+              type: "VIBRATO_DEPTH_DELAY_CHANGE_SELECTED_NOTE",
               payload: { depthOffset: deltaY, delayOffset: deltaX },
             });
         break;
@@ -247,7 +247,7 @@ export default function usePianoRollMouseHandlers() {
     switch (mouseHandlerMode) {
       case PianoRollLanesMouseHandlerMode.MarqueeSelection:
         dispatch({
-          type: "setNoteInMarqueeAsSelected",
+          type: "SET_NOTE_IN_MARQUEE_AS_SELECTED",
           payload: { startingPosition, ongoingPosition },
         });
         break;
@@ -269,7 +269,7 @@ export default function usePianoRollMouseHandlers() {
       console.log("no note double clicked");
     } else if (event.altKey) {
       console.log("note double clicked with alt key");
-      dispatch({ type: "toggleSelectedNoteVibratoMode" });
+      dispatch({ type: "TOGGLE_SELECTED_NOTE_VIBRATO_MODE" });
     } else {
       console.log("note double clicked");
       focusNote(event.nativeEvent, noteClicked.id);
@@ -298,14 +298,14 @@ export default function usePianoRollMouseHandlers() {
           transform.pianoLaneScaleX * (1 + event.deltaY * 0.01);
         console.log("newPianoRollScaleX", newPianoRollScaleX);
         dispatch({
-          type: "setPianoLaneScaleX",
+          type: "SET_PIANO_LANE_SCALE_X",
           payload: { pianoLaneScaleX: Math.max(minScaleX, newPianoRollScaleX) },
         });
       } else if (event.deltaY < 0) {
         const newPianoRollScaleX =
           transform.pianoLaneScaleX * (1 + event.deltaY * 0.01);
         dispatch({
-          type: "setPianoLaneScaleX",
+          type: "SET_PIANO_LANE_SCALE_X",
           payload: { pianoLaneScaleX: Math.max(minScaleX, newPianoRollScaleX) },
         });
       }

@@ -3,8 +3,6 @@
 ## TODOs
 
 - auto scaling of grid and ruler
-  - All >= bar marker in one color, all < bar and >= beat marker in one color, all > beat marker in one color
-  - every grid have certian min-width and max-width, all the width, min-width, and max-width are the same
   - all other action react to grid
 - lock in after passing snap to one grid (left or right)
   - before lock in can move in detail

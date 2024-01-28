@@ -44,14 +44,14 @@ export default function useVelocityEditorMouseHandlers() {
         const noteClickedIsSelected = noteClicked?.isSelected;
         if (noteClicked) {
           if (!noteClicked.isSelected) {
-            dispatch({ type: "unselectAllNotes" });
+            dispatch({ type: "UNSELECTED_ALL_NOTES" });
             dispatch({
-              type: "setNoteAsSelected",
+              type: "SET_NOTE_AS_SELECTED",
               payload: { noteId: noteClicked.id },
             });
           }
           dispatch({
-            type: "setNoteModificationBuffer",
+            type: "SET_NOTE_MODIFICATION_BUFFER",
             payload: {
               initX: event.nativeEvent.offsetX,
               initY: event.nativeEvent.offsetY,
@@ -62,7 +62,7 @@ export default function useVelocityEditorMouseHandlers() {
       }
     }
     dispatch({
-      type: "setNoteModificationBuffer",
+      type: "SET_NOTE_MODIFICATION_BUFFER",
       payload: {
         initX: event.nativeEvent.offsetX,
         initY: event.nativeEvent.offsetY,

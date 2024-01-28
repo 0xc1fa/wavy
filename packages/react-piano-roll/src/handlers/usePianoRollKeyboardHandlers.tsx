@@ -96,7 +96,7 @@ export default function usePianoRollKeyboardHandlers(
   };
 
   const onDeleteDown = (event: React.KeyboardEvent) => {
-    dispatch({ type: "deleteSelectedNotes" });
+    dispatch({ type: "DELETE_SELECTED_NOTES" });
   };
 
   const onSpaceDown = (event: React.KeyboardEvent) => {
@@ -123,7 +123,7 @@ export default function usePianoRollKeyboardHandlers(
     if (selectedNotes.length > 0) {
       clipboardDispatch({ type: "setNote", payload: { notes: selectedNotes } });
     }
-    dispatch({ type: "deleteSelectedNotes" });
+    dispatch({ type: "DELETE_SELECTED_NOTES" });
   };
 
   const onPaste = (event: React.KeyboardEvent) => {
@@ -140,8 +140,8 @@ export default function usePianoRollKeyboardHandlers(
         pianoRollStore.selectionTicks +
         (note.tick - clipboard.selectionRegion.start),
     }));
-    dispatch({ type: "unselectAllNotes" });
-    dispatch({ type: "addNotes", payload: { notes: shiftedNotes } });
+    dispatch({ type: "UNSELECTED_ALL_NOTES" });
+    dispatch({ type: "ADD_NOTES", payload: { notes: shiftedNotes } });
   };
 
   return {
