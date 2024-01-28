@@ -13,9 +13,11 @@
     "examples/*"
   ],
   "devDependencies": {
+    "@types/lodash": "^4.14.202",
     "@types/node": "^20.11.9",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "eslint": "^8.53.0",
@@ -24,5 +26,8 @@
     "prettier": "^3.2.4",
     "sass": "^1.69.5",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
   }
 }

@@ -5,7 +5,7 @@ import {
   PianoRollHistoryItemType,
   getChoppedHistoryAfterHead,
 } from "./history-action";
-import { arraysEqual } from "@/helpers/common";
+import _ from "lodash";
 
 export type NoteAction =
   | AddNoteAction
@@ -110,7 +110,7 @@ export function modifyingNotes(
     ...state,
     pianoRollNotes: [...notesNotModified, ...notesModifiedWithClampValue],
   };
-  if (arraysEqual(prevHistory, state.noteModificationBuffer.notesSelected)) {
+  if (_.isEqual(prevHistory, state.noteModificationBuffer.notesSelected)) {
     return {
       ...newStateWithoutHistory,
     };
