@@ -58,39 +58,37 @@ export type PianoRollStoreAction =
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   switch (action.type) {
-    case "addNote":
+    case "ADD_NOTE":
       return addNote(state, action);
-    case "addNotes":
+    case "ADD_NOTES":
       return addNotes(state, action);
     case "MODIFYING_NOTES":
       return modifyingNotes(state, action);
-    // case 'BEGIN_MODIFYING_NOTES': return beginModifyingNotes(state, action);
-    // case 'FINISH_MODIFYING_NOTES': return finishModifyingNotes(state, action);
-    case "unselectAllNotes":
+    case "UNSELECTED_ALL_NOTES":
       return unselectAllNotes(state, action);
-    case "setNoteAsSelected":
+    case "SET_NOTE_AS_SELECTED":
       return setNoteAsSelected(state, action);
-    case "toggleSelectedNoteVibratoMode":
+    case "TOGGLE_SELECTED_NOTE_VIBRATO_MODE":
       return toggleSelectedNoteVibratoMode(state, action);
-    case "vibratoDepthDelayChangeSelectedNote":
+    case "VIBRATO_DEPTH_DELAY_CHANGE_SELECTED_NOTE":
       return vibratoDepthDelayChangeSelectedNote(state, action);
-    case "vibratoRateChangeSelectedNote":
+    case "VIBRATO_RATE_CHANGE_SELECTED_NOTE":
       return vibratoRateChangeSelectedNote(state, action);
-    case "setNoteInMarqueeAsSelected":
+    case "SET_NOTE_IN_MARQUEE_AS_SELECTED":
       return setNoteInMarqueeAsSelected(state, action);
-    case "updateNoteLyric":
+    case "UPDATE_NOTE_LYRIC":
       return updateNoteLyric(state, action);
-    case "moveNoteAsLatestModified":
+    case "MOVE_NOTE_AS_LATEST_MODIFIED":
       return moveNoteAsLatestModified(state, action);
-    case "setPianoLaneScaleX":
+    case "SET_PIANO_LANE_SCALE_X":
       return setPianoLaneScaleX(state, action);
-    case "setSelectionTicks":
+    case "SET_SELECTION_TICKS":
       return setSelectionTicks(state, action);
-    case "deleteSelectedNotes":
+    case "DELETE_SELECTED_NOTES":
       return deleteSelectedNotes(state, action);
-    case "setNoteModificationBuffer":
+    case "SET_NOTE_MODIFICATION_BUFFER":
       return setNoteModificationBuffer(state, action);
-    case "setBpm":
+    case "SET_BPM":
       return {
         ...state,
         bpm: action.payload.bpm,

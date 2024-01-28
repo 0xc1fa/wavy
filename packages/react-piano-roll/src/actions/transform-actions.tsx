@@ -2,10 +2,10 @@ import { PianoRollStore } from "@/store/pianoRollStore";
 
 export type TransformAction =
   | SetPianoLaneScaleXAction
-  | { type: "setBpm"; payload: { bpm: number } };
+  | { type: "SET_BPM"; payload: { bpm: number } };
 
 type SetPianoLaneScaleXAction = {
-  type: "setPianoLaneScaleX";
+  type: "SET_PIANO_LANE_SCALE_X";
   payload: { pianoLaneScaleX: number };
 };
 export function setPianoLaneScaleX(

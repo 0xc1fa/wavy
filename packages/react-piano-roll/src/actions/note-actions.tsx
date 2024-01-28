@@ -18,7 +18,7 @@ export type NoteAction =
   | VibratoRateChangeSelectedNoteAction
   | SetNoteInMarqueeAsSelectedAction
   | MoveNoteAsLatestModifiedAction
-  | setNoteModificationBufferAction;
+  | SetNoteModificationBufferAction;
 
 function createNote(
   state: PianoRollStore,
@@ -42,7 +42,7 @@ function createNote(
 }
 
 type AddNoteAction = {
-  type: "addNote";
+  type: "ADD_NOTE";
   payload: { ticks: number; noteNum: number };
 };
 export function addNote(state: PianoRollStore, action: AddNoteAction) {
@@ -65,7 +65,7 @@ export function addNote(state: PianoRollStore, action: AddNoteAction) {
 }
 
 type AddNotesAction = {
-  type: "addNotes";
+  type: "ADD_NOTES";
   payload: { notes: TrackNoteEvent[] };
 };
 export function addNotes(state: PianoRollStore, action: AddNotesAction) {
@@ -131,7 +131,7 @@ export function modifyingNotes(
   }
 }
 
-type DeleteSelectedNotesAction = { type: "deleteSelectedNotes" };
+type DeleteSelectedNotesAction = { type: "DELETE_SELECTED_NOTES" };
 export function deleteSelectedNotes(
   state: PianoRollStore,
   action: DeleteSelectedNotesAction,
@@ -153,7 +153,7 @@ export function deleteSelectedNotes(
 }
 
 type ToggleSelectedNoteVibratoModeAction = {
-  type: "toggleSelectedNoteVibratoMode";
+  type: "TOGGLE_SELECTED_NOTE_VIBRATO_MODE";
 };
 export function toggleSelectedNoteVibratoMode(
   state: PianoRollStore,
@@ -171,7 +171,7 @@ export function toggleSelectedNoteVibratoMode(
 }
 
 type VibratoDepthDelayChangeSelectedNoteAction = {
-  type: "vibratoDepthDelayChangeSelectedNote";
+  type: "VIBRATO_DEPTH_DELAY_CHANGE_SELECTED_NOTE";
   payload: { depthOffset: number; delayOffset: number };
 };
 export function vibratoDepthDelayChangeSelectedNote(
@@ -202,7 +202,7 @@ export function vibratoDepthDelayChangeSelectedNote(
 }
 
 type VibratoRateChangeSelectedNoteAction = {
-  type: "vibratoRateChangeSelectedNote";
+  type: "VIBRATO_RATE_CHANGE_SELECTED_NOTE";
   payload: { rateOffset: number };
 };
 export function vibratoRateChangeSelectedNote(
@@ -230,7 +230,7 @@ export function vibratoRateChangeSelectedNote(
 }
 
 type SetNoteInMarqueeAsSelectedAction = {
-  type: "setNoteInMarqueeAsSelected";
+  type: "SET_NOTE_IN_MARQUEE_AS_SELECTED";
   payload: {
     startingPosition: { x: number; y: number };
     ongoingPosition: { x: number; y: number };
@@ -266,7 +266,7 @@ export function setNoteInMarqueeAsSelected(
 }
 
 type UpdateNoteLyricAction = {
-  type: "updateNoteLyric";
+  type: "UPDATE_NOTE_LYRIC";
   payload: { noteId: string; lyric: string };
 };
 export function updateNoteLyric(
@@ -286,7 +286,7 @@ export function updateNoteLyric(
 }
 
 type MoveNoteAsLatestModifiedAction = {
-  type: "moveNoteAsLatestModified";
+  type: "MOVE_NOTE_AS_LATEST_MODIFIED";
   payload: { noteId: string };
 };
 export function moveNoteAsLatestModified(
@@ -305,13 +305,13 @@ export function moveNoteAsLatestModified(
   };
 }
 
-type setNoteModificationBufferAction = {
-  type: "setNoteModificationBuffer";
+type SetNoteModificationBufferAction = {
+  type: "SET_NOTE_MODIFICATION_BUFFER";
   payload: { initX: number; initY: number };
 };
 export function setNoteModificationBuffer(
   state: PianoRollStore,
-  action: setNoteModificationBufferAction,
+  action: SetNoteModificationBufferAction,
 ) {
   return {
     ...state,
