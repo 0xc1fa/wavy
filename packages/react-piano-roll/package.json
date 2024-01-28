@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf build && rollup -c"
+    "build": "rm -rf build && rollup -c",
+    "watch": "rollup -c -w"
   },
   "author": "Chan Yat Fu",
   "license": "Apache-2.0",
@@ -28,6 +29,7 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-scss": "^4.0.0",
+    "rollup-watch": "^3.2.2",
     "sass": "^1.70.0",
     "typescript": "^5.3.3",
     "typescript-plugin-css-modules": "^5.0.2"
