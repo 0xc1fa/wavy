@@ -2,13 +2,19 @@ import { memo } from "react";
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import useTheme from "../../hooks/useTheme";
 import styles from "./index.module.scss";
-import { PianoRollLanesMouseHandlerMode, PianoRollMouseHandlersStates } from "../../handlers/usePianoRollMouseHandlers";
+import {
+  PianoRollLanesMouseHandlerMode,
+  PianoRollMouseHandlersStates,
+} from "../../handlers/usePianoRollMouseHandlers";
 
 interface SelectionMarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
-  mouseHandlersStates: PianoRollMouseHandlersStates
+  mouseHandlersStates: PianoRollMouseHandlersStates;
 }
-function SelectionMarquee({ mouseHandlersStates, style, ...other }: SelectionMarqueeProps) {
-
+function SelectionMarquee({
+  mouseHandlersStates,
+  style,
+  ...other
+}: SelectionMarqueeProps) {
   const theme = useTheme();
 
   const startingPositionX = mouseHandlersStates.startingPosition.x;
@@ -24,24 +30,27 @@ function SelectionMarquee({ mouseHandlersStates, style, ...other }: SelectionMar
   const width = right - left;
   const height = bottom - top;
 
-  return (
-    mouseHandlersStates.mouseHandlerMode === PianoRollLanesMouseHandlerMode.MarqueeSelection ?
-    <div aria-label="piano-roll-selection-area"
-      className={styles['selection--marquee']}
-      style={{
-        '--top': `${top}px`,
-        '--left': `${left}px`,
-        '--width': `${width}px`,
-        '--height': `${height}px`,
-        '--background-color': theme.selection.selectionAreaFillColor,
-        '--border-color': theme.selection.selectionAreaBorderColor,
-        ...style
-      } as React.CSSProperties}
+  return mouseHandlersStates.mouseHandlerMode ===
+    PianoRollLanesMouseHandlerMode.MarqueeSelection ? (
+    <div
+      aria-label="piano-roll-selection-area"
+      className={styles["selection--marquee"]}
+      style={
+        {
+          "--top": `${top}px`,
+          "--left": `${left}px`,
+          "--width": `${width}px`,
+          "--height": `${height}px`,
+          "--background-color": theme.selection.selectionAreaFillColor,
+          "--border-color": theme.selection.selectionAreaBorderColor,
+          ...style,
+        } as React.CSSProperties
+      }
       {...other}
     />
-    :
+  ) : (
     <></>
-  )
+  );
 }
 
-export default memo(SelectionMarquee)
+export default memo(SelectionMarquee);

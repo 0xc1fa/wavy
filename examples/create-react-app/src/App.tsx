@@ -1,7 +1,7 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { PianoRoll } from 'react-piano-roll'
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { PianoRoll } from "react-piano-roll";
 
 function App() {
   return (

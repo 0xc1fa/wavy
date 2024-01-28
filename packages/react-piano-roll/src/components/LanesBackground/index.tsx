@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo } from "react";
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import useTheme from "../../hooks/useTheme";
 import useStore from "../../hooks/useStore";
@@ -10,17 +10,30 @@ function LanesBackground({ ...other }: LanesBackgroundProps) {
   const { pianoRollStore } = useStore();
 
   const isBlackKey = (noteNumber: number) => {
-    const pattern = [false, true, false, true, false, false, true, false, true, false, true, false];
+    const pattern = [
+      false,
+      true,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      false,
+    ];
     return pattern[noteNumber % 12];
   };
 
   function range(start: number, stop?: number, step?: number) {
-    if (typeof stop == 'undefined') {
+    if (typeof stop == "undefined") {
       stop = start;
       start = 0;
     }
 
-    if (typeof step == 'undefined') {
+    if (typeof step == "undefined") {
       step = 1;
     }
 
@@ -34,17 +47,21 @@ function LanesBackground({ ...other }: LanesBackgroundProps) {
     }
 
     return result;
-  };
-
+  }
 
   const noteNums = range(
     pianoRollStore.startingNoteNum,
-    pianoRollStore.startingNoteNum + pianoRollStore.numOfKeys
+    pianoRollStore.startingNoteNum + pianoRollStore.numOfKeys,
   );
 
-  const lanes = noteNums.map(noteNumber => {
-    const keyColor = isBlackKey(noteNumber) ? theme.lane.blackLaneColor : theme.lane.whiteLaneColor;
-    const yPosition = transform.canvasHeight - (noteNumber * transform.laneWidth) - transform.laneWidth;
+  const lanes = noteNums.map((noteNumber) => {
+    const keyColor = isBlackKey(noteNumber)
+      ? theme.lane.blackLaneColor
+      : theme.lane.whiteLaneColor;
+    const yPosition =
+      transform.canvasHeight -
+      noteNumber * transform.laneWidth -
+      transform.laneWidth;
 
     return (
       <rect
@@ -60,7 +77,11 @@ function LanesBackground({ ...other }: LanesBackgroundProps) {
 
   return (
     <div
-      style={{ height: `${pianoRollStore.canvasHeight}px`, width: `${transform.pianoLaneScaleX * pianoRollStore.laneLength}px`, padding: '0px' }}
+      style={{
+        height: `${pianoRollStore.canvasHeight}px`,
+        width: `${transform.pianoLaneScaleX * pianoRollStore.laneLength}px`,
+        padding: "0px",
+      }}
     >
       <svg
         aria-label="piano-roll-lanes-background"

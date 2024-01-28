@@ -16,7 +16,6 @@
     "jsx": "preserve",
     // "types": ["node", "react"],
 
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -28,5 +27,5 @@
     "baseUrl": ".",
     "paths": {},
   },
-  "exclude": ["**/.*/", "**/build", "**/node_modules", "docs/export"]
+  "exclude": ["**/.*/", "**/build", "**/node_modules", "docs/export"],
 }

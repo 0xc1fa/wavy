@@ -1,6 +1,7 @@
 # ReactPianoRoll
 
 ## TODOs
+
 - auto scaling of grid and ruler
   - All >= bar marker in one color, all < bar and >= beat marker in one color, all > beat marker in one color
   - every grid have certian min-width and max-width, all the width, min-width, and max-width are the same
@@ -17,12 +18,11 @@
 - turn PianoRoll flex layout to grid layout
 - fix range selection
 
-
 ## Existing Problems and
+
 - Cannot delete lyric (as it would also delete the note)
 - Refactored PianoRollStore
 - The scrollable area does not resize upon scaling
-
 
 This is a component library for pianoroll in React. Functionalities included:
 
@@ -40,6 +40,7 @@ This is a component library for pianoroll in React. Functionalities included:
 Wrap your component with `<PianorollProvider />` and then use `<Pianoroll />` inside it.
 
 Inside main.js:
+
 ```
 import React from 'react'
 import ReactDOM from 'react-dom/client'
@@ -58,6 +59,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 ```
 
 Inside App.tsx:
+
 ```
 import { PianoRoll } from "react-piano-roll";
 
@@ -70,9 +72,8 @@ function App() {
 }
 
 export default App
-``````
+```
 
 Multiple hooks are provided to access the state of the pianoroll. A breif description of each hook is provided below. For more details, please refer to the source code.
 
 `usePianorollNotes()` returns the notes in the pianoroll.
-

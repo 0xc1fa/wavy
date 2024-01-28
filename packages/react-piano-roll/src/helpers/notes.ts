@@ -3,7 +3,9 @@ import useStore from "../hooks/useStore";
 
 export function focusNote(e: Event, id: string) {
   const componentRef = e.currentTarget as HTMLDivElement;
-  const childElement = componentRef.querySelector(`[data-noteid="${id}"]`) as HTMLInputElement;
+  const childElement = componentRef.querySelector(
+    `[data-noteid="${id}"]`,
+  ) as HTMLInputElement;
   childElement!.focus();
 }
 
@@ -13,16 +15,22 @@ export function usePianoRollNotes() {
 }
 
 export function getSelectedNotes(notes: TrackNoteEvent[]) {
-  const selectedNotes = notes.filter(note => note.isSelected)
+  const selectedNotes = notes.filter((note) => note.isSelected);
   return selectedNotes;
 }
 
 export function getStartingTickFromNotes(notes: TrackNoteEvent[]): number {
-  const startTick = notes.reduce((min, note) => Math.min(min, note.tick), Infinity)
+  const startTick = notes.reduce(
+    (min, note) => Math.min(min, note.tick),
+    Infinity,
+  );
   return startTick;
 }
 
 export function getEndingTickFromNotes(notes: TrackNoteEvent[]) {
-  const endTick = notes.reduce((max, note) => Math.max(max, note.tick + note.duration), -Infinity)
+  const endTick = notes.reduce(
+    (max, note) => Math.max(max, note.tick + note.duration),
+    -Infinity,
+  );
   return endTick;
 }

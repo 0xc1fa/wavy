@@ -1,3 +1,3 @@
 // export * from "./notes"
-export * from "./validation"
-export * from "./utility"
+export * from "./validation";
+export * from "./utility";

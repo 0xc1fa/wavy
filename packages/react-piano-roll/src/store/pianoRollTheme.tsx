@@ -1,5 +1,4 @@
-
-export type PianoRollTheme = ReturnType<typeof defaultPianoRollTheme>
+export type PianoRollTheme = ReturnType<typeof defaultPianoRollTheme>;
 
 export function defaultPianoRollTheme() {
   return {
@@ -43,6 +42,6 @@ export function defaultPianoRollTheme() {
       pitchBendCurveColor: "#ccccdd99",
       pitchBendCurveLineWidth: 2,
       pitchBendCurvePointRaduis: 3,
-    }
-  }
+    },
+  };
 }

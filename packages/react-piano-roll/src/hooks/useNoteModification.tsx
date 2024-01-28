@@ -2,13 +2,18 @@ import { TrackNoteEvent } from "@/types";
 import { usePianoRollDispatch, usePianoRollNotes } from "..";
 import { PianoRollStoreAction } from "@/store/pianoRollStore";
 
-function setSelectedNotesAsLegato(notes: TrackNoteEvent[], dispatch: React.Dispatch<PianoRollStoreAction>) {
-  let selectedNote = notes.filter(note => note.isSelected).sort((a, b) => a.tick - b.tick)
+function setSelectedNotesAsLegato(
+  notes: TrackNoteEvent[],
+  dispatch: React.Dispatch<PianoRollStoreAction>,
+) {
+  let selectedNote = notes
+    .filter((note) => note.isSelected)
+    .sort((a, b) => a.tick - b.tick);
   for (let i = 0; i < selectedNote.length - 1; i++) {
-    selectedNote[i].duration = selectedNote[i + 1].tick - selectedNote[i].tick
+    selectedNote[i].duration = selectedNote[i + 1].tick - selectedNote[i].tick;
   }
-  dispatch({ type: 'MODIFYING_NOTES', payload: { notes: selectedNote }})
-  console.log('set legato')
+  dispatch({ type: "MODIFYING_NOTES", payload: { notes: selectedNote } });
+  console.log("set legato");
 }
 
 export function useNoteModification() {
@@ -16,7 +21,7 @@ export function useNoteModification() {
   const dispatch = usePianoRollDispatch();
 
   return {
-    setSelectedNotesAsLegato: () => setSelectedNotesAsLegato(pianoRollNote, dispatch),
-  }
-
+    setSelectedNotesAsLegato: () =>
+      setSelectedNotesAsLegato(pianoRollNote, dispatch),
+  };
 }

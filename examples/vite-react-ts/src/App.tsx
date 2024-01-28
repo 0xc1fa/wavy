@@ -1,12 +1,11 @@
-import { PianoRoll } from 'react-piano-roll'
+import { PianoRoll } from "react-piano-roll";
 
 function App() {
-
   return (
     <>
       <PianoRoll attachLyric />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

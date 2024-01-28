@@ -1,63 +1,110 @@
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import { isBlackKey } from "../helpers";
 import { createContext, useReducer } from "react";
-import { NoteAction, addNote, addNotes, deleteSelectedNotes, modifyingNotes, moveNoteAsLatestModified, setNoteInMarqueeAsSelected, setNoteModificationBuffer, toggleSelectedNoteVibratoMode, updateNoteLyric, vibratoDepthDelayChangeSelectedNote, vibratoRateChangeSelectedNote } from "../actions/note-actions";
-import { TransformAction, setPianoLaneScaleX } from "../actions/transform-actions";
-import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
-import { HistoryAction, PianoRollHistoryItem, redo, undo } from "../actions/history-action";
+import {
+  NoteAction,
+  addNote,
+  addNotes,
+  deleteSelectedNotes,
+  modifyingNotes,
+  moveNoteAsLatestModified,
+  setNoteInMarqueeAsSelected,
+  setNoteModificationBuffer,
+  toggleSelectedNoteVibratoMode,
+  updateNoteLyric,
+  vibratoDepthDelayChangeSelectedNote,
+  vibratoRateChangeSelectedNote,
+} from "../actions/note-actions";
+import {
+  TransformAction,
+  setPianoLaneScaleX,
+} from "../actions/transform-actions";
+import {
+  SelectionAction,
+  setNoteAsSelected,
+  setSelectionTicks,
+  unselectAllNotes,
+} from "../actions/selection-actions";
+import {
+  HistoryAction,
+  PianoRollHistoryItem,
+  redo,
+  undo,
+} from "../actions/history-action";
 
-export const PianoRollStoreContext = createContext<ReturnType<typeof usePianoRollStore> | undefined>(undefined)
+export const PianoRollStoreContext = createContext<
+  ReturnType<typeof usePianoRollStore> | undefined
+>(undefined);
 
 interface PianoRollStoreProviderProps {
-  children?: React.ReactNode
+  children?: React.ReactNode;
 }
-export function PianoRollStoreProvider({ children }: PianoRollStoreProviderProps) {
-  const pianoRollStore = usePianoRollStore()
+export function PianoRollStoreProvider({
+  children,
+}: PianoRollStoreProviderProps) {
+  const pianoRollStore = usePianoRollStore();
   return (
     <PianoRollStoreContext.Provider value={pianoRollStore}>
       {children}
     </PianoRollStoreContext.Provider>
-  )
+  );
 }
 
-export type PianoRollStoreAction = NoteAction | TransformAction | SelectionAction | HistoryAction
+export type PianoRollStoreAction =
+  | NoteAction
+  | TransformAction
+  | SelectionAction
+  | HistoryAction;
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   switch (action.type) {
-    case 'addNote': return addNote(state, action);
-    case 'addNotes': return addNotes(state, action);
-    case 'MODIFYING_NOTES': return modifyingNotes(state, action);
+    case "addNote":
+      return addNote(state, action);
+    case "addNotes":
+      return addNotes(state, action);
+    case "MODIFYING_NOTES":
+      return modifyingNotes(state, action);
     // case 'BEGIN_MODIFYING_NOTES': return beginModifyingNotes(state, action);
     // case 'FINISH_MODIFYING_NOTES': return finishModifyingNotes(state, action);
-    case 'unselectAllNotes': return unselectAllNotes(state, action);
-    case 'setNoteAsSelected': return setNoteAsSelected(state, action);
-    case 'toggleSelectedNoteVibratoMode': return toggleSelectedNoteVibratoMode(state, action);
-    case 'vibratoDepthDelayChangeSelectedNote': return vibratoDepthDelayChangeSelectedNote(state, action);
-    case 'vibratoRateChangeSelectedNote': return vibratoRateChangeSelectedNote(state, action);
-    case 'setNoteInMarqueeAsSelected': return setNoteInMarqueeAsSelected(state, action);
-    case 'updateNoteLyric': return updateNoteLyric(state, action);
-    case 'moveNoteAsLatestModified': return moveNoteAsLatestModified(state, action);
-    case 'setPianoLaneScaleX': return setPianoLaneScaleX(state, action);
-    case 'setSelectionTicks': return setSelectionTicks(state, action);
-    case 'deleteSelectedNotes': return deleteSelectedNotes(state, action);
-    case 'setNoteModificationBuffer': return setNoteModificationBuffer(state, action)
-    case 'setBpm':
+    case "unselectAllNotes":
+      return unselectAllNotes(state, action);
+    case "setNoteAsSelected":
+      return setNoteAsSelected(state, action);
+    case "toggleSelectedNoteVibratoMode":
+      return toggleSelectedNoteVibratoMode(state, action);
+    case "vibratoDepthDelayChangeSelectedNote":
+      return vibratoDepthDelayChangeSelectedNote(state, action);
+    case "vibratoRateChangeSelectedNote":
+      return vibratoRateChangeSelectedNote(state, action);
+    case "setNoteInMarqueeAsSelected":
+      return setNoteInMarqueeAsSelected(state, action);
+    case "updateNoteLyric":
+      return updateNoteLyric(state, action);
+    case "moveNoteAsLatestModified":
+      return moveNoteAsLatestModified(state, action);
+    case "setPianoLaneScaleX":
+      return setPianoLaneScaleX(state, action);
+    case "setSelectionTicks":
+      return setSelectionTicks(state, action);
+    case "deleteSelectedNotes":
+      return deleteSelectedNotes(state, action);
+    case "setNoteModificationBuffer":
+      return setNoteModificationBuffer(state, action);
+    case "setBpm":
       return {
         ...state,
-        bpm: action.payload.bpm
-      }
-    case 'UNDO':
+        bpm: action.payload.bpm,
+      };
+    case "UNDO":
       return undo(state, action);
-    case 'REDO':
+    case "REDO":
       return redo(state, action);
     default:
       throw new Error();
   }
 }
 
-function usePianoRollStore(
-  initialState?: PianoRollStore,
-) {
+function usePianoRollStore(initialState?: PianoRollStore) {
   const [pianoRollStore, dispatch] = useReducer(
     reducer,
     initialState ? initialState : defaultPianoRollStore(),
@@ -65,14 +112,13 @@ function usePianoRollStore(
 
   return {
     pianoRollStore,
-    dispatch
+    dispatch,
   };
-
 }
 
-export type PianoRollStoreContext = ReturnType<typeof usePianoRollStore>
+export type PianoRollStoreContext = ReturnType<typeof usePianoRollStore>;
 
-export type PianoRollStore = ReturnType<typeof defaultPianoRollStore>
+export type PianoRollStore = ReturnType<typeof defaultPianoRollStore>;
 function defaultPianoRollStore() {
   return {
     pianoRollNotes: new Array<TrackNoteEvent>(),
@@ -118,11 +164,11 @@ function defaultPianoRollStore() {
     endingTick: 480 * 4 * 8,
 
     get scaledPixelPerBeat() {
-      return this.pixelPerBeat * this.pianoLaneScaleX
+      return this.pixelPerBeat * this.pianoLaneScaleX;
     },
 
     get laneLength() {
-      return (this.endingTick - this.startingTick) * this.pixelsPerTick
+      return (this.endingTick - this.startingTick) * this.pixelsPerTick;
     },
 
     get canvasWidth() {
@@ -133,7 +179,7 @@ function defaultPianoRollStore() {
       return 0;
     },
     get numOfKeys() {
-      return 128
+      return 128;
     },
     get pixelsPerTick() {
       return this.pixelPerBeat / this.tickPerBeat;
@@ -142,18 +188,21 @@ function defaultPianoRollStore() {
       return this.laneWidth * this.numOfKeys;
     },
     get whiteKeyWidth() {
-      return this.keyWidth * 12 / 7;
+      return (this.keyWidth * 12) / 7;
     },
     get blackKeyLength() {
       return this.keyLength * this.blackKeyLengthRatio;
     },
 
     getBeatFromOffsetX(offsetX: number) {
-      return (offsetX / (this.pianoLaneScaleX * this.pixelPerBeat));
+      return offsetX / (this.pianoLaneScaleX * this.pixelPerBeat);
     },
 
     getTickFromOffsetX(offsetX: number) {
-      return (offsetX / (this.pianoLaneScaleX * this.pixelPerBeat)) * this.tickPerBeat;
+      return (
+        (offsetX / (this.pianoLaneScaleX * this.pixelPerBeat)) *
+        this.tickPerBeat
+      );
     },
 
     getNoteNumFromOffsetY(offsetY: number) {
@@ -161,17 +210,33 @@ function defaultPianoRollStore() {
     },
 
     getCenterYFromNoteNum(noteNum: number) {
-      return (this.getMinYFromNoteNum(noteNum) + this.getMaxYFromNoteNum(noteNum)) / 2
+      return (
+        (this.getMinYFromNoteNum(noteNum) + this.getMaxYFromNoteNum(noteNum)) /
+        2
+      );
     },
 
     getNoteNameFromNoteNum(noteNum: number) {
-      const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+      const noteNames = [
+        "C",
+        "C#",
+        "D",
+        "D#",
+        "E",
+        "F",
+        "F#",
+        "G",
+        "G#",
+        "A",
+        "A#",
+        "B",
+      ];
       const noteNameIndex = noteNum % 12;
       const octave = Math.floor(noteNum / 12) - 1;
       return `${noteNames[noteNameIndex]}${octave}`;
     },
 
-    getMinYFromNoteNum(noteNum: number,) {
+    getMinYFromNoteNum(noteNum: number) {
       return (this.numOfKeys - noteNum - 1) * this.laneWidth;
     },
 
@@ -180,18 +245,23 @@ function defaultPianoRollStore() {
     },
 
     getOffsetXFromTick(tick: number) {
-      return (tick / this.tickPerBeat) * this.pixelPerBeat * this.pianoLaneScaleX;
+      return (
+        (tick / this.tickPerBeat) * this.pixelPerBeat * this.pianoLaneScaleX
+      );
     },
 
-    getNoteFromPosition(offsetX: number, offsetY: number): TrackNoteEvent | null {
-      console.log(this.pianoRollNotes)
-      console.log(this.getNoteNumFromOffsetY(offsetY))
-      console.log(this.getTickFromOffsetX(offsetX))
+    getNoteFromPosition(
+      offsetX: number,
+      offsetY: number,
+    ): TrackNoteEvent | null {
+      console.log(this.pianoRollNotes);
+      console.log(this.getNoteNumFromOffsetY(offsetY));
+      console.log(this.getTickFromOffsetX(offsetX));
       for (const note of this.pianoRollNotes.slice().reverse()) {
         if (
-          this.getNoteNumFromOffsetY(offsetY) == note.noteNumber
-          && this.getTickFromOffsetX(offsetX) >= note.tick
-          && this.getTickFromOffsetX(offsetX) <= note.tick + note.duration
+          this.getNoteNumFromOffsetY(offsetY) == note.noteNumber &&
+          this.getTickFromOffsetX(offsetX) >= note.tick &&
+          this.getTickFromOffsetX(offsetX) <= note.tick + note.duration
         ) {
           return note;
         }
@@ -200,19 +270,27 @@ function defaultPianoRollStore() {
     },
 
     getNotesFromOffsetX(offsetX: number) {
-      return this.pianoRollNotes.filter(note => note.tick <= this.getTickFromOffsetX(offsetX) && (note.tick + note.duration) >= this.getTickFromOffsetX(offsetX) )
+      return this.pianoRollNotes.filter(
+        (note) =>
+          note.tick <= this.getTickFromOffsetX(offsetX) &&
+          note.tick + note.duration >= this.getTickFromOffsetX(offsetX),
+      );
     },
 
     getWhiteKeyNumFromPosition(y: number) {
-      let currentY = 0
-      for (let keyNum = this.numOfKeys - 1; keyNum >= this.startingNoteNum; keyNum--) {
+      let currentY = 0;
+      for (
+        let keyNum = this.numOfKeys - 1;
+        keyNum >= this.startingNoteNum;
+        keyNum--
+      ) {
         if (isBlackKey(keyNum)) {
-          continue
+          continue;
         }
         if (y >= currentY && y <= currentY + this.whiteKeyWidth) {
-          return keyNum
+          return keyNum;
         }
-        currentY += this.whiteKeyWidth
+        currentY += this.whiteKeyWidth;
       }
       return -1;
     },
@@ -222,7 +300,7 @@ function defaultPianoRollStore() {
     },
 
     getPianoKeyNumFromPosition(x: number, y: number) {
-      const estimatedKeyNum = Math.floor(this.numOfKeys - y / this.keyWidth)
+      const estimatedKeyNum = Math.floor(this.numOfKeys - y / this.keyWidth);
       if (!this.isInnerKeyboard(x)) {
         return this.getWhiteKeyNumFromPosition(y);
       } else if (this.isInnerKeyboard(x) && isBlackKey(estimatedKeyNum)) {
@@ -245,26 +323,28 @@ function defaultPianoRollStore() {
     },
 
     roundDownTickToNearestGrid(tick: number) {
-      return tick - tick % this.tickPerBeat;
+      return tick - (tick % this.tickPerBeat);
     },
 
     clearCanvas(ctx: CanvasRenderingContext2D) {
-      ctx.clearRect(0, 0, this.laneLength, this.canvasHeight)
+      ctx.clearRect(0, 0, this.laneLength, this.canvasHeight);
     },
 
     isInnerKeyboard(x: number) {
-      const blackKeyLength = this.keyLength * this.blackKeyLengthRatio
-      return x < blackKeyLength
+      const blackKeyLength = this.keyLength * this.blackKeyLengthRatio;
+      return x < blackKeyLength;
     },
 
     isNoteLeftMarginClicked(
       note: TrackNoteEvent,
-      offsetX: number, offsetY: number,
+      offsetX: number,
+      offsetY: number,
     ) {
       if (
-        this.getNoteNumFromOffsetY(offsetY) == note.noteNumber
-        && offsetX >= this.getOffsetXFromTick(note.tick)
-        && offsetX <= this.getOffsetXFromTick(note.tick) + this.draggableBoundaryPixel
+        this.getNoteNumFromOffsetY(offsetY) == note.noteNumber &&
+        offsetX >= this.getOffsetXFromTick(note.tick) &&
+        offsetX <=
+          this.getOffsetXFromTick(note.tick) + this.draggableBoundaryPixel
       ) {
         return true;
       } else {
@@ -274,17 +354,20 @@ function defaultPianoRollStore() {
 
     isNoteRightMarginClicked(
       note: TrackNoteEvent,
-      offsetX: number, offsetY: number,
+      offsetX: number,
+      offsetY: number,
     ) {
       if (
-        this.getNoteNumFromOffsetY(offsetY) == note.noteNumber
-        && offsetX <= this.getOffsetXFromTick(note.tick + note.duration)
-        && offsetX >= this.getOffsetXFromTick(note.tick + note.duration) - this.draggableBoundaryPixel
+        this.getNoteNumFromOffsetY(offsetY) == note.noteNumber &&
+        offsetX <= this.getOffsetXFromTick(note.tick + note.duration) &&
+        offsetX >=
+          this.getOffsetXFromTick(note.tick + note.duration) -
+            this.draggableBoundaryPixel
       ) {
         return true;
       } else {
         return false;
       }
     },
-  }
+  };
 }

@@ -34,7 +34,10 @@
 .marker-container {
   position: absolute;
   left: var(--marker-left);
-  top: calc((var(--container-height) - var(--resize-bar-height)) * var(--marker-top) - 4px);
+  top: calc(
+    (var(--container-height) - var(--resize-bar-height)) * var(--marker-top) -
+      4px
+  );
   width: var(--marker-width);
   display: flex;
   justify-content: center;
@@ -56,11 +59,11 @@
     transition-delay: 0s;
   }
 
-  &:hover::after, &:focus::after {
+  &:hover::after,
+  &:focus::after {
     visibility: visible;
     transition-delay: 0.5s;
   }
-
 }
 
 .velocity-marker {

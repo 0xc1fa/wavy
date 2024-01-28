@@ -1,6 +1,6 @@
 import LaneGrids from "./LaneGrids";
 import { defaultPianoRollTheme } from "@/store/pianoRollTheme";
-import PianoRollThemeContext  from "../contexts/piano-roll-theme-context";
+import PianoRollThemeContext from "../contexts/piano-roll-theme-context";
 import styles from "./index.module.scss";
 import usePianoRollMouseHandlers from "../handlers/usePianoRollMouseHandlers";
 import SelectionArea from "./SelectionMarquee";
@@ -41,10 +41,10 @@ export default function PianoRoll({
   width = 800,
   height = 600,
 }: PianoRollProps) {
-
-  const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
+  const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } =
+    usePianoRollMouseHandlers();
   const pianoRollKeyboardHandlers = usePianoRollKeyboardHandlers();
-  const { pianoRollStore } = useStore()
+  const { pianoRollStore } = useStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const minScaleX = (800 - 50) / pianoRollStore.laneLength;
@@ -59,65 +59,88 @@ export default function PianoRoll({
 
   return (
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
-      <div className={styles['container']}
+      <div
+        className={styles["container"]}
         ref={containerRef}
-        style={{
-          '--lane-length': `${pianoRollStore.laneLength}px`,
-          '--canvas-width': `${pianoRollStore.laneLength * pianoRollStore.pianoLaneScaleX}px`,
-          '--canvas-height': `${pianoRollStore.canvasHeight}px`,
-          '--width': `${width}px`,
-          '--height': `${height}px`,
-        } as React.CSSProperties }
+        style={
+          {
+            "--lane-length": `${pianoRollStore.laneLength}px`,
+            "--canvas-width": `${pianoRollStore.laneLength * pianoRollStore.pianoLaneScaleX}px`,
+            "--canvas-height": `${pianoRollStore.canvasHeight}px`,
+            "--width": `${width}px`,
+            "--height": `${height}px`,
+          } as React.CSSProperties
+        }
         tabIndex={0}
       >
-        <div className={styles['upper-container']} onClick={(event) => console.log(event.clientX)}>
+        <div
+          className={styles["upper-container"]}
+          onClick={(event) => console.log(event.clientX)}
+        >
           <TempoInfo />
           <div>
             <Ruler />
             <SelectionBar />
           </div>
         </div>
-        <div className={styles['middle-container']}>
+        <div className={styles["middle-container"]}>
           <PianoKeyboard />
-          <div className={styles['lane-container']}>
-            <div className={styles['pianoroll-lane']} {...pianoRollMouseHandlers}
+          <div className={styles["lane-container"]}>
+            <div
+              className={styles["pianoroll-lane"]}
+              {...pianoRollMouseHandlers}
               tabIndex={0}
               {...pianoRollKeyboardHandlers}
             >
               <LaneGrids />
               <Selections />
               <Notes attachLyric={attachLyric} />
-              <SelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
-              {playheadPosition !== undefined && <Playhead playheadPosition={playheadPosition}/>}
-              <div style={{ position:'absolute', inset: '0', width: '100%', height: '100%' }} />
+              <SelectionArea
+                mouseHandlersStates={pianoRollMouseHandlersStates}
+              />
+              {playheadPosition !== undefined && (
+                <Playhead playheadPosition={playheadPosition} />
+              )}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: "0",
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
               <LanesBackground />
             </div>
           </div>
         </div>
-        <div className={styles['lower-container']}>
+        <div className={styles["lower-container"]}>
           <VelocityEditor />
         </div>
       </div>
     </PianoRollThemeContext.Provider>
-  )
-
+  );
 }
 
-function useScrollToNote(containerRef: React.RefObject<HTMLElement>, initialScrollMiddleNote: number) {
+function useScrollToNote(
+  containerRef: React.RefObject<HTMLElement>,
+  initialScrollMiddleNote: number,
+) {
   if (initialScrollMiddleNote < 0 || initialScrollMiddleNote > 127) {
     initialScrollMiddleNote = 60;
   }
   useEffect(() => {
     if (!containerRef) {
-      return
+      return;
     }
-    const containerHeight = containerRef.current?.offsetHeight
-    const c4KeyElement = document.querySelector(`[data-keynum="${initialScrollMiddleNote}"]`) as HTMLDivElement;
+    const containerHeight = containerRef.current?.offsetHeight;
+    const c4KeyElement = document.querySelector(
+      `[data-keynum="${initialScrollMiddleNote}"]`,
+    ) as HTMLDivElement;
     const c4KeyTop = c4KeyElement.getBoundingClientRect().top;
 
     // Thanks to strict mode rendering twice, we need to prevent the second scrolling which reset it to top
     if (c4KeyTop > 300) {
       containerRef.current?.scroll(0, c4KeyTop - containerHeight! / 2);
     }
-  }, [])
+  }, []);
 }
