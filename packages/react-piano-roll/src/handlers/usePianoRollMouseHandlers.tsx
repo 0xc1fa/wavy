@@ -82,10 +82,6 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const onPointerMove: React.PointerEventHandler = (event) => {
-    // const noteClicked = pianoRollStore.getNoteFromEvent(event.nativeEvent);
-    // if (noteClicked && mouseHandlerMode !== PianoRollLanesMouseHandlerMode.None) {
-    //   dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick } });
-    // }
     const bufferedNotes = pianoRollStore.noteModificationBuffer.notesSelected;
     const deltaY = event.nativeEvent.offsetY - pianoRollStore.noteModificationBuffer.initY;
     const deltaX = event.nativeEvent.offsetX - pianoRollStore.noteModificationBuffer.initX;
@@ -100,12 +96,6 @@ export default function usePianoRollMouseHandlers() {
     }
 
     const noteClicked = _.last(bufferedNotes);
-    console.log("gaurd", guardActive.current)
-    console.log("tick in grid", getTickInGrid(pianoRollStore.pianoLaneScaleX))
-    console.log("delta ticks", Math.abs(deltaTicks))
-    // console.log("anchor", getNearestAnchor(Math.min(noteClicked!.tick + noteClicked!.duration - 1, noteClicked!.tick + deltaTicks), pianoRollStore.pianoLaneScaleX, getGridOffsetOfTick(noteClicked!.tick, pianoRollStore.pianoLaneScaleX)))
-    // console.log("offset", getGridOffsetOfTick(noteClicked!.tick, pianoRollStore.pianoLaneScaleX))
-    // console.log("tickingrid", getTickInGrid(pianoRollStore.pianoLaneScaleX))
     switch (mouseHandlerMode) {
       case PianoRollLanesMouseHandlerMode.None:
         updateCursorStyle(event.nativeEvent);
@@ -161,17 +151,11 @@ export default function usePianoRollMouseHandlers() {
         }
         if (guardActive.current) {
           dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: _.last(newNotes)!.tick + _.last(newNotes)!.duration } });
-          // dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: Math.max(noteClicked!.tick + 1, clampTick(noteClicked!.tick + noteClicked!.duration + deltaTicks)) } });
         }
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
       }
       case PianoRollLanesMouseHandlerMode.DragAndDrop: {
-        // const newNotes = bufferedNotes.map((bufferedNote) => ({
-        //   ...bufferedNote,
-        //   noteNumber: bufferedNote.noteNumber + deltaPitch,
-        //   tick: !guardActive.current ? bufferedNote.tick : bufferedNote.tick + deltaTicks,
-        // }));
         let newNotes;
         if (guardActive.current === DraggingGuardMode.SnapToGrid) {
           const anchor = getNearestAnchor(noteClicked!.tick + deltaTicks, pianoRollStore.pianoLaneScaleX, getGridOffsetOfTick(noteClicked!.tick, pianoRollStore.pianoLaneScaleX));
