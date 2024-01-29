@@ -1,11 +1,11 @@
 import { basePixelsPerBeat, minGridPixel, ticksPerBeat } from "@/constants";
 import { ceilToNearestPowerOfTwo, floorToNearestPowerOfTwo } from "./number";
 
-export function getNumOfGrid(pixelPerBeat: number, laneLength: number) {
-  const numberOfBarGrids = Math.ceil(laneLength / (pixelPerBeat * 4));
-  const numberOfHalfBarGrids = Math.ceil(laneLength / (pixelPerBeat * 2));
-  const numberOfQuarterGrids = Math.ceil(laneLength / pixelPerBeat);
-  const numberOfQuaversGrids = Math.ceil(laneLength / pixelPerBeat);
+export function getNumOfGrid(laneLength: number) {
+  const numberOfBarGrids = Math.ceil(laneLength / (basePixelsPerBeat * 4));
+  const numberOfHalfBarGrids = Math.ceil(laneLength / (basePixelsPerBeat * 2));
+  const numberOfQuarterGrids = Math.ceil(laneLength / basePixelsPerBeat);
+  const numberOfQuaversGrids = Math.ceil(laneLength / basePixelsPerBeat);
   return {
     bar: numberOfBarGrids,
     halfBar: numberOfHalfBarGrids,
@@ -14,11 +14,11 @@ export function getNumOfGrid(pixelPerBeat: number, laneLength: number) {
   };
 }
 
-export function getGridSeparationFactor(pixelPerBeat: number, pianoLaneScaleX: number) {
-  const barGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (pianoLaneScaleX * pixelPerBeat * 4));
-  const halfBarGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (pianoLaneScaleX * pixelPerBeat * 2));
-  const quarterGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (pianoLaneScaleX * pixelPerBeat));
-  const quaversGridSeparationFactor = floorToNearestPowerOfTwo((pianoLaneScaleX * pixelPerBeat) / minGridPixel);
+export function getGridSeparationFactor(pianoLaneScaleX: number) {
+  const barGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (pianoLaneScaleX * basePixelsPerBeat * 4));
+  const halfBarGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (pianoLaneScaleX * basePixelsPerBeat * 2));
+  const quarterGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (pianoLaneScaleX * basePixelsPerBeat));
+  const quaversGridSeparationFactor = floorToNearestPowerOfTwo((pianoLaneScaleX * basePixelsPerBeat) / minGridPixel);
   return {
     bar: barGridSeparationFactor,
     halfBar: halfBarGridSeparationFactor,

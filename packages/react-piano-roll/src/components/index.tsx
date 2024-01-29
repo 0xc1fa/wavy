@@ -40,6 +40,7 @@ export default function PianoRoll({
   onSpace,
   width = 800,
   height = 600,
+  staringTick = 200, endingTick = 480 * 4 * 8
 }: PianoRollProps) {
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const pianoRollKeyboardHandlers = usePianoRollKeyboardHandlers();
@@ -52,9 +53,9 @@ export default function PianoRoll({
   const dispatch = usePianoRollDispatch();
   useScrollToNote(containerRef, initialScrollMiddleNote);
 
-  // useEffect(() => {
-  //   dispatch({ type: 'setPianoLaneScaleX' , payload: { pianoLaneScaleX: minScaleX } })
-  // }, [])
+  useEffect(() => {
+    dispatch({ type: 'SET_CLIP_SPAN' , payload: { startingTick: staringTick, endingTick: endingTick } })
+  }, [])
 
   return (
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>

@@ -19,6 +19,8 @@ import {
 import { TransformAction, setPianoLaneScaleX } from "../actions/transform-actions";
 import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
 import { HistoryAction, PianoRollHistoryItem, redo, undo } from "../actions/history-action";
+import { MetaAction, setClipSpan } from "@/actions/meta-action";
+import { baseKeyLength, baseKeyWidth, baseLaneWidth, basePixelsPerBeat, blackKeyLengthRatio, draggableBoundaryPixel, ticksPerBeat } from "@/constants";
 
 export const PianoRollStoreContext = createContext<ReturnType<typeof usePianoRollStore> | undefined>(undefined);
 
@@ -30,7 +32,7 @@ export function PianoRollStoreProvider({ children }: PianoRollStoreProviderProps
   return <PianoRollStoreContext.Provider value={pianoRollStore}>{children}</PianoRollStoreContext.Provider>;
 }
 
-export type PianoRollStoreAction = NoteAction | TransformAction | SelectionAction | HistoryAction;
+export type PianoRollStoreAction = NoteAction | TransformAction | SelectionAction | HistoryAction | MetaAction;
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   switch (action.type) {
@@ -75,6 +77,8 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
       return undo(state, action);
     case "REDO":
       return redo(state, action);
+    case "SET_CLIP_SPAN":
+      return setClipSpan(state, action);
     default:
       throw new Error();
   }
@@ -106,38 +110,23 @@ function defaultPianoRollStore() {
     },
 
     bpm: 120,
-    scaling: {
-      scaleX: 1,
-      scaleY: 1,
-    },
 
     pianoLaneScaleX: 1,
     pianoLaneScaleY: 1,
     defaultVelocity: 64,
     defaultDuration: 480,
-    playheadTick: 0,
-    keyLength: 50,
-    keyWidth: 25,
-    blackKeyLengthRatio: 0.5,
 
     startingOctave: -1,
     endingOctave: 10,
-    laneWidth: 25,
-    pixelPerBeat: 70,
-    tickPerBeat: 480,
+
     defaultNoteLyric: "啦",
-    draggableBoundaryPixel: 10,
 
-    resolution: 1,
-    scrollTop: 0,
-
-    currentTicks: 0,
     selectionTicks: 0,
     startingTick: 0,
     endingTick: 480 * 4 * 64,
 
     get scaledPixelPerBeat() {
-      return this.pixelPerBeat * this.pianoLaneScaleX;
+      return basePixelsPerBeat * this.pianoLaneScaleX;
     },
 
     get laneLength() {
@@ -155,28 +144,28 @@ function defaultPianoRollStore() {
       return 128;
     },
     get pixelsPerTick() {
-      return this.pixelPerBeat / this.tickPerBeat;
+      return basePixelsPerBeat / ticksPerBeat;
     },
     get canvasHeight() {
-      return this.laneWidth * this.numOfKeys;
+      return baseLaneWidth * this.numOfKeys;
     },
     get whiteKeyWidth() {
-      return (this.keyWidth * 12) / 7;
+      return (baseKeyWidth * 12) / 7;
     },
     get blackKeyLength() {
-      return this.keyLength * this.blackKeyLengthRatio;
+      return baseKeyLength * blackKeyLengthRatio;
     },
 
     getBeatFromOffsetX(offsetX: number) {
-      return offsetX / (this.pianoLaneScaleX * this.pixelPerBeat);
+      return offsetX / (this.pianoLaneScaleX * basePixelsPerBeat);
     },
 
     getTickFromOffsetX(offsetX: number) {
-      return (offsetX / (this.pianoLaneScaleX * this.pixelPerBeat)) * this.tickPerBeat;
+      return (offsetX / (this.pianoLaneScaleX * basePixelsPerBeat)) * ticksPerBeat;
     },
 
     getNoteNumFromOffsetY(offsetY: number) {
-      return Math.floor(this.numOfKeys - offsetY / this.laneWidth);
+      return Math.floor(this.numOfKeys - offsetY / baseLaneWidth);
     },
 
     getCenterYFromNoteNum(noteNum: number) {
@@ -191,15 +180,15 @@ function defaultPianoRollStore() {
     },
 
     getMinYFromNoteNum(noteNum: number) {
-      return (this.numOfKeys - noteNum - 1) * this.laneWidth;
+      return (this.numOfKeys - noteNum - 1) * baseLaneWidth;
     },
 
     getMaxYFromNoteNum(noteNum: number) {
-      return (this.numOfKeys - noteNum) * this.laneWidth;
+      return (this.numOfKeys - noteNum) * baseLaneWidth;
     },
 
     getOffsetXFromTick(tick: number) {
-      return (tick / this.tickPerBeat) * this.pixelPerBeat * this.pianoLaneScaleX;
+      return (tick / ticksPerBeat) * basePixelsPerBeat * this.pianoLaneScaleX;
     },
 
     getNoteFromPosition(offsetX: number, offsetY: number): TrackNoteEvent | null {
@@ -238,11 +227,11 @@ function defaultPianoRollStore() {
     },
 
     getBlackKeyNumFromPosition(y: number) {
-      return Math.floor(this.numOfKeys - y / this.keyWidth);
+      return Math.floor(this.numOfKeys - y / baseKeyWidth);
     },
 
     getPianoKeyNumFromPosition(x: number, y: number) {
-      const estimatedKeyNum = Math.floor(this.numOfKeys - y / this.keyWidth);
+      const estimatedKeyNum = Math.floor(this.numOfKeys - y / baseKeyWidth);
       if (!this.isInnerKeyboard(x)) {
         return this.getWhiteKeyNumFromPosition(y);
       } else if (this.isInnerKeyboard(x) && isBlackKey(estimatedKeyNum)) {
@@ -265,7 +254,7 @@ function defaultPianoRollStore() {
     },
 
     roundDownTickToNearestGrid(tick: number) {
-      return tick - (tick % this.tickPerBeat);
+      return tick - (tick % ticksPerBeat);
     },
 
     clearCanvas(ctx: CanvasRenderingContext2D) {
@@ -273,7 +262,7 @@ function defaultPianoRollStore() {
     },
 
     isInnerKeyboard(x: number) {
-      const blackKeyLength = this.keyLength * this.blackKeyLengthRatio;
+      const blackKeyLength = baseKeyLength * blackKeyLengthRatio;
       return x < blackKeyLength;
     },
 
@@ -281,7 +270,7 @@ function defaultPianoRollStore() {
       if (
         this.getNoteNumFromOffsetY(offsetY) == note.noteNumber &&
         offsetX >= this.getOffsetXFromTick(note.tick) &&
-        offsetX <= this.getOffsetXFromTick(note.tick) + this.draggableBoundaryPixel
+        offsetX <= this.getOffsetXFromTick(note.tick) + draggableBoundaryPixel
       ) {
         return true;
       } else {
@@ -293,7 +282,7 @@ function defaultPianoRollStore() {
       if (
         this.getNoteNumFromOffsetY(offsetY) == note.noteNumber &&
         offsetX <= this.getOffsetXFromTick(note.tick + note.duration) &&
-        offsetX >= this.getOffsetXFromTick(note.tick + note.duration) - this.draggableBoundaryPixel
+        offsetX >= this.getOffsetXFromTick(note.tick + note.duration) - draggableBoundaryPixel
       ) {
         return true;
       } else {

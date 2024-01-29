@@ -2,6 +2,7 @@ import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import styles from "./index.module.scss";
 import useStore from "../../../hooks/useStore";
 import { memo } from "react";
+import { baseLaneWidth } from "@/constants";
 
 interface NoteLyricProps extends React.HTMLAttributes<HTMLInputElement> {
   note: TrackNoteEvent;
@@ -52,7 +53,7 @@ function NoteLyric({ note, style, ...other }: NoteLyricProps) {
           "--top": `${pianoRollStore.getMinYFromNoteNum(note.noteNumber)}px`,
           "--left": `${pianoRollStore.getOffsetXFromTick(note.tick)}px`,
           "--width": `${pianoRollStore.getOffsetXFromTick(note.duration)}px`,
-          "--height": `${pianoRollStore.laneWidth}px`,
+          "--height": `${baseLaneWidth}px`,
           ...style,
         } as React.CSSProperties
       }

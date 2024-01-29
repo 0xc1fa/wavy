@@ -3,19 +3,20 @@ import useTheme from "../../hooks/useTheme";
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import styles from "./index.module.scss";
 import { getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
+import { basePixelsPerBeat } from "@/constants";
 
 interface RulerProps extends React.HTMLAttributes<SVGElement> {}
 
 const Ruler: React.FC<RulerProps> = ({ ...other }) => {
-  const { laneLength, pixelPerBeat, pianoLaneScaleX } = usePianoRollTransform();
+  const { laneLength, pianoLaneScaleX } = usePianoRollTransform();
 
-  const numberOfMarkers = getNumOfGrid(pixelPerBeat, laneLength);
-  const gridSeparationFactor = getGridSeparationFactor(pixelPerBeat, pianoLaneScaleX);
+  const numberOfMarkers = getNumOfGrid(laneLength);
+  const gridSeparationFactor = getGridSeparationFactor(pianoLaneScaleX);
 
   const barMarkers = [...Array(numberOfMarkers.bar).keys()]
     .filter((index) => index % gridSeparationFactor.bar === 0)
     .map((index) => (
-      <RulerMarker key={index} x={index * pixelPerBeat * pianoLaneScaleX * 4}>
+      <RulerMarker key={index} x={index * basePixelsPerBeat * pianoLaneScaleX * 4}>
         {index + 1}
       </RulerMarker>
     ));

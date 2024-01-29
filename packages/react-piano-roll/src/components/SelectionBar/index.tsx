@@ -1,13 +1,14 @@
 import { getGridBaseSeparation, getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import styles from "./index.module.scss";
+import { basePixelsPerBeat } from "@/constants";
 
 interface RulerProps extends React.HTMLAttributes<SVGElement> {}
 export default function SelectionBar({ ...other }: RulerProps) {
-  const { laneLength, pixelPerBeat, pianoLaneScaleX } = usePianoRollTransform();
+  const { laneLength, pianoLaneScaleX } = usePianoRollTransform();
 
-  const numberOfGrids = getNumOfGrid(pixelPerBeat, laneLength);
-  const gridSeparationFactor = getGridSeparationFactor(pixelPerBeat, pianoLaneScaleX);
+  const numberOfGrids = getNumOfGrid(laneLength);
+  const gridSeparationFactor = getGridSeparationFactor(pianoLaneScaleX);
   const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor);
   const rulerHeight = 30;
   const markeraHeight = {
@@ -21,7 +22,7 @@ export default function SelectionBar({ ...other }: RulerProps) {
     return [...Array(numberOfGrids[gridType]).keys()]
       .filter((index) => index % gridSeparationFactor[gridType] === 0)
       .map((index) => (
-        <SelectionBarMarker key={index} x={index * pixelPerBeat * scale} height={markeraHeight[gridType]} />
+        <SelectionBarMarker key={index} x={index * basePixelsPerBeat * scale} height={markeraHeight[gridType]} />
       ));
   };
 

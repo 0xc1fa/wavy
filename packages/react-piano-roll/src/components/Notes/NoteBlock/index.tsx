@@ -3,6 +3,7 @@ import styles from "./index.module.scss";
 import useTheme from "../../../hooks/useTheme";
 import useStore from "../../../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
+import { baseLaneWidth } from "@/constants";
 
 interface NoteBlockProps extends React.HTMLAttributes<HTMLDivElement> {
   note: TrackNoteEvent;
@@ -22,7 +23,7 @@ function NoteBlock({ note, ...other }: NoteBlockProps) {
           "--top": `${pianoRollStore.getMinYFromNoteNum(note.noteNumber)}px`,
           "--left": `${pianoRollStore.getOffsetXFromTick(note.tick)}px`,
           "--note-width": `${pianoRollStore.getOffsetXFromTick(note.duration)}px`,
-          "--note-height": `${pianoRollStore.laneWidth}px`,
+          "--note-height": `${baseLaneWidth}px`,
           "--background": note.isSelected ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
           "--border-color": note.isSelected ? theme.note.noteBorderColor : theme.note.noteBorderColor,
           "--border-radius": `${theme.note.noteBorderRadius}px`,

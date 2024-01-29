@@ -14,13 +14,11 @@ export function usePianoRollTransform() {
     () => ({
       laneLength: pianoRollStore.laneLength,
       canvasWidth: pianoRollStore.canvasWidth,
-      laneWidth: pianoRollStore.laneWidth,
       canvasHeight: pianoRollStore.canvasHeight,
-      pixelPerBeat: pianoRollStore.pixelPerBeat,
       pianoLaneScaleX: pianoRollStore.pianoLaneScaleX,
       startingNoteNum: pianoRollStore.startingNoteNum,
       numOfKeys: pianoRollStore.numOfKeys,
-      resolution: pianoRollStore.resolution,
+
       clearCanvas: pianoRollStore.clearCanvas,
       getMaxYFromNoteNum: pianoRollStore.getMaxYFromNoteNum,
     }),

@@ -3,21 +3,22 @@ import useTheme from "../../hooks/useTheme";
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import styles from "./index.module.scss";
 import { getGridBaseSeparation, getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
+import { basePixelsPerBeat } from "@/constants";
 
 interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {}
 const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
   const theme = useTheme();
-  const { laneLength, canvasHeight, pixelPerBeat, pianoLaneScaleX } = usePianoRollTransform();
+  const { laneLength, canvasHeight, pianoLaneScaleX } = usePianoRollTransform();
 
-  const gridSeparationFactor = getGridSeparationFactor(pixelPerBeat, pianoLaneScaleX);
-  const numberOfGrids = getNumOfGrid(pixelPerBeat, laneLength);
+  const gridSeparationFactor = getGridSeparationFactor(pianoLaneScaleX);
+  const numberOfGrids = getNumOfGrid(laneLength);
   const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor);
 
   const gridLines = (gridType: "bar" | "quarter" | "quavers") => {
     const scale = pianoLaneScaleX * gridBaseSeparation[gridType];
     return [...Array(numberOfGrids[gridType]).keys()]
       .filter((index) => index % gridSeparationFactor[gridType] === 0 || gridType === "quavers")
-      .map((index) => <GridLine key={index} x={index * pixelPerBeat * scale} color={theme.grid.color[gridType]} />);
+      .map((index) => <GridLine key={index} x={index * basePixelsPerBeat * scale} color={theme.grid.color[gridType]} />);
   };
 
   return (
