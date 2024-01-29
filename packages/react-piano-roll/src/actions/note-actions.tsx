@@ -3,7 +3,14 @@ import { PianoRollStore } from "@/store/pianoRollStore";
 import { v4 as uuidv4 } from "uuid";
 import { PianoRollHistoryItemType, getChoppedHistoryAfterHead } from "./history-action";
 import _ from "lodash";
-import { clampDuration, clampNoteNumber, clampTick, clampTo7BitRange, clampTo7BitRangeWithMinOne, clampVelocity } from "@/helpers/number";
+import {
+  clampDuration,
+  clampNoteNumber,
+  clampTick,
+  clampTo7BitRange,
+  clampTo7BitRangeWithMinOne,
+  clampVelocity,
+} from "@/helpers/number";
 
 export type NoteAction =
   | AddNoteAction
@@ -264,7 +271,10 @@ type SetNoteModificationBufferWithSelectedNoteAction = {
   type: "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE";
   payload: { initX: number; initY: number };
 };
-export function setNoteModificationBufferWithSelectedNote(state: PianoRollStore, action: SetNoteModificationBufferWithSelectedNoteAction) {
+export function setNoteModificationBufferWithSelectedNote(
+  state: PianoRollStore,
+  action: SetNoteModificationBufferWithSelectedNoteAction,
+) {
   return {
     ...state,
     noteModificationBuffer: {
@@ -279,7 +289,10 @@ type SetNoteModificationBufferWithAllNoteAction = {
   type: "SET_NOTE_MODIFICATION_BUFFER_WITH_ALL_NOTE";
   payload: { initX: number; initY: number };
 };
-export function setNoteModificationBufferWithAllNote(state: PianoRollStore, action: SetNoteModificationBufferWithAllNoteAction) {
+export function setNoteModificationBufferWithAllNote(
+  state: PianoRollStore,
+  action: SetNoteModificationBufferWithAllNoteAction,
+) {
   return {
     ...state,
     noteModificationBuffer: {

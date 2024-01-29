@@ -35,13 +35,13 @@ export function clampNoteNumber(noteNumber: number) {
 }
 
 export function clampVelocity(velocity: number) {
-  return Math.floor(clampTo7BitRangeWithMinOne(velocity))
+  return Math.floor(clampTo7BitRangeWithMinOne(velocity));
 }
 
 export function clampTick(tick: number) {
-  return Math.ceil(tick)
+  return Math.ceil(tick);
 }
 
 export function clampDuration(duration: number) {
-  return Math.floor(Math.max(1, duration))
+  return Math.floor(Math.max(1, duration));
 }

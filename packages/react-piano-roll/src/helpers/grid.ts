@@ -50,7 +50,7 @@ export function getTickInGrid(pianoLaneScaleX: number) {
       ticksInGrid /= 2;
     }
   }
-  return ticksInGrid
+  return ticksInGrid;
 }
 
 export function getNearestGridTick(ticks: number, pianoLaneScaleX: number) {
@@ -92,7 +92,7 @@ export function getNearestAnchor(ticks: number, pianoLaneScaleX: number, offset:
   return {
     anchor: anchor,
     proximity: Math.abs(anchor - ticks) / ticksInGrid < 0.4 ? true : false,
-  }
+  };
 }
 
 export function getGridOffsetOfTick(ticks: number, pianoLaneScaleX: number) {
@@ -100,4 +100,3 @@ export function getGridOffsetOfTick(ticks: number, pianoLaneScaleX: number) {
   const offset = ticks - Math.floor(ticks / ticksInGrid) * ticksInGrid;
   return offset;
 }
-

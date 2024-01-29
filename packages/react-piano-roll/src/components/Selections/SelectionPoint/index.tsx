@@ -4,7 +4,7 @@ import styles from "./index.module.scss";
 export default function SelectionPoint() {
   const { pianoRollStore } = useStore();
   const { pixelsPerTick, canvasHeight } = pianoRollStore;
-  const x = pianoRollStore.selectionTicks * pixelsPerTick * pianoRollStore.pianoLaneScaleX
+  const x = pianoRollStore.selectionTicks * pixelsPerTick * pianoRollStore.pianoLaneScaleX;
 
   return (
     <svg
@@ -16,5 +16,5 @@ export default function SelectionPoint() {
     >
       <line x1={x} y1={0} x2={x} y2={canvasHeight} stroke="#ffffff22" strokeWidth="1" />
     </svg>
-  )
+  );
 }

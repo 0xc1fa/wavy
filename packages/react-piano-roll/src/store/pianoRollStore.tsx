@@ -306,7 +306,7 @@ function defaultPianoRollStore() {
       marquee: {
         startingPosition: { x: number; y: number };
         ongoingPosition: { x: number; y: number };
-      }
+      },
     ) {
       const [selectedMinNoteNum, selectedMaxNoteNum] = [
         this.getNoteNumFromOffsetY(marquee.startingPosition.y),
@@ -322,8 +322,7 @@ function defaultPianoRollStore() {
         note.noteNumber <= selectedMaxNoteNum &&
         note.tick + note.duration >= selectedMinTick &&
         note.tick <= selectedMaxTick
-      )
-    }
+      );
+    },
   };
-
 }

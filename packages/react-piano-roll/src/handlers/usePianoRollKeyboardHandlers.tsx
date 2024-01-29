@@ -95,20 +95,20 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
 
   const onDeleteDown = (event: React.KeyboardEvent) => {
     let focusedElement = document.activeElement;
-    let flag = true
+    let flag = true;
 
     if (focusedElement && focusedElement.hasAttributes()) {
-      Array.from(focusedElement.attributes).forEach(attr => {
-        if (attr.name === 'data-noteid') {
-          console.log(attr.name, attr.value)
-          if (pianoRollNotes.filter(note => note.id === attr.value)) {
-            flag = false
+      Array.from(focusedElement.attributes).forEach((attr) => {
+        if (attr.name === "data-noteid") {
+          console.log(attr.name, attr.value);
+          if (pianoRollNotes.filter((note) => note.id === attr.value)) {
+            flag = false;
           }
         }
       });
     }
     if (flag) {
-      event.preventDefault()
+      event.preventDefault();
       dispatch({ type: "DELETE_SELECTED_NOTES" });
     }
   };
