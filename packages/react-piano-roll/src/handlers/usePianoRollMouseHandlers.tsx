@@ -5,6 +5,7 @@ import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import { clampTo7BitRange, clampTo7BitRangeWithMinOne } from "@/helpers/number";
+import _ from "lodash";
 
 export enum PianoRollLanesMouseHandlerMode {
   DragAndDrop,
@@ -72,10 +73,10 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const onPointerMove: React.PointerEventHandler = (event) => {
-    const noteClicked = pianoRollStore.getNoteFromEvent(event.nativeEvent);
-    if (noteClicked && mouseHandlerMode !== PianoRollLanesMouseHandlerMode.None) {
-      dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick } });
-    }
+    // const noteClicked = pianoRollStore.getNoteFromEvent(event.nativeEvent);
+    // if (noteClicked && mouseHandlerMode !== PianoRollLanesMouseHandlerMode.None) {
+    //   dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick } });
+    // }
     const bufferedNotes = pianoRollStore.noteModificationBuffer.notesSelected;
     const deltaY = event.nativeEvent.offsetY - pianoRollStore.noteModificationBuffer.initY;
     const deltaX = event.nativeEvent.offsetX - pianoRollStore.noteModificationBuffer.initX;
@@ -83,6 +84,8 @@ export default function usePianoRollMouseHandlers() {
     const deltaPitch =
       pianoRollStore.getNoteNumFromOffsetY(event.nativeEvent.offsetY) -
       pianoRollStore.getNoteNumFromOffsetY(pianoRollStore.noteModificationBuffer.initY);
+
+    const noteClicked = _.last(bufferedNotes);
     switch (mouseHandlerMode) {
       case PianoRollLanesMouseHandlerMode.None:
         updateCursorStyle(event.nativeEvent);
@@ -93,6 +96,7 @@ export default function usePianoRollMouseHandlers() {
           tick: bufferedNote.tick + deltaTicks,
           duration: Math.max(10, bufferedNote.duration - deltaTicks),
         }));
+        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked!.tick + deltaTicks } });
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
       }
@@ -101,6 +105,8 @@ export default function usePianoRollMouseHandlers() {
           ...bufferedNote,
           duration: Math.max(10, bufferedNote.duration + deltaTicks),
         }));
+
+        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked!.tick + noteClicked!.duration + deltaTicks } });
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
       }
@@ -110,6 +116,7 @@ export default function usePianoRollMouseHandlers() {
           noteNumber: clampTo7BitRange(bufferedNote.noteNumber + deltaPitch),
           tick: bufferedNote.tick + deltaTicks,
         }));
+        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked!.tick + deltaTicks } });
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
       }
@@ -190,6 +197,7 @@ export default function usePianoRollMouseHandlers() {
     } else if (
       pianoRollStore.isNoteRightMarginClicked(noteClicked!, event.nativeEvent.offsetX, event.nativeEvent.offsetY)
     ) {
+      dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick + noteClicked.duration } })
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesExtending);
     } else if (event.nativeEvent.altKey) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.Vibrato);

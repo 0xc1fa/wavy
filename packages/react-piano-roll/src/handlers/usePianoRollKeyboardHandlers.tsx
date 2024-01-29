@@ -3,11 +3,13 @@ import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import {
+  focusNote,
   getEndingTickFromNotes,
   getSelectedNotes,
   getStartingTickFromNotes,
   usePianoRollNotes,
 } from "../helpers/notes";
+import _ from "lodash";
 
 type SelectionRegion = {
   start: number;
@@ -92,7 +94,23 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
   };
 
   const onDeleteDown = (event: React.KeyboardEvent) => {
-    dispatch({ type: "DELETE_SELECTED_NOTES" });
+    let focusedElement = document.activeElement;
+    let flag = true
+
+    if (focusedElement && focusedElement.hasAttributes()) {
+      Array.from(focusedElement.attributes).forEach(attr => {
+        if (attr.name === 'data-noteid') {
+          console.log(attr.name, attr.value)
+          if (pianoRollNotes.filter(note => note.id === attr.value)) {
+            flag = false
+          }
+        }
+      });
+    }
+    if (flag) {
+      event.preventDefault()
+      dispatch({ type: "DELETE_SELECTED_NOTES" });
+    }
   };
 
   const onSpaceDown = (event: React.KeyboardEvent) => {

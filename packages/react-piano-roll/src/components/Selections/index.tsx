@@ -10,6 +10,10 @@ export default function Selections() {
 
   const selectionRangeMode: SelectionRangeMode = selectedNotes.length > 1 ? "multiple" : "single";
 
+  return (
+    <SelectionPoint />
+  )
+
   return selectionRangeMode === "multiple" ? (
     <SelectionRange />
   ) : selectionRangeMode === "single" ? (
