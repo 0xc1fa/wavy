@@ -34,7 +34,7 @@ function createNote(state: PianoRollStore, ticks: number, noteNum: number): Trac
     noteNumber: noteNum,
     velocity: state.newNoteVelocity,
     lyric: defaultNoteLyric,
-    duration: state.newNoteVelocity,
+    duration: state.newNoteDuration,
     isSelected: true,
     isActive: true,
     vibratoDepth: 10,
