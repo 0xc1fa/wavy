@@ -1,3 +1,4 @@
+import { baseWhiteKeyWidth } from "@/constants";
 import { isBlackKey } from "../../helpers";
 import useStore from "../../hooks/useStore";
 import useTheme from "../../hooks/useTheme";
@@ -46,7 +47,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
             </div>
           );
         else if (keyNum !== 127) {
-          currentY -= pianoRollStore.whiteKeyWidth;
+          currentY -= baseWhiteKeyWidth;
           return (
             <div
               key={keyNum}

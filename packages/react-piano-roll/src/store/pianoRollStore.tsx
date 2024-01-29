@@ -20,7 +20,7 @@ import { TransformAction, setPianoLaneScaleX } from "../actions/transform-action
 import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
 import { HistoryAction, PianoRollHistoryItem, redo, undo } from "../actions/history-action";
 import { MetaAction, setClipSpan } from "@/actions/meta-action";
-import { baseKeyLength, baseKeyWidth, baseLaneWidth, basePixelsPerBeat, blackKeyLengthRatio, draggableBoundaryPixel, ticksPerBeat } from "@/constants";
+import { baseBlackKeyLength, baseKeyWidth, baseLaneWidth, basePixelsPerBeat, basePixelsPerTick, baseWhiteKeyWidth, blackKeyLengthRatio, draggableBoundaryPixel, ticksPerBeat } from "@/constants";
 
 export const PianoRollStoreContext = createContext<ReturnType<typeof usePianoRollStore> | undefined>(undefined);
 
@@ -113,13 +113,8 @@ function defaultPianoRollStore() {
 
     pianoLaneScaleX: 1,
     pianoLaneScaleY: 1,
-    defaultVelocity: 64,
-    defaultDuration: 480,
-
-    startingOctave: -1,
-    endingOctave: 10,
-
-    defaultNoteLyric: "啦",
+    newNoteVelocity: 64,
+    newNoteDuration: 480,
 
     selectionTicks: 0,
     startingTick: 0,
@@ -130,7 +125,7 @@ function defaultPianoRollStore() {
     },
 
     get laneLength() {
-      return (this.endingTick - this.startingTick) * this.pixelsPerTick;
+      return (this.endingTick - this.startingTick) * basePixelsPerTick;
     },
 
     get canvasWidth() {
@@ -140,20 +135,13 @@ function defaultPianoRollStore() {
     get startingNoteNum() {
       return 0;
     },
+
     get numOfKeys() {
       return 128;
     },
-    get pixelsPerTick() {
-      return basePixelsPerBeat / ticksPerBeat;
-    },
+    
     get canvasHeight() {
       return baseLaneWidth * this.numOfKeys;
-    },
-    get whiteKeyWidth() {
-      return (baseKeyWidth * 12) / 7;
-    },
-    get blackKeyLength() {
-      return baseKeyLength * blackKeyLengthRatio;
     },
 
     getBeatFromOffsetX(offsetX: number) {
@@ -218,10 +206,10 @@ function defaultPianoRollStore() {
         if (isBlackKey(keyNum)) {
           continue;
         }
-        if (y >= currentY && y <= currentY + this.whiteKeyWidth) {
+        if (y >= currentY && y <= currentY + baseWhiteKeyWidth) {
           return keyNum;
         }
-        currentY += this.whiteKeyWidth;
+        currentY += baseWhiteKeyWidth;
       }
       return -1;
     },
@@ -262,8 +250,7 @@ function defaultPianoRollStore() {
     },
 
     isInnerKeyboard(x: number) {
-      const blackKeyLength = baseKeyLength * blackKeyLengthRatio;
-      return x < blackKeyLength;
+      return x < baseBlackKeyLength;
     },
 
     isNoteLeftMarginClicked(note: TrackNoteEvent, offsetX: number, offsetY: number) {

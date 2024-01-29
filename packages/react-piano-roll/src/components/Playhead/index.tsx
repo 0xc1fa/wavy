@@ -1,3 +1,4 @@
+import { basePixelsPerTick } from "@/constants";
 import useStore from "../../hooks/useStore";
 import styles from "./index.module.scss";
 
@@ -12,7 +13,7 @@ export default function Playhead({ playheadPosition }: PlayheadProps) {
       className={styles["playhead"]}
       style={
         {
-          "--playhead-position": `${playheadPosition * pianoRollStore.pixelsPerTick}px`,
+          "--playhead-position": `${playheadPosition * basePixelsPerTick}px`,
         } as React.CSSProperties
       }
     />

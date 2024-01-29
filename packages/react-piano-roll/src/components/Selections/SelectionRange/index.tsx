@@ -1,10 +1,10 @@
 import { getEndingTickFromNotes, getSelectedNotes, getStartingTickFromNotes, usePianoRollNotes } from "@/helpers/notes";
 import useStore from "../../../hooks/useStore";
 import styles from "./index.module.scss";
+import { basePixelsPerTick } from "@/constants";
 
 export default function SelectionRange() {
   const { pianoRollStore } = useStore();
-  const { pixelsPerTick } = pianoRollStore;
 
   const pianoRollNotes = usePianoRollNotes();
   const selectedNotes = getSelectedNotes(pianoRollNotes);
@@ -18,8 +18,8 @@ export default function SelectionRange() {
       className={styles["selection--range"]}
       style={
         {
-          "--left-marker-position": `${selectionStart * pixelsPerTick * pianoRollStore.pianoLaneScaleX}px`,
-          "--range-width": `${selectionWidth * pixelsPerTick * pianoRollStore.pianoLaneScaleX}px`,
+          "--left-marker-position": `${selectionStart * basePixelsPerTick * pianoRollStore.pianoLaneScaleX}px`,
+          "--range-width": `${selectionWidth * basePixelsPerTick * pianoRollStore.pianoLaneScaleX}px`,
         } as React.CSSProperties
       }
     />

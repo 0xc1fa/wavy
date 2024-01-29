@@ -1,10 +1,11 @@
 import useStore from "@/hooks/useStore";
 import styles from "./index.module.scss";
+import { basePixelsPerTick } from "@/constants";
 
 export default function SelectionPoint() {
   const { pianoRollStore } = useStore();
-  const { pixelsPerTick, canvasHeight } = pianoRollStore;
-  const x = pianoRollStore.selectionTicks * pixelsPerTick * pianoRollStore.pianoLaneScaleX;
+  const { canvasHeight } = pianoRollStore;
+  const x = pianoRollStore.selectionTicks * basePixelsPerTick * pianoRollStore.pianoLaneScaleX;
 
   return (
     <svg

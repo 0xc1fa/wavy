@@ -11,6 +11,7 @@ import {
   clampTo7BitRangeWithMinOne,
   clampVelocity,
 } from "@/helpers/number";
+import { defaultNoteLyric } from "@/constants";
 
 export type NoteAction =
   | AddNoteAction
@@ -31,14 +32,14 @@ function createNote(state: PianoRollStore, ticks: number, noteNum: number): Trac
     id: uuidv4(),
     tick: ticks,
     noteNumber: noteNum,
-    velocity: state.defaultVelocity,
-    lyric: state.defaultNoteLyric,
-    duration: state.defaultDuration,
+    velocity: state.newNoteVelocity,
+    lyric: defaultNoteLyric,
+    duration: state.newNoteVelocity,
     isSelected: true,
     isActive: true,
     vibratoDepth: 10,
     vibratoRate: 30,
-    vibratoDelay: state.defaultDuration * 0.3,
+    vibratoDelay: state.newNoteDuration * 0.3,
     vibratoMode: VibratoMode.Normal,
   };
 }
