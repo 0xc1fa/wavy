@@ -4,7 +4,7 @@ import { usePianoRollTransform } from "../hooks/usePianoRollTransform";
 import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
-import { clampTo7BitRange, clampTo7BitRangeWithMinOne } from "@/helpers/number";
+import { clampDuration, clampTick, clampTo7BitRange, clampTo7BitRangeWithMinOne } from "@/helpers/number";
 import _ from "lodash";
 
 export enum PianoRollLanesMouseHandlerMode {
@@ -93,30 +93,29 @@ export default function usePianoRollMouseHandlers() {
       case PianoRollLanesMouseHandlerMode.NotesTrimming: {
         const newNotes = bufferedNotes.map((bufferedNote) => ({
           ...bufferedNote,
-          tick: bufferedNote.tick + deltaTicks,
-          duration: Math.max(10, bufferedNote.duration - deltaTicks),
+          tick: Math.min(bufferedNote.tick + bufferedNote.duration - 1, bufferedNote.tick + deltaTicks),
+          duration: bufferedNote.duration - deltaTicks,
         }));
-        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked!.tick + deltaTicks } });
+        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: clampTick(Math.min(noteClicked!.tick + noteClicked!.duration - 1, noteClicked!.tick + deltaTicks)) } });
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
       }
       case PianoRollLanesMouseHandlerMode.NotesExtending: {
         const newNotes = bufferedNotes.map((bufferedNote) => ({
           ...bufferedNote,
-          duration: Math.max(10, bufferedNote.duration + deltaTicks),
+          duration: bufferedNote.duration + deltaTicks,
         }));
-
-        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked!.tick + noteClicked!.duration + deltaTicks } });
+        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: Math.max(noteClicked!.tick + 1, clampTick(noteClicked!.tick + noteClicked!.duration + deltaTicks)) } });
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
       }
       case PianoRollLanesMouseHandlerMode.DragAndDrop: {
         const newNotes = bufferedNotes.map((bufferedNote) => ({
           ...bufferedNote,
-          noteNumber: clampTo7BitRange(bufferedNote.noteNumber + deltaPitch),
+          noteNumber: bufferedNote.noteNumber + deltaPitch,
           tick: bufferedNote.tick + deltaTicks,
         }));
-        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked!.tick + deltaTicks } });
+        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: clampTick(noteClicked!.tick + deltaTicks) } });
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
       }
@@ -131,7 +130,7 @@ export default function usePianoRollMouseHandlers() {
       case PianoRollLanesMouseHandlerMode.Velocity: {
         const newNotes = bufferedNotes.map((bufferedNote) => ({
           ...bufferedNote,
-          velocity: clampTo7BitRangeWithMinOne(bufferedNote.velocity - deltaY / 3),
+          velocity: bufferedNote.velocity - deltaY / 3,
         }));
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
       }

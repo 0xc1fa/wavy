@@ -3,6 +3,7 @@ import { PianoRollStore } from "@/store/pianoRollStore";
 import { v4 as uuidv4 } from "uuid";
 import { PianoRollHistoryItemType, getChoppedHistoryAfterHead } from "./history-action";
 import _ from "lodash";
+import { clampDuration, clampNoteNumber, clampTick, clampTo7BitRange, clampTo7BitRangeWithMinOne, clampVelocity } from "@/helpers/number";
 
 export type NoteAction =
   | AddNoteAction
@@ -86,9 +87,10 @@ export function modifyingNotes(state: PianoRollStore, action: ModifyingNotesActi
   const notesNotModified = state.pianoRollNotes.filter((note) => !notesIdsToBeModified.includes(note.id));
   const notesModifiedWithClampValue = action.payload.notes.map((note) => ({
     ...note,
-    noteNumber: Math.max(0, Math.min(127, note.noteNumber)),
-    velocity: Math.round(Math.max(1, Math.min(127, note.velocity))),
-    duration: Math.max(10, note.duration),
+    noteNumber: clampNoteNumber(note.noteNumber),
+    velocity: clampVelocity(note.velocity),
+    tick: clampTick(note.tick),
+    duration: clampDuration(note.duration),
   }));
   const newStateWithoutHistory = {
     ...state,
