@@ -4,9 +4,8 @@ import { usePianoRollTransform } from "../hooks/usePianoRollTransform";
 import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
-import { clampDuration, clampTick, clampTo7BitRange, clampTo7BitRangeWithMinOne } from "@/helpers/number";
 import _ from "lodash";
-import { getGridOffsetOfTick, getNearestAnchor, getNearestGridTick, getNearestGridTickWithOffset, getTickInGrid } from "@/helpers/grid";
+import { getGridOffsetOfTick, getNearestAnchor, getNearestGridTick, getTickInGrid } from "@/helpers/grid";
 
 export enum PianoRollLanesMouseHandlerMode {
   DragAndDrop,
@@ -61,18 +60,15 @@ export default function usePianoRollMouseHandlers() {
         payload: { initX: event.nativeEvent.offsetX, initY: event.nativeEvent.offsetY },
       });
     } else if (event.metaKey) {
-      // note creation
       const { ticks, noteNum } = getTickAndNoteNumFromEvent(event.nativeEvent);
       dispatch({ type: "ADD_NOTE", payload: { ticks, noteNum } });
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: ticks } });
-      // dispatch({ type: 'unsetSelectionRange' })
       dispatch({
         type: "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE",
         payload: { initX: event.nativeEvent.offsetX, initY: event.nativeEvent.offsetY },
       });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
     } else {
-      // no note clicked
       const selectionTicks = pianoRollStore.getTickFromOffsetX(event.nativeEvent.offsetX);
       const snappedSelection = getNearestGridTick(selectionTicks, pianoRollStore.pianoLaneScaleX);
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: snappedSelection } });
@@ -128,7 +124,6 @@ export default function usePianoRollMouseHandlers() {
           newNotes = bufferedNotes
         }
         if (guardActive.current) {
-          // dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: clampTick(Math.min(noteClicked!.tick + noteClicked!.duration - 1, noteClicked!.tick + deltaTicks)) } });
           dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: _.last(newNotes)!.tick } });
         }
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
@@ -187,7 +182,6 @@ export default function usePianoRollMouseHandlers() {
         }
         if (guardActive.current) {
           dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: _.last(newNotes)!.tick } });
-          // dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: clampTick(noteClicked!.tick + deltaTicks) } });
         }
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
