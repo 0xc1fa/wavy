@@ -112,8 +112,8 @@ export default function usePianoRollMouseHandlers() {
           if (anchor.proximity) {
             newNotes = bufferedNotes.map((bufferedNote) => ({
               ...bufferedNote,
-              tick: anchor.anchor,
-              duration: bufferedNote.duration + (bufferedNote.tick - anchor.anchor),
+              tick: anchor.anchor - _.last(bufferedNotes)!.tick + bufferedNote.tick,
+              duration: bufferedNote.duration + (bufferedNote.tick - (anchor.anchor - _.last(bufferedNotes)!.tick + bufferedNote.tick)),
             }));
           } else {
             return
@@ -141,7 +141,7 @@ export default function usePianoRollMouseHandlers() {
           if (anchor.proximity) {
             newNotes = bufferedNotes.map((bufferedNote) => ({
               ...bufferedNote,
-              duration: anchor.anchor - bufferedNote.tick,
+              duration: (anchor.anchor - _.last(bufferedNotes)!.tick - _.last(bufferedNotes)!.duration) + bufferedNote.duration,
             }));
           } else {
             return
@@ -168,7 +168,7 @@ export default function usePianoRollMouseHandlers() {
             newNotes = bufferedNotes.map((bufferedNote) => ({
               ...bufferedNote,
               noteNumber: bufferedNote.noteNumber + deltaPitch,
-              tick: anchor.anchor,
+              tick: anchor.anchor - _.last(bufferedNotes)!.tick + bufferedNote.tick,
             }));
           } else {
             return

@@ -9,7 +9,7 @@
   - after lock in one can move in anchor point
   - if note is in grid line, only grid line are anchor points, else, both grid line and (note original points + grid width) are anchor points
 - [ ] selection bar
-- [ ] Select notes when dragging not after dragging
+- [x] Select notes when dragging not after dragging
 - [ ] Change the staring and ending point of the midi editor
 - [ ] Add loop area
 - [ ] Add selected mode for velocity editor
