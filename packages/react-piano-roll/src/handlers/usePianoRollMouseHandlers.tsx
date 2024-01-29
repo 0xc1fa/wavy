@@ -50,7 +50,8 @@ export default function usePianoRollMouseHandlers() {
         type: "SET_NOTE_MODIFICATION_BUFFER",
         payload: { initX: event.nativeEvent.offsetX, initY: event.nativeEvent.offsetY },
       });
-    } else if (event.metaKey) {  // note creation
+    } else if (event.metaKey) {
+      // note creation
       const { ticks, noteNum } = getTickAndNoteNumFromEvent(event.nativeEvent);
       dispatch({ type: "ADD_NOTE", payload: { ticks, noteNum } });
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: ticks } });
@@ -60,7 +61,8 @@ export default function usePianoRollMouseHandlers() {
         payload: { initX: event.nativeEvent.offsetX, initY: event.nativeEvent.offsetY },
       });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
-    } else {  // no note clicked
+    } else {
+      // no note clicked
       const selectionTicks = pianoRollStore.getTickFromOffsetX(event.nativeEvent.offsetX);
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: selectionTicks } });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.MarqueeSelection);
@@ -114,7 +116,10 @@ export default function usePianoRollMouseHandlers() {
       case PianoRollLanesMouseHandlerMode.Vibrato:
         event.shiftKey
           ? dispatch({ type: "VIBRATO_RATE_CHANGE_SELECTED_NOTE", payload: { rateOffset: deltaY } })
-          : dispatch({ type: "VIBRATO_DEPTH_DELAY_CHANGE_SELECTED_NOTE",payload: { depthOffset: deltaY, delayOffset: deltaX } });
+          : dispatch({
+              type: "VIBRATO_DEPTH_DELAY_CHANGE_SELECTED_NOTE",
+              payload: { depthOffset: deltaY, delayOffset: deltaX },
+            });
         break;
       case PianoRollLanesMouseHandlerMode.Velocity: {
         const newNotes = bufferedNotes.map((bufferedNote) => ({
@@ -182,7 +187,9 @@ export default function usePianoRollMouseHandlers() {
   const setMouseHandlerModeForNote = (event: React.PointerEvent<Element>, noteClicked: TrackNoteEvent) => {
     if (pianoRollStore.isNoteLeftMarginClicked(noteClicked!, event.nativeEvent.offsetX, event.nativeEvent.offsetY)) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesTrimming);
-    } else if (pianoRollStore.isNoteRightMarginClicked(noteClicked!, event.nativeEvent.offsetX, event.nativeEvent.offsetY)) {
+    } else if (
+      pianoRollStore.isNoteRightMarginClicked(noteClicked!, event.nativeEvent.offsetX, event.nativeEvent.offsetY)
+    ) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesExtending);
     } else if (event.nativeEvent.altKey) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.Vibrato);
