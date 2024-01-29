@@ -121,13 +121,22 @@ function useScrollToNote(containerRef: React.RefObject<HTMLElement>, initialScro
     if (!containerRef) {
       return;
     }
+    console.log("scroll1")
     const containerHeight = containerRef.current?.offsetHeight;
     const c4KeyElement = document.querySelector(`[data-keynum="${initialScrollMiddleNote}"]`) as HTMLDivElement;
     const c4KeyTop = c4KeyElement.getBoundingClientRect().top;
+    console.log(containerHeight)
+    console.log(c4KeyTop)
 
     // Thanks to strict mode rendering twice, we need to prevent the second scrolling which reset it to top
-    if (c4KeyTop > 300) {
-      containerRef.current?.scroll(0, c4KeyTop - containerHeight! / 2);
-    }
-  }, []);
+    // if (c4KeyTop > 300) {
+    //   console.log("scroll2")
+
+    // }
+    // containerRef.current?.scrollTo(0, c4KeyTop - containerHeight! / 2);
+
+    // TODO: fix this
+    containerRef.current?.scrollTo(0, 1438);
+
+  }, [containerRef]);
 }

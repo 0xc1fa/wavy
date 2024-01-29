@@ -83,7 +83,7 @@ type ModifyingNotesAction = {
 };
 export function modifyingNotes(state: PianoRollStore, action: ModifyingNotesAction) {
   const { history, head } = state.notesHistory;
-  const prevHistory = history[head].note;
+  const prevHistory = history[head]?.note;
   const notesIdsToBeModified = action.payload.notes.map((note) => note.id);
   const notesNotModified = state.pianoRollNotes.filter((note) => !notesIdsToBeModified.includes(note.id));
   const notesModifiedWithClampValue = action.payload.notes.map((note) => ({

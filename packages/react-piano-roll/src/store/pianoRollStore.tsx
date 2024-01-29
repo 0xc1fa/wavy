@@ -203,9 +203,6 @@ function defaultPianoRollStore() {
     },
 
     getNoteFromPosition(offsetX: number, offsetY: number): TrackNoteEvent | null {
-      console.log(this.pianoRollNotes);
-      console.log(this.getNoteNumFromOffsetY(offsetY));
-      console.log(this.getTickFromOffsetX(offsetX));
       for (const note of this.pianoRollNotes.slice().reverse()) {
         if (
           this.getNoteNumFromOffsetY(offsetY) == note.noteNumber &&

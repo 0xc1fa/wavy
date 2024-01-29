@@ -193,13 +193,10 @@ export default function usePianoRollMouseHandlers() {
         break;
       }
       case PianoRollLanesMouseHandlerMode.MarqueeSelection:
-        console.log("buffered note", bufferedNotes)
-        console.log({ startingPosition, ongoingPosition})
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: bufferedNotes.map(note => ({
           ...note,
           isSelected: pianoRollStore.inMarquee(note, { startingPosition, ongoingPosition}) ? !note.isSelected : note.isSelected
-          }))}
-        })
+        }))}})
         break;
       case PianoRollLanesMouseHandlerMode.Vibrato:
         event.shiftKey

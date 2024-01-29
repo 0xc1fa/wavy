@@ -66,6 +66,7 @@ export default function VelocityEditor() {
           <div className={styles["note-bar-container"]} {...mouseHandlers}>
             {pianoRollNotes.map((note) => (
               <div
+                key={note.id}
                 className={styles["marker-container"]}
                 style={
                   {

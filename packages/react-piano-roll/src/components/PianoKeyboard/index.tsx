@@ -32,6 +32,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
         if (isBlackKey(keyNum))
           return (
             <div
+              key={keyNum}
               className={`${styles["key"]} ${styles["black__key"]}`}
               data-keynum={keyNum}
               style={
@@ -48,6 +49,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
           currentY -= pianoRollStore.whiteKeyWidth;
           return (
             <div
+              key={keyNum}
               className={`${styles["key"]} ${styles["white__key"]}`}
               data-keynum={keyNum}
               style={
@@ -66,6 +68,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
         } else {
           return (
             <div
+              key={keyNum}
               className={`${styles["key"]} ${styles["white__key"]}`}
               data-keynum={keyNum}
               style={

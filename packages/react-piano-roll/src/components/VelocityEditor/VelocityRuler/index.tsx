@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import styles from "./index.module.scss";
 
 type VelocityRulerProps = React.HTMLAttributes<SVGSVGElement> & {
@@ -14,7 +15,7 @@ export default function VelocityRuler({ height }: VelocityRulerProps) {
     <svg width="100%" height="100%" viewBox={`0 0 50 ${height}`} className={styles["container"]}>
       {markers.map((marker, index) => {
         if (index % dividor !== 0) {
-          return <></>;
+          return <Fragment key={index}></Fragment>;
         }
         const markerHeight = height - height * (marker / 127);
         return (

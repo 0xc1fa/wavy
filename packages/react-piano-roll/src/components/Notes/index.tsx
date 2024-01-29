@@ -15,6 +15,7 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
           data-start-time={note.tick}
           data-duration={note.duration}
           data-velocity={note.velocity}
+          key={note.id}
         >
           <NoteBlock note={note} />
           {attachLyric && <NoteLyric note={note} />}
