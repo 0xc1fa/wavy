@@ -15,6 +15,8 @@
 - Add selected mode for velocity editor
 - turn PianoRoll flex layout to grid layout
 - fix range selection
+- Refactor out constants
+  - ticksPerBeat
 
 ## Existing Problems and
 

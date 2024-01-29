@@ -6,6 +6,7 @@ import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import { clampDuration, clampTick, clampTo7BitRange, clampTo7BitRangeWithMinOne } from "@/helpers/number";
 import _ from "lodash";
+import { getGridOffsetOfTick, getNearestAnchor, getNearestGridTick, getNearestGridTickWithOffset, getTickInGrid } from "@/helpers/grid";
 
 export enum PianoRollLanesMouseHandlerMode {
   DragAndDrop,
@@ -92,46 +93,102 @@ export default function usePianoRollMouseHandlers() {
     const deltaPitch =
       pianoRollStore.getNoteNumFromOffsetY(event.nativeEvent.offsetY) -
       pianoRollStore.getNoteNumFromOffsetY(pianoRollStore.noteModificationBuffer.initY);
-    if (deltaTicks > 96 || deltaTicks < -96) {
+    if (Math.abs(deltaTicks) > getTickInGrid(pianoRollStore.pianoLaneScaleX)) {
+      guardActive.current = DraggingGuardMode.SnapToGrid;
+    } else if (Math.abs(deltaTicks) > 96 && guardActive.current < DraggingGuardMode.FineTune) {
       guardActive.current = DraggingGuardMode.FineTune;
     }
 
     const noteClicked = _.last(bufferedNotes);
+    console.log("gaurd", guardActive.current)
+    console.log("tick in grid", getTickInGrid(pianoRollStore.pianoLaneScaleX))
+    console.log("delta ticks", Math.abs(deltaTicks))
+    // console.log("anchor", getNearestAnchor(Math.min(noteClicked!.tick + noteClicked!.duration - 1, noteClicked!.tick + deltaTicks), pianoRollStore.pianoLaneScaleX, getGridOffsetOfTick(noteClicked!.tick, pianoRollStore.pianoLaneScaleX)))
+    // console.log("offset", getGridOffsetOfTick(noteClicked!.tick, pianoRollStore.pianoLaneScaleX))
+    // console.log("tickingrid", getTickInGrid(pianoRollStore.pianoLaneScaleX))
     switch (mouseHandlerMode) {
       case PianoRollLanesMouseHandlerMode.None:
         updateCursorStyle(event.nativeEvent);
         break;
       case PianoRollLanesMouseHandlerMode.NotesTrimming: {
-        const newNotes = bufferedNotes.map((bufferedNote) => ({
-          ...bufferedNote,
-          tick: !guardActive.current ? bufferedNote.tick : Math.min(bufferedNote.tick + bufferedNote.duration - 1, bufferedNote.tick + deltaTicks),
-          duration: !guardActive.current ? bufferedNote.duration : bufferedNote.duration - deltaTicks,
-        }));
+        let newNotes;
+        if (guardActive.current === DraggingGuardMode.SnapToGrid) {
+          const anchor = getNearestAnchor(Math.min(noteClicked!.tick + noteClicked!.duration - 1, noteClicked!.tick + deltaTicks), pianoRollStore.pianoLaneScaleX, getGridOffsetOfTick(noteClicked!.tick, pianoRollStore.pianoLaneScaleX));
+          if (anchor.proximity) {
+            newNotes = bufferedNotes.map((bufferedNote) => ({
+              ...bufferedNote,
+              tick: anchor.anchor,
+              duration: bufferedNote.duration + (bufferedNote.tick - anchor.anchor),
+            }));
+          } else {
+            return
+          }
+        } else if (guardActive.current === DraggingGuardMode.FineTune) {
+          newNotes = bufferedNotes.map((bufferedNote) => ({
+            ...bufferedNote,
+            tick: Math.min(bufferedNote.tick + bufferedNote.duration - 1, bufferedNote.tick + deltaTicks),
+            duration: bufferedNote.duration - deltaTicks,
+          }));
+        } else {
+          newNotes = bufferedNotes
+        }
         if (guardActive.current) {
-          dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: clampTick(Math.min(noteClicked!.tick + noteClicked!.duration - 1, noteClicked!.tick + deltaTicks)) } });
+          // dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: clampTick(Math.min(noteClicked!.tick + noteClicked!.duration - 1, noteClicked!.tick + deltaTicks)) } });
+          dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: _.last(newNotes)!.tick } });
         }
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
       }
       case PianoRollLanesMouseHandlerMode.NotesExtending: {
-        const newNotes = bufferedNotes.map((bufferedNote) => ({
-          ...bufferedNote,
-          duration: !guardActive.current ? bufferedNote.duration : bufferedNote.duration + deltaTicks,
-        }));
+        let newNotes;
+        if (guardActive.current === DraggingGuardMode.SnapToGrid) {
+          const anchor = getNearestAnchor(noteClicked!.tick + noteClicked!.duration + deltaTicks, pianoRollStore.pianoLaneScaleX, getGridOffsetOfTick(noteClicked!.tick + noteClicked!.duration, pianoRollStore.pianoLaneScaleX));
+          if (anchor.proximity) {
+            newNotes = bufferedNotes.map((bufferedNote) => ({
+              ...bufferedNote,
+              duration: anchor.anchor - bufferedNote.tick,
+            }));
+          } else {
+            return
+          }
+        } else if (guardActive.current === DraggingGuardMode.FineTune) {
+          newNotes = bufferedNotes.map((bufferedNote) => ({
+            ...bufferedNote,
+            duration: !guardActive.current ? bufferedNote.duration : bufferedNote.duration + deltaTicks,
+          }));
+        } else {
+          newNotes = bufferedNotes
+        }
         if (guardActive.current) {
-          dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: Math.max(noteClicked!.tick + 1, clampTick(noteClicked!.tick + noteClicked!.duration + deltaTicks)) } });
+          dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: _.last(newNotes)!.tick + _.last(newNotes)!.duration } });
+          // dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: Math.max(noteClicked!.tick + 1, clampTick(noteClicked!.tick + noteClicked!.duration + deltaTicks)) } });
         }
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
       }
       case PianoRollLanesMouseHandlerMode.DragAndDrop: {
-        const newNotes = bufferedNotes.map((bufferedNote) => ({
-          ...bufferedNote,
-          noteNumber: bufferedNote.noteNumber + deltaPitch,
-          tick: !guardActive.current ? bufferedNote.tick : bufferedNote.tick + deltaTicks,
-        }));
+        let newNotes;
+        if (guardActive.current === DraggingGuardMode.SnapToGrid) {
+          const anchor = getNearestAnchor(noteClicked!.tick + deltaTicks, pianoRollStore.pianoLaneScaleX, getGridOffsetOfTick(noteClicked!.tick, pianoRollStore.pianoLaneScaleX));
+          if (anchor.proximity) {
+            newNotes = bufferedNotes.map((bufferedNote) => ({
+              ...bufferedNote,
+              tick: anchor.anchor,
+            }));
+          } else {
+            return
+          }
+        } else if (guardActive.current === DraggingGuardMode.FineTune) {
+          newNotes = bufferedNotes.map((bufferedNote) => ({
+            ...bufferedNote,
+            tick: Math.min(bufferedNote.tick + bufferedNote.duration - 1, bufferedNote.tick + deltaTicks),
+          }));
+        } else {
+          newNotes = bufferedNotes
+        }
         if (guardActive.current) {
-          dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: clampTick(noteClicked!.tick + deltaTicks) } });
+          dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: _.last(newNotes)!.tick } });
+          // dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: clampTick(noteClicked!.tick + deltaTicks) } });
         }
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
