@@ -5,9 +5,7 @@ export function usePianoRollTransform() {
   const context = useContext(PianoRollStoreContext);
 
   if (!context) {
-    throw new Error(
-      "usePianoRollNotes must be used within a PianoRollStoreProvider",
-    );
+    throw new Error("usePianoRollNotes must be used within a PianoRollStoreProvider");
   }
 
   const { pianoRollStore } = context;
@@ -26,10 +24,6 @@ export function usePianoRollTransform() {
       clearCanvas: pianoRollStore.clearCanvas,
       getMaxYFromNoteNum: pianoRollStore.getMaxYFromNoteNum,
     }),
-    [
-      pianoRollStore.laneLength,
-      pianoRollStore.canvasHeight,
-      pianoRollStore.pianoLaneScaleX,
-    ],
+    [pianoRollStore.laneLength, pianoRollStore.canvasHeight, pianoRollStore.pianoLaneScaleX],
   );
 }

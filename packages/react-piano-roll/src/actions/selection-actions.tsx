@@ -1,18 +1,12 @@
 import { PianoRollStore } from "@/store/pianoRollStore";
 
-export type SelectionAction =
-  | SetNoteAsSelectedAction
-  | UnselectAllNotesAction
-  | SetSelectionTicksAction;
+export type SelectionAction = SetNoteAsSelectedAction | UnselectAllNotesAction | SetSelectionTicksAction;
 
 type SetNoteAsSelectedAction = {
   type: "SET_NOTE_AS_SELECTED";
   payload: { noteId: string };
 };
-export function setNoteAsSelected(
-  state: PianoRollStore,
-  action: SetNoteAsSelectedAction,
-) {
+export function setNoteAsSelected(state: PianoRollStore, action: SetNoteAsSelectedAction) {
   return {
     ...state,
     pianoRollNotes: state.pianoRollNotes.map((note) => ({
@@ -23,10 +17,7 @@ export function setNoteAsSelected(
 }
 
 type UnselectAllNotesAction = { type: "UNSELECTED_ALL_NOTES" };
-export function unselectAllNotes(
-  state: PianoRollStore,
-  action: UnselectAllNotesAction,
-) {
+export function unselectAllNotes(state: PianoRollStore, action: UnselectAllNotesAction) {
   return {
     ...state,
     pianoRollNotes: state.pianoRollNotes.map((note) => ({
@@ -40,10 +31,7 @@ type SetSelectionTicksAction = {
   type: "SET_SELECTION_TICKS";
   payload: { ticks: number };
 };
-export function setSelectionTicks(
-  state: PianoRollStore,
-  action: SetSelectionTicksAction,
-) {
+export function setSelectionTicks(state: PianoRollStore, action: SetSelectionTicksAction) {
   return {
     ...state,
     selectionTicks: action.payload.ticks,

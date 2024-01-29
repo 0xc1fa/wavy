@@ -1,9 +1,4 @@
-import {
-  getEndingTickFromNotes,
-  getSelectedNotes,
-  getStartingTickFromNotes,
-  usePianoRollNotes,
-} from "@/helpers/notes";
+import { getEndingTickFromNotes, getSelectedNotes, getStartingTickFromNotes, usePianoRollNotes } from "@/helpers/notes";
 import useStore from "../../../hooks/useStore";
 import styles from "./index.module.scss";
 

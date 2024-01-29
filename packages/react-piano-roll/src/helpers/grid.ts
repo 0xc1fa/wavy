@@ -10,7 +10,7 @@ export function getNumOfGrid(pixelPerBeat: number, laneLength: number) {
     bar: numberOfBarGrids,
     halfBar: numberOfHalfBarGrids,
     quarter: numberOfQuarterGrids,
-    quavers: numberOfQuaversGrids
+    quavers: numberOfQuaversGrids,
   };
 }
 
@@ -23,7 +23,7 @@ export function getGridSeparationFactor(pixelPerBeat: number, pianoLaneScaleX: n
     bar: barGridSeparationFactor,
     halfBar: halfBarGridSeparationFactor,
     quarter: quarterGridSeparationFactor,
-    quavers: quaversGridSeparationFactor
+    quavers: quaversGridSeparationFactor,
   };
 }
 
@@ -33,5 +33,5 @@ export function getGridBaseSeparation(gridSeparationFactor: ReturnType<typeof ge
     halfBar: 2,
     quarter: 1,
     quavers: 1 / gridSeparationFactor.quavers,
-  }
+  };
 }

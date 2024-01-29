@@ -21,3 +21,11 @@ export function ceilToNearestPowerOfTwo(number: number) {
 export function floorToNearestPowerOfTwo(number: number) {
   return floorToNearestPower(2, number);
 }
+
+export function clampTo7BitRange(number: number) {
+  return Math.min(127, Math.max(0, number));
+}
+
+export function clampTo7BitRangeWithMinOne(number: number) {
+  return Math.min(127, Math.max(1, number));
+}

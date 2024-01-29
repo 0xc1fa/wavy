@@ -30,12 +30,9 @@ export default function VelocityEditor() {
     });
   };
 
-  const handlePointerMove: React.PointerEventHandler<HTMLDivElement> = (
-    event,
-  ) => {
+  const handlePointerMove: React.PointerEventHandler<HTMLDivElement> = (event) => {
     if (isDragging) {
-      const newHeight =
-        resizeBuffer.initHeight - (event.clientY - resizeBuffer.initY);
+      const newHeight = resizeBuffer.initHeight - (event.clientY - resizeBuffer.initY);
       setContainerHeight(Math.max(50, Math.min(300, newHeight)));
     }
   };
@@ -75,9 +72,7 @@ export default function VelocityEditor() {
                     "--marker-left": `${pianoRollStore.getOffsetXFromTick(note.tick)}px`,
                     "--marker-top": `${1 - note.velocity / 128}`,
                     "--marker-width": `${pianoRollStore.getOffsetXFromTick(note.duration)}px`,
-                    "--marker-color": note.isSelected
-                      ? theme.note.noteBackgroundColor
-                      : theme.note.noteBackgroundColor,
+                    "--marker-color": note.isSelected ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
                     "--cursor": isDragging ? "grabbing" : "grab",
                   } as React.CSSProperties
                 }

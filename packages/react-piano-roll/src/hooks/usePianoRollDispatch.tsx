@@ -5,9 +5,7 @@ export function usePianoRollDispatch() {
   const context = useContext(PianoRollStoreContext);
 
   if (!context) {
-    throw new Error(
-      "usePianoRollNotes must be used within a PianoRollStoreProvider",
-    );
+    throw new Error("usePianoRollNotes must be used within a PianoRollStoreProvider");
   }
 
   const { dispatch } = context;

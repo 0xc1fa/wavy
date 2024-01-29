@@ -8,11 +8,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
   const { pianoRollStore } = useStore();
 
   const keyNums = [];
-  for (
-    let i = pianoRollStore.startingNoteNum;
-    i < pianoRollStore.startingNoteNum + pianoRollStore.numOfKeys;
-    i++
-  ) {
+  for (let i = pianoRollStore.startingNoteNum; i < pianoRollStore.startingNoteNum + pianoRollStore.numOfKeys; i++) {
     keyNums.push(i);
   }
 
@@ -45,9 +41,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
               }
               onPointerDown={handlerPointerDown}
             >
-              <span hidden={keyNum % 12 !== 0}>
-                {pianoRollStore.getNoteNameFromNoteNum(keyNum)}
-              </span>
+              <span hidden={keyNum % 12 !== 0}>{pianoRollStore.getNoteNameFromNoteNum(keyNum)}</span>
             </div>
           );
         else if (keyNum !== 127) {
@@ -66,9 +60,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
               }
               onPointerDown={handlerPointerDown}
             >
-              <span hidden={keyNum % 12 !== 0}>
-                {pianoRollStore.getNoteNameFromNoteNum(keyNum)}
-              </span>
+              <span hidden={keyNum % 12 !== 0}>{pianoRollStore.getNoteNameFromNoteNum(keyNum)}</span>
             </div>
           );
         } else {
@@ -84,9 +76,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
               }
               onPointerDown={handlerPointerDown}
             >
-              <span hidden={keyNum % 12 !== 0}>
-                {pianoRollStore.getNoteNameFromNoteNum(keyNum)}
-              </span>
+              <span hidden={keyNum % 12 !== 0}>{pianoRollStore.getNoteNameFromNoteNum(keyNum)}</span>
             </div>
           );
         }

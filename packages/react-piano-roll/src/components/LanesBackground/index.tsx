@@ -10,20 +10,7 @@ function LanesBackground({ ...other }: LanesBackgroundProps) {
   const { pianoRollStore } = useStore();
 
   const isBlackKey = (noteNumber: number) => {
-    const pattern = [
-      false,
-      true,
-      false,
-      true,
-      false,
-      false,
-      true,
-      false,
-      true,
-      false,
-      true,
-      false,
-    ];
+    const pattern = [false, true, false, true, false, false, true, false, true, false, true, false];
     return pattern[noteNumber % 12];
   };
 
@@ -49,19 +36,11 @@ function LanesBackground({ ...other }: LanesBackgroundProps) {
     return result;
   }
 
-  const noteNums = range(
-    pianoRollStore.startingNoteNum,
-    pianoRollStore.startingNoteNum + pianoRollStore.numOfKeys,
-  );
+  const noteNums = range(pianoRollStore.startingNoteNum, pianoRollStore.startingNoteNum + pianoRollStore.numOfKeys);
 
   const lanes = noteNums.map((noteNumber) => {
-    const keyColor = isBlackKey(noteNumber)
-      ? theme.lane.blackLaneColor
-      : theme.lane.whiteLaneColor;
-    const yPosition =
-      transform.canvasHeight -
-      noteNumber * transform.laneWidth -
-      transform.laneWidth;
+    const keyColor = isBlackKey(noteNumber) ? theme.lane.blackLaneColor : theme.lane.whiteLaneColor;
+    const yPosition = transform.canvasHeight - noteNumber * transform.laneWidth - transform.laneWidth;
 
     return (
       <rect
@@ -83,12 +62,7 @@ function LanesBackground({ ...other }: LanesBackgroundProps) {
         padding: "0px",
       }}
     >
-      <svg
-        aria-label="piano-roll-lanes-background"
-        width="100%"
-        height="100%"
-        {...other}
-      >
+      <svg aria-label="piano-roll-lanes-background" width="100%" height="100%" {...other}>
         {lanes}
       </svg>
     </div>

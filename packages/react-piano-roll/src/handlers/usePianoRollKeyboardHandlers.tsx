@@ -31,9 +31,7 @@ function clipboardReducer(state: Clipboard, action: ClipboardAction) {
         notes: action.payload.notes,
         selectionRegion: {
           start: getStartingTickFromNotes(action.payload.notes),
-          width:
-            getEndingTickFromNotes(action.payload.notes) -
-            getStartingTickFromNotes(action.payload.notes),
+          width: getEndingTickFromNotes(action.payload.notes) - getStartingTickFromNotes(action.payload.notes),
         },
       };
     default:
@@ -41,9 +39,7 @@ function clipboardReducer(state: Clipboard, action: ClipboardAction) {
   }
 }
 
-export default function usePianoRollKeyboardHandlers(
-  onSpace?: (event: React.KeyboardEvent) => void,
-) {
+export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.KeyboardEvent) => void) {
   const dispatch = usePianoRollDispatch();
   const { pianoRollStore } = useStore();
   const pianoRollNotes = usePianoRollNotes();
@@ -136,9 +132,7 @@ export default function usePianoRollKeyboardHandlers(
     }
     const shiftedNotes = clipboard.notes.map((note) => ({
       ...note,
-      tick:
-        pianoRollStore.selectionTicks +
-        (note.tick - clipboard.selectionRegion.start),
+      tick: pianoRollStore.selectionTicks + (note.tick - clipboard.selectionRegion.start),
     }));
     dispatch({ type: "UNSELECTED_ALL_NOTES" });
     dispatch({ type: "ADD_NOTES", payload: { notes: shiftedNotes } });

@@ -15,46 +15,21 @@ import {
   vibratoDepthDelayChangeSelectedNote,
   vibratoRateChangeSelectedNote,
 } from "../actions/note-actions";
-import {
-  TransformAction,
-  setPianoLaneScaleX,
-} from "../actions/transform-actions";
-import {
-  SelectionAction,
-  setNoteAsSelected,
-  setSelectionTicks,
-  unselectAllNotes,
-} from "../actions/selection-actions";
-import {
-  HistoryAction,
-  PianoRollHistoryItem,
-  redo,
-  undo,
-} from "../actions/history-action";
+import { TransformAction, setPianoLaneScaleX } from "../actions/transform-actions";
+import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
+import { HistoryAction, PianoRollHistoryItem, redo, undo } from "../actions/history-action";
 
-export const PianoRollStoreContext = createContext<
-  ReturnType<typeof usePianoRollStore> | undefined
->(undefined);
+export const PianoRollStoreContext = createContext<ReturnType<typeof usePianoRollStore> | undefined>(undefined);
 
 interface PianoRollStoreProviderProps {
   children?: React.ReactNode;
 }
-export function PianoRollStoreProvider({
-  children,
-}: PianoRollStoreProviderProps) {
+export function PianoRollStoreProvider({ children }: PianoRollStoreProviderProps) {
   const pianoRollStore = usePianoRollStore();
-  return (
-    <PianoRollStoreContext.Provider value={pianoRollStore}>
-      {children}
-    </PianoRollStoreContext.Provider>
-  );
+  return <PianoRollStoreContext.Provider value={pianoRollStore}>{children}</PianoRollStoreContext.Provider>;
 }
 
-export type PianoRollStoreAction =
-  | NoteAction
-  | TransformAction
-  | SelectionAction
-  | HistoryAction;
+export type PianoRollStoreAction = NoteAction | TransformAction | SelectionAction | HistoryAction;
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   switch (action.type) {
@@ -103,10 +78,7 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
 }
 
 function usePianoRollStore(initialState?: PianoRollStore) {
-  const [pianoRollStore, dispatch] = useReducer(
-    reducer,
-    initialState ? initialState : defaultPianoRollStore(),
-  );
+  const [pianoRollStore, dispatch] = useReducer(reducer, initialState ? initialState : defaultPianoRollStore());
 
   return {
     pianoRollStore,
@@ -197,10 +169,7 @@ function defaultPianoRollStore() {
     },
 
     getTickFromOffsetX(offsetX: number) {
-      return (
-        (offsetX / (this.pianoLaneScaleX * this.pixelPerBeat)) *
-        this.tickPerBeat
-      );
+      return (offsetX / (this.pianoLaneScaleX * this.pixelPerBeat)) * this.tickPerBeat;
     },
 
     getNoteNumFromOffsetY(offsetY: number) {
@@ -208,27 +177,11 @@ function defaultPianoRollStore() {
     },
 
     getCenterYFromNoteNum(noteNum: number) {
-      return (
-        (this.getMinYFromNoteNum(noteNum) + this.getMaxYFromNoteNum(noteNum)) /
-        2
-      );
+      return (this.getMinYFromNoteNum(noteNum) + this.getMaxYFromNoteNum(noteNum)) / 2;
     },
 
     getNoteNameFromNoteNum(noteNum: number) {
-      const noteNames = [
-        "C",
-        "C#",
-        "D",
-        "D#",
-        "E",
-        "F",
-        "F#",
-        "G",
-        "G#",
-        "A",
-        "A#",
-        "B",
-      ];
+      const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
       const noteNameIndex = noteNum % 12;
       const octave = Math.floor(noteNum / 12) - 1;
       return `${noteNames[noteNameIndex]}${octave}`;
@@ -243,15 +196,10 @@ function defaultPianoRollStore() {
     },
 
     getOffsetXFromTick(tick: number) {
-      return (
-        (tick / this.tickPerBeat) * this.pixelPerBeat * this.pianoLaneScaleX
-      );
+      return (tick / this.tickPerBeat) * this.pixelPerBeat * this.pianoLaneScaleX;
     },
 
-    getNoteFromPosition(
-      offsetX: number,
-      offsetY: number,
-    ): TrackNoteEvent | null {
+    getNoteFromPosition(offsetX: number, offsetY: number): TrackNoteEvent | null {
       console.log(this.pianoRollNotes);
       console.log(this.getNoteNumFromOffsetY(offsetY));
       console.log(this.getTickFromOffsetX(offsetX));
@@ -277,11 +225,7 @@ function defaultPianoRollStore() {
 
     getWhiteKeyNumFromPosition(y: number) {
       let currentY = 0;
-      for (
-        let keyNum = this.numOfKeys - 1;
-        keyNum >= this.startingNoteNum;
-        keyNum--
-      ) {
+      for (let keyNum = this.numOfKeys - 1; keyNum >= this.startingNoteNum; keyNum--) {
         if (isBlackKey(keyNum)) {
           continue;
         }
@@ -333,16 +277,11 @@ function defaultPianoRollStore() {
       return x < blackKeyLength;
     },
 
-    isNoteLeftMarginClicked(
-      note: TrackNoteEvent,
-      offsetX: number,
-      offsetY: number,
-    ) {
+    isNoteLeftMarginClicked(note: TrackNoteEvent, offsetX: number, offsetY: number) {
       if (
         this.getNoteNumFromOffsetY(offsetY) == note.noteNumber &&
         offsetX >= this.getOffsetXFromTick(note.tick) &&
-        offsetX <=
-          this.getOffsetXFromTick(note.tick) + this.draggableBoundaryPixel
+        offsetX <= this.getOffsetXFromTick(note.tick) + this.draggableBoundaryPixel
       ) {
         return true;
       } else {
@@ -350,17 +289,11 @@ function defaultPianoRollStore() {
       }
     },
 
-    isNoteRightMarginClicked(
-      note: TrackNoteEvent,
-      offsetX: number,
-      offsetY: number,
-    ) {
+    isNoteRightMarginClicked(note: TrackNoteEvent, offsetX: number, offsetY: number) {
       if (
         this.getNoteNumFromOffsetY(offsetY) == note.noteNumber &&
         offsetX <= this.getOffsetXFromTick(note.tick + note.duration) &&
-        offsetX >=
-          this.getOffsetXFromTick(note.tick + note.duration) -
-            this.draggableBoundaryPixel
+        offsetX >= this.getOffsetXFromTick(note.tick + note.duration) - this.draggableBoundaryPixel
       ) {
         return true;
       } else {

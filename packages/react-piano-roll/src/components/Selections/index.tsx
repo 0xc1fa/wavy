@@ -8,16 +8,11 @@ export default function Selections() {
   const pianoRollNotes = usePianoRollNotes();
   const selectedNotes = getSelectedNotes(pianoRollNotes);
 
-  const selectionRangeMode: SelectionRangeMode =
-    selectedNotes.length === 1
-      ? "single"
-      : selectedNotes.length > 1
-        ? "multiple"
-        : "none";
+  const selectionRangeMode: SelectionRangeMode = selectedNotes.length > 1 ? "multiple" : "single";
 
   return selectionRangeMode === "multiple" ? (
     <SelectionRange />
-  ) : selectionRangeMode === "none" ? (
+  ) : selectionRangeMode === "single" ? (
     <SelectionPoint />
   ) : (
     <></>

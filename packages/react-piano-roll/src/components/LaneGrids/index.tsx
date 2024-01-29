@@ -7,19 +7,18 @@ import { getGridBaseSeparation, getGridSeparationFactor, getNumOfGrid } from "@/
 interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {}
 const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
   const theme = useTheme();
-  const { laneLength, canvasHeight, pixelPerBeat, pianoLaneScaleX } =
-    usePianoRollTransform();
+  const { laneLength, canvasHeight, pixelPerBeat, pianoLaneScaleX } = usePianoRollTransform();
 
-  const gridSeparationFactor = getGridSeparationFactor(pixelPerBeat, pianoLaneScaleX)
-  const numberOfGrids = getNumOfGrid(pixelPerBeat,laneLength)
-  const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor)
+  const gridSeparationFactor = getGridSeparationFactor(pixelPerBeat, pianoLaneScaleX);
+  const numberOfGrids = getNumOfGrid(pixelPerBeat, laneLength);
+  const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor);
 
-  const gridLines = (gridType: 'bar' | 'quarter' | 'quavers') => {
+  const gridLines = (gridType: "bar" | "quarter" | "quavers") => {
     const scale = pianoLaneScaleX * gridBaseSeparation[gridType];
     return [...Array(numberOfGrids[gridType]).keys()]
-      .filter(index => index % gridSeparationFactor[gridType] === 0 || gridType === 'quavers')
-      .map(index => <GridLine key={index} x={index * pixelPerBeat * scale} color={theme.grid.color[gridType]} />);
-  }
+      .filter((index) => index % gridSeparationFactor[gridType] === 0 || gridType === "quavers")
+      .map((index) => <GridLine key={index} x={index * pixelPerBeat * scale} color={theme.grid.color[gridType]} />);
+  };
 
   return (
     <svg
@@ -30,9 +29,9 @@ const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
       preserveAspectRatio="none"
       {...other}
     >
-      {gridSeparationFactor.quavers !== 1 ? gridLines('quavers') : []}
-      {gridLines('quarter')}
-      {gridLines('bar')}
+      {gridSeparationFactor.quavers !== 1 ? gridLines("quavers") : []}
+      {gridLines("quarter")}
+      {gridLines("bar")}
     </svg>
   );
 };
@@ -43,18 +42,9 @@ interface GridLineProps {
 }
 
 const GridLine: React.FC<GridLineProps> = ({ x, color }) => {
-
   const { canvasHeight } = usePianoRollTransform();
 
-  return <line
-    x1={x}
-    y1={0}
-    x2={x}
-    y2={canvasHeight}
-    stroke={color}
-    strokeWidth="1"
-  />
+  return <line x1={x} y1={0} x2={x} y2={canvasHeight} stroke={color} strokeWidth="1" />;
 };
-
 
 export default memo(LaneGrids);

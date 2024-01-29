@@ -9,9 +9,7 @@ interface NoteLyricProps extends React.HTMLAttributes<HTMLInputElement> {
 function NoteLyric({ note, style, ...other }: NoteLyricProps) {
   const { pianoRollStore, dispatch } = useStore();
 
-  const handleKeyPress: React.KeyboardEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
+  const handleKeyPress: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === "Enter") (event.target as HTMLInputElement).blur();
   };
 

@@ -58,10 +58,7 @@ export default function createMIDIFile(notes: TrackNoteEvent[]) {
   const headerChunk = getHeaderChunk(MidiFormat.SingleTrack, 1, 9600);
   const trackChunk = getTrackChunk(notes);
 
-  const bufferArray = [
-    ...headerChunk,
-    ...trackChunk.flatMap((trackChunk) => trackChunk),
-  ];
+  const bufferArray = [...headerChunk, ...trackChunk.flatMap((trackChunk) => trackChunk)];
 
   const buffer = new Uint8Array(bufferArray);
   return buffer;
@@ -84,29 +81,16 @@ export function downloadMidi(notes: TrackNoteEvent[]) {
   URL.revokeObjectURL(url);
 }
 
-function getHeaderChunk(
-  format: MidiFormat,
-  numOfTracks: number,
-  ticksPerQuarterNote: number,
-) {
+function getHeaderChunk(format: MidiFormat, numOfTracks: number, ticksPerQuarterNote: number) {
   const MThd = [0x4d, 0x54, 0x68, 0x64]; // Header identifier "MThd"
   const length = [0x00, 0x00, 0x00, 0x06]; // Header chunk length (always 6 bytes for standard MIDI files)
   const formatType = [0x00, format]; // MIDI format type (0, 1, or 2)
 
   // Convert numOfTracks and ticksPerQuarterNote to two bytes each in big-endian format
   const numOfTracksBytes = [(numOfTracks >> 8) & 0xff, numOfTracks & 0xff];
-  const timeDivisionBytes = [
-    (ticksPerQuarterNote >> 8) & 0xff,
-    ticksPerQuarterNote & 0xff,
-  ];
+  const timeDivisionBytes = [(ticksPerQuarterNote >> 8) & 0xff, ticksPerQuarterNote & 0xff];
 
-  return [
-    ...MThd,
-    ...length,
-    ...formatType,
-    ...numOfTracksBytes,
-    ...timeDivisionBytes,
-  ];
+  return [...MThd, ...length, ...formatType, ...numOfTracksBytes, ...timeDivisionBytes];
 }
 
 function getTrackChunk(data: TrackNoteEvent[]): number[] {
@@ -129,9 +113,7 @@ function getTrackChunk(data: TrackNoteEvent[]): number[] {
       tick: note.tick + note.duration,
       velocity: 0,
     }));
-  const channelEvents = [...noteStartEvents, ...noteEndEvents].sort(
-    (a, b) => a.tick - b.tick,
-  );
+  const channelEvents = [...noteStartEvents, ...noteEndEvents].sort((a, b) => a.tick - b.tick);
   const timedChannelEvents = insertVLQEvents(channelEvents);
   console.log(timedChannelEvents);
 
@@ -151,9 +133,7 @@ function getTrackChunk(data: TrackNoteEvent[]): number[] {
   return [...MTrk, ...trackLength, ...encodedEvents];
 }
 
-const insertVLQEvents = (
-  channelEvents: AbsoluteTimedMidiChannelEvent[],
-): TimedMidiChannelEvent[] => {
+const insertVLQEvents = (channelEvents: AbsoluteTimedMidiChannelEvent[]): TimedMidiChannelEvent[] => {
   let currentDeltaT = 0;
   let ret: TimedMidiChannelEvent[] = [];
   channelEvents.forEach((event) => {
@@ -218,17 +198,10 @@ function encodeTrackLength(length: number) {
   ];
 }
 
-function toNoteOnEvent(
-  note: TimedMidiChannelEvent & { type: ChannelEventType.NoteOn },
-) {
-  return [
-    ...encodeVlq(note.deltaTick),
-    ...encodeNoteOn(note.noteNumber, note.velocity),
-  ];
+function toNoteOnEvent(note: TimedMidiChannelEvent & { type: ChannelEventType.NoteOn }) {
+  return [...encodeVlq(note.deltaTick), ...encodeNoteOn(note.noteNumber, note.velocity)];
 }
 
-function toNoteOffEvent(
-  note: TimedMidiChannelEvent & { type: ChannelEventType.NoteOff },
-) {
+function toNoteOffEvent(note: TimedMidiChannelEvent & { type: ChannelEventType.NoteOff }) {
   return [...encodeVlq(note.deltaTick), ...encodeNoteOff(note.noteNumber)];
 }

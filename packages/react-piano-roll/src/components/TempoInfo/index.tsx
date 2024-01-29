@@ -21,15 +21,11 @@ export default function TempoInfo() {
     setInputValue(event.currentTarget.value);
   };
 
-  const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
+  const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => {
     event?.currentTarget.focus();
   };
 
-  const handlePointerDown: React.PointerEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
+  const handlePointerDown: React.PointerEventHandler<HTMLInputElement> = (event) => {
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
     setIsDragging(true);
@@ -37,27 +33,20 @@ export default function TempoInfo() {
     bufferedValue.current = inputValue;
   };
 
-  const handlePointerMove: React.PointerEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
+  const handlePointerMove: React.PointerEventHandler<HTMLInputElement> = (event) => {
     if (isDragging) {
-      const newValue =
-        parseFloat(bufferedValue.current) - (event.clientY - inintialY);
+      const newValue = parseFloat(bufferedValue.current) - (event.clientY - inintialY);
       const clampedValue = Math.max(40, Math.min(200, newValue));
       setInputValue(Math.round(clampedValue).toString());
     }
   };
 
-  const handlePointerUp: React.PointerEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
+  const handlePointerUp: React.PointerEventHandler<HTMLInputElement> = (event) => {
     event.currentTarget.releasePointerCapture(event.pointerId);
     setIsDragging(false);
   };
 
-  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === "Enter") {
       const value = parseFloat(inputValue);
       if (!isNaN(value)) {

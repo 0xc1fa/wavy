@@ -1,1 +1,1 @@
-export const minGridPixel = 35
+export const minGridPixel = 35;

@@ -2,19 +2,12 @@ import { memo } from "react";
 import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import useTheme from "../../hooks/useTheme";
 import styles from "./index.module.scss";
-import {
-  PianoRollLanesMouseHandlerMode,
-  PianoRollMouseHandlersStates,
-} from "../../handlers/usePianoRollMouseHandlers";
+import { PianoRollLanesMouseHandlerMode, PianoRollMouseHandlersStates } from "../../handlers/usePianoRollMouseHandlers";
 
 interface SelectionMarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
   mouseHandlersStates: PianoRollMouseHandlersStates;
 }
-function SelectionMarquee({
-  mouseHandlersStates,
-  style,
-  ...other
-}: SelectionMarqueeProps) {
+function SelectionMarquee({ mouseHandlersStates, style, ...other }: SelectionMarqueeProps) {
   const theme = useTheme();
 
   const startingPositionX = mouseHandlersStates.startingPosition.x;
@@ -30,8 +23,7 @@ function SelectionMarquee({
   const width = right - left;
   const height = bottom - top;
 
-  return mouseHandlersStates.mouseHandlerMode ===
-    PianoRollLanesMouseHandlerMode.MarqueeSelection ? (
+  return mouseHandlersStates.mouseHandlerMode === PianoRollLanesMouseHandlerMode.MarqueeSelection ? (
     <div
       aria-label="piano-roll-selection-area"
       className={styles["selection--marquee"]}

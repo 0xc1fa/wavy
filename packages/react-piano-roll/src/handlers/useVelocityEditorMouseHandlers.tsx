@@ -10,9 +10,7 @@ enum VelocityEditorMouseHandlerMode {
 
 export default function useVelocityEditorMouseHandlers() {
   const [isDragging, setIsDragging] = useState(false);
-  const [mouseHandlerMode, setMouseHandlerMode] = useState(
-    VelocityEditorMouseHandlerMode.Pencil,
-  );
+  const [mouseHandlerMode, setMouseHandlerMode] = useState(VelocityEditorMouseHandlerMode.Pencil);
   const dispatch = usePianoRollDispatch();
   const { pianoRollStore } = useStore();
 

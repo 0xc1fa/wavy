@@ -35,12 +35,7 @@ const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
   };
 
   // Function to draw the vibrato curve line (path in SVG)
-  const drawVibratoCurveLine = (
-    note: TrackNoteEvent,
-    x1: number,
-    x2: number,
-    y: number,
-  ) => {
+  const drawVibratoCurveLine = (note: TrackNoteEvent, x1: number, x2: number, y: number) => {
     // Implement the logic for the vibrato curve here
     // For the sake of example, let's assume it's a simple sine wave
     const pathData = [];
@@ -63,12 +58,8 @@ const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
 
   // Extract needed values from the note and store
   const noteStartingX = pianoRollStore.getOffsetXFromTick(note.tick);
-  const noteEndingX = pianoRollStore.getOffsetXFromTick(
-    note.tick + note.duration,
-  );
-  const noteVibratoStartX = pianoRollStore.getOffsetXFromTick(
-    note.tick + note.vibratoDelay,
-  );
+  const noteEndingX = pianoRollStore.getOffsetXFromTick(note.tick + note.duration);
+  const noteVibratoStartX = pianoRollStore.getOffsetXFromTick(note.tick + note.vibratoDelay);
   const noteCenterY = pianoRollStore.getCenterYFromNoteNum(note.noteNumber);
 
   return (

@@ -35,10 +35,7 @@ export function undo(state: PianoRollStore, action: UndoAction) {
     return state;
   }
 
-  const prevNoteHistory = getPrevNoteHistory(
-    state.pianoRollNotes,
-    state.notesHistory,
-  );
+  const prevNoteHistory = getPrevNoteHistory(state.pianoRollNotes, state.notesHistory);
   return {
     ...state,
     pianoRollNotes: prevNoteHistory,
@@ -49,29 +46,20 @@ export function undo(state: PianoRollStore, action: UndoAction) {
   };
 }
 
-function getPrevNoteHistory(
-  notes: TrackNoteEvent[],
-  history: PianoRollHistory,
-): TrackNoteEvent[] {
+function getPrevNoteHistory(notes: TrackNoteEvent[], history: PianoRollHistory): TrackNoteEvent[] {
   const nearestHistory = history.history[history.head];
   switch (nearestHistory.type) {
     case PianoRollHistoryItemType.ADD_NOTE: {
-      const toBeDeletedNoteIds = new Set(
-        nearestHistory.note.map((note) => note.id),
-      );
+      const toBeDeletedNoteIds = new Set(nearestHistory.note.map((note) => note.id));
       return notes.filter((note) => !toBeDeletedNoteIds.has(note.id));
     }
     case PianoRollHistoryItemType.DELETE_NOTE: {
       return [...notes, ...nearestHistory.note];
     }
     case PianoRollHistoryItemType.MODIFY_NOTE: {
-      const modifiedNoteIds = new Map(
-        nearestHistory.note.map((note) => [note.id, note]),
-      );
+      const modifiedNoteIds = new Map(nearestHistory.note.map((note) => [note.id, note]));
       return notes.map((note) =>
-        modifiedNoteIds.has(note.id)
-          ? (modifiedNoteIds.get(note.id) as TrackNoteEvent)
-          : note,
+        modifiedNoteIds.has(note.id) ? (modifiedNoteIds.get(note.id) as TrackNoteEvent) : note,
       );
     }
     default:
@@ -92,10 +80,7 @@ export function redo(state: PianoRollStore, action: RedoAction) {
     return state;
   }
 
-  const nextNoteHistory = getNextNoteHistory(
-    state.pianoRollNotes,
-    state.notesHistory,
-  );
+  const nextNoteHistory = getNextNoteHistory(state.pianoRollNotes, state.notesHistory);
   return {
     ...state,
     pianoRollNotes: nextNoteHistory,
@@ -106,29 +91,20 @@ export function redo(state: PianoRollStore, action: RedoAction) {
   };
 }
 
-function getNextNoteHistory(
-  notes: TrackNoteEvent[],
-  history: PianoRollHistory,
-): TrackNoteEvent[] {
+function getNextNoteHistory(notes: TrackNoteEvent[], history: PianoRollHistory): TrackNoteEvent[] {
   const nearestHistory = history.history[history.head + 1];
   switch (nearestHistory.type) {
     case PianoRollHistoryItemType.ADD_NOTE: {
       return [...notes, ...nearestHistory.note];
     }
     case PianoRollHistoryItemType.DELETE_NOTE: {
-      const deletedNoteIds = new Set(
-        nearestHistory.note.map((note) => note.id),
-      );
+      const deletedNoteIds = new Set(nearestHistory.note.map((note) => note.id));
       return notes.filter((note) => !deletedNoteIds.has(note.id));
     }
     case PianoRollHistoryItemType.MODIFY_NOTE: {
-      const modifiedNoteIds = new Map(
-        nearestHistory.note.map((note) => [note.id, note]),
-      );
+      const modifiedNoteIds = new Map(nearestHistory.note.map((note) => [note.id, note]));
       return notes.map((note) =>
-        modifiedNoteIds.has(note.id)
-          ? (modifiedNoteIds.get(note.id) as TrackNoteEvent)
-          : note,
+        modifiedNoteIds.has(note.id) ? (modifiedNoteIds.get(note.id) as TrackNoteEvent) : note,
       );
     }
     default:
@@ -136,8 +112,6 @@ function getNextNoteHistory(
   }
 }
 
-export function getChoppedHistoryAfterHead(
-  history: PianoRollHistory,
-): PianoRollHistoryItem[] {
+export function getChoppedHistoryAfterHead(history: PianoRollHistory): PianoRollHistoryItem[] {
   return history.history.slice(0, history.head + 1);
 }

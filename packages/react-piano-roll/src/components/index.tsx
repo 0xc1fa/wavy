@@ -41,8 +41,7 @@ export default function PianoRoll({
   width = 800,
   height = 600,
 }: PianoRollProps) {
-  const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } =
-    usePianoRollMouseHandlers();
+  const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const pianoRollKeyboardHandlers = usePianoRollKeyboardHandlers();
   const { pianoRollStore } = useStore();
 
@@ -73,10 +72,7 @@ export default function PianoRoll({
         }
         tabIndex={0}
       >
-        <div
-          className={styles["upper-container"]}
-          onClick={(event) => console.log(event.clientX)}
-        >
+        <div className={styles["upper-container"]} onClick={(event) => console.log(event.clientX)}>
           <TempoInfo />
           <div>
             <Ruler />
@@ -95,12 +91,8 @@ export default function PianoRoll({
               <LaneGrids />
               <Selections />
               <Notes attachLyric={attachLyric} />
-              <SelectionArea
-                mouseHandlersStates={pianoRollMouseHandlersStates}
-              />
-              {playheadPosition !== undefined && (
-                <Playhead playheadPosition={playheadPosition} />
-              )}
+              <SelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
+              {playheadPosition !== undefined && <Playhead playheadPosition={playheadPosition} />}
               <div
                 style={{
                   position: "absolute",
@@ -121,10 +113,7 @@ export default function PianoRoll({
   );
 }
 
-function useScrollToNote(
-  containerRef: React.RefObject<HTMLElement>,
-  initialScrollMiddleNote: number,
-) {
+function useScrollToNote(containerRef: React.RefObject<HTMLElement>, initialScrollMiddleNote: number) {
   if (initialScrollMiddleNote < 0 || initialScrollMiddleNote > 127) {
     initialScrollMiddleNote = 60;
   }
@@ -133,9 +122,7 @@ function useScrollToNote(
       return;
     }
     const containerHeight = containerRef.current?.offsetHeight;
-    const c4KeyElement = document.querySelector(
-      `[data-keynum="${initialScrollMiddleNote}"]`,
-    ) as HTMLDivElement;
+    const c4KeyElement = document.querySelector(`[data-keynum="${initialScrollMiddleNote}"]`) as HTMLDivElement;
     const c4KeyTop = c4KeyElement.getBoundingClientRect().top;
 
     // Thanks to strict mode rendering twice, we need to prevent the second scrolling which reset it to top

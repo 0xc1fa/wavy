@@ -23,12 +23,8 @@ function NoteBlock({ note, ...other }: NoteBlockProps) {
           "--left": `${pianoRollStore.getOffsetXFromTick(note.tick)}px`,
           "--note-width": `${pianoRollStore.getOffsetXFromTick(note.duration)}px`,
           "--note-height": `${pianoRollStore.laneWidth}px`,
-          "--background": note.isSelected
-            ? theme.note.noteBackgroundColor
-            : theme.note.noteBackgroundColor,
-          "--border-color": note.isSelected
-            ? theme.note.noteBorderColor
-            : theme.note.noteBorderColor,
+          "--background": note.isSelected ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
+          "--border-color": note.isSelected ? theme.note.noteBorderColor : theme.note.noteBorderColor,
           "--border-radius": `${theme.note.noteBorderRadius}px`,
           outline: note.isSelected ? `3px solid #ffffff33` : "none",
         } as React.CSSProperties
