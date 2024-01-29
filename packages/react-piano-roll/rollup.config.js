@@ -14,7 +14,7 @@ export default {
     dir: "dist",
     format: "esm",
   },
-  external: ["react", "react/jsx-runtime"],
+  external: ["react", "react/jsx-runtime", "lodash"],
   plugins: [
     peerDepsExternal(),
     postcss({
@@ -31,6 +31,6 @@ export default {
     // babel({ babelHelpers: 'bundled', exclude: 'node_modules/**' }),
     nodeResolve(),
     commonjs(),
-    terser(),
+    // terser(),
   ],
 };

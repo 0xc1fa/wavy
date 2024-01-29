@@ -49,7 +49,7 @@ export default function useVelocityEditorMouseHandlers() {
             });
           }
           dispatch({
-            type: "SET_NOTE_MODIFICATION_BUFFER",
+            type: "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE",
             payload: {
               initX: event.nativeEvent.offsetX,
               initY: event.nativeEvent.offsetY,
@@ -60,7 +60,7 @@ export default function useVelocityEditorMouseHandlers() {
       }
     }
     dispatch({
-      type: "SET_NOTE_MODIFICATION_BUFFER",
+      type: "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE",
       payload: {
         initX: event.nativeEvent.offsetX,
         initY: event.nativeEvent.offsetY,

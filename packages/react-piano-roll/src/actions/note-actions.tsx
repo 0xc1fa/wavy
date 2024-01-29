@@ -16,7 +16,8 @@ export type NoteAction =
   | VibratoRateChangeSelectedNoteAction
   | SetNoteInMarqueeAsSelectedAction
   | MoveNoteAsLatestModifiedAction
-  | SetNoteModificationBufferAction;
+  | SetNoteModificationBufferWithSelectedNoteAction
+  | SetNoteModificationBufferWithAllNoteAction;
 
 function createNote(state: PianoRollStore, ticks: number, noteNum: number): TrackNoteEvent {
   return {
@@ -259,15 +260,30 @@ export function moveNoteAsLatestModified(state: PianoRollStore, action: MoveNote
   };
 }
 
-type SetNoteModificationBufferAction = {
-  type: "SET_NOTE_MODIFICATION_BUFFER";
+type SetNoteModificationBufferWithSelectedNoteAction = {
+  type: "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE";
   payload: { initX: number; initY: number };
 };
-export function setNoteModificationBuffer(state: PianoRollStore, action: SetNoteModificationBufferAction) {
+export function setNoteModificationBufferWithSelectedNote(state: PianoRollStore, action: SetNoteModificationBufferWithSelectedNoteAction) {
   return {
     ...state,
     noteModificationBuffer: {
       notesSelected: state.pianoRollNotes.filter((note) => note.isSelected),
+      initX: action.payload.initX,
+      initY: action.payload.initY,
+    },
+  };
+}
+
+type SetNoteModificationBufferWithAllNoteAction = {
+  type: "SET_NOTE_MODIFICATION_BUFFER_WITH_ALL_NOTE";
+  payload: { initX: number; initY: number };
+};
+export function setNoteModificationBufferWithAllNote(state: PianoRollStore, action: SetNoteModificationBufferWithAllNoteAction) {
+  return {
+    ...state,
+    noteModificationBuffer: {
+      notesSelected: state.pianoRollNotes,
       initX: action.payload.initX,
       initY: action.payload.initY,
     },

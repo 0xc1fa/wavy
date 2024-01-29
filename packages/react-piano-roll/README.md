@@ -2,21 +2,20 @@
 
 ## TODOs
 
-- auto scaling of grid and ruler
+- [x] auto scaling of grid and ruler
   - all other action react to grid
-- lock in after passing snap to one grid (left or right)
+- [x] lock in after passing snap to one grid (left or right)
   - before lock in can move in detail
   - after lock in one can move in anchor point
   - if note is in grid line, only grid line are anchor points, else, both grid line and (note original points + grid width) are anchor points
-- selection bar
-- Select notes when dragging not after dragging
-- Change the staring and ending point of the midi editor
-- Add loop area
-- Add selected mode for velocity editor
-- turn PianoRoll flex layout to grid layout
-- fix range selection
-- Refactor out constants
-  - ticksPerBeat
+- [ ] selection bar
+- [ ] Select notes when dragging not after dragging
+- [ ] Change the staring and ending point of the midi editor
+- [ ] Add loop area
+- [ ] Add selected mode for velocity editor
+- [ ] turn PianoRoll flex layout to grid layout
+- [ ] fix range selection
+- [ ] Refactor out constants
 
 ## Existing Problems and
 

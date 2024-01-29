@@ -9,7 +9,8 @@ import {
   modifyingNotes,
   moveNoteAsLatestModified,
   setNoteInMarqueeAsSelected,
-  setNoteModificationBuffer,
+  setNoteModificationBufferWithAllNote,
+  setNoteModificationBufferWithSelectedNote,
   toggleSelectedNoteVibratoMode,
   updateNoteLyric,
   vibratoDepthDelayChangeSelectedNote,
@@ -61,8 +62,10 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
       return setSelectionTicks(state, action);
     case "DELETE_SELECTED_NOTES":
       return deleteSelectedNotes(state, action);
-    case "SET_NOTE_MODIFICATION_BUFFER":
-      return setNoteModificationBuffer(state, action);
+    case "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE":
+      return setNoteModificationBufferWithSelectedNote(state, action);
+    case "SET_NOTE_MODIFICATION_BUFFER_WITH_ALL_NOTE":
+      return setNoteModificationBufferWithAllNote(state, action);
     case "SET_BPM":
       return {
         ...state,
@@ -300,5 +303,30 @@ function defaultPianoRollStore() {
         return false;
       }
     },
+
+    inMarquee(
+      note: TrackNoteEvent,
+      marquee: {
+        startingPosition: { x: number; y: number };
+        ongoingPosition: { x: number; y: number };
+      }
+    ) {
+      const [selectedMinNoteNum, selectedMaxNoteNum] = [
+        this.getNoteNumFromOffsetY(marquee.startingPosition.y),
+        this.getNoteNumFromOffsetY(marquee.ongoingPosition.y),
+      ].sort((a, b) => a - b);
+      const [selectedMinTick, selectedMaxTick] = [
+        this.getTickFromOffsetX(marquee.startingPosition.x),
+        this.getTickFromOffsetX(marquee.ongoingPosition.x),
+      ].sort((a, b) => a - b);
+
+      return (
+        note.noteNumber >= selectedMinNoteNum &&
+        note.noteNumber <= selectedMaxNoteNum &&
+        note.tick + note.duration >= selectedMinTick &&
+        note.tick <= selectedMaxTick
+      )
+    }
   };
+
 }

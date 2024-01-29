@@ -57,7 +57,7 @@ export default function usePianoRollMouseHandlers() {
       dispatch({ type: "MOVE_NOTE_AS_LATEST_MODIFIED", payload: { noteId: noteClicked.id } });
       setMouseHandlerModeForNote(event, noteClicked);
       dispatch({
-        type: "SET_NOTE_MODIFICATION_BUFFER",
+        type: "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE",
         payload: { initX: event.nativeEvent.offsetX, initY: event.nativeEvent.offsetY },
       });
     } else if (event.metaKey) {
@@ -67,14 +67,19 @@ export default function usePianoRollMouseHandlers() {
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: ticks } });
       // dispatch({ type: 'unsetSelectionRange' })
       dispatch({
-        type: "SET_NOTE_MODIFICATION_BUFFER",
+        type: "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE",
         payload: { initX: event.nativeEvent.offsetX, initY: event.nativeEvent.offsetY },
       });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
     } else {
       // no note clicked
       const selectionTicks = pianoRollStore.getTickFromOffsetX(event.nativeEvent.offsetX);
-      dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: selectionTicks } });
+      const snappedSelection = getNearestGridTick(selectionTicks, pianoRollStore.pianoLaneScaleX);
+      dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: snappedSelection } });
+      dispatch({
+        type: "SET_NOTE_MODIFICATION_BUFFER_WITH_ALL_NOTE",
+        payload: { initX: event.nativeEvent.offsetX, initY: event.nativeEvent.offsetY },
+      });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.MarqueeSelection);
     }
     setStartingPosition({ x: event.nativeEvent.offsetX, y: event.nativeEvent.offsetY });
@@ -187,6 +192,15 @@ export default function usePianoRollMouseHandlers() {
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
       }
+      case PianoRollLanesMouseHandlerMode.MarqueeSelection:
+        console.log("buffered note", bufferedNotes)
+        console.log({ startingPosition, ongoingPosition})
+        dispatch({ type: "MODIFYING_NOTES", payload: { notes: bufferedNotes.map(note => ({
+          ...note,
+          isSelected: pianoRollStore.inMarquee(note, { startingPosition, ongoingPosition}) ? !note.isSelected : note.isSelected
+          }))}
+        })
+        break;
       case PianoRollLanesMouseHandlerMode.Vibrato:
         event.shiftKey
           ? dispatch({ type: "VIBRATO_RATE_CHANGE_SELECTED_NOTE", payload: { rateOffset: deltaY } })
@@ -207,14 +221,6 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const onPointerUp: React.PointerEventHandler = () => {
-    switch (mouseHandlerMode) {
-      case PianoRollLanesMouseHandlerMode.MarqueeSelection:
-        dispatch({
-          type: "SET_NOTE_IN_MARQUEE_AS_SELECTED",
-          payload: { startingPosition, ongoingPosition },
-        });
-        break;
-    }
     setMouseHandlerMode(PianoRollLanesMouseHandlerMode.None);
   };
 

@@ -1,4 +1,4 @@
-import { useStore } from "@/index";
+import useStore from "@/hooks/useStore";
 import styles from "./index.module.scss";
 
 export default function SelectionPoint() {
