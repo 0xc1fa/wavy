@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { focusNote } from "../helpers/notes";
 import { usePianoRollTransform } from "../hooks/usePianoRollTransform";
 import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
@@ -15,6 +15,12 @@ export enum PianoRollLanesMouseHandlerMode {
   Vibrato,
   Velocity,
   None,
+}
+
+export enum DraggingGuardMode {
+  UnderThreshold,
+  FineTune,
+  SnapToGrid,
 }
 
 export type PianoRollMouseHandlersStates = {
@@ -37,9 +43,11 @@ export default function usePianoRollMouseHandlers() {
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None);
   const [startingPosition, setStartingPosition] = useState({ x: 0, y: 0 });
   const [ongoingPosition, setOngoingPosition] = useState({ x: 0, y: 0 });
+  const guardActive = useRef(DraggingGuardMode.UnderThreshold);
 
   const onPointerDown: React.PointerEventHandler = (event) => {
     event.currentTarget.setPointerCapture(event.nativeEvent.pointerId);
+    guardActive.current = DraggingGuardMode.UnderThreshold;
 
     const noteClicked = pianoRollStore.getNoteFromEvent(event.nativeEvent);
     setNoteSelection(event, noteClicked);
@@ -84,6 +92,9 @@ export default function usePianoRollMouseHandlers() {
     const deltaPitch =
       pianoRollStore.getNoteNumFromOffsetY(event.nativeEvent.offsetY) -
       pianoRollStore.getNoteNumFromOffsetY(pianoRollStore.noteModificationBuffer.initY);
+    if (deltaTicks > 96 || deltaTicks < -96) {
+      guardActive.current = DraggingGuardMode.FineTune;
+    }
 
     const noteClicked = _.last(bufferedNotes);
     switch (mouseHandlerMode) {
@@ -93,19 +104,23 @@ export default function usePianoRollMouseHandlers() {
       case PianoRollLanesMouseHandlerMode.NotesTrimming: {
         const newNotes = bufferedNotes.map((bufferedNote) => ({
           ...bufferedNote,
-          tick: Math.min(bufferedNote.tick + bufferedNote.duration - 1, bufferedNote.tick + deltaTicks),
-          duration: bufferedNote.duration - deltaTicks,
+          tick: !guardActive.current ? bufferedNote.tick : Math.min(bufferedNote.tick + bufferedNote.duration - 1, bufferedNote.tick + deltaTicks),
+          duration: !guardActive.current ? bufferedNote.duration : bufferedNote.duration - deltaTicks,
         }));
-        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: clampTick(Math.min(noteClicked!.tick + noteClicked!.duration - 1, noteClicked!.tick + deltaTicks)) } });
+        if (guardActive.current) {
+          dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: clampTick(Math.min(noteClicked!.tick + noteClicked!.duration - 1, noteClicked!.tick + deltaTicks)) } });
+        }
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
       }
       case PianoRollLanesMouseHandlerMode.NotesExtending: {
         const newNotes = bufferedNotes.map((bufferedNote) => ({
           ...bufferedNote,
-          duration: bufferedNote.duration + deltaTicks,
+          duration: !guardActive.current ? bufferedNote.duration : bufferedNote.duration + deltaTicks,
         }));
-        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: Math.max(noteClicked!.tick + 1, clampTick(noteClicked!.tick + noteClicked!.duration + deltaTicks)) } });
+        if (guardActive.current) {
+          dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: Math.max(noteClicked!.tick + 1, clampTick(noteClicked!.tick + noteClicked!.duration + deltaTicks)) } });
+        }
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
       }
@@ -113,9 +128,11 @@ export default function usePianoRollMouseHandlers() {
         const newNotes = bufferedNotes.map((bufferedNote) => ({
           ...bufferedNote,
           noteNumber: bufferedNote.noteNumber + deltaPitch,
-          tick: bufferedNote.tick + deltaTicks,
+          tick: !guardActive.current ? bufferedNote.tick : bufferedNote.tick + deltaTicks,
         }));
-        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: clampTick(noteClicked!.tick + deltaTicks) } });
+        if (guardActive.current) {
+          dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: clampTick(noteClicked!.tick + deltaTicks) } });
+        }
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
       }
