@@ -8,7 +8,7 @@ import { basePixelsPerBeat } from "@/constants";
 interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {}
 const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
   const theme = useTheme();
-  const { laneLength, canvasHeight, pianoLaneScaleX } = usePianoRollTransform();
+  const { laneLength,  pianoLaneScaleX } = usePianoRollTransform();
 
   const gridSeparationFactor = getGridSeparationFactor(pianoLaneScaleX);
   const numberOfGrids = getNumOfGrid(laneLength);

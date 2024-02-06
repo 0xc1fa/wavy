@@ -22,3 +22,22 @@
 - Cannot delete lyric (as it would also delete the note)
 - Refactored PianoRollStore
 - The scrollable area does not resize upon scaling
+
+## Performance Refactor
+### Lane Container
+#### LaneGrids
+- The span of the pianoroll
+- ScaleX
+
+#### Selection
+- piano roll note (currently, maybe delete it later)
+- selection tick
+- scaleX
+-
+
+#### Note
+- piano roll note
+- scaleX (in the use of function call)
+
+#### Selection Area
+- 

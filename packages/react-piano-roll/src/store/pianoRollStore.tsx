@@ -139,7 +139,7 @@ function defaultPianoRollStore() {
     get numOfKeys() {
       return 128;
     },
-    
+
     get canvasHeight() {
       return baseLaneWidth * this.numOfKeys;
     },

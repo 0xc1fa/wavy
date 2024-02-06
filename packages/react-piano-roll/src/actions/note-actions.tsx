@@ -27,7 +27,7 @@ export type NoteAction =
   | SetNoteModificationBufferWithSelectedNoteAction
   | SetNoteModificationBufferWithAllNoteAction;
 
-function createNote(state: PianoRollStore, ticks: number, noteNum: number): TrackNoteEvent {
+export function createNote(state: PianoRollStore, ticks: number, noteNum: number): TrackNoteEvent {
   return {
     id: uuidv4(),
     tick: ticks,

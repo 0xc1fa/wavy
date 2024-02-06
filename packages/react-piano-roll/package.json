@@ -29,6 +29,7 @@
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.33",
     "rollup": "^4.9.6",
+    "rollup-plugin-banner2": "^1.2.2",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-scss": "^4.0.0",
