@@ -1,6 +1,7 @@
-import { PianoRoll } from "react-piano-roll";
+import { PianoRoll, usePreventZoom } from "react-piano-roll";
 
 function App() {
+  usePreventZoom();
   return (
     <>
       <div style={{ width: "800px", height: "600px", boxSizing: "border-box" }}>

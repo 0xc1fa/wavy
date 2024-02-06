@@ -8,7 +8,7 @@ import SelectionArea from "./SelectionMarquee";
 import LanesBackground from "./LanesBackground";
 import useStore from "../hooks/useStore";
 import PianoKeyboard from "./PianoKeyboard";
-import usePreventZoom from "../hooks/usePreventZoom";
+import usePreventZoom, { disableZoom, enableZoom } from "../hooks/usePreventZoom";
 import Ruler from "./Ruler";
 import Notes from "./Notes";
 import Playhead from "./Playhead";
@@ -19,6 +19,7 @@ import { CSSProperties, KeyboardEvent, useEffect, useLayoutEffect, useRef, useSt
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import VelocityEditor from "./VelocityEditor";
 import SelectionBar from "./SelectionBar";
+import preventZoom from "@/hoc/preventZoom";
 
 interface PianoRollProps {
   playheadPosition?: number;
@@ -32,7 +33,7 @@ interface PianoRollProps {
   endingTick?: number;
   style?: CSSProperties;
 }
-export default function PianoRoll({
+function PianoRoll({
   playheadPosition,
   attachLyric = false,
   initialScrollMiddleNote = 60,
@@ -46,18 +47,12 @@ export default function PianoRoll({
   const { pianoRollStore } = useStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // useLayoutEffect(() => {
-  //   dispatch({ type: "SET_CLIP_SPAN", payload: { startingTick: staringTick, endingTick: endingTick } });
-  // });
-
-  usePreventZoom();
   useScrollToNote(containerRef, initialScrollMiddleNote);
 
   return (
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
       <div
-        className={styles["container"]}
+        className={`${styles["container"]} piano-roll`}
         ref={containerRef}
         style={
           {
@@ -122,3 +117,5 @@ function useScrollToNote(containerRef: React.RefObject<HTMLElement>, initialScro
     scrolled.current = true;
   }, []);
 }
+
+export default PianoRoll;

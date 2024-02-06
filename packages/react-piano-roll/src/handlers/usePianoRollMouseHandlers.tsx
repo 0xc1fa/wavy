@@ -250,9 +250,8 @@ export default function usePianoRollMouseHandlers() {
       return;
     }
     event.preventDefault();
-    // TODO: change the 800 to adaptive length
     const minScaleX = (800 - 50) / pianoRollStore.laneLength;
-    const multiplier = 0.01;
+    const multiplier = -0.01;
     const newPianoRollScaleX = pianoRollStore.pianoLaneScaleX * (1 + event.deltaY * multiplier);
     dispatch({
       type: "SET_PIANO_LANE_SCALE_X",

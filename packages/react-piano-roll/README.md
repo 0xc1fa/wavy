@@ -16,6 +16,8 @@
 - [ ] turn PianoRoll flex layout to grid layout
 - [ ] fix range selection
 - [ ] Refactor out constants
+- [ ] Add notes boundary as anchor points
+- [ ] New note size reactive to grid size
 
 ## Existing Problems and
 
@@ -24,20 +26,26 @@
 - The scrollable area does not resize upon scaling
 
 ## Performance Refactor
+
 ### Lane Container
+
 #### LaneGrids
+
 - The span of the pianoroll
 - ScaleX
 
 #### Selection
+
 - piano roll note (currently, maybe delete it later)
 - selection tick
 - scaleX
 -
 
 #### Note
+
 - piano roll note
 - scaleX (in the use of function call)
 
 #### Selection Area
-- 
+
+-

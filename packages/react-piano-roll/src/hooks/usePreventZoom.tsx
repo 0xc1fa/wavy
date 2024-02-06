@@ -1,5 +1,21 @@
 import { useEffect } from "react";
 
+const handleWheel = (event: WheelEvent) => {
+  if (event.ctrlKey) {
+    event.preventDefault();
+  }
+};
+
+export function disableZoom() {
+  document.addEventListener("wheel", handleWheel, { passive: false });
+  console.log("disabled zoom");
+}
+
+export function enableZoom() {
+  document.removeEventListener("wheel", handleWheel);
+  console.log("enabled zoom");
+}
+
 function usePreventZoom(scrollCheck = true, keyboardCheck = true) {
   useEffect(() => {
     const handleKeydown = (event: KeyboardEvent) => {
