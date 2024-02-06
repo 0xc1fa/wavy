@@ -1,12 +1,10 @@
 import React, { memo } from "react";
-import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import useTheme from "../../hooks/useTheme";
 import useStore from "../../hooks/useStore";
 import { baseLaneWidth } from "@/constants";
 
 interface LanesBackgroundProps extends React.HTMLAttributes<SVGElement> {}
 function LanesBackground({ ...other }: LanesBackgroundProps) {
-  const transform = usePianoRollTransform();
   const theme = useTheme();
   const { pianoRollStore } = useStore();
 
@@ -41,14 +39,14 @@ function LanesBackground({ ...other }: LanesBackgroundProps) {
 
   const lanes = noteNums.map((noteNumber) => {
     const keyColor = isBlackKey(noteNumber) ? theme.lane.blackLaneColor : theme.lane.whiteLaneColor;
-    const yPosition = transform.canvasHeight - (noteNumber - 1) * baseLaneWidth;
+    const yPosition = pianoRollStore.canvasHeight - (noteNumber - 1) * baseLaneWidth;
 
     return (
       <rect
         key={noteNumber}
         x={0}
         y={yPosition}
-        width={transform.pianoLaneScaleX * pianoRollStore.laneLength}
+        width={pianoRollStore.canvasWidth}
         height={baseLaneWidth}
         fill={keyColor}
       />
@@ -59,7 +57,7 @@ function LanesBackground({ ...other }: LanesBackgroundProps) {
     <div
       style={{
         height: `${pianoRollStore.canvasHeight}px`,
-        width: `${transform.pianoLaneScaleX * pianoRollStore.laneLength}px`,
+        width: `${pianoRollStore.canvasWidth}px`,
         padding: "0px",
       }}
     >

@@ -1,21 +1,21 @@
 import { memo } from "react";
 import useTheme from "../../hooks/useTheme";
-import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import styles from "./index.module.scss";
 import { getGridBaseSeparation, getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
 import { basePixelsPerBeat } from "@/constants";
+import { useStore } from "@/index";
 
 interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {}
 const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
   const theme = useTheme();
-  const { laneLength,  pianoLaneScaleX } = usePianoRollTransform();
+  const { pianoRollStore }= useStore();
 
-  const gridSeparationFactor = getGridSeparationFactor(pianoLaneScaleX);
-  const numberOfGrids = getNumOfGrid(laneLength);
+  const gridSeparationFactor = getGridSeparationFactor(pianoRollStore.pianoLaneScaleX);
+  const numberOfGrids = getNumOfGrid(pianoRollStore.laneLength);
   const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor);
 
   const gridLines = (gridType: "bar" | "quarter" | "quavers") => {
-    const scale = pianoLaneScaleX * gridBaseSeparation[gridType];
+    const scale = pianoRollStore.pianoLaneScaleX * gridBaseSeparation[gridType];
     return [...Array(numberOfGrids[gridType]).keys()]
       .filter((index) => index % gridSeparationFactor[gridType] === 0 || gridType === "quavers")
       .map((index) => <GridLine key={index} x={index * basePixelsPerBeat * scale} color={theme.grid.color[gridType]} />);
@@ -43,9 +43,9 @@ interface GridLineProps {
 }
 
 const GridLine: React.FC<GridLineProps> = ({ x, color }) => {
-  const { canvasHeight } = usePianoRollTransform();
+  const { pianoRollStore } = useStore();
 
-  return <line x1={x} y1={0} x2={x} y2={canvasHeight} stroke={color} strokeWidth="1" />;
+  return <line x1={x} y1={0} x2={x} y2={pianoRollStore.canvasHeight} stroke={color} strokeWidth="1" />;
 };
 
 export default memo(LaneGrids);

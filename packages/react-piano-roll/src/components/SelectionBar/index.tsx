@@ -1,14 +1,14 @@
 import { getGridBaseSeparation, getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
-import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import styles from "./index.module.scss";
 import { basePixelsPerBeat } from "@/constants";
+import { useStore } from "@/index";
 
 interface RulerProps extends React.HTMLAttributes<SVGElement> {}
 export default function SelectionBar({ ...other }: RulerProps) {
-  const { laneLength, pianoLaneScaleX } = usePianoRollTransform();
+  const { pianoRollStore } = useStore();
 
-  const numberOfGrids = getNumOfGrid(laneLength);
-  const gridSeparationFactor = getGridSeparationFactor(pianoLaneScaleX);
+  const numberOfGrids = getNumOfGrid(pianoRollStore.laneLength);
+  const gridSeparationFactor = getGridSeparationFactor(pianoRollStore.pianoLaneScaleX);
   const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor);
   const rulerHeight = 30;
   const markeraHeight = {
@@ -18,7 +18,7 @@ export default function SelectionBar({ ...other }: RulerProps) {
   };
 
   const markers = (gridType: "bar" | "halfBar" | "quarter") => {
-    const scale = pianoLaneScaleX * gridBaseSeparation[gridType];
+    const scale = pianoRollStore.pianoLaneScaleX * gridBaseSeparation[gridType];
     return [...Array(numberOfGrids[gridType]).keys()]
       .filter((index) => index % gridSeparationFactor[gridType] === 0)
       .map((index) => (

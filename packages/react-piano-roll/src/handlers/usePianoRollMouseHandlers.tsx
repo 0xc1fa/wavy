@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { focusNote } from "../helpers/notes";
-import { usePianoRollTransform } from "../hooks/usePianoRollTransform";
 import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
@@ -37,7 +36,6 @@ export type NotesModificationBuffer = {
 
 export default function usePianoRollMouseHandlers() {
   const { pianoRollStore } = useStore();
-  const transform = usePianoRollTransform();
   const dispatch = usePianoRollDispatch();
 
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None);
@@ -257,7 +255,7 @@ export default function usePianoRollMouseHandlers() {
     // TODO: change the 800 to adaptive length
     const minScaleX = (800 - 50) / pianoRollStore.laneLength;
     const multiplier = 0.01;
-    const newPianoRollScaleX = transform.pianoLaneScaleX * (1 + event.deltaY * multiplier);
+    const newPianoRollScaleX = pianoRollStore.pianoLaneScaleX * (1 + event.deltaY * multiplier);
     dispatch({
       type: "SET_PIANO_LANE_SCALE_X",
       payload: { pianoLaneScaleX: Math.max(minScaleX, newPianoRollScaleX) },

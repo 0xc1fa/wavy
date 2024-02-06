@@ -54,7 +54,7 @@ const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
     );
   };
 
-  const { laneLength, canvasHeight } = pianoRollStore;
+  const { canvasWidth, canvasHeight } = pianoRollStore;
 
   // Extract needed values from the note and store
   const noteStartingX = pianoRollStore.getOffsetXFromTick(note.tick);
@@ -65,7 +65,7 @@ const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
   return (
     <svg
       aria-label="piano-roll-pitch-curve"
-      width={laneLength}
+      width={canvasWidth}
       height={canvasHeight}
       style={{ position: "absolute" }}
       {...other}

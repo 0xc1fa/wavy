@@ -1,22 +1,21 @@
 import { Fragment, memo } from "react";
-import useTheme from "../../hooks/useTheme";
-import { usePianoRollTransform } from "../../hooks/usePianoRollTransform";
 import styles from "./index.module.scss";
 import { getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
 import { basePixelsPerBeat } from "@/constants";
+import { useStore } from "@/index";
 
 interface RulerProps extends React.HTMLAttributes<SVGElement> {}
 
 const Ruler: React.FC<RulerProps> = ({ ...other }) => {
-  const { laneLength, pianoLaneScaleX } = usePianoRollTransform();
+  const { pianoRollStore } = useStore();
 
-  const numberOfMarkers = getNumOfGrid(laneLength);
-  const gridSeparationFactor = getGridSeparationFactor(pianoLaneScaleX);
+  const numberOfMarkers = getNumOfGrid(pianoRollStore.laneLength);
+  const gridSeparationFactor = getGridSeparationFactor(pianoRollStore.pianoLaneScaleX);
 
   const barMarkers = [...Array(numberOfMarkers.bar).keys()]
     .filter((index) => index % gridSeparationFactor.bar === 0)
     .map((index) => (
-      <RulerMarker key={index} x={index * basePixelsPerBeat * pianoLaneScaleX * 4}>
+      <RulerMarker key={index} x={index * basePixelsPerBeat * pianoRollStore.pianoLaneScaleX * 4}>
         {index + 1}
       </RulerMarker>
     ));
