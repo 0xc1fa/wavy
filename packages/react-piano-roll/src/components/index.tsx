@@ -16,7 +16,7 @@ import usePianoRollKeyboardHandlers from "../handlers/usePianoRollKeyboardHandle
 import TempoInfo from "./TempoInfo";
 import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import Selections from "./Selections";
-import { CSSProperties, KeyboardEvent, useEffect, useLayoutEffect, useRef } from "react";
+import { CSSProperties, KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import VelocityEditor from "./VelocityEditor";
 import SelectionBar from "./SelectionBar";
@@ -119,24 +119,14 @@ function useScrollToNote(containerRef: React.RefObject<HTMLElement>, initialScro
   if (initialScrollMiddleNote < 0 || initialScrollMiddleNote > 127) {
     initialScrollMiddleNote = 60;
   }
+  const [scrolled, setScrolled] = useState(false);
   useLayoutEffect(() => {
-    if (!containerRef) {
+    if (scrolled || !containerRef.current) {
       return;
     }
-    const containerHeight = containerRef.current?.offsetHeight;
-    const c4KeyElement = document.querySelector(`[data-keynum="${initialScrollMiddleNote}"]`) as HTMLDivElement;
-    const c4KeyTop = c4KeyElement.getBoundingClientRect().top;
-    console.log(containerHeight);
-    console.log(c4KeyTop);
-
-    // Thanks to strict mode rendering twice, we need to prevent the second scrolling which reset it to top
-    // if (c4KeyTop > 300) {
-    //   console.log("scroll2")
-
-    // }
-    // containerRef.current?.scrollTo(0, c4KeyTop - containerHeight! / 2);
-
-    // TODO: fix this
-    containerRef.current?.scrollTo(0, 1438);
+    const keyElement = document.querySelector(`[data-keynum="${initialScrollMiddleNote}"]`) as HTMLDivElement;
+    const keyTop = keyElement.getBoundingClientRect().top;
+    containerRef.current?.scrollBy(0, keyTop);
+    setScrolled(true);
   }, [containerRef]);
 }
