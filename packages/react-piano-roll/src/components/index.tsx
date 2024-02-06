@@ -15,12 +15,12 @@ import usePianoRollKeyboardHandlers from "../handlers/usePianoRollKeyboardHandle
 import TempoInfo from "./TempoInfo";
 import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import Selections from "./Selections";
-import { KeyboardEvent, useEffect, useRef } from "react";
+import { CSSProperties, KeyboardEvent, useEffect, useRef } from "react";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import VelocityEditor from "./VelocityEditor";
 import SelectionBar from "./SelectionBar";
 
-interface PianoRollProps extends React.HTMLAttributes<HTMLDivElement> {
+interface PianoRollProps {
   playheadPosition?: number;
   attachLyric?: boolean;
   initialScrollMiddleNote?: number;
@@ -30,17 +30,16 @@ interface PianoRollProps extends React.HTMLAttributes<HTMLDivElement> {
   onNoteSelect?: (notes: TrackNoteEvent[]) => void;
   staringTick?: number;
   endingTick?: number;
-  width?: number;
-  height?: number;
+  style?: CSSProperties;
 }
 export default function PianoRoll({
   playheadPosition,
   attachLyric = false,
   initialScrollMiddleNote = 60,
   onSpace,
-  width = 800,
-  height = 600,
-  staringTick = 200, endingTick = 480 * 4 * 8
+  style,
+  staringTick = 200,
+  endingTick = 480 * 4 * 8,
 }: PianoRollProps) {
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const pianoRollKeyboardHandlers = usePianoRollKeyboardHandlers();
@@ -54,8 +53,8 @@ export default function PianoRoll({
   useScrollToNote(containerRef, initialScrollMiddleNote);
 
   useEffect(() => {
-    dispatch({ type: 'SET_CLIP_SPAN' , payload: { startingTick: staringTick, endingTick: endingTick } })
-  }, [])
+    dispatch({ type: "SET_CLIP_SPAN", payload: { startingTick: staringTick, endingTick: endingTick } });
+  }, []);
 
   return (
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
@@ -64,11 +63,9 @@ export default function PianoRoll({
         ref={containerRef}
         style={
           {
-            "--lane-length": `${pianoRollStore.laneLength}px`,
             "--canvas-width": `${pianoRollStore.laneLength * pianoRollStore.pianoLaneScaleX}px`,
             "--canvas-height": `${pianoRollStore.canvasHeight}px`,
-            "--width": `${width}px`,
-            "--height": `${height}px`,
+            ...style,
           } as React.CSSProperties
         }
         tabIndex={0}
@@ -122,7 +119,6 @@ function useScrollToNote(containerRef: React.RefObject<HTMLElement>, initialScro
     if (!containerRef) {
       return;
     }
-    console.log("scroll1");
     const containerHeight = containerRef.current?.offsetHeight;
     const c4KeyElement = document.querySelector(`[data-keynum="${initialScrollMiddleNote}"]`) as HTMLDivElement;
     const c4KeyTop = c4KeyElement.getBoundingClientRect().top;

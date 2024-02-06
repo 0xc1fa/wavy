@@ -4,10 +4,10 @@
 
   position: relative;
   overflow: scroll;
-
-  width: var(--width);
-  height: var(--height);
+  box-sizing: border-box;
   user-select: none;
+  max-width: 100%;
+  max-height: 100%;
   -ms-overflow-style: none;
   scrollbar-width: none;
   background-color: var(--black);

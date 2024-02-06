@@ -3,7 +3,9 @@ import { PianoRoll } from "react-piano-roll";
 function App() {
   return (
     <>
-      <PianoRoll attachLyric />
+      <div style={{ width: "800px", height: "600px", boxSizing: "border-box" }}>
+        <PianoRoll attachLyric />
+      </div>
     </>
   );
 }
