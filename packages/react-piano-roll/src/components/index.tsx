@@ -56,10 +56,6 @@ export default function PianoRoll({
   const dispatch = usePianoRollDispatch();
   useScrollToNote(containerRef, initialScrollMiddleNote);
 
-  // useEffect(() => {
-  //   dispatch({ type: "SET_CLIP_SPAN", payload: { startingTick: staringTick, endingTick: endingTick } });
-  // }, []);
-
   return (
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
       <div
@@ -116,17 +112,15 @@ export default function PianoRoll({
 }
 
 function useScrollToNote(containerRef: React.RefObject<HTMLElement>, initialScrollMiddleNote: number) {
-  if (initialScrollMiddleNote < 0 || initialScrollMiddleNote > 127) {
-    initialScrollMiddleNote = 60;
-  }
-  const [scrolled, setScrolled] = useState(false);
+  // const [scrolled, setScrolled] = useState(false);
+  const scrolled = useRef(false);
   useLayoutEffect(() => {
-    if (scrolled || !containerRef.current) {
+    if (scrolled.current) {
       return;
     }
     const keyElement = document.querySelector(`[data-keynum="${initialScrollMiddleNote}"]`) as HTMLDivElement;
     const keyTop = keyElement.getBoundingClientRect().top;
     containerRef.current?.scrollBy(0, keyTop);
-    setScrolled(true);
-  }, [containerRef]);
+    scrolled.current = true;
+  }, []);
 }
