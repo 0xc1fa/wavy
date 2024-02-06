@@ -14,7 +14,6 @@ import Notes from "./Notes";
 import Playhead from "./Playhead";
 import usePianoRollKeyboardHandlers from "../handlers/usePianoRollKeyboardHandlers";
 import TempoInfo from "./TempoInfo";
-import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import Selections from "./Selections";
 import { CSSProperties, KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
@@ -53,7 +52,6 @@ export default function PianoRoll({
   // });
 
   usePreventZoom();
-  const dispatch = usePianoRollDispatch();
   useScrollToNote(containerRef, initialScrollMiddleNote);
 
   return (

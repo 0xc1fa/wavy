@@ -1,7 +1,7 @@
 import { TrackNoteEvent } from "@/types";
 import { PianoRollStoreAction } from "@/store/pianoRollStore";
-import { usePianoRollDispatch } from "./usePianoRollDispatch";
 import { usePianoRollNotes } from "@/helpers/notes";
+import { useStore } from "..";
 
 function setSelectedNotesAsLegato(notes: TrackNoteEvent[], dispatch: React.Dispatch<PianoRollStoreAction>) {
   let selectedNote = notes.filter((note) => note.isSelected).sort((a, b) => a.tick - b.tick);
@@ -13,7 +13,7 @@ function setSelectedNotesAsLegato(notes: TrackNoteEvent[], dispatch: React.Dispa
 
 export function useNoteModification() {
   const pianoRollNote = usePianoRollNotes();
-  const dispatch = usePianoRollDispatch();
+  const { dispatch } = useStore();
 
   return {
     setSelectedNotesAsLegato: () => setSelectedNotesAsLegato(pianoRollNote, dispatch),

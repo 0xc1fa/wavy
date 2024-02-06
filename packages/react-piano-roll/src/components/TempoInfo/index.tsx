@@ -1,11 +1,9 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { usePianoRollDispatch } from "../../hooks/usePianoRollDispatch";
 import useStore from "../../hooks/useStore";
 import styles from "./index.module.scss";
 
 export default function TempoInfo() {
-  const { pianoRollStore } = useStore();
-  const dispatch = usePianoRollDispatch();
+  const { pianoRollStore, dispatch } = useStore();
 
   const [isDragging, setIsDragging] = useState(false);
   const [inintialY, setInitialY] = useState(0);

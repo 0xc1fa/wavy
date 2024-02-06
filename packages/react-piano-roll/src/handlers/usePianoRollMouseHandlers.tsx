@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { focusNote } from "../helpers/notes";
-import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import _ from "lodash";
@@ -35,8 +34,7 @@ export type NotesModificationBuffer = {
 };
 
 export default function usePianoRollMouseHandlers() {
-  const { pianoRollStore } = useStore();
-  const dispatch = usePianoRollDispatch();
+  const { pianoRollStore, dispatch } = useStore();
 
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None);
   const [startingPosition, setStartingPosition] = useState({ x: 0, y: 0 });

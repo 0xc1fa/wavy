@@ -1,5 +1,4 @@
 import { useEffect, useReducer, useRef, useState } from "react";
-import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import {
@@ -42,8 +41,7 @@ function clipboardReducer(state: Clipboard, action: ClipboardAction) {
 }
 
 export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.KeyboardEvent) => void) {
-  const dispatch = usePianoRollDispatch();
-  const { pianoRollStore } = useStore();
+  const { pianoRollStore, dispatch } = useStore();
   const pianoRollNotes = usePianoRollNotes();
   const [clipboard, clipboardDispatch] = useReducer(clipboardReducer, {
     notes: [],

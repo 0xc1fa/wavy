@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import useStore from "../hooks/useStore";
 
 enum VelocityEditorMouseHandlerMode {
@@ -11,8 +10,7 @@ enum VelocityEditorMouseHandlerMode {
 export default function useVelocityEditorMouseHandlers() {
   const [isDragging, setIsDragging] = useState(false);
   const [mouseHandlerMode, setMouseHandlerMode] = useState(VelocityEditorMouseHandlerMode.Pencil);
-  const dispatch = usePianoRollDispatch();
-  const { pianoRollStore } = useStore();
+  const { pianoRollStore, dispatch } = useStore();
 
   const onPointerDown: React.PointerEventHandler = (event) => {
     const containerHeight = event.currentTarget.clientHeight;
