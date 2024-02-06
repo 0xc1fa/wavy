@@ -1,3 +1,4 @@
+"use client";
 import LaneGrids from "./LaneGrids";
 import { defaultPianoRollTheme } from "@/store/pianoRollTheme";
 import PianoRollThemeContext from "../contexts/piano-roll-theme-context";
@@ -15,7 +16,7 @@ import usePianoRollKeyboardHandlers from "../handlers/usePianoRollKeyboardHandle
 import TempoInfo from "./TempoInfo";
 import { usePianoRollDispatch } from "../hooks/usePianoRollDispatch";
 import Selections from "./Selections";
-import { CSSProperties, KeyboardEvent, useEffect, useRef } from "react";
+import { CSSProperties, KeyboardEvent, useEffect, useLayoutEffect, useRef } from "react";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import VelocityEditor from "./VelocityEditor";
 import SelectionBar from "./SelectionBar";
@@ -46,15 +47,18 @@ export default function PianoRoll({
   const { pianoRollStore } = useStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const minScaleX = (800 - 50) / pianoRollStore.laneLength;
+
+  // useLayoutEffect(() => {
+  //   dispatch({ type: "SET_CLIP_SPAN", payload: { startingTick: staringTick, endingTick: endingTick } });
+  // });
 
   usePreventZoom();
   const dispatch = usePianoRollDispatch();
   useScrollToNote(containerRef, initialScrollMiddleNote);
 
-  useEffect(() => {
-    dispatch({ type: "SET_CLIP_SPAN", payload: { startingTick: staringTick, endingTick: endingTick } });
-  }, []);
+  // useEffect(() => {
+  //   dispatch({ type: "SET_CLIP_SPAN", payload: { startingTick: staringTick, endingTick: endingTick } });
+  // }, []);
 
   return (
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
@@ -115,7 +119,7 @@ function useScrollToNote(containerRef: React.RefObject<HTMLElement>, initialScro
   if (initialScrollMiddleNote < 0 || initialScrollMiddleNote > 127) {
     initialScrollMiddleNote = 60;
   }
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!containerRef) {
       return;
     }
