@@ -1,7 +1,8 @@
-import { baseBlackKeyLength, baseKeyWidth, baseLaneWidth, basePixelsPerBeat, baseWhiteKeyWidth, ticksPerBeat } from "@/constants";
+import { baseBlackKeyLength, baseKeyWidth, baseLaneWidth, basePixelsPerBeat, baseWhiteKeyWidth, draggableBoundaryPixel, ticksPerBeat } from "@/constants";
 import { PianoRollRange } from "@/interfaces/piano-roll-range";
 import { TrackNoteEvent } from "@/types";
 import { isBlackKey } from ".";
+import { Offset } from "@/interfaces/offset";
 
 export function getBeatFromOffsetX(offsetX: number, scaleX: number) {
   return offsetX / (scaleX * basePixelsPerBeat);
@@ -114,4 +115,19 @@ export function getTickFromEvent(scaleX: number, e: PointerEvent | MouseEvent): 
 
 export function roundDownTickToNearestGrid(tick: number) {
   return tick - (tick % ticksPerBeat);
+}
+
+export function isNoteLeftMarginClicked(numOfKeys: number, scaleX: number, note: TrackNoteEvent, offset: Offset) {
+  if (Array.isArray(offset)) {
+    offset = { x: offset[0], y: offset[1] };
+  }
+  if (
+    getNoteNumFromOffsetY(numOfKeys, offset.y) == note.noteNumber &&
+    offset.x >= getOffsetXFromTick(scaleX, note.tick) &&
+    offset.x <= getOffsetXFromTick(scaleX, note.tick) + draggableBoundaryPixel
+  ) {
+    return true;
+  } else {
+    return false;
+  }
 }

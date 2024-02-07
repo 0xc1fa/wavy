@@ -4,7 +4,16 @@ import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import _ from "lodash";
 import { getGridOffsetOfTick, getNearestAnchor, getNearestGridTick, getTickInGrid } from "@/helpers/grid";
-import { getNoteFromEvent, getNoteFromPosition, getNoteNumFromEvent, getNoteNumFromOffsetY, getTickFromEvent, getTickFromOffsetX, roundDownTickToNearestGrid } from "@/helpers/conversion";
+import {
+  getNoteFromEvent,
+  getNoteFromPosition,
+  getNoteNumFromEvent,
+  getNoteNumFromOffsetY,
+  getTickFromEvent,
+  getTickFromOffsetX,
+  isNoteLeftMarginClicked,
+  roundDownTickToNearestGrid,
+} from "@/helpers/conversion";
 import { useConfig } from "@/components";
 
 export enum PianoRollLanesMouseHandlerMode {
@@ -278,7 +287,10 @@ export default function usePianoRollMouseHandlers() {
     ]);
     const isBoundaryHovered =
       noteHovered &&
-      (pianoRollStore.isNoteLeftMarginClicked(noteHovered, e.offsetX, e.offsetY) ||
+      (isNoteLeftMarginClicked(numOfKeys, pianoRollStore.pianoLaneScaleX, noteHovered, {
+        x: e.offsetX,
+        y: e.offsetY,
+      }) ||
         pianoRollStore.isNoteRightMarginClicked(noteHovered, e.offsetX, e.offsetY));
     target.style.cursor = isBoundaryHovered ? "col-resize" : "default";
   };
@@ -290,7 +302,12 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const setMouseHandlerModeForNote = (event: React.PointerEvent<Element>, noteClicked: TrackNoteEvent) => {
-    if (pianoRollStore.isNoteLeftMarginClicked(noteClicked!, event.nativeEvent.offsetX, event.nativeEvent.offsetY)) {
+    if (
+      isNoteLeftMarginClicked(numOfKeys, pianoRollStore.pianoLaneScaleX, noteClicked!, {
+        x: event.nativeEvent.offsetX,
+        y: event.nativeEvent.offsetY,
+      })
+    ) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesTrimming);
     } else if (
       pianoRollStore.isNoteRightMarginClicked(noteClicked!, event.nativeEvent.offsetX, event.nativeEvent.offsetY)

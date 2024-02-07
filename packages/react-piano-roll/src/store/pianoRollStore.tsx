@@ -165,17 +165,6 @@ function defaultPianoRollStore() {
     get canvasHeight() {
       return baseLaneWidth * this.numOfKeys;
     },
-    isNoteLeftMarginClicked(note: TrackNoteEvent, offsetX: number, offsetY: number) {
-      if (
-        getNoteNumFromOffsetY(this.numOfKeys, offsetY) == note.noteNumber &&
-        offsetX >= getOffsetXFromTick(this.pianoLaneScaleX, note.tick) &&
-        offsetX <= getOffsetXFromTick(this.pianoLaneScaleX, note.tick) + draggableBoundaryPixel
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    },
 
     isNoteRightMarginClicked(note: TrackNoteEvent, offsetX: number, offsetY: number) {
       if (
