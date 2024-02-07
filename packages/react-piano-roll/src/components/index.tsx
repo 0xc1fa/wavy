@@ -39,11 +39,25 @@ function PianoRoll({
   useScrollToNote(containerRef, initialScrollMiddleNote);
   const { scaleX } = useScaleX();
 
+  const offsetX = useRef(0);
+
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      offsetX.current = event.offsetX;
+    };
+    containerRef.current?.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      containerRef.current?.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
   const prevScaleX = useRef(scaleX);
   useLayoutEffect(() => {
     const scaleDifference = scaleX / prevScaleX.current;
-    const scrollLeft = containerRef.current!.scrollLeft + 0.5;
-    containerRef.current!.scrollTo(scrollLeft * scaleDifference, 0);
+    containerRef.current!.dispatchEvent(new MouseEvent("mousemove", { clientX: (containerRef.current!.getBoundingClientRect().left + 0.5 + offsetX.current * scaleDifference) }));
+    const scrollLeft = containerRef.current!.scrollLeft + 0.5
+    const realOffsetX = offsetX.current - scrollLeft - 0.5;
+    containerRef.current!.scrollTo((scrollLeft + realOffsetX) * scaleDifference - realOffsetX, 0);
     prevScaleX.current = scaleX;
   }, [scaleX]);
 
