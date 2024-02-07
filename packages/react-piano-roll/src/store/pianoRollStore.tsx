@@ -165,41 +165,5 @@ function defaultPianoRollStore() {
     get canvasHeight() {
       return baseLaneWidth * this.numOfKeys;
     },
-
-    // isNoteRightMarginClicked(note: TrackNoteEvent, offsetX: number, offsetY: number) {
-    //   if (
-    //     getNoteNumFromOffsetY(this.numOfKeys, offsetY) == note.noteNumber &&
-    //     offsetX <= getOffsetXFromTick(this.pianoLaneScaleX, note.tick + note.duration) &&
-    //     offsetX >= getOffsetXFromTick(this.pianoLaneScaleX, note.tick + note.duration) - draggableBoundaryPixel
-    //   ) {
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
-    // },
-
-    inMarquee(
-      note: TrackNoteEvent,
-      marquee: {
-        startingPosition: { x: number; y: number };
-        ongoingPosition: { x: number; y: number };
-      },
-    ) {
-      const [selectedMinNoteNum, selectedMaxNoteNum] = [
-        getNoteNumFromOffsetY(this.numOfKeys, marquee.startingPosition.y),
-        getNoteNumFromOffsetY(this.numOfKeys, marquee.ongoingPosition.y),
-      ].sort((a, b) => a - b);
-      const [selectedMinTick, selectedMaxTick] = [
-        getTickFromOffsetX(marquee.startingPosition.x, this.pianoLaneScaleX),
-        getTickFromOffsetX(marquee.ongoingPosition.x, this.pianoLaneScaleX),
-      ].sort((a, b) => a - b);
-
-      return (
-        note.noteNumber >= selectedMinNoteNum &&
-        note.noteNumber <= selectedMaxNoteNum &&
-        note.tick + note.duration >= selectedMinTick &&
-        note.tick <= selectedMaxTick
-      );
-    },
   };
 }

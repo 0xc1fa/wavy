@@ -11,6 +11,7 @@ import {
   getNoteNumFromOffsetY,
   getTickFromEvent,
   getTickFromOffsetX,
+  inMarquee,
   isNoteLeftMarginClicked,
   isNoteRightMarginClicked,
   roundDownTickToNearestGrid,
@@ -224,7 +225,10 @@ export default function usePianoRollMouseHandlers() {
           payload: {
             notes: bufferedNotes.map((note) => ({
               ...note,
-              isSelected: pianoRollStore.inMarquee(note, { startingPosition, ongoingPosition })
+              isSelected: inMarquee(numOfKeys, pianoRollStore.pianoLaneScaleX, note, {
+                startingPosition,
+                ongoingPosition,
+              })
                 ? !note.isSelected
                 : note.isSelected,
             })),
@@ -292,7 +296,10 @@ export default function usePianoRollMouseHandlers() {
         x: e.offsetX,
         y: e.offsetY,
       }) ||
-        isNoteRightMarginClicked(numOfKeys, pianoRollStore.pianoLaneScaleX, noteHovered, { x: e.offsetX, y: e.offsetY}));
+        isNoteRightMarginClicked(numOfKeys, pianoRollStore.pianoLaneScaleX, noteHovered, {
+          x: e.offsetX,
+          y: e.offsetY,
+        }));
     target.style.cursor = isBoundaryHovered ? "col-resize" : "default";
   };
 
@@ -311,7 +318,10 @@ export default function usePianoRollMouseHandlers() {
     ) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesTrimming);
     } else if (
-      isNoteRightMarginClicked(numOfKeys, pianoRollStore.pianoLaneScaleX, noteClicked!, [event.nativeEvent.offsetX, event.nativeEvent.offsetY])
+      isNoteRightMarginClicked(numOfKeys, pianoRollStore.pianoLaneScaleX, noteClicked!, [
+        event.nativeEvent.offsetX,
+        event.nativeEvent.offsetY,
+      ])
     ) {
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick + noteClicked.duration } });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesExtending);

@@ -142,3 +142,29 @@ export function isNoteRightMarginClicked(numOfKeys: number, scaleX: number, note
     return false;
   }
 }
+
+export function inMarquee(
+  numOfKeys: number,
+  scaleX: number,
+  note: TrackNoteEvent,
+  marquee: {
+    startingPosition: { x: number; y: number };
+    ongoingPosition: { x: number; y: number };
+  },
+) {
+  const [selectedMinNoteNum, selectedMaxNoteNum] = [
+    getNoteNumFromOffsetY(numOfKeys, marquee.startingPosition.y),
+    getNoteNumFromOffsetY(numOfKeys, marquee.ongoingPosition.y),
+  ].sort((a, b) => a - b);
+  const [selectedMinTick, selectedMaxTick] = [
+    getTickFromOffsetX(marquee.startingPosition.x, scaleX),
+    getTickFromOffsetX(marquee.ongoingPosition.x, scaleX),
+  ].sort((a, b) => a - b);
+
+  return (
+    note.noteNumber >= selectedMinNoteNum &&
+    note.noteNumber <= selectedMaxNoteNum &&
+    note.tick + note.duration >= selectedMinTick &&
+    note.tick <= selectedMaxTick
+  );
+}
