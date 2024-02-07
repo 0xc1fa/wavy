@@ -112,3 +112,6 @@ export function getTickFromEvent(scaleX: number, e: PointerEvent | MouseEvent): 
   return getTickFromOffsetX(e.offsetX, scaleX);
 }
 
+export function roundDownTickToNearestGrid(tick: number) {
+  return tick - (tick % ticksPerBeat);
+}

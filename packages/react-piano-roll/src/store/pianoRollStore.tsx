@@ -165,11 +165,6 @@ function defaultPianoRollStore() {
     get canvasHeight() {
       return baseLaneWidth * this.numOfKeys;
     },
-
-    roundDownTickToNearestGrid(tick: number) {
-      return tick - (tick % ticksPerBeat);
-    },
-
     isNoteLeftMarginClicked(note: TrackNoteEvent, offsetX: number, offsetY: number) {
       if (
         getNoteNumFromOffsetY(this.numOfKeys, offsetY) == note.noteNumber &&
