@@ -59,15 +59,15 @@ const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
   };
 
   // Extract needed values from the note and store
-  const noteStartingX = getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick);
-  const noteEndingX = getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick + note.duration);
-  const noteVibratoStartX = getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick + note.vibratoDelay);
+  const noteStartingX = getOffsetXFromTick(pianoRollStore.scaleX, note.tick);
+  const noteEndingX = getOffsetXFromTick(pianoRollStore.scaleX, note.tick + note.duration);
+  const noteVibratoStartX = getOffsetXFromTick(pianoRollStore.scaleX, note.tick + note.vibratoDelay);
   const noteCenterY = getCenterYFromNoteNum(numOfKeys, note.noteNumber);
 
   return (
     <svg
       aria-label="piano-roll-pitch-curve"
-      width={baseCanvasWidth(tickRange) * pianoRollStore.pianoLaneScaleX}
+      width={baseCanvasWidth(tickRange) * pianoRollStore.scaleX}
       height={baseCanvasHeight(numOfKeys)}
       style={{ position: "absolute" }}
       {...other}

@@ -7,18 +7,19 @@ import Notes from "@/components/Notes";
 import SelectionArea from "@/components/SelectionMarquee";
 import Playhead from "@/components/Playhead";
 import LanesBackground from "@/components/LanesBackground";
+import { useStore } from "@/index";
 
 type Props = {
   attachLyric: boolean;
   playheadPosition: number | undefined;
 };
 const MiddleRightSection: React.FC<Props> = (props) => {
-  // const { pianoLaneScaleX}
+  const { pianoRollStore } = useStore();
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const pianoRollKeyboardHandlers = usePianoRollKeyboardHandlers();
   return (
     <div className={styles["pianoroll-lane"]} {...pianoRollMouseHandlers} tabIndex={0} {...pianoRollKeyboardHandlers}>
-      <LaneGrids scaleX={1}/>
+      <LaneGrids scaleX={pianoRollStore.scaleX} />
       <Selections />
       <Notes attachLyric={props.attachLyric} />
       <SelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />

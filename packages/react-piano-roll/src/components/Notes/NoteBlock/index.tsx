@@ -24,8 +24,8 @@ function NoteBlock({ note, ...other }: NoteBlockProps) {
         {
           "--saturation": `${0.2 + (note.velocity / 127) * 0.8}`,
           "--top": `${getMinYFromNoteNum(numOfKeys, note.noteNumber)}px`,
-          "--left": `${getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick)}px`,
-          "--note-width": `${getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.duration)}px`,
+          "--left": `${getOffsetXFromTick(pianoRollStore.scaleX, note.tick)}px`,
+          "--note-width": `${getOffsetXFromTick(pianoRollStore.scaleX, note.duration)}px`,
           "--note-height": `${baseLaneWidth}px`,
           "--background": note.isSelected ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
           "--border-color": note.isSelected ? theme.note.noteBorderColor : theme.note.noteBorderColor,

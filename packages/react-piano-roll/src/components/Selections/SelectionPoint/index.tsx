@@ -7,7 +7,7 @@ import { useConfig } from "@/contexts/PianoRollConfigProvider";
 export default function SelectionPoint() {
   const { pianoRollStore } = useStore();
   const { numOfKeys } = useConfig().pitchRange;
-  const x = pianoRollStore.selectionTicks * basePixelsPerTick * pianoRollStore.pianoLaneScaleX;
+  const x = pianoRollStore.selectionTicks * basePixelsPerTick * pianoRollStore.scaleX;
 
   return (
     <svg

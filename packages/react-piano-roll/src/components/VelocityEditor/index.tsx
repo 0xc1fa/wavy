@@ -62,7 +62,7 @@ export default function VelocityEditor() {
           <VelocityRuler height={containerHeight} />
         </div>
         <div className={styles["right-container"]}>
-          <LaneGrids />
+          <LaneGrids scaleX={pianoRollStore.scaleX} />
           <div className={styles["note-bar-container"]} {...mouseHandlers}>
             {notes.map((note) => (
               <div
@@ -70,9 +70,9 @@ export default function VelocityEditor() {
                 className={styles["marker-container"]}
                 style={
                   {
-                    "--marker-left": `${getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick)}px`,
+                    "--marker-left": `${getOffsetXFromTick(pianoRollStore.scaleX, note.tick)}px`,
                     "--marker-top": `${1 - note.velocity / 128}`,
-                    "--marker-width": `${getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.duration)}px`,
+                    "--marker-width": `${getOffsetXFromTick(pianoRollStore.scaleX, note.duration)}px`,
                     "--marker-color": note.isSelected ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
                     "--cursor": isDragging ? "grabbing" : "grab",
                   } as React.CSSProperties

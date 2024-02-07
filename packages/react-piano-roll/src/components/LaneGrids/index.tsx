@@ -1,26 +1,24 @@
 import { memo } from "react";
-import useTheme from "../../hooks/useTheme";
+import useTheme from "@/hooks/useTheme";
 import styles from "./index.module.scss";
 import { getGridBaseSeparation, getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
 import { basePixelsPerBeat } from "@/constants";
-import useStore from "@/hooks/useStore";
 import { baseCanvasWidth } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
 interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {
-  scaleX?: number;
+  scaleX: number;
 }
-const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
+const LaneGrids: React.FC<LaneGridsProps> = ({ scaleX }) => {
   const theme = useTheme();
-  const { pianoRollStore } = useStore();
   const { tickRange } = useConfig();
 
-  const gridSeparationFactor = getGridSeparationFactor(pianoRollStore.pianoLaneScaleX);
+  const gridSeparationFactor = getGridSeparationFactor(scaleX);
   const numberOfGrids = getNumOfGrid(baseCanvasWidth(tickRange));
   const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor);
 
   const gridLines = (gridType: "bar" | "quarter" | "quavers") => {
-    const scale = pianoRollStore.pianoLaneScaleX * gridBaseSeparation[gridType];
+    const scale = scaleX * gridBaseSeparation[gridType];
     return [...Array(numberOfGrids[gridType]).keys()]
       .filter((index) => index % gridSeparationFactor[gridType] === 0 || gridType === "quavers")
       .map((index) => (
@@ -29,14 +27,7 @@ const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
   };
 
   return (
-    <svg
-      className={styles["grid"]}
-      aria-label="pianoroll-grids"
-      width="100%"
-      height="100%"
-      preserveAspectRatio="none"
-      {...other}
-    >
+    <svg className={styles["grid"]} aria-label="pianoroll-grids" width="100%" height="100%" preserveAspectRatio="none">
       {gridSeparationFactor.quavers !== 1 ? gridLines("quavers") : []}
       {gridLines("quarter")}
       {gridLines("bar")}

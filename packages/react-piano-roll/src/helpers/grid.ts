@@ -14,11 +14,11 @@ export function getNumOfGrid(baseCanvasWidth: number) {
   };
 }
 
-export function getGridSeparationFactor(pianoLaneScaleX: number) {
-  const barGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (pianoLaneScaleX * basePixelsPerBeat * 4));
-  const halfBarGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (pianoLaneScaleX * basePixelsPerBeat * 2));
-  const quarterGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (pianoLaneScaleX * basePixelsPerBeat));
-  const quaversGridSeparationFactor = floorToNearestPowerOfTwo((pianoLaneScaleX * basePixelsPerBeat) / minGridPixel);
+export function getGridSeparationFactor(scaleX: number) {
+  const barGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (scaleX * basePixelsPerBeat * 4));
+  const halfBarGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (scaleX * basePixelsPerBeat * 2));
+  const quarterGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (scaleX * basePixelsPerBeat));
+  const quaversGridSeparationFactor = floorToNearestPowerOfTwo((scaleX * basePixelsPerBeat) / minGridPixel);
   return {
     bar: barGridSeparationFactor,
     halfBar: halfBarGridSeparationFactor,
@@ -36,8 +36,8 @@ export function getGridBaseSeparation(gridSeparationFactor: ReturnType<typeof ge
   };
 }
 
-export function getTickInGrid(pianoLaneScaleX: number) {
-  let pixelsPerBeat = basePixelsPerBeat * pianoLaneScaleX;
+export function getTickInGrid(scaleX: number) {
+  let pixelsPerBeat = basePixelsPerBeat * scaleX;
   let ticksInGrid = ticksPerBeat;
   if (pixelsPerBeat < minGridPixel) {
     while (pixelsPerBeat < minGridPixel) {
@@ -53,8 +53,8 @@ export function getTickInGrid(pianoLaneScaleX: number) {
   return ticksInGrid;
 }
 
-export function getNearestGridTick(ticks: number, pianoLaneScaleX: number) {
-  const ticksInGrid = getTickInGrid(pianoLaneScaleX);
+export function getNearestGridTick(ticks: number, scaleX: number) {
+  const ticksInGrid = getTickInGrid(scaleX);
   const upperGridTick = Math.ceil(ticks / ticksInGrid) * ticksInGrid;
   const lowerGridTick = Math.floor(ticks / ticksInGrid) * ticksInGrid;
   const upperGridTickDiff = upperGridTick - ticks;
@@ -63,8 +63,8 @@ export function getNearestGridTick(ticks: number, pianoLaneScaleX: number) {
   return upperGridTickDiff < lowerGridTickDiff ? upperGridTick : lowerGridTick;
 }
 
-export function getNearestGridTickWithOffset(ticks: number, pianoLaneScaleX: number, offset: number) {
-  const ticksInGrid = getTickInGrid(pianoLaneScaleX);
+export function getNearestGridTickWithOffset(ticks: number, scaleX: number, offset: number) {
+  const ticksInGrid = getTickInGrid(scaleX);
   let upperGridTick;
   let lowerGridTick;
   const gridTickAnchor = Math.floor(ticks / ticksInGrid) * ticksInGrid + offset;
@@ -81,10 +81,10 @@ export function getNearestGridTickWithOffset(ticks: number, pianoLaneScaleX: num
   return upperGridTickDiff < lowerGridTickDiff ? upperGridTick : lowerGridTick;
 }
 
-export function getNearestAnchor(ticks: number, pianoLaneScaleX: number, offset: number) {
-  const ticksInGrid = getTickInGrid(pianoLaneScaleX);
-  const nearestGridTick = getNearestGridTick(ticks, pianoLaneScaleX);
-  const nearestGridTickWithOffset = getNearestGridTickWithOffset(ticks, pianoLaneScaleX, offset);
+export function getNearestAnchor(ticks: number, scaleX: number, offset: number) {
+  const ticksInGrid = getTickInGrid(scaleX);
+  const nearestGridTick = getNearestGridTick(ticks, scaleX);
+  const nearestGridTickWithOffset = getNearestGridTickWithOffset(ticks, scaleX, offset);
   const nearestGridTickDiff = Math.abs(nearestGridTick - ticks);
   const nearestGridTickWithOffsetDiff = Math.abs(nearestGridTickWithOffset - ticks);
   const anchor = nearestGridTickDiff < nearestGridTickWithOffsetDiff ? nearestGridTick : nearestGridTickWithOffset;
@@ -95,8 +95,8 @@ export function getNearestAnchor(ticks: number, pianoLaneScaleX: number, offset:
   };
 }
 
-export function getGridOffsetOfTick(ticks: number, pianoLaneScaleX: number) {
-  const ticksInGrid = getTickInGrid(pianoLaneScaleX);
+export function getGridOffsetOfTick(ticks: number, scaleX: number) {
+  const ticksInGrid = getTickInGrid(scaleX);
   const offset = ticks - Math.floor(ticks / ticksInGrid) * ticksInGrid;
   return offset;
 }

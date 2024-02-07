@@ -1,17 +1,17 @@
 import { getGridBaseSeparation, getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
 import styles from "./index.module.scss";
 import { basePixelsPerBeat } from "@/constants";
-import useStore from "@/hooks/useStore";
 import { baseCanvasWidth } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
-interface RulerProps extends React.HTMLAttributes<SVGElement> {}
-export default function SelectionBar({ ...other }: RulerProps) {
-  const { pianoRollStore } = useStore();
+interface RulerProps extends React.HTMLAttributes<SVGElement> {
+  scaleX: number;
+}
+export default function SelectionBar({ scaleX }: RulerProps) {
   const { tickRange } = useConfig();
 
   const numberOfGrids = getNumOfGrid(baseCanvasWidth(tickRange));
-  const gridSeparationFactor = getGridSeparationFactor(pianoRollStore.pianoLaneScaleX);
+  const gridSeparationFactor = getGridSeparationFactor(scaleX);
   const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor);
   const rulerHeight = 30;
   const markeraHeight = {
@@ -21,7 +21,7 @@ export default function SelectionBar({ ...other }: RulerProps) {
   };
 
   const markers = (gridType: "bar" | "halfBar" | "quarter") => {
-    const scale = pianoRollStore.pianoLaneScaleX * gridBaseSeparation[gridType];
+    const scale = scaleX * gridBaseSeparation[gridType];
     return [...Array(numberOfGrids[gridType]).keys()]
       .filter((index) => index % gridSeparationFactor[gridType] === 0)
       .map((index) => (
@@ -35,7 +35,6 @@ export default function SelectionBar({ ...other }: RulerProps) {
         aria-label="pianoroll-ruler"
         width="100%"
         height="100%"
-        {...other}
         preserveAspectRatio="none"
         className={styles["ruler"]}
       >

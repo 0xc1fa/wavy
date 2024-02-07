@@ -18,8 +18,8 @@ export default function SelectionRange() {
       className={styles["selection--range"]}
       style={
         {
-          "--left-marker-position": `${selectionStart * basePixelsPerTick * pianoRollStore.pianoLaneScaleX}px`,
-          "--range-width": `${selectionWidth * basePixelsPerTick * pianoRollStore.pianoLaneScaleX}px`,
+          "--left-marker-position": `${selectionStart * basePixelsPerTick * pianoRollStore.scaleX}px`,
+          "--range-width": `${selectionWidth * basePixelsPerTick * pianoRollStore.scaleX}px`,
         } as React.CSSProperties
       }
     />

@@ -3,12 +3,7 @@ import { PianoRollStore } from "@/store/pianoRollStore";
 import { v4 as uuidv4 } from "uuid";
 import { PianoRollHistoryItemType, getChoppedHistoryAfterHead } from "./history-action";
 import _ from "lodash";
-import {
-  clampDuration,
-  clampNoteNumber,
-  clampTick,
-  clampVelocity,
-} from "@/helpers/number";
+import { clampDuration, clampNoteNumber, clampTick, clampVelocity } from "@/helpers/number";
 import { defaultNoteLyric } from "@/constants";
 import { getNoteNumFromOffsetY, getTickFromOffsetX } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
@@ -216,8 +211,8 @@ export function setNoteInMarqueeAsSelected(state: PianoRollStore, action: SetNot
     getNoteNumFromOffsetY(numOfKeys, action.payload.ongoingPosition.y),
   ].sort((a, b) => a - b);
   const [selectedMinTick, selectedMaxTick] = [
-    getTickFromOffsetX(action.payload.startingPosition.x, state.pianoLaneScaleX),
-    getTickFromOffsetX(action.payload.ongoingPosition.x, state.pianoLaneScaleX),
+    getTickFromOffsetX(action.payload.startingPosition.x, state.scaleX),
+    getTickFromOffsetX(action.payload.ongoingPosition.x, state.scaleX),
   ].sort((a, b) => a - b);
   return {
     ...state,

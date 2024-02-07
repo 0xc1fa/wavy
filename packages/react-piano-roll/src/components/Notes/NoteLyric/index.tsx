@@ -54,8 +54,8 @@ function NoteLyric({ note, style, ...other }: NoteLyricProps) {
       style={
         {
           "--top": `${getMinYFromNoteNum(numOfKeys, note.noteNumber)}px`,
-          "--left": `${getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick)}px`,
-          "--width": `${getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.duration)}px`,
+          "--left": `${getOffsetXFromTick(pianoRollStore.scaleX, note.tick)}px`,
+          "--width": `${getOffsetXFromTick(pianoRollStore.scaleX, note.duration)}px`,
           "--height": `${baseLaneWidth}px`,
           ...style,
         } as React.CSSProperties
@@ -68,9 +68,5 @@ function NoteLyric({ note, style, ...other }: NoteLyricProps) {
     />
   );
 }
-
-// function withNoteLyricsChanged(notes: TrackNoteEvent[], noteId: string, lyric: string) {
-//   return notes.map(note => (note.id === noteId) ? { ...note, lyric: lyric } : note)
-// }
 
 export default memo(NoteLyric);

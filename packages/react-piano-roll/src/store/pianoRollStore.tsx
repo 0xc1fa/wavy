@@ -16,14 +16,11 @@ import {
   vibratoDepthDelayChangeSelectedNote,
   vibratoRateChangeSelectedNote,
 } from "../actions/note-actions";
-import { TransformAction, setPianoLaneScaleX } from "../actions/transform-actions";
+import { TransformAction, setscaleX } from "../actions/transform-actions";
 import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
 import { HistoryAction, PianoRollHistoryItem, redo, undo } from "../actions/history-action";
 import { MetaAction, setClipSpan } from "@/actions/meta-action";
-import {
-  basePixelsPerBeat,
-  basePixelsPerTick,
-} from "@/constants";
+import { basePixelsPerBeat, basePixelsPerTick } from "@/constants";
 
 export const PianoRollStoreContext = createContext<ReturnType<typeof usePianoRollStore> | undefined>(undefined);
 
@@ -62,7 +59,7 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
     case "MOVE_NOTE_AS_LATEST_MODIFIED":
       return moveNoteAsLatestModified(state, action);
     case "SET_PIANO_LANE_SCALE_X":
-      return setPianoLaneScaleX(state, action);
+      return setscaleX(state, action);
     case "SET_SELECTION_TICKS":
       return setSelectionTicks(state, action);
     case "DELETE_SELECTED_NOTES":
@@ -114,15 +111,15 @@ function defaultPianoRollStore() {
 
     bpm: 120,
 
-    pianoLaneScaleX: 1,
-    pianoLaneScaleY: 1,
+    scaleX: 1,
+    scaleY: 1,
     newNoteVelocity: 64,
     newNoteDuration: 480,
 
     selectionTicks: 0,
 
     get scaledPixelPerBeat() {
-      return basePixelsPerBeat * this.pianoLaneScaleX;
+      return basePixelsPerBeat * this.scaleX;
     },
   };
 }

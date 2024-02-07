@@ -55,7 +55,7 @@ function PianoRoll({
           ref={containerRef}
           style={
             {
-              "--canvas-width": `${baseCanvasWidth(tickRange) * pianoRollStore.pianoLaneScaleX}px`,
+              "--canvas-width": `${baseCanvasWidth(tickRange) * pianoRollStore.scaleX}px`,
               "--canvas-height": `${baseCanvasHeight(pitchRange.numOfKeys)}px`,
               ...style,
             } as React.CSSProperties

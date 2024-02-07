@@ -1,14 +1,14 @@
 import { PianoRollStore } from "@/store/pianoRollStore";
 
-export type TransformAction = SetPianoLaneScaleXAction | { type: "SET_BPM"; payload: { bpm: number } };
+export type TransformAction = SetscaleXAction | { type: "SET_BPM"; payload: { bpm: number } };
 
-type SetPianoLaneScaleXAction = {
+type SetscaleXAction = {
   type: "SET_PIANO_LANE_SCALE_X";
-  payload: { pianoLaneScaleX: number };
+  payload: { scaleX: number };
 };
-export function setPianoLaneScaleX(state: PianoRollStore, action: SetPianoLaneScaleXAction) {
+export function setscaleX(state: PianoRollStore, action: SetscaleXAction) {
   return {
     ...state,
-    pianoLaneScaleX: action.payload.pianoLaneScaleX,
+    scaleX: action.payload.scaleX,
   };
 }
