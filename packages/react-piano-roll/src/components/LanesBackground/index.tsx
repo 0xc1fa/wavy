@@ -9,7 +9,6 @@ import _ from "lodash";
 function LanesBackground() {
   const theme = useTheme();
   const { startingNoteNum, numOfKeys } = useConfig().range;
-
   const noteNums = _.range(startingNoteNum, startingNoteNum + numOfKeys);
 
   const lanes = noteNums.map((noteNumber) => {

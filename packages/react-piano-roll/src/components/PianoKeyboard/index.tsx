@@ -8,7 +8,6 @@ import { useConfig } from "..";
 
 interface PianoKeyboardProps extends React.HTMLAttributes<HTMLCanvasElement> {}
 export default function PianoKeyboard(props: PianoKeyboardProps) {
-  const { pianoRollStore } = useStore();
   const { startingNoteNum, numOfKeys } = useConfig().range;
 
   const keyNums = [];

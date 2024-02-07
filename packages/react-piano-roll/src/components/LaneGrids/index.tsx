@@ -10,7 +10,7 @@ import { useConfig } from "..";
 interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {}
 const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
   const theme = useTheme();
-  const { pianoRollStore }= useStore();
+  const { pianoRollStore } = useStore();
 
   const gridSeparationFactor = getGridSeparationFactor(pianoRollStore.pianoLaneScaleX);
   const numberOfGrids = getNumOfGrid(pianoRollStore.laneLength);
@@ -20,7 +20,9 @@ const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
     const scale = pianoRollStore.pianoLaneScaleX * gridBaseSeparation[gridType];
     return [...Array(numberOfGrids[gridType]).keys()]
       .filter((index) => index % gridSeparationFactor[gridType] === 0 || gridType === "quavers")
-      .map((index) => <GridLine key={index} x={index * basePixelsPerBeat * scale} color={theme.grid.color[gridType]} />);
+      .map((index) => (
+        <GridLine key={index} x={index * basePixelsPerBeat * scale} color={theme.grid.color[gridType]} />
+      ));
   };
 
   return (
@@ -45,9 +47,7 @@ interface GridLineProps {
 }
 
 const GridLine: React.FC<GridLineProps> = ({ x, color }) => {
-  const { numOfKeys } = useConfig().range
-
-  return <line x1={x} y1={0} x2={x} y2={canvasHeight(numOfKeys)} stroke={color} strokeWidth="1" />;
+  return <line x1={x} y1="0" x2={x} y2="100%" stroke={color} strokeWidth="1" preserveAspectRatio="none" />;
 };
 
 export default memo(LaneGrids);

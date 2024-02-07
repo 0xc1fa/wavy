@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { usePianoRollNotes } from "../../helpers/notes";
 import useStore from "../../hooks/useStore";
 import styles from "./index.module.scss";
 import LaneGrids from "../LaneGrids";
@@ -11,7 +10,7 @@ import { getOffsetXFromTick } from "@/helpers/conversion";
 export default function VelocityEditor() {
   const { pianoRollStore } = useStore();
   const theme = useTheme();
-  const pianoRollNotes = usePianoRollNotes();
+  const { pianoRollNotes } = pianoRollStore;
   const [isDragging, setIsDragging] = useState(false);
 
   const [containerHeight, setContainerHeight] = useState(200);
