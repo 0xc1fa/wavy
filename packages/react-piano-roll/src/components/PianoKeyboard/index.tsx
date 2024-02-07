@@ -3,7 +3,7 @@ import { isBlackKey } from "../../helpers";
 import useStore from "../../hooks/useStore";
 import useTheme from "../../hooks/useTheme";
 import styles from "./index.module.scss";
-import { getMinYFromNoteNum } from "@/helpers/conversion";
+import { getMinYFromNoteNum, getNoteNameFromNoteNum } from "@/helpers/conversion";
 
 interface PianoKeyboardProps extends React.HTMLAttributes<HTMLCanvasElement> {}
 export default function PianoKeyboard(props: PianoKeyboardProps) {
@@ -44,7 +44,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
               }
               onPointerDown={handlerPointerDown}
             >
-              <span hidden={keyNum % 12 !== 0}>{pianoRollStore.getNoteNameFromNoteNum(keyNum)}</span>
+              <span hidden={keyNum % 12 !== 0}>{getNoteNameFromNoteNum(keyNum)}</span>
             </div>
           );
         else if (keyNum !== 127) {
@@ -64,7 +64,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
               }
               onPointerDown={handlerPointerDown}
             >
-              <span hidden={keyNum % 12 !== 0}>{pianoRollStore.getNoteNameFromNoteNum(keyNum)}</span>
+              <span hidden={keyNum % 12 !== 0}>{getNoteNameFromNoteNum(keyNum)}</span>
             </div>
           );
         } else {
@@ -81,7 +81,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
               }
               onPointerDown={handlerPointerDown}
             >
-              <span hidden={keyNum % 12 !== 0}>{pianoRollStore.getNoteNameFromNoteNum(keyNum)}</span>
+              <span hidden={keyNum % 12 !== 0}>{getNoteNameFromNoteNum(keyNum)}</span>
             </div>
           );
         }

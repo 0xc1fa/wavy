@@ -32,3 +32,10 @@ export function getNotesFromOffsetX(scaleX: number, notes: TrackNoteEvent[], off
       note.tick + note.duration >= getTickFromOffsetX(offsetX, scaleX),
   );
 }
+
+export function getNoteNameFromNoteNum(noteNum: number) {
+  const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  const noteNameIndex = noteNum % 12;
+  const octave = Math.floor(noteNum / 12) - 1;
+  return `${noteNames[noteNameIndex]}${octave}`;
+}
