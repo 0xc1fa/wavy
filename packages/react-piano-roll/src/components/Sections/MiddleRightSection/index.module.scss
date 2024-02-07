@@ -1,0 +1,9 @@
+.pianoroll-lane {
+  position: relative;
+
+  width: var(--canvas-width);
+  // height: fit-content;
+  height: var(--canvas-height);
+  background-color: var(--black);
+  outline: none;
+}

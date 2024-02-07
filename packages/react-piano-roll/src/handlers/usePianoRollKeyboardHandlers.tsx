@@ -51,7 +51,6 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
   let spaceDown = useRef(false);
 
   const onKeyDown: React.KeyboardEventHandler = (event) => {
-    console.log(event);
     switch (event.code) {
       case "Backspace":
       case "Delete":
@@ -98,7 +97,6 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
     if (focusedElement && focusedElement.hasAttributes()) {
       Array.from(focusedElement.attributes).forEach((attr) => {
         if (attr.name === "data-noteid") {
-          console.log(attr.name, attr.value);
           if (notes.filter((note) => note.id === attr.value)) {
             flag = false;
           }
@@ -116,7 +114,6 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
   };
 
   const onCopy = (event: React.KeyboardEvent) => {
-    console.log("copying...");
     event.preventDefault();
     event.stopPropagation();
 
@@ -127,7 +124,6 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
   };
 
   const onCut = (event: React.KeyboardEvent) => {
-    console.log("copying...");
     event.preventDefault();
     event.stopPropagation();
     const selectedNotes = getSelectedNotes(notes);
@@ -139,7 +135,6 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
   };
 
   const onPaste = (event: React.KeyboardEvent) => {
-    console.log("copying...");
     event.preventDefault();
     event.stopPropagation();
 

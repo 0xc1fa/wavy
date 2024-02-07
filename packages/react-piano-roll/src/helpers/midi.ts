@@ -115,7 +115,6 @@ function getTrackChunk(data: TrackNoteEvent[]): number[] {
     }));
   const channelEvents = [...noteStartEvents, ...noteEndEvents].sort((a, b) => a.tick - b.tick);
   const timedChannelEvents = insertVLQEvents(channelEvents);
-  console.log(timedChannelEvents);
 
   const encodedEvents = timedChannelEvents.flatMap((event) => {
     switch (event.type) {

@@ -1,0 +1,7 @@
+.container {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  width: calc(var(--canvas-width) + 50px);
+}

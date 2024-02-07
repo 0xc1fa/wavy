@@ -191,11 +191,8 @@ export function vibratoRateChangeSelectedNote(state: PianoRollStore, action: Vib
     notes: state.notes.map((note) => {
       if (note.isSelected) {
         const newVibratoRate = note.vibratoRate - 0.15 * action.payload.rateOffset;
-        // const newVibratoRate = note.vibratoRate + 1 * (this.state.ongoingPosition.x - e.offsetX);
-        console.log(`newVibratoRate: ${newVibratoRate}`);
         return {
           ...note,
-          // vibratoDelay: Math.max(Math.min(newVibratoDelay, note.duration * 0.9), 0),
           vibratoRate: Math.min(Math.max(newVibratoRate, 5), 200),
         };
       } else {

@@ -7,7 +7,9 @@ import useStore from "@/hooks/useStore";
 import { baseCanvasWidth } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
-interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {}
+interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {
+  scaleX?: number;
+}
 const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
   const theme = useTheme();
   const { pianoRollStore } = useStore();

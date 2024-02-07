@@ -1,0 +1,13 @@
+.middle-container {
+  display: flex;
+  position: relative;
+  width: calc(var(--canvas-width) + 50px);
+  z-index: 1;
+}
+
+.lane-container {
+  height: var(--canvas-height);
+  width: var(--canvas-width);
+  z-index: 0;
+  position: relative;
+}

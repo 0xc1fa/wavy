@@ -8,12 +8,10 @@ const handleWheel = (event: WheelEvent) => {
 
 export function disableZoom() {
   document.addEventListener("wheel", handleWheel, { passive: false });
-  console.log("disabled zoom");
 }
 
 export function enableZoom() {
   document.removeEventListener("wheel", handleWheel);
-  console.log("enabled zoom");
 }
 
 function usePreventZoom(scrollCheck = true, keyboardCheck = true) {

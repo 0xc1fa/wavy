@@ -23,8 +23,6 @@ export type HistoryAction =
 
 type UndoAction = { type: "UNDO" };
 export function undo(state: PianoRollStore, action: UndoAction) {
-  console.log("undo");
-  console.log(state.notesHistory);
 
   const { history, head } = state.notesHistory;
 
@@ -69,8 +67,6 @@ function getPrevNoteHistory(notes: TrackNoteEvent[], history: PianoRollHistory):
 
 type RedoAction = { type: "REDO" };
 export function redo(state: PianoRollStore, action: RedoAction) {
-  console.log("redo");
-  console.log(state.notesHistory);
   const { history, head } = state.notesHistory;
   const edgeCases =
     history.length === 0 || // There is no history

@@ -12,10 +12,10 @@ function setSelectedNotesAsLegato(notes: TrackNoteEvent[], dispatch: React.Dispa
 }
 
 export function useNoteModification() {
-  const pianoRollNote = useNotes();
+  const notes = useNotes();
   const { dispatch } = useStore();
 
   return {
-    setSelectedNotesAsLegato: () => setSelectedNotesAsLegato(pianoRollNote, dispatch),
+    setSelectedNotesAsLegato: () => setSelectedNotesAsLegato(notes, dispatch),
   };
 }

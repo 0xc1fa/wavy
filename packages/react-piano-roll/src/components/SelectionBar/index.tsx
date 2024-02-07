@@ -30,7 +30,7 @@ export default function SelectionBar({ ...other }: RulerProps) {
   };
 
   return (
-    <div onClick={(event) => console.log(event.nativeEvent.offsetX)} className={styles["ruler-container"]}>
+    <div className={styles["ruler-container"]}>
       <svg
         aria-label="pianoroll-ruler"
         width="100%"

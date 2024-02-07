@@ -1,7 +1,5 @@
 import { baseWhiteKeyWidth } from "@/constants";
 import { isBlackKey } from "../../helpers";
-import useStore from "../../hooks/useStore";
-import useTheme from "../../hooks/useTheme";
 import styles from "./index.module.scss";
 import { baseCanvasHeight, getMinYFromNoteNum, getNoteNameFromNoteNum } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
@@ -17,7 +15,6 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
 
   const handlerPointerDown: React.PointerEventHandler = (event) => {
     const currentTarget = event.currentTarget as HTMLDivElement;
-    // currentTarget.setPointerCapture(event.pointerId);
     currentTarget.classList.add(styles["key--pressed"]);
     const handleMouseLeave = () => {
       currentTarget.classList.remove(styles["key--pressed"]);

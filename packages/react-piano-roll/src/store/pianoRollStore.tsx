@@ -120,8 +120,6 @@ function defaultPianoRollStore() {
     newNoteDuration: 480,
 
     selectionTicks: 0,
-    startingTick: 0,
-    endingTick: 480 * 4 * 8,
 
     get scaledPixelPerBeat() {
       return basePixelsPerBeat * this.pianoLaneScaleX;

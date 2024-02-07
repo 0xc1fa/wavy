@@ -24,12 +24,10 @@ export default function useVelocityEditorMouseHandlers() {
         const notesInPosition = getNotesFromOffsetX(pianoRollStore.pianoLaneScaleX, pianoRollStore.notes, offsetX);
         const newVelocityInPercent = 1 - offsetY / containerHeight;
         const newVelocity = newVelocityInPercent * 127;
-        console.log(offsetX);
         const modifiedNotes = notesInPosition.map((note) => ({
           ...note,
           velocity: newVelocity,
         }));
-        console.log(modifiedNotes);
         dispatch({
           type: "MODIFYING_NOTES",
           payload: { notes: modifiedNotes },
@@ -79,12 +77,10 @@ export default function useVelocityEditorMouseHandlers() {
         const notesInPosition = getNotesFromOffsetX(pianoRollStore.pianoLaneScaleX, pianoRollStore.notes, offsetX);
         const newVelocityInPercent = 1 - offsetY / containerHeight;
         const newVelocity = newVelocityInPercent * 127;
-        console.log(offsetX);
         const modifiedNotes = notesInPosition.map((note) => ({
           ...note,
           velocity: newVelocity,
         }));
-        console.log(modifiedNotes);
         dispatch({
           type: "MODIFYING_NOTES",
           payload: { notes: modifiedNotes },

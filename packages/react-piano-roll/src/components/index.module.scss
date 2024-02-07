@@ -11,49 +11,15 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
   background-color: var(--black);
-  
+  // display: grid;
+  // grid-template-areas:
+  //   "upper-left upper-right"
+  //   "middle-left middle-right"
+  //   "lower-left lower-right";
 }
 
 .container::-webkit-scrollbar {
   display: none;
 }
 
-.upper-container {
-  display: flex;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  width: calc(var(--canvas-width) + 50px);
-}
 
-.middle-container {
-  display: flex;
-  position: relative;
-  width: calc(var(--canvas-width) + 50px);
-  z-index: 1;
-}
-
-.lower-container {
-  display: flex;
-  position: sticky;
-  bottom: 0;
-  z-index: 2;
-  height: fit-content;
-}
-
-.lane-container {
-  height: var(--canvas-height);
-  width: var(--canvas-width);
-  z-index: 0;
-  position: relative;
-}
-
-.pianoroll-lane {
-  position: relative;
-
-  width: var(--canvas-width);
-  // height: fit-content;
-  height: var(--canvas-height);
-  background-color: var(--black);
-  outline: none;
-}
