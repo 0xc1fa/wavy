@@ -107,3 +107,8 @@ export function getNoteFromEvent(numOfKeys: number, scaleX: number, notes: Track
 export function getNoteNumFromEvent(numOfKeys: number, e: PointerEvent | MouseEvent): number {
   return getNoteNumFromOffsetY(numOfKeys, e.offsetY);
 }
+
+export function getTickFromEvent(scaleX: number, e: PointerEvent | MouseEvent): number {
+  return getTickFromOffsetX(e.offsetX, scaleX);
+}
+

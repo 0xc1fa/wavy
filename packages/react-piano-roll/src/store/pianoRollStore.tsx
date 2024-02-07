@@ -166,10 +166,6 @@ function defaultPianoRollStore() {
       return baseLaneWidth * this.numOfKeys;
     },
 
-    getTickFromEvent(e: PointerEvent | MouseEvent): number {
-      return getTickFromOffsetX(e.offsetX, this.pianoLaneScaleX);
-    },
-
     roundDownTickToNearestGrid(tick: number) {
       return tick - (tick % ticksPerBeat);
     },
