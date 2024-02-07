@@ -4,7 +4,7 @@ import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import _ from "lodash";
 import { getGridOffsetOfTick, getNearestAnchor, getNearestGridTick, getTickInGrid } from "@/helpers/grid";
-import { getTickFromOffsetX } from "@/helpers/conversion";
+import { getNoteNumFromOffsetY, getTickFromOffsetX } from "@/helpers/conversion";
 
 export enum PianoRollLanesMouseHandlerMode {
   DragAndDrop,
@@ -85,8 +85,8 @@ export default function usePianoRollMouseHandlers() {
     const deltaX = event.nativeEvent.offsetX - pianoRollStore.noteModificationBuffer.initX;
     const deltaTicks = getTickFromOffsetX(deltaX, pianoRollStore.pianoLaneScaleX);
     const deltaPitch =
-      pianoRollStore.getNoteNumFromOffsetY(event.nativeEvent.offsetY) -
-      pianoRollStore.getNoteNumFromOffsetY(pianoRollStore.noteModificationBuffer.initY);
+      getNoteNumFromOffsetY(pianoRollStore.numOfKeys, event.nativeEvent.offsetY) -
+      getNoteNumFromOffsetY(pianoRollStore.numOfKeys, pianoRollStore.noteModificationBuffer.initY);
     if (Math.abs(deltaTicks) > getTickInGrid(pianoRollStore.pianoLaneScaleX)) {
       guardActive.current = DraggingGuardMode.SnapToGrid;
     } else if (Math.abs(deltaTicks) > 96 && guardActive.current < DraggingGuardMode.FineTune) {

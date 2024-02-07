@@ -31,7 +31,7 @@ import {
   draggableBoundaryPixel,
   ticksPerBeat,
 } from "@/constants";
-import { getTickFromOffsetX } from "@/helpers/conversion";
+import { getNoteNumFromOffsetY, getTickFromOffsetX } from "@/helpers/conversion";
 
 export const PianoRollStoreContext = createContext<ReturnType<typeof usePianoRollStore> | undefined>(undefined);
 
@@ -155,10 +155,6 @@ function defaultPianoRollStore() {
       return baseLaneWidth * this.numOfKeys;
     },
 
-    getNoteNumFromOffsetY(offsetY: number) {
-      return Math.floor(this.numOfKeys - offsetY / baseLaneWidth);
-    },
-
     getCenterYFromNoteNum(noteNum: number) {
       return (this.getMinYFromNoteNum(noteNum) + this.getMaxYFromNoteNum(noteNum)) / 2;
     },
@@ -185,7 +181,7 @@ function defaultPianoRollStore() {
     getNoteFromPosition(offsetX: number, offsetY: number): TrackNoteEvent | null {
       for (const note of this.pianoRollNotes.slice().reverse()) {
         if (
-          this.getNoteNumFromOffsetY(offsetY) == note.noteNumber &&
+          getNoteNumFromOffsetY(this.numOfKeys, offsetY) == note.noteNumber &&
           getTickFromOffsetX(offsetX, this.pianoLaneScaleX) >= note.tick &&
           getTickFromOffsetX(offsetX, this.pianoLaneScaleX) <= note.tick + note.duration
         ) {
@@ -229,7 +225,7 @@ function defaultPianoRollStore() {
     },
 
     getNoteNumFromEvent(e: PointerEvent | MouseEvent): number {
-      return this.getNoteNumFromOffsetY(e.offsetY);
+      return getNoteNumFromOffsetY(this.numOfKeys, e.offsetY);
     },
 
     getTickFromEvent(e: PointerEvent | MouseEvent): number {
@@ -246,7 +242,7 @@ function defaultPianoRollStore() {
 
     isNoteLeftMarginClicked(note: TrackNoteEvent, offsetX: number, offsetY: number) {
       if (
-        this.getNoteNumFromOffsetY(offsetY) == note.noteNumber &&
+        getNoteNumFromOffsetY(this.numOfKeys, offsetY) == note.noteNumber &&
         offsetX >= this.getOffsetXFromTick(note.tick) &&
         offsetX <= this.getOffsetXFromTick(note.tick) + draggableBoundaryPixel
       ) {
@@ -258,7 +254,7 @@ function defaultPianoRollStore() {
 
     isNoteRightMarginClicked(note: TrackNoteEvent, offsetX: number, offsetY: number) {
       if (
-        this.getNoteNumFromOffsetY(offsetY) == note.noteNumber &&
+        getNoteNumFromOffsetY(this.numOfKeys, offsetY) == note.noteNumber &&
         offsetX <= this.getOffsetXFromTick(note.tick + note.duration) &&
         offsetX >= this.getOffsetXFromTick(note.tick + note.duration) - draggableBoundaryPixel
       ) {
@@ -276,8 +272,8 @@ function defaultPianoRollStore() {
       },
     ) {
       const [selectedMinNoteNum, selectedMaxNoteNum] = [
-        this.getNoteNumFromOffsetY(marquee.startingPosition.y),
-        this.getNoteNumFromOffsetY(marquee.ongoingPosition.y),
+        getNoteNumFromOffsetY(this.numOfKeys, marquee.startingPosition.y),
+        getNoteNumFromOffsetY(this.numOfKeys, marquee.ongoingPosition.y),
       ].sort((a, b) => a - b);
       const [selectedMinTick, selectedMaxTick] = [
         getTickFromOffsetX(marquee.startingPosition.x, this.pianoLaneScaleX),
