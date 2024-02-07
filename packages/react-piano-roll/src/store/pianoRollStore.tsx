@@ -20,7 +20,18 @@ import { TransformAction, setPianoLaneScaleX } from "../actions/transform-action
 import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
 import { HistoryAction, PianoRollHistoryItem, redo, undo } from "../actions/history-action";
 import { MetaAction, setClipSpan } from "@/actions/meta-action";
-import { baseBlackKeyLength, baseKeyWidth, baseLaneWidth, basePixelsPerBeat, basePixelsPerTick, baseWhiteKeyWidth, blackKeyLengthRatio, draggableBoundaryPixel, ticksPerBeat } from "@/constants";
+import {
+  baseBlackKeyLength,
+  baseKeyWidth,
+  baseLaneWidth,
+  basePixelsPerBeat,
+  basePixelsPerTick,
+  baseWhiteKeyWidth,
+  blackKeyLengthRatio,
+  draggableBoundaryPixel,
+  ticksPerBeat,
+} from "@/constants";
+import { getTickFromOffsetX } from "@/helpers/conversion";
 
 export const PianoRollStoreContext = createContext<ReturnType<typeof usePianoRollStore> | undefined>(undefined);
 
@@ -144,10 +155,6 @@ function defaultPianoRollStore() {
       return baseLaneWidth * this.numOfKeys;
     },
 
-    getTickFromOffsetX(offsetX: number) {
-      return (offsetX / (this.pianoLaneScaleX * basePixelsPerBeat)) * ticksPerBeat;
-    },
-
     getNoteNumFromOffsetY(offsetY: number) {
       return Math.floor(this.numOfKeys - offsetY / baseLaneWidth);
     },
@@ -179,8 +186,8 @@ function defaultPianoRollStore() {
       for (const note of this.pianoRollNotes.slice().reverse()) {
         if (
           this.getNoteNumFromOffsetY(offsetY) == note.noteNumber &&
-          this.getTickFromOffsetX(offsetX) >= note.tick &&
-          this.getTickFromOffsetX(offsetX) <= note.tick + note.duration
+          getTickFromOffsetX(offsetX, this.pianoLaneScaleX) >= note.tick &&
+          getTickFromOffsetX(offsetX, this.pianoLaneScaleX) <= note.tick + note.duration
         ) {
           return note;
         }
@@ -191,8 +198,8 @@ function defaultPianoRollStore() {
     getNotesFromOffsetX(offsetX: number) {
       return this.pianoRollNotes.filter(
         (note) =>
-          note.tick <= this.getTickFromOffsetX(offsetX) &&
-          note.tick + note.duration >= this.getTickFromOffsetX(offsetX),
+          note.tick <= getTickFromOffsetX(offsetX, this.pianoLaneScaleX) &&
+          note.tick + note.duration >= getTickFromOffsetX(offsetX, this.pianoLaneScaleX),
       );
     },
 
@@ -234,7 +241,7 @@ function defaultPianoRollStore() {
     },
 
     getTickFromEvent(e: PointerEvent | MouseEvent): number {
-      return this.getTickFromOffsetX(e.offsetX);
+      return getTickFromOffsetX(e.offsetX, this.pianoLaneScaleX);
     },
 
     roundDownTickToNearestGrid(tick: number) {
@@ -281,8 +288,8 @@ function defaultPianoRollStore() {
         this.getNoteNumFromOffsetY(marquee.ongoingPosition.y),
       ].sort((a, b) => a - b);
       const [selectedMinTick, selectedMaxTick] = [
-        this.getTickFromOffsetX(marquee.startingPosition.x),
-        this.getTickFromOffsetX(marquee.ongoingPosition.x),
+        getTickFromOffsetX(marquee.startingPosition.x, this.pianoLaneScaleX),
+        getTickFromOffsetX(marquee.ongoingPosition.x, this.pianoLaneScaleX),
       ].sort((a, b) => a - b);
 
       return (

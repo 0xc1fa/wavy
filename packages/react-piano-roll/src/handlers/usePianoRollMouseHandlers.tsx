@@ -4,6 +4,7 @@ import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import _ from "lodash";
 import { getGridOffsetOfTick, getNearestAnchor, getNearestGridTick, getTickInGrid } from "@/helpers/grid";
+import { getTickFromOffsetX } from "@/helpers/conversion";
 
 export enum PianoRollLanesMouseHandlerMode {
   DragAndDrop,
@@ -65,7 +66,7 @@ export default function usePianoRollMouseHandlers() {
       });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
     } else {
-      const selectionTicks = pianoRollStore.getTickFromOffsetX(event.nativeEvent.offsetX);
+      const selectionTicks = getTickFromOffsetX(event.nativeEvent.offsetX, pianoRollStore.pianoLaneScaleX);
       const snappedSelection = getNearestGridTick(selectionTicks, pianoRollStore.pianoLaneScaleX);
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: snappedSelection } });
       dispatch({
@@ -82,7 +83,7 @@ export default function usePianoRollMouseHandlers() {
     const bufferedNotes = pianoRollStore.noteModificationBuffer.notesSelected;
     const deltaY = event.nativeEvent.offsetY - pianoRollStore.noteModificationBuffer.initY;
     const deltaX = event.nativeEvent.offsetX - pianoRollStore.noteModificationBuffer.initX;
-    const deltaTicks = pianoRollStore.getTickFromOffsetX(deltaX);
+    const deltaTicks = getTickFromOffsetX(deltaX, pianoRollStore.pianoLaneScaleX);
     const deltaPitch =
       pianoRollStore.getNoteNumFromOffsetY(event.nativeEvent.offsetY) -
       pianoRollStore.getNoteNumFromOffsetY(pianoRollStore.noteModificationBuffer.initY);

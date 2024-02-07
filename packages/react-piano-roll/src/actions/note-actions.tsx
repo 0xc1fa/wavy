@@ -12,6 +12,7 @@ import {
   clampVelocity,
 } from "@/helpers/number";
 import { defaultNoteLyric } from "@/constants";
+import { getTickFromOffsetX } from "@/helpers/conversion";
 
 export type NoteAction =
   | AddNoteAction
@@ -218,8 +219,8 @@ export function setNoteInMarqueeAsSelected(state: PianoRollStore, action: SetNot
     state.getNoteNumFromOffsetY(action.payload.ongoingPosition.y),
   ].sort((a, b) => a - b);
   const [selectedMinTick, selectedMaxTick] = [
-    state.getTickFromOffsetX(action.payload.startingPosition.x),
-    state.getTickFromOffsetX(action.payload.ongoingPosition.x),
+    getTickFromOffsetX(action.payload.startingPosition.x, state.pianoLaneScaleX),
+    getTickFromOffsetX(action.payload.ongoingPosition.x, state.pianoLaneScaleX),
   ].sort((a, b) => a - b);
   return {
     ...state,
