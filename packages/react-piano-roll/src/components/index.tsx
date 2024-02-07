@@ -19,11 +19,7 @@ import { CSSProperties, KeyboardEvent, createContext, memo, useContext, useEffec
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import VelocityEditor from "./VelocityEditor";
 import SelectionBar from "./SelectionBar"
-
-type PianoRollRange = {
-  startingNoteNum: number;
-  numOfKeys: number;
-}
+import type { PianoRollRange } from '@/interfaces/piano-roll-range'
 
 type PianoRollConfig = {
   range: PianoRollRange;

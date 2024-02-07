@@ -1,5 +1,7 @@
-import { baseLaneWidth, basePixelsPerBeat, ticksPerBeat } from "@/constants";
+import { baseLaneWidth, basePixelsPerBeat, baseWhiteKeyWidth, ticksPerBeat } from "@/constants";
+import { PianoRollRange } from "@/interfaces/piano-roll-range";
 import { TrackNoteEvent } from "@/types";
+import { isBlackKey } from ".";
 
 export function getBeatFromOffsetX(offsetX: number, scaleX: number) {
   return offsetX / (scaleX * basePixelsPerBeat);
@@ -63,4 +65,18 @@ export function getNoteFromPosition(
     }
   }
   return null;
+}
+
+export function getWhiteKeyNumFromPosition(range: PianoRollRange, y: number) {
+  let currentY = 0;
+  for (let keyNum = range.numOfKeys - 1; keyNum >= range.startingNoteNum; keyNum--) {
+    if (isBlackKey(keyNum)) {
+      continue;
+    }
+    if (y >= currentY && y <= currentY + baseWhiteKeyWidth) {
+      return keyNum;
+    }
+    currentY += baseWhiteKeyWidth;
+  }
+  return -1;
 }

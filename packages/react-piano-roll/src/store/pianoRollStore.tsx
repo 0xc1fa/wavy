@@ -38,6 +38,7 @@ import {
   getNoteNumFromOffsetY,
   getOffsetXFromTick,
   getTickFromOffsetX,
+  getWhiteKeyNumFromPosition,
 } from "@/helpers/conversion";
 import { useConfig } from "@/components";
 
@@ -164,20 +165,6 @@ function defaultPianoRollStore() {
       return baseLaneWidth * this.numOfKeys;
     },
 
-    getWhiteKeyNumFromPosition(y: number) {
-      let currentY = 0;
-      for (let keyNum = this.numOfKeys - 1; keyNum >= this.startingNoteNum; keyNum--) {
-        if (isBlackKey(keyNum)) {
-          continue;
-        }
-        if (y >= currentY && y <= currentY + baseWhiteKeyWidth) {
-          return keyNum;
-        }
-        currentY += baseWhiteKeyWidth;
-      }
-      return -1;
-    },
-
     getBlackKeyNumFromPosition(y: number) {
       return Math.floor(this.numOfKeys - y / baseKeyWidth);
     },
@@ -185,11 +172,11 @@ function defaultPianoRollStore() {
     getPianoKeyNumFromPosition(x: number, y: number) {
       const estimatedKeyNum = Math.floor(this.numOfKeys - y / baseKeyWidth);
       if (!this.isInnerKeyboard(x)) {
-        return this.getWhiteKeyNumFromPosition(y);
+        return getWhiteKeyNumFromPosition({numOfKeys: this.numOfKeys, startingNoteNum: this.startingNoteNum }, y);
       } else if (this.isInnerKeyboard(x) && isBlackKey(estimatedKeyNum)) {
         return this.getBlackKeyNumFromPosition(y);
       } else {
-        return this.getWhiteKeyNumFromPosition(y);
+        return getWhiteKeyNumFromPosition({numOfKeys: this.numOfKeys, startingNoteNum: this.startingNoteNum }, y);
       }
     },
 
