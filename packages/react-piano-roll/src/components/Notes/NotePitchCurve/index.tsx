@@ -3,7 +3,7 @@ import React, { memo } from "react";
 import useTheme from "../../../hooks/useTheme";
 import useStore from "../../../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
-import { getCenterYFromNoteNum } from "@/helpers/conversion";
+import { getCenterYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
 
 interface NotePitchCurveProps extends React.SVGProps<SVGSVGElement> {
   note: TrackNoteEvent;
@@ -58,9 +58,9 @@ const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
   const { canvasWidth, canvasHeight } = pianoRollStore;
 
   // Extract needed values from the note and store
-  const noteStartingX = pianoRollStore.getOffsetXFromTick(note.tick);
-  const noteEndingX = pianoRollStore.getOffsetXFromTick(note.tick + note.duration);
-  const noteVibratoStartX = pianoRollStore.getOffsetXFromTick(note.tick + note.vibratoDelay);
+  const noteStartingX = getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick);
+  const noteEndingX = getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick + note.duration);
+  const noteVibratoStartX = getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick + note.vibratoDelay);
   const noteCenterY = getCenterYFromNoteNum(pianoRollStore.numOfKeys, note.noteNumber);
 
   return (

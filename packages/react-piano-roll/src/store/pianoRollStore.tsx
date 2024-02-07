@@ -35,6 +35,7 @@ import {
   getMaxYFromNoteNum,
   getMinYFromNoteNum,
   getNoteNumFromOffsetY,
+  getOffsetXFromTick,
   getTickFromOffsetX,
 } from "@/helpers/conversion";
 
@@ -160,10 +161,6 @@ function defaultPianoRollStore() {
       return baseLaneWidth * this.numOfKeys;
     },
 
-    getOffsetXFromTick(tick: number) {
-      return (tick / ticksPerBeat) * basePixelsPerBeat * this.pianoLaneScaleX;
-    },
-
     getNoteFromPosition(offsetX: number, offsetY: number): TrackNoteEvent | null {
       for (const note of this.pianoRollNotes.slice().reverse()) {
         if (
@@ -229,8 +226,8 @@ function defaultPianoRollStore() {
     isNoteLeftMarginClicked(note: TrackNoteEvent, offsetX: number, offsetY: number) {
       if (
         getNoteNumFromOffsetY(this.numOfKeys, offsetY) == note.noteNumber &&
-        offsetX >= this.getOffsetXFromTick(note.tick) &&
-        offsetX <= this.getOffsetXFromTick(note.tick) + draggableBoundaryPixel
+        offsetX >= getOffsetXFromTick(this.pianoLaneScaleX, note.tick) &&
+        offsetX <= getOffsetXFromTick(this.pianoLaneScaleX, note.tick) + draggableBoundaryPixel
       ) {
         return true;
       } else {
@@ -241,8 +238,8 @@ function defaultPianoRollStore() {
     isNoteRightMarginClicked(note: TrackNoteEvent, offsetX: number, offsetY: number) {
       if (
         getNoteNumFromOffsetY(this.numOfKeys, offsetY) == note.noteNumber &&
-        offsetX <= this.getOffsetXFromTick(note.tick + note.duration) &&
-        offsetX >= this.getOffsetXFromTick(note.tick + note.duration) - draggableBoundaryPixel
+        offsetX <= getOffsetXFromTick(this.pianoLaneScaleX, note.tick + note.duration) &&
+        offsetX >= getOffsetXFromTick(this.pianoLaneScaleX, note.tick + note.duration) - draggableBoundaryPixel
       ) {
         return true;
       } else {

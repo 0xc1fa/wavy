@@ -6,6 +6,7 @@ import LaneGrids from "../LaneGrids";
 import useVelocityEditorMouseHandlers from "../../handlers/useVelocityEditorMouseHandlers";
 import useTheme from "../../hooks/useTheme";
 import VelocityRuler from "./VelocityRuler";
+import { getOffsetXFromTick } from "@/helpers/conversion";
 
 export default function VelocityEditor() {
   const { pianoRollStore } = useStore();
@@ -70,9 +71,9 @@ export default function VelocityEditor() {
                 className={styles["marker-container"]}
                 style={
                   {
-                    "--marker-left": `${pianoRollStore.getOffsetXFromTick(note.tick)}px`,
+                    "--marker-left": `${getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick)}px`,
                     "--marker-top": `${1 - note.velocity / 128}`,
-                    "--marker-width": `${pianoRollStore.getOffsetXFromTick(note.duration)}px`,
+                    "--marker-width": `${getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.duration)}px`,
                     "--marker-color": note.isSelected ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
                     "--cursor": isDragging ? "grabbing" : "grab",
                   } as React.CSSProperties

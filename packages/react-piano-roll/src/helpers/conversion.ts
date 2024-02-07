@@ -39,3 +39,7 @@ export function getNoteNameFromNoteNum(noteNum: number) {
   const octave = Math.floor(noteNum / 12) - 1;
   return `${noteNames[noteNameIndex]}${octave}`;
 }
+
+export function getOffsetXFromTick(scaleX: number, tick: number) {
+  return (tick / ticksPerBeat) * basePixelsPerBeat * scaleX;
+}
