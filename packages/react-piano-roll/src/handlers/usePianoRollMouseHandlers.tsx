@@ -5,6 +5,7 @@ import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import _ from "lodash";
 import { getGridOffsetOfTick, getNearestAnchor, getNearestGridTick, getTickInGrid } from "@/helpers/grid";
 import {
+  baseCanvasWidth,
   getNoteFromEvent,
   getNoteFromPosition,
   getNoteNumFromEvent,
@@ -16,7 +17,7 @@ import {
   isNoteRightMarginClicked,
   roundDownTickToNearestGrid,
 } from "@/helpers/conversion";
-import { useConfig } from "@/components";
+import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
 export enum PianoRollLanesMouseHandlerMode {
   DragAndDrop,
@@ -48,7 +49,8 @@ export type NotesModificationBuffer = {
 
 export default function usePianoRollMouseHandlers() {
   const { pianoRollStore, dispatch } = useStore();
-  const { numOfKeys } = useConfig().range;
+  const { numOfKeys } = useConfig().pitchRange;
+  const { tickRange } = useConfig();
 
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None);
   const [startingPosition, setStartingPosition] = useState({ x: 0, y: 0 });
@@ -275,7 +277,7 @@ export default function usePianoRollMouseHandlers() {
       return;
     }
     event.preventDefault();
-    const minScaleX = (800 - 50) / pianoRollStore.laneLength;
+    const minScaleX = (800 - 50) / baseCanvasWidth(tickRange);
     const multiplier = -0.01;
     const newPianoRollScaleX = pianoRollStore.pianoLaneScaleX * (1 + event.deltaY * multiplier);
     dispatch({

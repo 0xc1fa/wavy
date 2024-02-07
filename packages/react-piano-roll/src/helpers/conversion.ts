@@ -3,14 +3,16 @@ import {
   baseKeyWidth,
   baseLaneWidth,
   basePixelsPerBeat,
+  basePixelsPerTick,
   baseWhiteKeyWidth,
   draggableBoundaryPixel,
   ticksPerBeat,
 } from "@/constants";
-import { PianoRollRange } from "@/interfaces/piano-roll-range";
+import { PitchRange } from "@/interfaces/piano-roll-range";
 import { TrackNoteEvent } from "@/types";
 import { isBlackKey } from ".";
 import { Offset, convertOffsetToObject, convertOffsetToTuple } from "@/interfaces/offset";
+import { TickRange } from "@/contexts/PianoRollConfigProvider";
 
 export function getBeatFromOffsetX(offsetX: number, scaleX: number) {
   return offsetX / (scaleX * basePixelsPerBeat);
@@ -76,7 +78,7 @@ export function getNoteFromPosition(
   return null;
 }
 
-export function getWhiteKeyNumFromPosition(range: PianoRollRange, y: number) {
+export function getWhiteKeyNumFromPosition(range: PitchRange, y: number) {
   let currentY = 0;
   for (let keyNum = range.numOfKeys - 1; keyNum >= range.startingNoteNum; keyNum--) {
     if (isBlackKey(keyNum)) {
@@ -98,7 +100,7 @@ export function isInnerKeyboard(x: number) {
   return x < baseBlackKeyLength;
 }
 
-export function getPianoKeyNumFromPosition(range: PianoRollRange, x: number, y: number) {
+export function getPianoKeyNumFromPosition(range: PitchRange, x: number, y: number) {
   const estimatedKeyNum = Math.floor(range.numOfKeys - y / baseKeyWidth);
   if (!isInnerKeyboard(x)) {
     return getWhiteKeyNumFromPosition({ numOfKeys: range.numOfKeys, startingNoteNum: range.startingNoteNum }, y);
@@ -182,6 +184,14 @@ export function inMarquee(
   );
 }
 
-export function canvasHeight(numOfKeys: number) {
+export function baseCanvasHeight(numOfKeys: number) {
   return baseLaneWidth * numOfKeys;
 }
+
+export function baseCanvasWidth(tickRange: TickRange) {
+  return (tickRange[1] - tickRange[0]) * basePixelsPerTick;
+}
+
+// export function canvasWidth(baseCanvasWidth: number, scaleX: number) {
+//   return baseCanvasWidth * scaleX;
+// }

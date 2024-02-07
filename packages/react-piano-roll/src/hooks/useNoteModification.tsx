@@ -1,7 +1,7 @@
 import { TrackNoteEvent } from "@/types";
 import { PianoRollStoreAction } from "@/store/pianoRollStore";
 import { useNotes } from "@/helpers/notes";
-import { useStore } from "..";
+import useStore from "@/hooks/useStore";
 
 function setSelectedNotesAsLegato(notes: TrackNoteEvent[], dispatch: React.Dispatch<PianoRollStoreAction>) {
   let selectedNote = notes.filter((note) => note.isSelected).sort((a, b) => a.tick - b.tick);

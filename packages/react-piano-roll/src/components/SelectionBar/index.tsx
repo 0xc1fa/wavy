@@ -1,13 +1,16 @@
 import { getGridBaseSeparation, getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
 import styles from "./index.module.scss";
 import { basePixelsPerBeat } from "@/constants";
-import { useStore } from "@/index";
+import useStore from "@/hooks/useStore";
+import { baseCanvasWidth } from "@/helpers/conversion";
+import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
 interface RulerProps extends React.HTMLAttributes<SVGElement> {}
 export default function SelectionBar({ ...other }: RulerProps) {
   const { pianoRollStore } = useStore();
+  const { tickRange } = useConfig();
 
-  const numberOfGrids = getNumOfGrid(pianoRollStore.laneLength);
+  const numberOfGrids = getNumOfGrid(baseCanvasWidth(tickRange));
   const gridSeparationFactor = getGridSeparationFactor(pianoRollStore.pianoLaneScaleX);
   const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor);
   const rulerHeight = 30;

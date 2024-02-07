@@ -5,7 +5,7 @@ import useStore from "../../../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import { baseLaneWidth } from "@/constants";
 import { getMinYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
-import { useConfig } from "@/components";
+import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
 interface NoteBlockProps extends React.HTMLAttributes<HTMLDivElement> {
   note: TrackNoteEvent;
@@ -13,7 +13,7 @@ interface NoteBlockProps extends React.HTMLAttributes<HTMLDivElement> {
 function NoteBlock({ note, ...other }: NoteBlockProps) {
   const theme = useTheme();
   const { pianoRollStore } = useStore();
-  const { numOfKeys } = useConfig().range;
+  const { numOfKeys } = useConfig().pitchRange;
 
   return (
     <div

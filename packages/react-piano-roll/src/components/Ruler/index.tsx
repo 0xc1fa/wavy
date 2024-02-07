@@ -2,14 +2,17 @@ import { Fragment, memo } from "react";
 import styles from "./index.module.scss";
 import { getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
 import { basePixelsPerBeat } from "@/constants";
-import { useStore } from "@/index";
+import useStore from "@/hooks/useStore";
+import { baseCanvasWidth } from "@/helpers/conversion";
+import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
 interface RulerProps extends React.HTMLAttributes<SVGElement> {}
 
 const Ruler: React.FC<RulerProps> = ({ ...other }) => {
   const { pianoRollStore } = useStore();
+  const { tickRange } = useConfig();
 
-  const numberOfMarkers = getNumOfGrid(pianoRollStore.laneLength);
+  const numberOfMarkers = getNumOfGrid(baseCanvasWidth(tickRange));
   const gridSeparationFactor = getGridSeparationFactor(pianoRollStore.pianoLaneScaleX);
 
   const barMarkers = [...Array(numberOfMarkers.bar).keys()]

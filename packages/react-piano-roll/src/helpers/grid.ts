@@ -1,11 +1,11 @@
 import { basePixelsPerBeat, minGridPixel, ticksPerBeat } from "@/constants";
 import { ceilToNearestPowerOfTwo, floorToNearestPowerOfTwo } from "./number";
 
-export function getNumOfGrid(laneLength: number) {
-  const numberOfBarGrids = Math.ceil(laneLength / (basePixelsPerBeat * 4));
-  const numberOfHalfBarGrids = Math.ceil(laneLength / (basePixelsPerBeat * 2));
-  const numberOfQuarterGrids = Math.ceil(laneLength / basePixelsPerBeat);
-  const numberOfQuaversGrids = Math.ceil(laneLength / basePixelsPerBeat);
+export function getNumOfGrid(baseCanvasWidth: number) {
+  const numberOfBarGrids = Math.ceil(baseCanvasWidth / (basePixelsPerBeat * 4));
+  const numberOfHalfBarGrids = Math.ceil(baseCanvasWidth / (basePixelsPerBeat * 2));
+  const numberOfQuarterGrids = Math.ceil(baseCanvasWidth / basePixelsPerBeat);
+  const numberOfQuaversGrids = Math.ceil(baseCanvasWidth / basePixelsPerBeat);
   return {
     bar: numberOfBarGrids,
     halfBar: numberOfHalfBarGrids,

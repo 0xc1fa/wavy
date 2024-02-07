@@ -1,4 +1,3 @@
-"use client";
 import LaneGrids from "./LaneGrids";
 import { defaultPianoRollTheme } from "@/store/pianoRollTheme";
 import PianoRollThemeContext from "../contexts/piano-roll-theme-context";
@@ -8,47 +7,20 @@ import SelectionArea from "./SelectionMarquee";
 import LanesBackground from "./LanesBackground";
 import useStore from "../hooks/useStore";
 import PianoKeyboard from "./PianoKeyboard";
-import usePreventZoom, { disableZoom, enableZoom } from "../hooks/usePreventZoom";
 import Ruler from "./Ruler";
 import Notes from "./Notes";
 import Playhead from "./Playhead";
 import usePianoRollKeyboardHandlers from "../handlers/usePianoRollKeyboardHandlers";
 import TempoInfo from "./TempoInfo";
 import Selections from "./Selections";
-import {
-  CSSProperties,
-  KeyboardEvent,
-  createContext,
-  memo,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { CSSProperties, KeyboardEvent, useLayoutEffect, useMemo, useRef } from "react";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import VelocityEditor from "./VelocityEditor";
 import SelectionBar from "./SelectionBar";
-import type { PianoRollRange } from "@/interfaces/piano-roll-range";
-import { canvasHeight } from "@/helpers/conversion";
-
-type PianoRollConfig = {
-  range: PianoRollRange;
-};
-
-const defaultPianoRollConfig: PianoRollConfig = {
-  range: {
-    startingNoteNum: 0,
-    numOfKeys: 128,
-  },
-};
-
-const PianoRollConfigContext = createContext(defaultPianoRollConfig);
-const ConfigProvider = memo(PianoRollConfigContext.Provider);
-export function useConfig() {
-  return useContext(PianoRollConfigContext);
-}
+import type { PitchRange } from "@/interfaces/piano-roll-range";
+import { baseCanvasWidth, baseCanvasHeight } from "@/helpers/conversion";
+import { ConfigProvider, PianoRollConfig } from "@/contexts/PianoRollConfigProvider";
+import { useScrollToNote } from "@/hooks/useScrollToNote";
 
 interface PianoRollProps {
   playheadPosition?: number;
@@ -58,10 +30,9 @@ interface PianoRollProps {
   onNoteCreate?: (notes: TrackNoteEvent[]) => void;
   onNoteUpdate?: (notes: TrackNoteEvent[]) => void;
   onNoteSelect?: (notes: TrackNoteEvent[]) => void;
-  staringTick?: number;
-  endingTick?: number;
+  tickRange?: [number, number];
   style?: CSSProperties;
-  range?: PianoRollRange;
+  pitchRange?: PitchRange;
 }
 function PianoRoll({
   playheadPosition,
@@ -69,9 +40,8 @@ function PianoRoll({
   initialScrollMiddleNote = 60,
   onSpace,
   style,
-  staringTick = 200,
-  endingTick = 480 * 4 * 8,
-  range = { startingNoteNum: 0, numOfKeys: 128 },
+  tickRange = [0, 480 * 4 * 8],
+  pitchRange = { startingNoteNum: 0, numOfKeys: 128 },
 }: PianoRollProps) {
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const pianoRollKeyboardHandlers = usePianoRollKeyboardHandlers();
@@ -82,7 +52,8 @@ function PianoRoll({
 
   const config = useMemo(() => {
     const config: PianoRollConfig = {
-      range: range,
+      pitchRange: pitchRange,
+      tickRange: tickRange,
     };
     return config;
   }, []);
@@ -95,8 +66,8 @@ function PianoRoll({
           ref={containerRef}
           style={
             {
-              "--canvas-width": `${pianoRollStore.laneLength * pianoRollStore.pianoLaneScaleX}px`,
-              "--canvas-height": `${canvasHeight(range.numOfKeys)}px`,
+              "--canvas-width": `${baseCanvasWidth(tickRange) * pianoRollStore.pianoLaneScaleX}px`,
+              "--canvas-height": `${baseCanvasHeight(pitchRange.numOfKeys)}px`,
               ...style,
             } as React.CSSProperties
           }
@@ -142,20 +113,6 @@ function PianoRoll({
       </ConfigProvider>
     </PianoRollThemeContext.Provider>
   );
-}
-
-function useScrollToNote(containerRef: React.RefObject<HTMLElement>, initialScrollMiddleNote: number) {
-  // const [scrolled, setScrolled] = useState(false);
-  const scrolled = useRef(false);
-  useLayoutEffect(() => {
-    if (scrolled.current) {
-      return;
-    }
-    const keyElement = document.querySelector(`[data-keynum="${initialScrollMiddleNote}"]`) as HTMLDivElement;
-    const keyTop = keyElement.getBoundingClientRect().top;
-    containerRef.current?.scrollBy(0, keyTop);
-    scrolled.current = true;
-  }, []);
 }
 
 export default PianoRoll;

@@ -4,14 +4,14 @@ import useStore from "../../../hooks/useStore";
 import { memo } from "react";
 import { baseLaneWidth } from "@/constants";
 import { getMinYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
-import { useConfig } from "@/components";
+import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
 interface NoteLyricProps extends React.HTMLAttributes<HTMLInputElement> {
   note: TrackNoteEvent;
 }
 function NoteLyric({ note, style, ...other }: NoteLyricProps) {
   const { pianoRollStore, dispatch } = useStore();
-  const { numOfKeys } = useConfig().range;
+  const { numOfKeys } = useConfig().pitchRange;
 
   const handleKeyPress: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === "Enter") (event.target as HTMLInputElement).blur();

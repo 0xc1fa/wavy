@@ -3,8 +3,8 @@ import React, { memo } from "react";
 import useTheme from "../../../hooks/useTheme";
 import useStore from "../../../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
-import { canvasHeight, getCenterYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
-import { useConfig } from "@/components";
+import { baseCanvasWidth, baseCanvasHeight, getCenterYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
+import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
 interface NotePitchCurveProps extends React.SVGProps<SVGSVGElement> {
   note: TrackNoteEvent;
@@ -13,7 +13,8 @@ interface NotePitchCurveProps extends React.SVGProps<SVGSVGElement> {
 const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
   const theme = useTheme();
   const { pianoRollStore } = useStore();
-  const { numOfKeys } = useConfig().range;
+  const { numOfKeys } = useConfig().pitchRange;
+  const { tickRange } = useConfig();
 
   // Function to draw a point (circle in SVG)
   const drawPoint = (x: number, y: number, filled: boolean = true) => {
@@ -57,8 +58,6 @@ const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
     );
   };
 
-  const { canvasWidth } = pianoRollStore;
-
   // Extract needed values from the note and store
   const noteStartingX = getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick);
   const noteEndingX = getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick + note.duration);
@@ -68,8 +67,8 @@ const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
   return (
     <svg
       aria-label="piano-roll-pitch-curve"
-      width={canvasWidth}
-      height={canvasHeight(numOfKeys)}
+      width={baseCanvasWidth(tickRange) * pianoRollStore.pianoLaneScaleX}
+      height={baseCanvasHeight(numOfKeys)}
       style={{ position: "absolute" }}
       {...other}
     >

@@ -3,17 +3,18 @@ import useTheme from "../../hooks/useTheme";
 import styles from "./index.module.scss";
 import { getGridBaseSeparation, getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
 import { basePixelsPerBeat } from "@/constants";
-import { useStore } from "@/index";
-import { canvasHeight } from "@/helpers/conversion";
-import { useConfig } from "..";
+import useStore from "@/hooks/useStore";
+import { baseCanvasWidth } from "@/helpers/conversion";
+import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
 interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {}
 const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
   const theme = useTheme();
   const { pianoRollStore } = useStore();
+  const { tickRange } = useConfig();
 
   const gridSeparationFactor = getGridSeparationFactor(pianoRollStore.pianoLaneScaleX);
-  const numberOfGrids = getNumOfGrid(pianoRollStore.laneLength);
+  const numberOfGrids = getNumOfGrid(baseCanvasWidth(tickRange));
   const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor);
 
   const gridLines = (gridType: "bar" | "quarter" | "quavers") => {

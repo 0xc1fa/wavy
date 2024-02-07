@@ -1,4 +1,4 @@
-export type PianoRollRange = {
+export type PitchRange = {
   startingNoteNum: number;
   numOfKeys: number;
 };

@@ -21,27 +21,9 @@ import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes
 import { HistoryAction, PianoRollHistoryItem, redo, undo } from "../actions/history-action";
 import { MetaAction, setClipSpan } from "@/actions/meta-action";
 import {
-  baseBlackKeyLength,
-  baseKeyWidth,
-  baseLaneWidth,
   basePixelsPerBeat,
   basePixelsPerTick,
-  baseWhiteKeyWidth,
-  blackKeyLengthRatio,
-  draggableBoundaryPixel,
-  ticksPerBeat,
 } from "@/constants";
-import {
-  getBlackKeyNumFromPosition,
-  getMaxYFromNoteNum,
-  getMinYFromNoteNum,
-  getNoteFromPosition,
-  getNoteNumFromOffsetY,
-  getOffsetXFromTick,
-  getTickFromOffsetX,
-  getWhiteKeyNumFromPosition,
-} from "@/helpers/conversion";
-import { useConfig } from "@/components";
 
 export const PianoRollStoreContext = createContext<ReturnType<typeof usePianoRollStore> | undefined>(undefined);
 
@@ -143,14 +125,6 @@ function defaultPianoRollStore() {
 
     get scaledPixelPerBeat() {
       return basePixelsPerBeat * this.pianoLaneScaleX;
-    },
-
-    get laneLength() {
-      return (this.endingTick - this.startingTick) * basePixelsPerTick;
-    },
-
-    get canvasWidth() {
-      return this.pianoLaneScaleX * this.laneLength;
     },
   };
 }

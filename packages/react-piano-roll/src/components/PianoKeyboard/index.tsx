@@ -3,12 +3,12 @@ import { isBlackKey } from "../../helpers";
 import useStore from "../../hooks/useStore";
 import useTheme from "../../hooks/useTheme";
 import styles from "./index.module.scss";
-import { canvasHeight, getMinYFromNoteNum, getNoteNameFromNoteNum } from "@/helpers/conversion";
-import { useConfig } from "..";
+import { baseCanvasHeight, getMinYFromNoteNum, getNoteNameFromNoteNum } from "@/helpers/conversion";
+import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
 interface PianoKeyboardProps extends React.HTMLAttributes<HTMLCanvasElement> {}
 export default function PianoKeyboard(props: PianoKeyboardProps) {
-  const { startingNoteNum, numOfKeys } = useConfig().range;
+  const { startingNoteNum, numOfKeys } = useConfig().pitchRange;
 
   const keyNums = [];
   for (let i = startingNoteNum; i < startingNoteNum + numOfKeys; i++) {
@@ -27,7 +27,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
     currentTarget.addEventListener("mouseleave", handleMouseLeave);
   };
 
-  let currentY = canvasHeight(numOfKeys);
+  let currentY = baseCanvasHeight(numOfKeys);
 
   return (
     <div className={styles["container"]}>

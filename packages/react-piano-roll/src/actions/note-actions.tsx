@@ -7,13 +7,11 @@ import {
   clampDuration,
   clampNoteNumber,
   clampTick,
-  clampTo7BitRange,
-  clampTo7BitRangeWithMinOne,
   clampVelocity,
 } from "@/helpers/number";
 import { defaultNoteLyric } from "@/constants";
 import { getNoteNumFromOffsetY, getTickFromOffsetX } from "@/helpers/conversion";
-import { useConfig } from "@/components";
+import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
 export type NoteAction =
   | AddNoteAction
@@ -215,7 +213,7 @@ type SetNoteInMarqueeAsSelectedAction = {
   };
 };
 export function setNoteInMarqueeAsSelected(state: PianoRollStore, action: SetNoteInMarqueeAsSelectedAction) {
-  const { numOfKeys } = useConfig().range;
+  const { numOfKeys } = useConfig().pitchRange;
   const [selectedMinNoteNum, selectedMaxNoteNum] = [
     getNoteNumFromOffsetY(numOfKeys, action.payload.startingPosition.y),
     getNoteNumFromOffsetY(numOfKeys, action.payload.ongoingPosition.y),
