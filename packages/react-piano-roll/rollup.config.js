@@ -6,7 +6,7 @@ import autoprefixer from "autoprefixer";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
-import banner2 from 'rollup-plugin-banner2'
+import banner2 from "rollup-plugin-banner2";
 
 export default {
   input: "src/index.ts",
@@ -33,7 +33,7 @@ export default {
     nodeResolve(),
     commonjs(),
     banner2(() => {
-      return '"use client";\n'
+      return '"use client";\n';
     }),
     // terser(),
   ],

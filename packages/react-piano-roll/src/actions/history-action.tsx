@@ -35,10 +35,10 @@ export function undo(state: PianoRollStore, action: UndoAction) {
     return state;
   }
 
-  const prevNoteHistory = getPrevNoteHistory(state.pianoRollNotes, state.notesHistory);
+  const prevNoteHistory = getPrevNoteHistory(state.notes, state.notesHistory);
   return {
     ...state,
-    pianoRollNotes: prevNoteHistory,
+    notes: prevNoteHistory,
     notesHistory: {
       ...state.notesHistory,
       head: head - 1,
@@ -80,10 +80,10 @@ export function redo(state: PianoRollStore, action: RedoAction) {
     return state;
   }
 
-  const nextNoteHistory = getNextNoteHistory(state.pianoRollNotes, state.notesHistory);
+  const nextNoteHistory = getNextNoteHistory(state.notes, state.notesHistory);
   return {
     ...state,
-    pianoRollNotes: nextNoteHistory,
+    notes: nextNoteHistory,
     notesHistory: {
       ...state.notesHistory,
       head: head + 1,

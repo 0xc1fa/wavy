@@ -7,9 +7,9 @@ export function focusNote(e: Event, id: string) {
   childElement!.focus();
 }
 
-export function usePianoRollNotes() {
+export function useNotes() {
   const { pianoRollStore } = useStore();
-  return pianoRollStore.pianoRollNotes;
+  return pianoRollStore.notes;
 }
 
 export function getSelectedNotes(notes: TrackNoteEvent[]) {

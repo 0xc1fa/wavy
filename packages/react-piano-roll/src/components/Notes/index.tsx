@@ -8,7 +8,7 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
 
   return (
     <div className={styles["notes-container"]}>
-      {pianoRollStore.pianoRollNotes.map((note) => (
+      {pianoRollStore.notes.map((note) => (
         <div
           className={styles["note"]}
           data-note-num={note.noteNumber}

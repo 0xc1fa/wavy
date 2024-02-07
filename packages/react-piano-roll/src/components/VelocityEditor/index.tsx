@@ -10,7 +10,7 @@ import { getOffsetXFromTick } from "@/helpers/conversion";
 export default function VelocityEditor() {
   const { pianoRollStore } = useStore();
   const theme = useTheme();
-  const { pianoRollNotes } = pianoRollStore;
+  const { notes } = pianoRollStore;
   const [isDragging, setIsDragging] = useState(false);
 
   const [containerHeight, setContainerHeight] = useState(200);
@@ -64,7 +64,7 @@ export default function VelocityEditor() {
         <div className={styles["right-container"]}>
           <LaneGrids />
           <div className={styles["note-bar-container"]} {...mouseHandlers}>
-            {pianoRollNotes.map((note) => (
+            {notes.map((note) => (
               <div
                 key={note.id}
                 className={styles["marker-container"]}

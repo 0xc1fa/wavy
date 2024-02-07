@@ -6,7 +6,7 @@ import {
   getEndingTickFromNotes,
   getSelectedNotes,
   getStartingTickFromNotes,
-  usePianoRollNotes,
+  useNotes,
 } from "../helpers/notes";
 import _ from "lodash";
 
@@ -42,7 +42,7 @@ function clipboardReducer(state: Clipboard, action: ClipboardAction) {
 
 export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.KeyboardEvent) => void) {
   const { pianoRollStore, dispatch } = useStore();
-  const pianoRollNotes = usePianoRollNotes();
+  const notes = useNotes();
   const [clipboard, clipboardDispatch] = useReducer(clipboardReducer, {
     notes: [],
     selectionRegion: { start: 0, width: 0 },
@@ -99,7 +99,7 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
       Array.from(focusedElement.attributes).forEach((attr) => {
         if (attr.name === "data-noteid") {
           console.log(attr.name, attr.value);
-          if (pianoRollNotes.filter((note) => note.id === attr.value)) {
+          if (notes.filter((note) => note.id === attr.value)) {
             flag = false;
           }
         }
@@ -120,7 +120,7 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
     event.preventDefault();
     event.stopPropagation();
 
-    const selectedNotes = getSelectedNotes(pianoRollNotes);
+    const selectedNotes = getSelectedNotes(notes);
     if (selectedNotes.length > 0) {
       clipboardDispatch({ type: "setNote", payload: { notes: selectedNotes } });
     }
@@ -130,7 +130,7 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
     console.log("copying...");
     event.preventDefault();
     event.stopPropagation();
-    const selectedNotes = getSelectedNotes(pianoRollNotes);
+    const selectedNotes = getSelectedNotes(notes);
 
     if (selectedNotes.length > 0) {
       clipboardDispatch({ type: "setNote", payload: { notes: selectedNotes } });

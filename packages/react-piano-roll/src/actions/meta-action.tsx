@@ -1,7 +1,6 @@
 import { PianoRollStore } from "@/store/pianoRollStore";
 
-export type MetaAction =
-  | SetClipSpanAction
+export type MetaAction = SetClipSpanAction;
 
 type SetClipSpanAction = {
   type: "SET_CLIP_SPAN";

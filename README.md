@@ -52,4 +52,4 @@ export default App
 
 Multiple hooks are provided to access the state of the pianoroll. A breif description of each hook is provided below. For more details, please refer to the source code.
 
-`usePianorollNotes()` returns the notes in the pianoroll.
+`useNotes()` returns the notes in the pianoroll.

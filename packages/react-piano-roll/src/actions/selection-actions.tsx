@@ -9,7 +9,7 @@ type SetNoteAsSelectedAction = {
 export function setNoteAsSelected(state: PianoRollStore, action: SetNoteAsSelectedAction) {
   return {
     ...state,
-    pianoRollNotes: state.pianoRollNotes.map((note) => ({
+    notes: state.notes.map((note) => ({
       ...note,
       isSelected: note.isSelected || note.id === action.payload.noteId,
     })),
@@ -20,7 +20,7 @@ type UnselectAllNotesAction = { type: "UNSELECTED_ALL_NOTES" };
 export function unselectAllNotes(state: PianoRollStore, action: UnselectAllNotesAction) {
   return {
     ...state,
-    pianoRollNotes: state.pianoRollNotes.map((note) => ({
+    notes: state.notes.map((note) => ({
       ...note,
       isSelected: false,
     })),

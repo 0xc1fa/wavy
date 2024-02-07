@@ -119,7 +119,7 @@ export type PianoRollStoreContext = ReturnType<typeof usePianoRollStore>;
 export type PianoRollStore = ReturnType<typeof defaultPianoRollStore>;
 function defaultPianoRollStore() {
   return {
-    pianoRollNotes: new Array<TrackNoteEvent>(),
+    notes: new Array<TrackNoteEvent>(),
     notesHistory: {
       head: -1,
       history: new Array<PianoRollHistoryItem>(),

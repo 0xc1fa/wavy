@@ -1,6 +1,6 @@
 import { TrackNoteEvent } from "@/types";
 import { PianoRollStoreAction } from "@/store/pianoRollStore";
-import { usePianoRollNotes } from "@/helpers/notes";
+import { useNotes } from "@/helpers/notes";
 import { useStore } from "..";
 
 function setSelectedNotesAsLegato(notes: TrackNoteEvent[], dispatch: React.Dispatch<PianoRollStoreAction>) {
@@ -12,7 +12,7 @@ function setSelectedNotesAsLegato(notes: TrackNoteEvent[], dispatch: React.Dispa
 }
 
 export function useNoteModification() {
-  const pianoRollNote = usePianoRollNotes();
+  const pianoRollNote = useNotes();
   const { dispatch } = useStore();
 
   return {

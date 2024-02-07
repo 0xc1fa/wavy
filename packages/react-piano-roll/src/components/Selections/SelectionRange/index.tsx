@@ -1,4 +1,4 @@
-import { getEndingTickFromNotes, getSelectedNotes, getStartingTickFromNotes, usePianoRollNotes } from "@/helpers/notes";
+import { getEndingTickFromNotes, getSelectedNotes, getStartingTickFromNotes, useNotes } from "@/helpers/notes";
 import useStore from "../../../hooks/useStore";
 import styles from "./index.module.scss";
 import { basePixelsPerTick } from "@/constants";
@@ -6,8 +6,8 @@ import { basePixelsPerTick } from "@/constants";
 export default function SelectionRange() {
   const { pianoRollStore } = useStore();
 
-  const pianoRollNotes = usePianoRollNotes();
-  const selectedNotes = getSelectedNotes(pianoRollNotes);
+  const notes = useNotes();
+  const selectedNotes = getSelectedNotes(notes);
 
   const selectionStart = getStartingTickFromNotes(selectedNotes);
   const selectionEnd = getEndingTickFromNotes(selectedNotes);

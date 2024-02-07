@@ -62,7 +62,7 @@ export default function usePianoRollMouseHandlers() {
     const noteClicked = getNoteFromEvent(
       numOfKeys,
       pianoRollStore.pianoLaneScaleX,
-      pianoRollStore.pianoRollNotes,
+      pianoRollStore.notes,
       event.nativeEvent,
     );
     setNoteSelection(event, noteClicked);
@@ -259,7 +259,7 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const onDoubleClick: React.MouseEventHandler = (event) => {
-    const noteClicked = getNoteFromPosition(pianoRollStore.pianoLaneScaleX, numOfKeys, pianoRollStore.pianoRollNotes, [
+    const noteClicked = getNoteFromPosition(pianoRollStore.pianoLaneScaleX, numOfKeys, pianoRollStore.notes, [
       event.nativeEvent.offsetX,
       event.nativeEvent.offsetY,
     ]);
@@ -286,7 +286,7 @@ export default function usePianoRollMouseHandlers() {
 
   const updateCursorStyle = (e: PointerEvent) => {
     const target = e.currentTarget as HTMLElement;
-    const noteHovered = getNoteFromPosition(pianoRollStore.pianoLaneScaleX, numOfKeys, pianoRollStore.pianoRollNotes, [
+    const noteHovered = getNoteFromPosition(pianoRollStore.pianoLaneScaleX, numOfKeys, pianoRollStore.notes, [
       e.offsetX,
       e.offsetY,
     ]);

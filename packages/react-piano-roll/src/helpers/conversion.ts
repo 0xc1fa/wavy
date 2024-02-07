@@ -1,4 +1,12 @@
-import { baseBlackKeyLength, baseKeyWidth, baseLaneWidth, basePixelsPerBeat, baseWhiteKeyWidth, draggableBoundaryPixel, ticksPerBeat } from "@/constants";
+import {
+  baseBlackKeyLength,
+  baseKeyWidth,
+  baseLaneWidth,
+  basePixelsPerBeat,
+  baseWhiteKeyWidth,
+  draggableBoundaryPixel,
+  ticksPerBeat,
+} from "@/constants";
 import { PianoRollRange } from "@/interfaces/piano-roll-range";
 import { TrackNoteEvent } from "@/types";
 import { isBlackKey } from ".";
@@ -93,15 +101,20 @@ export function isInnerKeyboard(x: number) {
 export function getPianoKeyNumFromPosition(range: PianoRollRange, x: number, y: number) {
   const estimatedKeyNum = Math.floor(range.numOfKeys - y / baseKeyWidth);
   if (!isInnerKeyboard(x)) {
-    return getWhiteKeyNumFromPosition({numOfKeys: range.numOfKeys, startingNoteNum: range.startingNoteNum }, y);
+    return getWhiteKeyNumFromPosition({ numOfKeys: range.numOfKeys, startingNoteNum: range.startingNoteNum }, y);
   } else if (isInnerKeyboard(x) && isBlackKey(estimatedKeyNum)) {
     return getBlackKeyNumFromPosition(range.numOfKeys, y);
   } else {
-    return getWhiteKeyNumFromPosition({numOfKeys: range.numOfKeys, startingNoteNum: range.startingNoteNum }, y);
+    return getWhiteKeyNumFromPosition({ numOfKeys: range.numOfKeys, startingNoteNum: range.startingNoteNum }, y);
   }
 }
 
-export function getNoteFromEvent(numOfKeys: number, scaleX: number, notes: TrackNoteEvent[], e: PointerEvent | MouseEvent): TrackNoteEvent | null {
+export function getNoteFromEvent(
+  numOfKeys: number,
+  scaleX: number,
+  notes: TrackNoteEvent[],
+  e: PointerEvent | MouseEvent,
+): TrackNoteEvent | null {
   return getNoteFromPosition(scaleX, numOfKeys, notes, [e.offsetX, e.offsetY]);
 }
 

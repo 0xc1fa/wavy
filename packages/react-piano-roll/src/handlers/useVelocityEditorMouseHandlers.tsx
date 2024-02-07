@@ -21,7 +21,7 @@ export default function useVelocityEditorMouseHandlers() {
     const offsetY = event.nativeEvent.offsetY;
     switch (mouseHandlerMode) {
       case VelocityEditorMouseHandlerMode.Pencil: {
-        const notesInPosition = getNotesFromOffsetX(pianoRollStore.pianoLaneScaleX, pianoRollStore.pianoRollNotes, offsetX);
+        const notesInPosition = getNotesFromOffsetX(pianoRollStore.pianoLaneScaleX, pianoRollStore.notes, offsetX);
         const newVelocityInPercent = 1 - offsetY / containerHeight;
         const newVelocity = newVelocityInPercent * 127;
         console.log(offsetX);
@@ -37,7 +37,7 @@ export default function useVelocityEditorMouseHandlers() {
         break;
       }
       case VelocityEditorMouseHandlerMode.SelectAndDrag: {
-        const noteClicked = getNotesFromOffsetX(pianoRollStore.pianoLaneScaleX, pianoRollStore.pianoRollNotes, offsetX)[0];
+        const noteClicked = getNotesFromOffsetX(pianoRollStore.pianoLaneScaleX, pianoRollStore.notes, offsetX)[0];
         const noteClickedIsSelected = noteClicked?.isSelected;
         if (noteClicked) {
           if (!noteClicked.isSelected) {
@@ -76,7 +76,7 @@ export default function useVelocityEditorMouseHandlers() {
     const offsetY = event.nativeEvent.offsetY;
     switch (mouseHandlerMode) {
       case VelocityEditorMouseHandlerMode.Pencil: {
-        const notesInPosition = getNotesFromOffsetX(pianoRollStore.pianoLaneScaleX, pianoRollStore.pianoRollNotes, offsetX);
+        const notesInPosition = getNotesFromOffsetX(pianoRollStore.pianoLaneScaleX, pianoRollStore.notes, offsetX);
         const newVelocityInPercent = 1 - offsetY / containerHeight;
         const newVelocity = newVelocityInPercent * 127;
         console.log(offsetX);

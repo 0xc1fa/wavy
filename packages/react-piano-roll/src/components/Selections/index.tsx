@@ -1,12 +1,12 @@
-import { getSelectedNotes, usePianoRollNotes } from "../../helpers/notes";
+import { getSelectedNotes, useNotes } from "../../helpers/notes";
 import SelectionPoint from "./SelectionPoint";
 import SelectionRange from "./SelectionRange";
 
 type SelectionRangeMode = "single" | "multiple" | "none";
 
 export default function Selections() {
-  const pianoRollNotes = usePianoRollNotes();
-  const selectedNotes = getSelectedNotes(pianoRollNotes);
+  const notes = useNotes();
+  const selectedNotes = getSelectedNotes(notes);
 
   const selectionRangeMode: SelectionRangeMode = selectedNotes.length > 1 ? "multiple" : "single";
 

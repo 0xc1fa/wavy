@@ -54,7 +54,7 @@ export function addNote(state: PianoRollStore, action: AddNoteAction) {
   const newNote = createNote(state, action.payload.ticks, action.payload.noteNum);
   return {
     ...state,
-    pianoRollNotes: [...state.pianoRollNotes, newNote],
+    notes: [...state.notes, newNote],
     notesHistory: {
       head: state.notesHistory.head + 1,
       history: [
@@ -76,7 +76,7 @@ export function addNotes(state: PianoRollStore, action: AddNotesAction) {
   }));
   return {
     ...state,
-    pianoRollNotes: [...state.pianoRollNotes, ...newNotes],
+    notes: [...state.notes, ...newNotes],
     notesHistory: {
       head: state.notesHistory.head + 1,
       history: [
@@ -95,7 +95,7 @@ export function modifyingNotes(state: PianoRollStore, action: ModifyingNotesActi
   const { history, head } = state.notesHistory;
   const prevHistory = history[head]?.note;
   const notesIdsToBeModified = action.payload.notes.map((note) => note.id);
-  const notesNotModified = state.pianoRollNotes.filter((note) => !notesIdsToBeModified.includes(note.id));
+  const notesNotModified = state.notes.filter((note) => !notesIdsToBeModified.includes(note.id));
   const notesModifiedWithClampValue = action.payload.notes.map((note) => ({
     ...note,
     noteNumber: clampNoteNumber(note.noteNumber),
@@ -105,7 +105,7 @@ export function modifyingNotes(state: PianoRollStore, action: ModifyingNotesActi
   }));
   const newStateWithoutHistory = {
     ...state,
-    pianoRollNotes: [...notesNotModified, ...notesModifiedWithClampValue],
+    notes: [...notesNotModified, ...notesModifiedWithClampValue],
   };
   if (_.isEqual(prevHistory, state.noteModificationBuffer.notesSelected)) {
     return {
@@ -130,10 +130,10 @@ export function modifyingNotes(state: PianoRollStore, action: ModifyingNotesActi
 
 type DeleteSelectedNotesAction = { type: "DELETE_SELECTED_NOTES" };
 export function deleteSelectedNotes(state: PianoRollStore, action: DeleteSelectedNotesAction) {
-  const notesToBeDeleted = state.pianoRollNotes.filter((note) => note.isSelected);
+  const notesToBeDeleted = state.notes.filter((note) => note.isSelected);
   return {
     ...state,
-    pianoRollNotes: state.pianoRollNotes.filter((note) => !note.isSelected),
+    notes: state.notes.filter((note) => !note.isSelected),
     notesHistory: {
       head: state.notesHistory.head + 1,
       history: [
@@ -150,7 +150,7 @@ type ToggleSelectedNoteVibratoModeAction = {
 export function toggleSelectedNoteVibratoMode(state: PianoRollStore, action: ToggleSelectedNoteVibratoModeAction) {
   return {
     ...state,
-    pianoRollNotes: state.pianoRollNotes.map((note) => ({
+    notes: state.notes.map((note) => ({
       ...note,
       vibratoMode: note.isSelected ? (note.vibratoMode + 1) % 2 : note.vibratoMode,
     })),
@@ -167,7 +167,7 @@ export function vibratoDepthDelayChangeSelectedNote(
 ) {
   return {
     ...state,
-    pianoRollNotes: state.pianoRollNotes.map((note) => {
+    notes: state.notes.map((note) => {
       if (note.isSelected) {
         const newVibratoDepth = note.vibratoDepth + 0.6 * action.payload.depthOffset;
         const newVibratoDelay = note.vibratoDelay - 4 * action.payload.delayOffset;
@@ -190,7 +190,7 @@ type VibratoRateChangeSelectedNoteAction = {
 export function vibratoRateChangeSelectedNote(state: PianoRollStore, action: VibratoRateChangeSelectedNoteAction) {
   return {
     ...state,
-    pianoRollNotes: state.pianoRollNotes.map((note) => {
+    notes: state.notes.map((note) => {
       if (note.isSelected) {
         const newVibratoRate = note.vibratoRate - 0.15 * action.payload.rateOffset;
         // const newVibratoRate = note.vibratoRate + 1 * (this.state.ongoingPosition.x - e.offsetX);
@@ -226,7 +226,7 @@ export function setNoteInMarqueeAsSelected(state: PianoRollStore, action: SetNot
   ].sort((a, b) => a - b);
   return {
     ...state,
-    pianoRollNotes: state.pianoRollNotes.map((note) => {
+    notes: state.notes.map((note) => {
       if (
         note.noteNumber >= selectedMinNoteNum &&
         note.noteNumber <= selectedMaxNoteNum &&
@@ -248,7 +248,7 @@ type UpdateNoteLyricAction = {
 export function updateNoteLyric(state: PianoRollStore, action: UpdateNoteLyricAction) {
   return {
     ...state,
-    pianoRollNotes: state.pianoRollNotes.map((note) => {
+    notes: state.notes.map((note) => {
       if (note.id === action.payload.noteId) {
         return { ...note, lyric: action.payload.lyric };
       } else {
@@ -265,9 +265,9 @@ type MoveNoteAsLatestModifiedAction = {
 export function moveNoteAsLatestModified(state: PianoRollStore, action: MoveNoteAsLatestModifiedAction) {
   return {
     ...state,
-    pianoRollNotes: state.pianoRollNotes
+    notes: state.notes
       .filter((note) => note.id !== action.payload.noteId)
-      .concat(state.pianoRollNotes.filter((note) => note.id === action.payload.noteId)),
+      .concat(state.notes.filter((note) => note.id === action.payload.noteId)),
   };
 }
 
@@ -282,7 +282,7 @@ export function setNoteModificationBufferWithSelectedNote(
   return {
     ...state,
     noteModificationBuffer: {
-      notesSelected: state.pianoRollNotes.filter((note) => note.isSelected),
+      notesSelected: state.notes.filter((note) => note.isSelected),
       initX: action.payload.initX,
       initY: action.payload.initY,
     },
@@ -300,7 +300,7 @@ export function setNoteModificationBufferWithAllNote(
   return {
     ...state,
     noteModificationBuffer: {
-      notesSelected: state.pianoRollNotes,
+      notesSelected: state.notes,
       initX: action.payload.initX,
       initY: action.payload.initY,
     },
