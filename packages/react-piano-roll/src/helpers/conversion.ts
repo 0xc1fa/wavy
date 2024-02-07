@@ -88,3 +88,14 @@ export function getBlackKeyNumFromPosition(numOfKeys: number, y: number) {
 export function isInnerKeyboard(x: number) {
   return x < baseBlackKeyLength;
 }
+
+export function getPianoKeyNumFromPosition(range: PianoRollRange, x: number, y: number) {
+  const estimatedKeyNum = Math.floor(range.numOfKeys - y / baseKeyWidth);
+  if (!isInnerKeyboard(x)) {
+    return getWhiteKeyNumFromPosition({numOfKeys: range.numOfKeys, startingNoteNum: range.startingNoteNum }, y);
+  } else if (isInnerKeyboard(x) && isBlackKey(estimatedKeyNum)) {
+    return getBlackKeyNumFromPosition(range.numOfKeys, y);
+  } else {
+    return getWhiteKeyNumFromPosition({numOfKeys: range.numOfKeys, startingNoteNum: range.startingNoteNum }, y);
+  }
+}

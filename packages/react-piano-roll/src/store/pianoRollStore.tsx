@@ -166,17 +166,6 @@ function defaultPianoRollStore() {
       return baseLaneWidth * this.numOfKeys;
     },
 
-    getPianoKeyNumFromPosition(x: number, y: number) {
-      const estimatedKeyNum = Math.floor(this.numOfKeys - y / baseKeyWidth);
-      if (!this.isInnerKeyboard(x)) {
-        return getWhiteKeyNumFromPosition({numOfKeys: this.numOfKeys, startingNoteNum: this.startingNoteNum }, y);
-      } else if (this.isInnerKeyboard(x) && isBlackKey(estimatedKeyNum)) {
-        return getBlackKeyNumFromPosition(this.numOfKeys, y);
-      } else {
-        return getWhiteKeyNumFromPosition({numOfKeys: this.numOfKeys, startingNoteNum: this.startingNoteNum }, y);
-      }
-    },
-
     getNoteFromEvent(e: PointerEvent | MouseEvent): TrackNoteEvent | null {
       return getNoteFromPosition(this.pianoLaneScaleX, this.numOfKeys, this.pianoRollNotes, [e.offsetX, e.offsetY]);
     },
