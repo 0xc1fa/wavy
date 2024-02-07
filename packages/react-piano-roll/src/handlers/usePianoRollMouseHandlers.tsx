@@ -4,7 +4,7 @@ import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import _ from "lodash";
 import { getGridOffsetOfTick, getNearestAnchor, getNearestGridTick, getTickInGrid } from "@/helpers/grid";
-import { getNoteNumFromOffsetY, getTickFromOffsetX } from "@/helpers/conversion";
+import { getNoteFromPosition, getNoteNumFromOffsetY, getTickFromOffsetX } from "@/helpers/conversion";
 
 export enum PianoRollLanesMouseHandlerMode {
   DragAndDrop,
@@ -238,7 +238,12 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const onDoubleClick: React.MouseEventHandler = (event) => {
-    const noteClicked = pianoRollStore.getNoteFromPosition(event.nativeEvent.offsetX, event.nativeEvent.offsetY);
+    const noteClicked = getNoteFromPosition(
+      pianoRollStore.pianoLaneScaleX,
+      pianoRollStore.numOfKeys,
+      pianoRollStore.pianoRollNotes,
+      [event.nativeEvent.offsetX, event.nativeEvent.offsetY],
+    );
     if (noteClicked && event.altKey) {
       dispatch({ type: "TOGGLE_SELECTED_NOTE_VIBRATO_MODE" });
     } else if (noteClicked) {
@@ -262,7 +267,12 @@ export default function usePianoRollMouseHandlers() {
 
   const updateCursorStyle = (e: PointerEvent) => {
     const target = e.currentTarget as HTMLElement;
-    const noteHovered = pianoRollStore.getNoteFromPosition(e.offsetX, e.offsetY);
+    const noteHovered = getNoteFromPosition(
+      pianoRollStore.pianoLaneScaleX,
+      pianoRollStore.numOfKeys,
+      pianoRollStore.pianoRollNotes,
+      [e.offsetX, e.offsetY]
+    );
     const isBoundaryHovered =
       noteHovered &&
       (pianoRollStore.isNoteLeftMarginClicked(noteHovered, e.offsetX, e.offsetY) ||

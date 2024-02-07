@@ -34,6 +34,7 @@ import {
 import {
   getMaxYFromNoteNum,
   getMinYFromNoteNum,
+  getNoteFromPosition,
   getNoteNumFromOffsetY,
   getOffsetXFromTick,
   getTickFromOffsetX,
@@ -161,19 +162,6 @@ function defaultPianoRollStore() {
       return baseLaneWidth * this.numOfKeys;
     },
 
-    getNoteFromPosition(offsetX: number, offsetY: number): TrackNoteEvent | null {
-      for (const note of this.pianoRollNotes.slice().reverse()) {
-        if (
-          getNoteNumFromOffsetY(this.numOfKeys, offsetY) == note.noteNumber &&
-          getTickFromOffsetX(offsetX, this.pianoLaneScaleX) >= note.tick &&
-          getTickFromOffsetX(offsetX, this.pianoLaneScaleX) <= note.tick + note.duration
-        ) {
-          return note;
-        }
-      }
-      return null;
-    },
-
     getWhiteKeyNumFromPosition(y: number) {
       let currentY = 0;
       for (let keyNum = this.numOfKeys - 1; keyNum >= this.startingNoteNum; keyNum--) {
@@ -204,7 +192,7 @@ function defaultPianoRollStore() {
     },
 
     getNoteFromEvent(e: PointerEvent | MouseEvent): TrackNoteEvent | null {
-      return this.getNoteFromPosition(e.offsetX, e.offsetY);
+      return getNoteFromPosition(this.pianoLaneScaleX, this.numOfKeys, this.pianoRollNotes, [e.offsetX, e.offsetY]);
     },
 
     getNoteNumFromEvent(e: PointerEvent | MouseEvent): number {

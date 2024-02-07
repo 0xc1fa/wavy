@@ -25,7 +25,7 @@ export function getCenterYFromNoteNum(numOfKeys: number, noteNum: number) {
   return (getMinYFromNoteNum(numOfKeys, noteNum) + getMaxYFromNoteNum(numOfKeys, noteNum)) / 2;
 }
 
-export function getNotesFromOffsetX(scaleX: number, notes: TrackNoteEvent[], offsetX: number, ) {
+export function getNotesFromOffsetX(scaleX: number, notes: TrackNoteEvent[], offsetX: number) {
   return notes.filter(
     (note) =>
       note.tick <= getTickFromOffsetX(offsetX, scaleX) &&
@@ -42,4 +42,25 @@ export function getNoteNameFromNoteNum(noteNum: number) {
 
 export function getOffsetXFromTick(scaleX: number, tick: number) {
   return (tick / ticksPerBeat) * basePixelsPerBeat * scaleX;
+}
+
+export function getNoteFromPosition(
+  scaleX: number,
+  numOfKeys: number,
+  notes: TrackNoteEvent[],
+  position: { offsetX: number; offsetY: number } | [number, number],
+): TrackNoteEvent | null {
+  if (Array.isArray(position)) {
+    position = { offsetX: position[0], offsetY: position[1] };
+  }
+  for (const note of notes.slice().reverse()) {
+    if (
+      getNoteNumFromOffsetY(numOfKeys, position.offsetY) == note.noteNumber &&
+      getTickFromOffsetX(position.offsetX, scaleX) >= note.tick &&
+      getTickFromOffsetX(position.offsetX, scaleX) <= note.tick + note.duration
+    ) {
+      return note;
+    }
+  }
+  return null;
 }
