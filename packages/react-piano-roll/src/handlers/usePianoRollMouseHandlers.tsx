@@ -12,6 +12,7 @@ import {
   getTickFromEvent,
   getTickFromOffsetX,
   isNoteLeftMarginClicked,
+  isNoteRightMarginClicked,
   roundDownTickToNearestGrid,
 } from "@/helpers/conversion";
 import { useConfig } from "@/components";
@@ -291,7 +292,7 @@ export default function usePianoRollMouseHandlers() {
         x: e.offsetX,
         y: e.offsetY,
       }) ||
-        pianoRollStore.isNoteRightMarginClicked(noteHovered, e.offsetX, e.offsetY));
+        isNoteRightMarginClicked(numOfKeys, pianoRollStore.pianoLaneScaleX, noteHovered, { x: e.offsetX, y: e.offsetY}));
     target.style.cursor = isBoundaryHovered ? "col-resize" : "default";
   };
 
@@ -310,7 +311,7 @@ export default function usePianoRollMouseHandlers() {
     ) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesTrimming);
     } else if (
-      pianoRollStore.isNoteRightMarginClicked(noteClicked!, event.nativeEvent.offsetX, event.nativeEvent.offsetY)
+      isNoteRightMarginClicked(numOfKeys, pianoRollStore.pianoLaneScaleX, noteClicked!, [event.nativeEvent.offsetX, event.nativeEvent.offsetY])
     ) {
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick + noteClicked.duration } });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesExtending);

@@ -2,7 +2,7 @@ import { baseBlackKeyLength, baseKeyWidth, baseLaneWidth, basePixelsPerBeat, bas
 import { PianoRollRange } from "@/interfaces/piano-roll-range";
 import { TrackNoteEvent } from "@/types";
 import { isBlackKey } from ".";
-import { Offset } from "@/interfaces/offset";
+import { Offset, convertOffsetToObject, convertOffsetToTuple } from "@/interfaces/offset";
 
 export function getBeatFromOffsetX(offsetX: number, scaleX: number) {
   return offsetX / (scaleX * basePixelsPerBeat);
@@ -118,13 +118,24 @@ export function roundDownTickToNearestGrid(tick: number) {
 }
 
 export function isNoteLeftMarginClicked(numOfKeys: number, scaleX: number, note: TrackNoteEvent, offset: Offset) {
-  if (Array.isArray(offset)) {
-    offset = { x: offset[0], y: offset[1] };
-  }
+  offset = convertOffsetToObject(offset);
   if (
     getNoteNumFromOffsetY(numOfKeys, offset.y) == note.noteNumber &&
     offset.x >= getOffsetXFromTick(scaleX, note.tick) &&
     offset.x <= getOffsetXFromTick(scaleX, note.tick) + draggableBoundaryPixel
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export function isNoteRightMarginClicked(numOfKeys: number, scaleX: number, note: TrackNoteEvent, offset: Offset) {
+  offset = convertOffsetToObject(offset);
+  if (
+    getNoteNumFromOffsetY(numOfKeys, offset.y) == note.noteNumber &&
+    offset.x <= getOffsetXFromTick(scaleX, note.tick + note.duration) &&
+    offset.x >= getOffsetXFromTick(scaleX, note.tick + note.duration) - draggableBoundaryPixel
   ) {
     return true;
   } else {
