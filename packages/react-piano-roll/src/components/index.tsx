@@ -20,6 +20,7 @@ import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import VelocityEditor from "./VelocityEditor";
 import SelectionBar from "./SelectionBar"
 import type { PianoRollRange } from '@/interfaces/piano-roll-range'
+import { canvasHeight } from "@/helpers/conversion";
 
 type PianoRollConfig = {
   range: PianoRollRange;
@@ -85,7 +86,7 @@ function PianoRoll({
         style={
           {
             "--canvas-width": `${pianoRollStore.laneLength * pianoRollStore.pianoLaneScaleX}px`,
-            "--canvas-height": `${pianoRollStore.canvasHeight}px`,
+            "--canvas-height": `${canvasHeight(range.numOfKeys)}px`,
             ...style,
           } as React.CSSProperties
         }

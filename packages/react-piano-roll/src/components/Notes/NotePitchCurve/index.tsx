@@ -3,7 +3,7 @@ import React, { memo } from "react";
 import useTheme from "../../../hooks/useTheme";
 import useStore from "../../../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
-import { getCenterYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
+import { canvasHeight, getCenterYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
 import { useConfig } from "@/components";
 
 interface NotePitchCurveProps extends React.SVGProps<SVGSVGElement> {
@@ -57,7 +57,7 @@ const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
     );
   };
 
-  const { canvasWidth, canvasHeight } = pianoRollStore;
+  const { canvasWidth } = pianoRollStore;
 
   // Extract needed values from the note and store
   const noteStartingX = getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick);
@@ -69,7 +69,7 @@ const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
     <svg
       aria-label="piano-roll-pitch-curve"
       width={canvasWidth}
-      height={canvasHeight}
+      height={canvasHeight(numOfKeys)}
       style={{ position: "absolute" }}
       {...other}
     >

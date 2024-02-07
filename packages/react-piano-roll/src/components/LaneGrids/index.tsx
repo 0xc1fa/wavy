@@ -4,6 +4,8 @@ import styles from "./index.module.scss";
 import { getGridBaseSeparation, getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
 import { basePixelsPerBeat } from "@/constants";
 import { useStore } from "@/index";
+import { canvasHeight } from "@/helpers/conversion";
+import { useConfig } from "..";
 
 interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {}
 const LaneGrids: React.FC<LaneGridsProps> = ({ ...other }) => {
@@ -43,9 +45,9 @@ interface GridLineProps {
 }
 
 const GridLine: React.FC<GridLineProps> = ({ x, color }) => {
-  const { pianoRollStore } = useStore();
+  const { numOfKeys } = useConfig().range
 
-  return <line x1={x} y1={0} x2={x} y2={pianoRollStore.canvasHeight} stroke={color} strokeWidth="1" />;
+  return <line x1={x} y1={0} x2={x} y2={canvasHeight(numOfKeys)} stroke={color} strokeWidth="1" />;
 };
 
 export default memo(LaneGrids);

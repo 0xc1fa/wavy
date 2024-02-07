@@ -168,3 +168,7 @@ export function inMarquee(
     note.tick <= selectedMaxTick
   );
 }
+
+export function canvasHeight(numOfKeys: number) {
+  return baseLaneWidth * numOfKeys;
+}

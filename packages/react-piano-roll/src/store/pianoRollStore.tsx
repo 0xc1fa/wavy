@@ -118,7 +118,6 @@ export type PianoRollStoreContext = ReturnType<typeof usePianoRollStore>;
 
 export type PianoRollStore = ReturnType<typeof defaultPianoRollStore>;
 function defaultPianoRollStore() {
-  // const { startingNoteNum, numOfKeys } = useConfig().range;
   return {
     pianoRollNotes: new Array<TrackNoteEvent>(),
     notesHistory: {
@@ -152,18 +151,6 @@ function defaultPianoRollStore() {
 
     get canvasWidth() {
       return this.pianoLaneScaleX * this.laneLength;
-    },
-
-    get startingNoteNum() {
-      return 0;
-    },
-
-    get numOfKeys() {
-      return 128;
-    },
-
-    get canvasHeight() {
-      return baseLaneWidth * this.numOfKeys;
     },
   };
 }
