@@ -13,6 +13,7 @@ import {
 } from "@/helpers/number";
 import { defaultNoteLyric } from "@/constants";
 import { getNoteNumFromOffsetY, getTickFromOffsetX } from "@/helpers/conversion";
+import { useConfig } from "@/components";
 
 export type NoteAction =
   | AddNoteAction
@@ -214,9 +215,10 @@ type SetNoteInMarqueeAsSelectedAction = {
   };
 };
 export function setNoteInMarqueeAsSelected(state: PianoRollStore, action: SetNoteInMarqueeAsSelectedAction) {
+  const { numOfKeys } = useConfig().range;
   const [selectedMinNoteNum, selectedMaxNoteNum] = [
-    getNoteNumFromOffsetY(state.numOfKeys, action.payload.startingPosition.y),
-    getNoteNumFromOffsetY(state.numOfKeys, action.payload.ongoingPosition.y),
+    getNoteNumFromOffsetY(numOfKeys, action.payload.startingPosition.y),
+    getNoteNumFromOffsetY(numOfKeys, action.payload.ongoingPosition.y),
   ].sort((a, b) => a - b);
   const [selectedMinTick, selectedMaxTick] = [
     getTickFromOffsetX(action.payload.startingPosition.x, state.pianoLaneScaleX),

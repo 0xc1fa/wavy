@@ -39,6 +39,7 @@ import {
   getOffsetXFromTick,
   getTickFromOffsetX,
 } from "@/helpers/conversion";
+import { useConfig } from "@/components";
 
 export const PianoRollStoreContext = createContext<ReturnType<typeof usePianoRollStore> | undefined>(undefined);
 
@@ -115,6 +116,7 @@ export type PianoRollStoreContext = ReturnType<typeof usePianoRollStore>;
 
 export type PianoRollStore = ReturnType<typeof defaultPianoRollStore>;
 function defaultPianoRollStore() {
+  // const { startingNoteNum, numOfKeys } = useConfig().range;
   return {
     pianoRollNotes: new Array<TrackNoteEvent>(),
     notesHistory: {

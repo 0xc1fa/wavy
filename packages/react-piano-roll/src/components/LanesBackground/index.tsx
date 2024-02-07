@@ -2,9 +2,7 @@ import React, { memo } from "react";
 import useTheme from "../../hooks/useTheme";
 import useStore from "../../hooks/useStore";
 import { baseLaneWidth } from "@/constants";
-
-
-
+import { useConfig } from "..";
 
 interface LanesBackgroundProps extends React.HTMLAttributes<SVGElement> {}
 function LanesBackground({ ...other }: LanesBackgroundProps) {
@@ -38,7 +36,9 @@ function LanesBackground({ ...other }: LanesBackgroundProps) {
     return result;
   }
 
-  const noteNums = range(pianoRollStore.startingNoteNum, pianoRollStore.startingNoteNum + pianoRollStore.numOfKeys);
+  const { startingNoteNum, numOfKeys } = useConfig().range;
+
+  const noteNums = range(startingNoteNum, startingNoteNum + numOfKeys);
 
   const lanes = noteNums.map((noteNumber) => {
     const keyColor = isBlackKey(noteNumber) ? theme.lane.blackLaneColor : theme.lane.whiteLaneColor;

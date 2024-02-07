@@ -5,6 +5,7 @@ import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import _ from "lodash";
 import { getGridOffsetOfTick, getNearestAnchor, getNearestGridTick, getTickInGrid } from "@/helpers/grid";
 import { getNoteFromPosition, getNoteNumFromOffsetY, getTickFromOffsetX } from "@/helpers/conversion";
+import { useConfig } from "@/components";
 
 export enum PianoRollLanesMouseHandlerMode {
   DragAndDrop,
@@ -36,6 +37,7 @@ export type NotesModificationBuffer = {
 
 export default function usePianoRollMouseHandlers() {
   const { pianoRollStore, dispatch } = useStore();
+  const { numOfKeys } = useConfig().range;
 
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None);
   const [startingPosition, setStartingPosition] = useState({ x: 0, y: 0 });
@@ -85,8 +87,8 @@ export default function usePianoRollMouseHandlers() {
     const deltaX = event.nativeEvent.offsetX - pianoRollStore.noteModificationBuffer.initX;
     const deltaTicks = getTickFromOffsetX(deltaX, pianoRollStore.pianoLaneScaleX);
     const deltaPitch =
-      getNoteNumFromOffsetY(pianoRollStore.numOfKeys, event.nativeEvent.offsetY) -
-      getNoteNumFromOffsetY(pianoRollStore.numOfKeys, pianoRollStore.noteModificationBuffer.initY);
+      getNoteNumFromOffsetY(numOfKeys, event.nativeEvent.offsetY) -
+      getNoteNumFromOffsetY(numOfKeys, pianoRollStore.noteModificationBuffer.initY);
     if (Math.abs(deltaTicks) > getTickInGrid(pianoRollStore.pianoLaneScaleX)) {
       guardActive.current = DraggingGuardMode.SnapToGrid;
     } else if (Math.abs(deltaTicks) > 96 && guardActive.current < DraggingGuardMode.FineTune) {
@@ -240,7 +242,7 @@ export default function usePianoRollMouseHandlers() {
   const onDoubleClick: React.MouseEventHandler = (event) => {
     const noteClicked = getNoteFromPosition(
       pianoRollStore.pianoLaneScaleX,
-      pianoRollStore.numOfKeys,
+      numOfKeys,
       pianoRollStore.pianoRollNotes,
       [event.nativeEvent.offsetX, event.nativeEvent.offsetY],
     );
@@ -269,7 +271,7 @@ export default function usePianoRollMouseHandlers() {
     const target = e.currentTarget as HTMLElement;
     const noteHovered = getNoteFromPosition(
       pianoRollStore.pianoLaneScaleX,
-      pianoRollStore.numOfKeys,
+      numOfKeys,
       pianoRollStore.pianoRollNotes,
       [e.offsetX, e.offsetY]
     );

@@ -4,6 +4,7 @@ import useTheme from "../../../hooks/useTheme";
 import useStore from "../../../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import { getCenterYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
+import { useConfig } from "@/components";
 
 interface NotePitchCurveProps extends React.SVGProps<SVGSVGElement> {
   note: TrackNoteEvent;
@@ -12,6 +13,7 @@ interface NotePitchCurveProps extends React.SVGProps<SVGSVGElement> {
 const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
   const theme = useTheme();
   const { pianoRollStore } = useStore();
+  const { numOfKeys } = useConfig().range;
 
   // Function to draw a point (circle in SVG)
   const drawPoint = (x: number, y: number, filled: boolean = true) => {
@@ -61,7 +63,7 @@ const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
   const noteStartingX = getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick);
   const noteEndingX = getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick + note.duration);
   const noteVibratoStartX = getOffsetXFromTick(pianoRollStore.pianoLaneScaleX, note.tick + note.vibratoDelay);
-  const noteCenterY = getCenterYFromNoteNum(pianoRollStore.numOfKeys, note.noteNumber);
+  const noteCenterY = getCenterYFromNoteNum(numOfKeys, note.noteNumber);
 
   return (
     <svg

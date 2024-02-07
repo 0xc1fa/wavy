@@ -15,16 +15,33 @@ import Playhead from "./Playhead";
 import usePianoRollKeyboardHandlers from "../handlers/usePianoRollKeyboardHandlers";
 import TempoInfo from "./TempoInfo";
 import Selections from "./Selections";
-import { CSSProperties, KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { CSSProperties, KeyboardEvent, createContext, memo, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import VelocityEditor from "./VelocityEditor";
-import SelectionBar from "./SelectionBar";
-import preventZoom from "@/hoc/preventZoom";
+import SelectionBar from "./SelectionBar"
 
-// type PianoRollRange = {
-//   startingNoteNum: number;
-//   numOfKeys: number;
-// }
+type PianoRollRange = {
+  startingNoteNum: number;
+  numOfKeys: number;
+}
+
+type PianoRollConfig = {
+  range: PianoRollRange;
+}
+
+const defaultPianoRollConfig: PianoRollConfig = {
+  range: {
+    startingNoteNum: 0,
+    numOfKeys: 128,
+  }
+}
+
+
+const PianoRollConfigContext = createContext(defaultPianoRollConfig)
+const ConfigProvider = memo(PianoRollConfigContext.Provider)
+export function useConfig() {
+  return useContext(PianoRollConfigContext)
+}
 
 interface PianoRollProps {
   playheadPosition?: number;
@@ -37,7 +54,7 @@ interface PianoRollProps {
   staringTick?: number;
   endingTick?: number;
   style?: CSSProperties;
-  // range?: PianoRollRange;
+  range?: PianoRollRange;
 }
 function PianoRoll({
   playheadPosition,
@@ -47,7 +64,7 @@ function PianoRoll({
   style,
   staringTick = 200,
   endingTick = 480 * 4 * 8,
-  // range = { startingNoteNum: 0, numOfKeys: 128 },
+  range = { startingNoteNum: 0, numOfKeys: 128 },
 }: PianoRollProps) {
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const pianoRollKeyboardHandlers = usePianoRollKeyboardHandlers();
@@ -56,8 +73,16 @@ function PianoRoll({
   const containerRef = useRef<HTMLDivElement>(null);
   useScrollToNote(containerRef, initialScrollMiddleNote);
 
+  const config = useMemo(() => {
+    const config: PianoRollConfig = {
+      range: range,
+    }
+    return config;
+  }, [])
+
   return (
     <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
+    <ConfigProvider value={config}>
       <div
         className={`${styles["container"]} piano-roll`}
         ref={containerRef}
@@ -107,6 +132,7 @@ function PianoRoll({
           <VelocityEditor />
         </div>
       </div>
+    </ConfigProvider>
     </PianoRollThemeContext.Provider>
   );
 }

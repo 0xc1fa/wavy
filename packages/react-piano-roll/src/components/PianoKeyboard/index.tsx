@@ -4,13 +4,15 @@ import useStore from "../../hooks/useStore";
 import useTheme from "../../hooks/useTheme";
 import styles from "./index.module.scss";
 import { getMinYFromNoteNum, getNoteNameFromNoteNum } from "@/helpers/conversion";
+import { useConfig } from "..";
 
 interface PianoKeyboardProps extends React.HTMLAttributes<HTMLCanvasElement> {}
 export default function PianoKeyboard(props: PianoKeyboardProps) {
   const { pianoRollStore } = useStore();
+  const { startingNoteNum, numOfKeys } = useConfig().range;
 
   const keyNums = [];
-  for (let i = pianoRollStore.startingNoteNum; i < pianoRollStore.startingNoteNum + pianoRollStore.numOfKeys; i++) {
+  for (let i = startingNoteNum; i < startingNoteNum + numOfKeys; i++) {
     keyNums.push(i);
   }
 
@@ -39,7 +41,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
               data-keynum={keyNum}
               style={
                 {
-                  "--key-top": `${getMinYFromNoteNum(pianoRollStore.numOfKeys, keyNum)}px`,
+                  "--key-top": `${getMinYFromNoteNum(numOfKeys, keyNum)}px`,
                 } as React.CSSProperties
               }
               onPointerDown={handlerPointerDown}
@@ -58,8 +60,8 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
                 {
                   "--key-top": `${currentY}px`,
                   paddingLeft: "40%",
-                  paddingTop: `${getMinYFromNoteNum(pianoRollStore.numOfKeys, keyNum) - currentY}px`,
-                  paddingBottom: `${25 * (12 / 7) - (getMinYFromNoteNum(pianoRollStore.numOfKeys, keyNum) - currentY) - 25}px`,
+                  paddingTop: `${getMinYFromNoteNum(numOfKeys, keyNum) - currentY}px`,
+                  paddingBottom: `${25 * (12 / 7) - (getMinYFromNoteNum(numOfKeys, keyNum) - currentY) - 25}px`,
                 } as React.CSSProperties
               }
               onPointerDown={handlerPointerDown}
