@@ -193,10 +193,6 @@ function defaultPianoRollStore() {
       return tick - (tick % ticksPerBeat);
     },
 
-    isInnerKeyboard(x: number) {
-      return x < baseBlackKeyLength;
-    },
-
     isNoteLeftMarginClicked(note: TrackNoteEvent, offsetX: number, offsetY: number) {
       if (
         getNoteNumFromOffsetY(this.numOfKeys, offsetY) == note.noteNumber &&
