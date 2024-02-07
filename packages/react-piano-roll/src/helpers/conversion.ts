@@ -13,6 +13,10 @@ export function getNoteNumFromOffsetY(numOfKeys: number, offsetY: number) {
   return Math.floor(numOfKeys - offsetY / baseLaneWidth);
 }
 
+export function getMinYFromNoteNum(numOfKeys: number, noteNum: number) {
+  return (numOfKeys - noteNum - 1) * baseLaneWidth;
+}
+
 export function getNotesFromOffsetX(scaleX: number, notes: TrackNoteEvent[], offsetX: number, ) {
   return notes.filter(
     (note) =>

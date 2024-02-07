@@ -31,7 +31,7 @@ import {
   draggableBoundaryPixel,
   ticksPerBeat,
 } from "@/constants";
-import { getNoteNumFromOffsetY, getTickFromOffsetX } from "@/helpers/conversion";
+import { getMinYFromNoteNum, getNoteNumFromOffsetY, getTickFromOffsetX } from "@/helpers/conversion";
 
 export const PianoRollStoreContext = createContext<ReturnType<typeof usePianoRollStore> | undefined>(undefined);
 
@@ -156,7 +156,7 @@ function defaultPianoRollStore() {
     },
 
     getCenterYFromNoteNum(noteNum: number) {
-      return (this.getMinYFromNoteNum(noteNum) + this.getMaxYFromNoteNum(noteNum)) / 2;
+      return (getMinYFromNoteNum(this.numOfKeys, noteNum) + this.getMaxYFromNoteNum(noteNum)) / 2;
     },
 
     getNoteNameFromNoteNum(noteNum: number) {
@@ -164,10 +164,6 @@ function defaultPianoRollStore() {
       const noteNameIndex = noteNum % 12;
       const octave = Math.floor(noteNum / 12) - 1;
       return `${noteNames[noteNameIndex]}${octave}`;
-    },
-
-    getMinYFromNoteNum(noteNum: number) {
-      return (this.numOfKeys - noteNum - 1) * baseLaneWidth;
     },
 
     getMaxYFromNoteNum(noteNum: number) {

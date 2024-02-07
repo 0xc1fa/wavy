@@ -3,6 +3,7 @@ import { isBlackKey } from "../../helpers";
 import useStore from "../../hooks/useStore";
 import useTheme from "../../hooks/useTheme";
 import styles from "./index.module.scss";
+import { getMinYFromNoteNum } from "@/helpers/conversion";
 
 interface PianoKeyboardProps extends React.HTMLAttributes<HTMLCanvasElement> {}
 export default function PianoKeyboard(props: PianoKeyboardProps) {
@@ -38,7 +39,7 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
               data-keynum={keyNum}
               style={
                 {
-                  "--key-top": `${pianoRollStore.getMinYFromNoteNum(keyNum)}px`,
+                  "--key-top": `${getMinYFromNoteNum(pianoRollStore.numOfKeys, keyNum)}px`,
                 } as React.CSSProperties
               }
               onPointerDown={handlerPointerDown}
@@ -57,8 +58,8 @@ export default function PianoKeyboard(props: PianoKeyboardProps) {
                 {
                   "--key-top": `${currentY}px`,
                   paddingLeft: "40%",
-                  paddingTop: `${pianoRollStore.getMinYFromNoteNum(keyNum) - currentY}px`,
-                  paddingBottom: `${25 * (12 / 7) - (pianoRollStore.getMinYFromNoteNum(keyNum) - currentY) - 25}px`,
+                  paddingTop: `${getMinYFromNoteNum(pianoRollStore.numOfKeys, keyNum) - currentY}px`,
+                  paddingBottom: `${25 * (12 / 7) - (getMinYFromNoteNum(pianoRollStore.numOfKeys, keyNum) - currentY) - 25}px`,
                 } as React.CSSProperties
               }
               onPointerDown={handlerPointerDown}
