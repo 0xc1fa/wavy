@@ -144,10 +144,6 @@ function defaultPianoRollStore() {
       return baseLaneWidth * this.numOfKeys;
     },
 
-    getBeatFromOffsetX(offsetX: number) {
-      return offsetX / (this.pianoLaneScaleX * basePixelsPerBeat);
-    },
-
     getTickFromOffsetX(offsetX: number) {
       return (offsetX / (this.pianoLaneScaleX * basePixelsPerBeat)) * ticksPerBeat;
     },
@@ -243,10 +239,6 @@ function defaultPianoRollStore() {
 
     roundDownTickToNearestGrid(tick: number) {
       return tick - (tick % ticksPerBeat);
-    },
-
-    clearCanvas(ctx: CanvasRenderingContext2D) {
-      ctx.clearRect(0, 0, this.laneLength, this.canvasHeight);
     },
 
     isInnerKeyboard(x: number) {

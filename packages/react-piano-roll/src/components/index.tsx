@@ -21,6 +21,11 @@ import VelocityEditor from "./VelocityEditor";
 import SelectionBar from "./SelectionBar";
 import preventZoom from "@/hoc/preventZoom";
 
+// type PianoRollRange = {
+//   startingNoteNum: number;
+//   numOfKeys: number;
+// }
+
 interface PianoRollProps {
   playheadPosition?: number;
   attachLyric?: boolean;
@@ -32,6 +37,7 @@ interface PianoRollProps {
   staringTick?: number;
   endingTick?: number;
   style?: CSSProperties;
+  // range?: PianoRollRange;
 }
 function PianoRoll({
   playheadPosition,
@@ -41,6 +47,7 @@ function PianoRoll({
   style,
   staringTick = 200,
   endingTick = 480 * 4 * 8,
+  // range = { startingNoteNum: 0, numOfKeys: 128 },
 }: PianoRollProps) {
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const pianoRollKeyboardHandlers = usePianoRollKeyboardHandlers();

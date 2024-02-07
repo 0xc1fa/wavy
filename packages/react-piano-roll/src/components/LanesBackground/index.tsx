@@ -3,6 +3,9 @@ import useTheme from "../../hooks/useTheme";
 import useStore from "../../hooks/useStore";
 import { baseLaneWidth } from "@/constants";
 
+
+
+
 interface LanesBackgroundProps extends React.HTMLAttributes<SVGElement> {}
 function LanesBackground({ ...other }: LanesBackgroundProps) {
   const theme = useTheme();
@@ -41,30 +44,13 @@ function LanesBackground({ ...other }: LanesBackgroundProps) {
     const keyColor = isBlackKey(noteNumber) ? theme.lane.blackLaneColor : theme.lane.whiteLaneColor;
     const yPosition = pianoRollStore.canvasHeight - (noteNumber - 1) * baseLaneWidth;
 
-    return (
-      <rect
-        key={noteNumber}
-        x={0}
-        y={yPosition}
-        width={pianoRollStore.canvasWidth}
-        height={baseLaneWidth}
-        fill={keyColor}
-      />
-    );
+    return <rect key={noteNumber} x={0} y={yPosition} width="100%" height={baseLaneWidth} fill={keyColor} />;
   });
 
   return (
-    <div
-      style={{
-        height: `${pianoRollStore.canvasHeight}px`,
-        width: `${pianoRollStore.canvasWidth}px`,
-        padding: "0px",
-      }}
-    >
-      <svg aria-label="piano-roll-lanes-background" width="100%" height="100%" {...other}>
-        {lanes}
-      </svg>
-    </div>
+    <svg aria-label="piano-roll-lanes-background" width="100%" height="100%" preserveAspectRatio="none" {...other}>
+      {lanes}
+    </svg>
   );
 }
 
