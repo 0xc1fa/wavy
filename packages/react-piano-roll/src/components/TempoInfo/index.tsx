@@ -2,6 +2,10 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import useStore from "../../hooks/useStore";
 import styles from "./index.module.scss";
 
+const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => {
+  event?.currentTarget.focus();
+};
+
 export default function TempoInfo() {
   const { pianoRollStore, dispatch } = useStore();
 
@@ -17,10 +21,6 @@ export default function TempoInfo() {
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setInputValue(event.currentTarget.value);
-  };
-
-  const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => {
-    event?.currentTarget.focus();
   };
 
   const handlePointerDown: React.PointerEventHandler<HTMLInputElement> = (event) => {

@@ -5,13 +5,16 @@ import { getGridBaseSeparation, getGridSeparationFactor, getNumOfGrid } from "@/
 import { basePixelsPerBeat } from "@/constants";
 import { baseCanvasWidth } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
+import { useScaleX } from "@/contexts/ScaleXProvider";
 
-interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {
-  scaleX: number;
-}
-const LaneGrids: React.FC<LaneGridsProps> = ({ scaleX }) => {
+// interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {
+//   scaleX: number;
+// }
+const LaneGrids: React.FC = memo(() => {
   const theme = useTheme();
   const { tickRange } = useConfig();
+
+  const { scaleX } = useScaleX();
 
   const gridSeparationFactor = getGridSeparationFactor(scaleX);
   const numberOfGrids = getNumOfGrid(baseCanvasWidth(tickRange));
@@ -33,7 +36,7 @@ const LaneGrids: React.FC<LaneGridsProps> = ({ scaleX }) => {
       {gridLines("bar")}
     </svg>
   );
-};
+});
 
 interface GridLineProps {
   x: number;
@@ -44,4 +47,4 @@ const GridLine: React.FC<GridLineProps> = ({ x, color }) => {
   return <line x1={x} y1="0" x2={x} y2="100%" stroke={color} strokeWidth="1" preserveAspectRatio="none" />;
 };
 
-export default memo(LaneGrids);
+export default LaneGrids;

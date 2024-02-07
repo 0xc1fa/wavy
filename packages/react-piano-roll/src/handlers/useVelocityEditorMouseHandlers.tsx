@@ -1,6 +1,7 @@
 import { useState } from "react";
 import useStore from "../hooks/useStore";
 import { getNotesFromOffsetX } from "@/helpers/conversion";
+import { useScaleX } from "@/contexts/ScaleXProvider";
 
 enum VelocityEditorMouseHandlerMode {
   Idle,
@@ -12,6 +13,7 @@ export default function useVelocityEditorMouseHandlers() {
   const [isDragging, setIsDragging] = useState(false);
   const [mouseHandlerMode, setMouseHandlerMode] = useState(VelocityEditorMouseHandlerMode.Pencil);
   const { pianoRollStore, dispatch } = useStore();
+  const { scaleX } = useScaleX();
 
   const onPointerDown: React.PointerEventHandler = (event) => {
     const containerHeight = event.currentTarget.clientHeight;
@@ -21,7 +23,7 @@ export default function useVelocityEditorMouseHandlers() {
     const offsetY = event.nativeEvent.offsetY;
     switch (mouseHandlerMode) {
       case VelocityEditorMouseHandlerMode.Pencil: {
-        const notesInPosition = getNotesFromOffsetX(pianoRollStore.scaleX, pianoRollStore.notes, offsetX);
+        const notesInPosition = getNotesFromOffsetX(scaleX, pianoRollStore.notes, offsetX);
         const newVelocityInPercent = 1 - offsetY / containerHeight;
         const newVelocity = newVelocityInPercent * 127;
         const modifiedNotes = notesInPosition.map((note) => ({
@@ -35,7 +37,7 @@ export default function useVelocityEditorMouseHandlers() {
         break;
       }
       case VelocityEditorMouseHandlerMode.SelectAndDrag: {
-        const noteClicked = getNotesFromOffsetX(pianoRollStore.scaleX, pianoRollStore.notes, offsetX)[0];
+        const noteClicked = getNotesFromOffsetX(scaleX, pianoRollStore.notes, offsetX)[0];
         const noteClickedIsSelected = noteClicked?.isSelected;
         if (noteClicked) {
           if (!noteClicked.isSelected) {
@@ -74,7 +76,7 @@ export default function useVelocityEditorMouseHandlers() {
     const offsetY = event.nativeEvent.offsetY;
     switch (mouseHandlerMode) {
       case VelocityEditorMouseHandlerMode.Pencil: {
-        const notesInPosition = getNotesFromOffsetX(pianoRollStore.scaleX, pianoRollStore.notes, offsetX);
+        const notesInPosition = getNotesFromOffsetX(scaleX, pianoRollStore.notes, offsetX);
         const newVelocityInPercent = 1 - offsetY / containerHeight;
         const newVelocity = newVelocityInPercent * 127;
         const modifiedNotes = notesInPosition.map((note) => ({

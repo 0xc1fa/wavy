@@ -6,7 +6,7 @@ import { isBlackKey } from "@/helpers";
 import _ from "lodash";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
-function LanesBackground() {
+const LanesBackground: React.FC = memo(() => {
   const theme = useTheme();
   const { startingNoteNum, numOfKeys } = useConfig().pitchRange;
   const noteNums = _.range(startingNoteNum, startingNoteNum + numOfKeys);
@@ -23,6 +23,6 @@ function LanesBackground() {
       {lanes}
     </svg>
   );
-}
+})
 
-export default memo(LanesBackground);
+export default LanesBackground;

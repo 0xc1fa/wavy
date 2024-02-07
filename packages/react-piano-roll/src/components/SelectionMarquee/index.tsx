@@ -6,7 +6,7 @@ import { PianoRollLanesMouseHandlerMode, PianoRollMouseHandlersStates } from "..
 interface SelectionMarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
   mouseHandlersStates: PianoRollMouseHandlersStates;
 }
-function SelectionMarquee({ mouseHandlersStates, style, ...other }: SelectionMarqueeProps) {
+function SelectionMarquee({ mouseHandlersStates, style }: SelectionMarqueeProps) {
   const theme = useTheme();
 
   const startingPositionX = mouseHandlersStates.startingPosition.x;
@@ -37,11 +37,10 @@ function SelectionMarquee({ mouseHandlersStates, style, ...other }: SelectionMar
           ...style,
         } as React.CSSProperties
       }
-      {...other}
     />
   ) : (
     <></>
   );
 }
 
-export default memo(SelectionMarquee);
+export default SelectionMarquee;

@@ -5,8 +5,6 @@ import { PianoRollHistoryItemType, getChoppedHistoryAfterHead } from "./history-
 import _ from "lodash";
 import { clampDuration, clampNoteNumber, clampTick, clampVelocity } from "@/helpers/number";
 import { defaultNoteLyric } from "@/constants";
-import { getNoteNumFromOffsetY, getTickFromOffsetX } from "@/helpers/conversion";
-import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
 export type NoteAction =
   | AddNoteAction
@@ -17,7 +15,6 @@ export type NoteAction =
   | ToggleSelectedNoteVibratoModeAction
   | VibratoDepthDelayChangeSelectedNoteAction
   | VibratoRateChangeSelectedNoteAction
-  | SetNoteInMarqueeAsSelectedAction
   | MoveNoteAsLatestModifiedAction
   | SetNoteModificationBufferWithSelectedNoteAction
   | SetNoteModificationBufferWithAllNoteAction;
@@ -190,40 +187,6 @@ export function vibratoRateChangeSelectedNote(state: PianoRollStore, action: Vib
           ...note,
           vibratoRate: Math.min(Math.max(newVibratoRate, 5), 200),
         };
-      } else {
-        return note;
-      }
-    }),
-  };
-}
-
-type SetNoteInMarqueeAsSelectedAction = {
-  type: "SET_NOTE_IN_MARQUEE_AS_SELECTED";
-  payload: {
-    startingPosition: { x: number; y: number };
-    ongoingPosition: { x: number; y: number };
-  };
-};
-export function setNoteInMarqueeAsSelected(state: PianoRollStore, action: SetNoteInMarqueeAsSelectedAction) {
-  const { numOfKeys } = useConfig().pitchRange;
-  const [selectedMinNoteNum, selectedMaxNoteNum] = [
-    getNoteNumFromOffsetY(numOfKeys, action.payload.startingPosition.y),
-    getNoteNumFromOffsetY(numOfKeys, action.payload.ongoingPosition.y),
-  ].sort((a, b) => a - b);
-  const [selectedMinTick, selectedMaxTick] = [
-    getTickFromOffsetX(action.payload.startingPosition.x, state.scaleX),
-    getTickFromOffsetX(action.payload.ongoingPosition.x, state.scaleX),
-  ].sort((a, b) => a - b);
-  return {
-    ...state,
-    notes: state.notes.map((note) => {
-      if (
-        note.noteNumber >= selectedMinNoteNum &&
-        note.noteNumber <= selectedMaxNoteNum &&
-        note.tick + note.duration >= selectedMinTick &&
-        note.tick <= selectedMaxTick
-      ) {
-        return { ...note, isSelected: true };
       } else {
         return note;
       }

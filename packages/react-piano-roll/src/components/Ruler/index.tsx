@@ -9,7 +9,7 @@ interface RulerProps extends React.HTMLAttributes<SVGElement> {
   scaleX: number;
 }
 
-const Ruler: React.FC<RulerProps> = ({ scaleX }) => {
+const Ruler: React.FC<RulerProps> = memo(({ scaleX }) => {
   const { tickRange } = useConfig();
 
   const numberOfMarkers = getNumOfGrid(baseCanvasWidth(tickRange));
@@ -30,7 +30,7 @@ const Ruler: React.FC<RulerProps> = ({ scaleX }) => {
       </svg>
     </div>
   );
-};
+});
 
 interface RulerMarkerProps {
   x: number;
@@ -55,4 +55,4 @@ function RulerMarker({ x, children }: RulerMarkerProps) {
   );
 }
 
-export default memo(Ruler);
+export default Ruler;

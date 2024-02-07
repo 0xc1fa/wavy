@@ -6,26 +6,26 @@ import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import { baseLaneWidth } from "@/constants";
 import { getMinYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
+import { useScaleX } from "@/contexts/ScaleXProvider";
 
 interface NoteBlockProps extends React.HTMLAttributes<HTMLDivElement> {
   note: TrackNoteEvent;
 }
-function NoteBlock({ note, ...other }: NoteBlockProps) {
+function NoteBlock({ note }: NoteBlockProps) {
   const theme = useTheme();
-  const { pianoRollStore } = useStore();
+  const { scaleX } = useScaleX();
   const { numOfKeys } = useConfig().pitchRange;
 
   return (
     <div
       aria-label="piano-roll-note"
-      key={note.id}
       className={styles["note"]}
       style={
         {
           "--saturation": `${0.2 + (note.velocity / 127) * 0.8}`,
           "--top": `${getMinYFromNoteNum(numOfKeys, note.noteNumber)}px`,
-          "--left": `${getOffsetXFromTick(pianoRollStore.scaleX, note.tick)}px`,
-          "--note-width": `${getOffsetXFromTick(pianoRollStore.scaleX, note.duration)}px`,
+          "--left": `${getOffsetXFromTick(scaleX, note.tick)}px`,
+          "--note-width": `${getOffsetXFromTick(scaleX, note.duration)}px`,
           "--note-height": `${baseLaneWidth}px`,
           "--background": note.isSelected ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
           "--border-color": note.isSelected ? theme.note.noteBorderColor : theme.note.noteBorderColor,
@@ -37,4 +37,4 @@ function NoteBlock({ note, ...other }: NoteBlockProps) {
   );
 }
 
-export default memo(NoteBlock);
+export default NoteBlock;

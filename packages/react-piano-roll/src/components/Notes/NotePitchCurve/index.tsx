@@ -1,10 +1,9 @@
 import React, { memo } from "react";
-// import { TrackNoteEvent, VibratoMode } from "@/types"; // Update these imports as necessary
 import useTheme from "../../../hooks/useTheme";
-import useStore from "../../../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import { baseCanvasWidth, baseCanvasHeight, getCenterYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
+import { useScaleX } from "@/contexts/ScaleXProvider";
 
 interface NotePitchCurveProps extends React.SVGProps<SVGSVGElement> {
   note: TrackNoteEvent;
@@ -12,9 +11,9 @@ interface NotePitchCurveProps extends React.SVGProps<SVGSVGElement> {
 
 const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
   const theme = useTheme();
-  const { pianoRollStore } = useStore();
   const { numOfKeys } = useConfig().pitchRange;
   const { tickRange } = useConfig();
+  const { scaleX } = useScaleX()
 
   // Function to draw a point (circle in SVG)
   const drawPoint = (x: number, y: number, filled: boolean = true) => {
@@ -59,15 +58,15 @@ const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
   };
 
   // Extract needed values from the note and store
-  const noteStartingX = getOffsetXFromTick(pianoRollStore.scaleX, note.tick);
-  const noteEndingX = getOffsetXFromTick(pianoRollStore.scaleX, note.tick + note.duration);
-  const noteVibratoStartX = getOffsetXFromTick(pianoRollStore.scaleX, note.tick + note.vibratoDelay);
+  const noteStartingX = getOffsetXFromTick(scaleX, note.tick);
+  const noteEndingX = getOffsetXFromTick(scaleX, note.tick + note.duration);
+  const noteVibratoStartX = getOffsetXFromTick(scaleX, note.tick + note.vibratoDelay);
   const noteCenterY = getCenterYFromNoteNum(numOfKeys, note.noteNumber);
 
   return (
     <svg
       aria-label="piano-roll-pitch-curve"
-      width={baseCanvasWidth(tickRange) * pianoRollStore.scaleX}
+      width={baseCanvasWidth(tickRange) * scaleX}
       height={baseCanvasHeight(numOfKeys)}
       style={{ position: "absolute" }}
       {...other}
@@ -81,4 +80,4 @@ const NotePitchCurve: React.FC<NotePitchCurveProps> = ({ note, ...other }) => {
   );
 };
 
-export default memo(NotePitchCurve);
+export default NotePitchCurve;

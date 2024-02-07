@@ -4,8 +4,7 @@ import styles from "./index.module.scss";
 import { baseCanvasHeight, getMinYFromNoteNum, getNoteNameFromNoteNum } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
-interface PianoKeyboardProps extends React.HTMLAttributes<HTMLCanvasElement> {}
-export default function PianoKeyboard(props: PianoKeyboardProps) {
+export default function PianoKeyboard() {
   const { startingNoteNum, numOfKeys } = useConfig().pitchRange;
 
   const keyNums = [];

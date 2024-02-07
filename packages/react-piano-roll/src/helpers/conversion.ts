@@ -192,6 +192,6 @@ export function baseCanvasWidth(tickRange: TickRange) {
   return (tickRange[1] - tickRange[0]) * basePixelsPerTick;
 }
 
-// export function canvasWidth(baseCanvasWidth: number, scaleX: number) {
-//   return baseCanvasWidth * scaleX;
-// }
+export function getScaledPixelPerBeat(scaleX: number) {
+  return basePixelsPerBeat * scaleX;
+}

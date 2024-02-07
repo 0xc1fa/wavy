@@ -5,13 +5,15 @@ import { memo } from "react";
 import { baseLaneWidth } from "@/constants";
 import { getMinYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
+import { useScaleX } from "@/contexts/ScaleXProvider";
 
 interface NoteLyricProps extends React.HTMLAttributes<HTMLInputElement> {
   note: TrackNoteEvent;
 }
-function NoteLyric({ note, style, ...other }: NoteLyricProps) {
-  const { pianoRollStore, dispatch } = useStore();
+function NoteLyric({ note, style }: NoteLyricProps) {
+  const { dispatch } = useStore();
   const { numOfKeys } = useConfig().pitchRange;
+  const { scaleX } = useScaleX();
 
   const handleKeyPress: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === "Enter") (event.target as HTMLInputElement).blur();
@@ -46,16 +48,14 @@ function NoteLyric({ note, style, ...other }: NoteLyricProps) {
   return (
     <input
       type="text"
-      key={note.id}
       data-noteid={note.id}
       className={styles["lyric"]}
       placeholder=" - "
-      // onKeyDown={event => event.stopPropagation()}
       style={
         {
           "--top": `${getMinYFromNoteNum(numOfKeys, note.noteNumber)}px`,
-          "--left": `${getOffsetXFromTick(pianoRollStore.scaleX, note.tick)}px`,
-          "--width": `${getOffsetXFromTick(pianoRollStore.scaleX, note.duration)}px`,
+          "--left": `${getOffsetXFromTick(scaleX, note.tick)}px`,
+          "--width": `${getOffsetXFromTick(scaleX, note.duration)}px`,
           "--height": `${baseLaneWidth}px`,
           ...style,
         } as React.CSSProperties
@@ -64,9 +64,8 @@ function NoteLyric({ note, style, ...other }: NoteLyricProps) {
       onBlur={handleBlur}
       onKeyDown={handleKeyPress}
       onChange={onChange}
-      {...other}
     />
   );
 }
 
-export default memo(NoteLyric);
+export default NoteLyric;

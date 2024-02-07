@@ -6,11 +6,10 @@ import useVelocityEditorMouseHandlers from "../../handlers/useVelocityEditorMous
 import useTheme from "../../hooks/useTheme";
 import VelocityRuler from "./VelocityRuler";
 import { getOffsetXFromTick } from "@/helpers/conversion";
+import { useScaleX } from "@/contexts/ScaleXProvider";
+import NoteBars from "./NoteBars";
 
 export default function VelocityEditor() {
-  const { pianoRollStore } = useStore();
-  const theme = useTheme();
-  const { notes } = pianoRollStore;
   const [isDragging, setIsDragging] = useState(false);
 
   const [containerHeight, setContainerHeight] = useState(200);
@@ -18,8 +17,6 @@ export default function VelocityEditor() {
     initY: 0,
     initHeight: 0,
   });
-
-  const mouseHandlers = useVelocityEditorMouseHandlers();
 
   const handlePointerDown: React.PointerEventHandler = (event) => {
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -62,34 +59,8 @@ export default function VelocityEditor() {
           <VelocityRuler height={containerHeight} />
         </div>
         <div className={styles["right-container"]}>
-          <LaneGrids scaleX={pianoRollStore.scaleX} />
-          <div className={styles["note-bar-container"]} {...mouseHandlers}>
-            {notes.map((note) => (
-              <div
-                key={note.id}
-                className={styles["marker-container"]}
-                style={
-                  {
-                    "--marker-left": `${getOffsetXFromTick(pianoRollStore.scaleX, note.tick)}px`,
-                    "--marker-top": `${1 - note.velocity / 128}`,
-                    "--marker-width": `${getOffsetXFromTick(pianoRollStore.scaleX, note.duration)}px`,
-                    "--marker-color": note.isSelected ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
-                    "--cursor": isDragging ? "grabbing" : "grab",
-                  } as React.CSSProperties
-                }
-                data-id={note.id}
-                data-velocity={note.velocity}
-              >
-                <div className={styles["velocity-marker"]} />
-                <div
-                  className={styles["length-marker"]}
-                  style={{
-                    outline: note.isSelected ? `3px solid #ffffff33` : "none",
-                  }}
-                />
-              </div>
-            ))}
-          </div>
+          <LaneGrids />
+          <NoteBars isDragging={isDragging} />
         </div>
       </div>
     </div>

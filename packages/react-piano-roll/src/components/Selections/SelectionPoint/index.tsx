@@ -3,11 +3,14 @@ import styles from "./index.module.scss";
 import { basePixelsPerTick } from "@/constants";
 import { baseCanvasHeight } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
+import { useScaleX } from "@/contexts/ScaleXProvider";
 
 export default function SelectionPoint() {
   const { pianoRollStore } = useStore();
+  const { scaleX } = useScaleX();
+
   const { numOfKeys } = useConfig().pitchRange;
-  const x = pianoRollStore.selectionTicks * basePixelsPerTick * pianoRollStore.scaleX;
+  const x = pianoRollStore.selectionTicks * basePixelsPerTick * scaleX;
 
   return (
     <svg
