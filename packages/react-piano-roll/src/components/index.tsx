@@ -1,8 +1,8 @@
 import styles from "./index.module.scss";
-import { CSSProperties, KeyboardEvent, useMemo, useRef } from "react";
+import { CSSProperties, KeyboardEvent, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import type { PitchRange } from "@/interfaces/piano-roll-range";
-import { baseCanvasWidth, baseCanvasHeight } from "@/helpers/conversion";
+import { baseCanvasWidth, baseCanvasHeight, getTickFromEvent, getTickFromOffsetX } from "@/helpers/conversion";
 import { ConfigProvider, PianoRollConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScrollToNote } from "@/hooks/useScrollToNote";
 import UpperSection from "./Sections/UpperSection";
@@ -12,6 +12,7 @@ import LowerSection from "./Sections/LowerSection";
 import { ScaleXProvider, useScaleX } from "@/contexts/ScaleXProvider";
 import PianoRollThemeContext from "@/contexts/piano-roll-theme-context";
 import { defaultPianoRollTheme } from "@/store/pianoRollTheme";
+import { basePixelsPerTick } from "@/constants";
 
 interface PianoRollProps {
   playheadPosition?: number;
@@ -38,6 +39,14 @@ function PianoRoll({
   useScrollToNote(containerRef, initialScrollMiddleNote);
   const { scaleX } = useScaleX();
 
+  const prevScaleX = useRef(scaleX);
+  useLayoutEffect(() => {
+    const scaleDifference = scaleX / prevScaleX.current;
+    const scrollLeft = containerRef.current!.scrollLeft + 0.5;
+    containerRef.current!.scrollTo(scrollLeft * scaleDifference, 0);
+    prevScaleX.current = scaleX;
+  }, [scaleX]);
+
   return (
     <div
       className={`${styles["container"]} piano-roll`}
@@ -62,7 +71,7 @@ function PianoRoll({
 
 const withProvider = (Component: typeof PianoRoll) => {
   return ({
-    tickRange = [0, 480 * 4 * 1024],
+    tickRange = [0, 480 * 4 * 8],
     pitchRange = { startingNoteNum: 0, numOfKeys: 128 },
     ...other
   }: PianoRollProps) => {
