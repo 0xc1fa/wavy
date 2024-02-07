@@ -32,6 +32,7 @@ import {
   ticksPerBeat,
 } from "@/constants";
 import {
+  getBlackKeyNumFromPosition,
   getMaxYFromNoteNum,
   getMinYFromNoteNum,
   getNoteFromPosition,
@@ -165,16 +166,12 @@ function defaultPianoRollStore() {
       return baseLaneWidth * this.numOfKeys;
     },
 
-    getBlackKeyNumFromPosition(y: number) {
-      return Math.floor(this.numOfKeys - y / baseKeyWidth);
-    },
-
     getPianoKeyNumFromPosition(x: number, y: number) {
       const estimatedKeyNum = Math.floor(this.numOfKeys - y / baseKeyWidth);
       if (!this.isInnerKeyboard(x)) {
         return getWhiteKeyNumFromPosition({numOfKeys: this.numOfKeys, startingNoteNum: this.startingNoteNum }, y);
       } else if (this.isInnerKeyboard(x) && isBlackKey(estimatedKeyNum)) {
-        return this.getBlackKeyNumFromPosition(y);
+        return getBlackKeyNumFromPosition(this.numOfKeys, y);
       } else {
         return getWhiteKeyNumFromPosition({numOfKeys: this.numOfKeys, startingNoteNum: this.startingNoteNum }, y);
       }

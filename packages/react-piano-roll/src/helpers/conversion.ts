@@ -1,4 +1,4 @@
-import { baseLaneWidth, basePixelsPerBeat, baseWhiteKeyWidth, ticksPerBeat } from "@/constants";
+import { baseKeyWidth, baseLaneWidth, basePixelsPerBeat, baseWhiteKeyWidth, ticksPerBeat } from "@/constants";
 import { PianoRollRange } from "@/interfaces/piano-roll-range";
 import { TrackNoteEvent } from "@/types";
 import { isBlackKey } from ".";
@@ -79,4 +79,8 @@ export function getWhiteKeyNumFromPosition(range: PianoRollRange, y: number) {
     currentY += baseWhiteKeyWidth;
   }
   return -1;
+}
+
+export function getBlackKeyNumFromPosition(numOfKeys: number, y: number) {
+  return Math.floor(numOfKeys - y / baseKeyWidth);
 }
