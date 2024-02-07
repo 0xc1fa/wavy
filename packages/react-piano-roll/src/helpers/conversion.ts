@@ -21,6 +21,10 @@ export function getMaxYFromNoteNum(numOfKeys: number, noteNum: number) {
   return (numOfKeys - noteNum) * baseLaneWidth;
 }
 
+export function getCenterYFromNoteNum(numOfKeys: number, noteNum: number) {
+  return (getMinYFromNoteNum(numOfKeys, noteNum) + getMaxYFromNoteNum(numOfKeys, noteNum)) / 2;
+}
+
 export function getNotesFromOffsetX(scaleX: number, notes: TrackNoteEvent[], offsetX: number, ) {
   return notes.filter(
     (note) =>

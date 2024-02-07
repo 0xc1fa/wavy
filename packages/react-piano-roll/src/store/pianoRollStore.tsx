@@ -160,10 +160,6 @@ function defaultPianoRollStore() {
       return baseLaneWidth * this.numOfKeys;
     },
 
-    getCenterYFromNoteNum(noteNum: number) {
-      return (getMinYFromNoteNum(this.numOfKeys, noteNum) + getMaxYFromNoteNum(this.numOfKeys, noteNum)) / 2;
-    },
-
     getNoteNameFromNoteNum(noteNum: number) {
       const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
       const noteNameIndex = noteNum % 12;
