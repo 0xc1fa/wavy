@@ -4,7 +4,7 @@ import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import _ from "lodash";
 import { getGridOffsetOfTick, getNearestAnchor, getNearestGridTick, getTickInGrid } from "@/helpers/grid";
-import { getNoteFromEvent, getNoteFromPosition, getNoteNumFromOffsetY, getTickFromOffsetX } from "@/helpers/conversion";
+import { getNoteFromEvent, getNoteFromPosition, getNoteNumFromEvent, getNoteNumFromOffsetY, getTickFromOffsetX } from "@/helpers/conversion";
 import { useConfig } from "@/components";
 
 export enum PianoRollLanesMouseHandlerMode {
@@ -284,7 +284,7 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const getTickAndNoteNumFromEvent = (e: PointerEvent) => {
-    const noteNum = pianoRollStore.getNoteNumFromEvent(e);
+    const noteNum = getNoteNumFromEvent(numOfKeys, e);
     const ticks = pianoRollStore.roundDownTickToNearestGrid(pianoRollStore.getTickFromEvent(e));
     return { ticks, noteNum };
   };
