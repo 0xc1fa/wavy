@@ -195,14 +195,6 @@ function defaultPianoRollStore() {
       return null;
     },
 
-    getNotesFromOffsetX(offsetX: number) {
-      return this.pianoRollNotes.filter(
-        (note) =>
-          note.tick <= getTickFromOffsetX(offsetX, this.pianoLaneScaleX) &&
-          note.tick + note.duration >= getTickFromOffsetX(offsetX, this.pianoLaneScaleX),
-      );
-    },
-
     getWhiteKeyNumFromPosition(y: number) {
       let currentY = 0;
       for (let keyNum = this.numOfKeys - 1; keyNum >= this.startingNoteNum; keyNum--) {
