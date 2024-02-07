@@ -17,7 +17,8 @@ export type NoteAction =
   | VibratoRateChangeSelectedNoteAction
   | MoveNoteAsLatestModifiedAction
   | SetNoteModificationBufferWithSelectedNoteAction
-  | SetNoteModificationBufferWithAllNoteAction;
+  | SetNoteModificationBufferWithAllNoteAction
+  | SetBpmAction;
 
 export function createNote(state: PianoRollStore, ticks: number, noteNum: number): TrackNoteEvent {
   return {
@@ -257,5 +258,16 @@ export function setNoteModificationBufferWithAllNote(
       initX: action.payload.initX,
       initY: action.payload.initY,
     },
+  };
+}
+
+type SetBpmAction = {
+  type: "SET_BPM";
+  payload: { bpm: number };
+};
+export function setBpm(state: PianoRollStore, action: SetBpmAction) {
+  return {
+    ...state,
+    bpm: action.payload.bpm,
   };
 }
