@@ -166,9 +166,9 @@ function defaultPianoRollStore() {
       return baseLaneWidth * this.numOfKeys;
     },
 
-    getNoteFromEvent(e: PointerEvent | MouseEvent): TrackNoteEvent | null {
-      return getNoteFromPosition(this.pianoLaneScaleX, this.numOfKeys, this.pianoRollNotes, [e.offsetX, e.offsetY]);
-    },
+    // getNoteFromEvent(e: PointerEvent | MouseEvent): TrackNoteEvent | null {
+    //   return getNoteFromPosition(this.pianoLaneScaleX, this.numOfKeys, this.pianoRollNotes, [e.offsetX, e.offsetY]);
+    // },
 
     getNoteNumFromEvent(e: PointerEvent | MouseEvent): number {
       return getNoteNumFromOffsetY(this.numOfKeys, e.offsetY);

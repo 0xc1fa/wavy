@@ -99,3 +99,7 @@ export function getPianoKeyNumFromPosition(range: PianoRollRange, x: number, y: 
     return getWhiteKeyNumFromPosition({numOfKeys: range.numOfKeys, startingNoteNum: range.startingNoteNum }, y);
   }
 }
+
+export function getNoteFromEvent(numOfKeys: number, scaleX: number, notes: TrackNoteEvent[], e: PointerEvent | MouseEvent): TrackNoteEvent | null {
+  return getNoteFromPosition(scaleX, numOfKeys, notes, [e.offsetX, e.offsetY]);
+}
