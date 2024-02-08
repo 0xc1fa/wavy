@@ -42,27 +42,11 @@ function PianoRoll({
 
   const offsetX = useRef(0);
 
-  useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      offsetX.current = event.offsetX;
-    };
-    containerRef.current?.addEventListener("mousemove", handleMouseMove);
-    return () => {
-      containerRef.current?.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
-
   const prevScaleX = useRef(scaleX);
   useLayoutEffect(() => {
     const scaleDifference = scaleX / prevScaleX.current;
-    containerRef.current!.dispatchEvent(
-      new MouseEvent("mousemove", {
-        clientX: containerRef.current!.getBoundingClientRect().left + 0.5 + offsetX.current * scaleDifference,
-      }),
-    );
     const scrollLeft = containerRef.current!.scrollLeft + 0.5;
-    const realOffsetX = offsetX.current - scrollLeft - 0.5;
-    containerRef.current!.scrollTo((scrollLeft + realOffsetX) * scaleDifference - realOffsetX, 0);
+    containerRef.current!.scrollTo({ left: scrollLeft * scaleDifference });
     prevScaleX.current = scaleX;
   }, [scaleX]);
 
