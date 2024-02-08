@@ -13,6 +13,7 @@ import { ScaleXProvider, useScaleX } from "@/contexts/ScaleXProvider";
 import PianoRollThemeContext from "@/contexts/piano-roll-theme-context";
 import { defaultPianoRollTheme } from "@/store/pianoRollTheme";
 import { basePixelsPerTick } from "@/constants";
+import { PianoRollStoreContext, PianoRollStoreProvider } from "@/store/pianoRollStore";
 
 interface PianoRollProps {
   playheadPosition?: number;
@@ -54,8 +55,12 @@ function PianoRoll({
   const prevScaleX = useRef(scaleX);
   useLayoutEffect(() => {
     const scaleDifference = scaleX / prevScaleX.current;
-    containerRef.current!.dispatchEvent(new MouseEvent("mousemove", { clientX: (containerRef.current!.getBoundingClientRect().left + 0.5 + offsetX.current * scaleDifference) }));
-    const scrollLeft = containerRef.current!.scrollLeft + 0.5
+    containerRef.current!.dispatchEvent(
+      new MouseEvent("mousemove", {
+        clientX: containerRef.current!.getBoundingClientRect().left + 0.5 + offsetX.current * scaleDifference,
+      }),
+    );
+    const scrollLeft = containerRef.current!.scrollLeft + 0.5;
     const realOffsetX = offsetX.current - scrollLeft - 0.5;
     containerRef.current!.scrollTo((scrollLeft + realOffsetX) * scaleDifference - realOffsetX, 0);
     prevScaleX.current = scaleX;
@@ -98,13 +103,15 @@ const withProvider = (Component: typeof PianoRoll) => {
     }, []);
 
     return (
-      <ConfigProvider value={config}>
-        <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
-          <ScaleXProvider>
-            <Component {...other} tickRange={tickRange} pitchRange={pitchRange} />
-          </ScaleXProvider>
-        </PianoRollThemeContext.Provider>
-      </ConfigProvider>
+      <PianoRollStoreProvider>
+        <ConfigProvider value={config}>
+          <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
+            <ScaleXProvider>
+              <Component {...other} tickRange={tickRange} pitchRange={pitchRange} />
+            </ScaleXProvider>
+          </PianoRollThemeContext.Provider>
+        </ConfigProvider>
+      </PianoRollStoreProvider>
     );
   };
 };

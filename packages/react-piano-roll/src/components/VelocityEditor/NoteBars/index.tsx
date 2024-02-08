@@ -1,6 +1,6 @@
 import useVelocityEditorMouseHandlers from "@/handlers/useVelocityEditorMouseHandlers";
 import styles from "./index.module.scss";
-import { useStore } from "@/index";
+import useStore from "@/hooks/useStore";
 import { getOffsetXFromTick } from "@/helpers/conversion";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import useTheme from "@/hooks/useTheme";

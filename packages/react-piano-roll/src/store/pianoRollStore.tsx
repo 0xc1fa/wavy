@@ -15,7 +15,6 @@ import {
   vibratoDepthDelayChangeSelectedNote,
   vibratoRateChangeSelectedNote,
 } from "../actions/note-actions";
-import { TransformAction } from "../actions/transform-actions";
 import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
 import { HistoryAction, PianoRollHistoryItem, redo, undo } from "../actions/history-action";
 import { MetaAction, setClipSpan } from "@/actions/meta-action";
@@ -31,7 +30,7 @@ export function PianoRollStoreProvider({ children }: PianoRollStoreProviderProps
   return <PianoRollStoreContext.Provider value={pianoRollStore}>{children}</PianoRollStoreContext.Provider>;
 }
 
-export type PianoRollStoreAction = NoteAction | TransformAction | SelectionAction | HistoryAction | MetaAction;
+export type PianoRollStoreAction = NoteAction | SelectionAction | HistoryAction | MetaAction;
 
 function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
   switch (action.type) {

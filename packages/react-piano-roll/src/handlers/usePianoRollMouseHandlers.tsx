@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { focusNote } from "../helpers/notes";
 import useStore from "../hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
@@ -54,10 +54,15 @@ export default function usePianoRollMouseHandlers() {
   const { numOfKeys } = useConfig().pitchRange;
   const { tickRange } = useConfig();
 
+  const [cursorStyle, setCursorStyle] = useState<"default" | "col-resize">("default");
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None);
   const [startingPosition, setStartingPosition] = useState({ x: 0, y: 0 });
   const [ongoingPosition, setOngoingPosition] = useState({ x: 0, y: 0 });
   const guardActive = useRef(DraggingGuardMode.UnderThreshold);
+
+  useEffect(() => {
+    document.body.style.cursor = cursorStyle;
+  }, [cursorStyle]);
 
   const onPointerDown: React.PointerEventHandler = (event) => {
     event.currentTarget.setPointerCapture(event.nativeEvent.pointerId);
@@ -287,10 +292,7 @@ export default function usePianoRollMouseHandlers() {
 
   const updateCursorStyle = (e: PointerEvent) => {
     const target = e.currentTarget as HTMLElement;
-    const noteHovered = getNoteFromPosition(scaleX, numOfKeys, pianoRollStore.notes, [
-      e.offsetX,
-      e.offsetY,
-    ]);
+    const noteHovered = getNoteFromPosition(scaleX, numOfKeys, pianoRollStore.notes, [e.offsetX, e.offsetY]);
     const isBoundaryHovered =
       noteHovered &&
       (isNoteLeftMarginClicked(numOfKeys, scaleX, noteHovered, {
@@ -301,7 +303,7 @@ export default function usePianoRollMouseHandlers() {
           x: e.offsetX,
           y: e.offsetY,
         }));
-    target.style.cursor = isBoundaryHovered ? "col-resize" : "default";
+    setCursorStyle(isBoundaryHovered ? "col-resize" : "default");
   };
 
   const getTickAndNoteNumFromEvent = (e: PointerEvent) => {
@@ -319,10 +321,7 @@ export default function usePianoRollMouseHandlers() {
     ) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesTrimming);
     } else if (
-      isNoteRightMarginClicked(numOfKeys, scaleX, noteClicked!, [
-        event.nativeEvent.offsetX,
-        event.nativeEvent.offsetY,
-      ])
+      isNoteRightMarginClicked(numOfKeys, scaleX, noteClicked!, [event.nativeEvent.offsetX, event.nativeEvent.offsetY])
     ) {
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick + noteClicked.duration } });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesExtending);
@@ -366,6 +365,7 @@ export default function usePianoRollMouseHandlers() {
       mouseHandlerMode,
       startingPosition,
       ongoingPosition,
+      cursorStyle,
     },
   };
 }
