@@ -1,6 +1,7 @@
 .notes-container {
   position: absolute;
   inset: 0;
+  overflow-x: hidden;
 }
 
 .note {
