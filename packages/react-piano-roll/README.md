@@ -1,12 +1,25 @@
 # react-piano-roll
 
 ## Bugs
+
 - Selection marquee that drag outside the piano roll will make the piano roll extend and scroll
 - A small gap appear when the piano roll is scrolled all the way to the bottom
 - The color of selection marquee is too ugly
 - The onclick animation of piano keyboard is not working
 - No line between white key lane
 - Range indicator overlap piano keyboard
+- Note/selecton maquee does not follow overflow scroll (only follow when on move)
+- 0 length note should extend first instead of trimming
+- Make pianoroll lane overflow not the whole editor
+- Sometime dragging marker in velocity editor will make other marker shift to the top
+- check if the length is correct if editor staring tick not 0
+- Velocity editor
+  - Clicking on velocity editor should changed the selected note
+  - Velocity editor should modified all selected note together
+  - Or just dont show selection on velocity editor
+  - But then need to lose selected when change note
+  - Velocity editor should only change the current note in drag mode even if it have move to the range of another note
+
 
 ## TODOs
 
@@ -16,10 +29,8 @@
   - before lock in can move in detail
   - after lock in one can move in anchor point
   - if note is in grid line, only grid line are anchor points, else, both grid line and (note original points + grid width) are anchor points
-- [ ] selection bar
+- [x] selection bar
 - [x] Select notes when dragging not after dragging
-- [ ] Change the staring and ending point of the midi editor
-- [ ] Add loop area
 - [ ] Add selected mode for velocity editor
 - [ ] turn PianoRoll flex layout to grid layout
 - [ ] fix range selection
@@ -27,36 +38,17 @@
 - [ ] Add notes boundary as anchor points
 - [ ] New note size reactive to grid size
 
-## Existing Problems and
-
-- Cannot delete lyric (as it would also delete the note)
-- Refactored PianoRollStore
-- The scrollable area does not resize upon scaling
-
-## Performance Refactor
-
-### Lane Container
-
-#### LaneGrids
-
-- The span of the pianoroll
-- ScaleX
-
-#### Selection
-
-- piano roll note (currently, maybe delete it later)
-- selection tick
-- scaleX
--
-
-#### Note
-
-- piano roll note
-- scaleX (in the use of function call)
-
 ## Roadmap
 
 ### 1.0.0
+
 - Clipboard
 - Velocity Editor
 - Horizontally scalable
+
+### 1.1.0
+- Time signature customization
+- Key range customization
+
+### 1.2.0
+- Loop area

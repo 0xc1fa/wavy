@@ -3,7 +3,7 @@ import { useScaleX } from "@/contexts/ScaleXProvider";
 import { getSelectionRangeWithSelectedNotes } from "@/helpers/notes";
 import { useStore } from "@/hooks/useStore";
 
-const triangleWidth = 9;
+const triangleWidth = 8;
 const indicatorHeight = 8;
 const triangleHeight = 8;
 const SelectionRangeIndicator = () => {
