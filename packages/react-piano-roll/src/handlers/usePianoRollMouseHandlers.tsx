@@ -268,7 +268,8 @@ export default function usePianoRollMouseHandlers() {
         });
         const snappedSelection = [startingPosition.x, event.nativeEvent.offsetX]
           .map(getTickFromOffsetX.bind(null, scaleX))
-          .map(getNearestGridTick.bind(null, scaleX)) as [number, number];
+          .map(getNearestGridTick.bind(null, scaleX))
+          .sort((a, b) => a - b) as [number, number];
         dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: snappedSelection } });
         break;
       case PianoRollLanesMouseHandlerMode.Vibrato:

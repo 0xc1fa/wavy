@@ -4,6 +4,7 @@ import { basePixelsPerTick } from "@/constants";
 import { baseCanvasHeight } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
+import { getEndingTickFromNotes, getStartingTickFromNotes } from "@/helpers/notes";
 
 export default function SelectionPoint() {
   const { pianoRollStore } = useStore();
@@ -11,9 +12,18 @@ export default function SelectionPoint() {
 
   const { numOfKeys } = useConfig().pitchRange;
   let selectionTicks = pianoRollStore.selectionTicks;
-  if (selectionTicks instanceof Array && selectionTicks[0] === selectionTicks[1]) {
-    selectionTicks = selectionTicks[0];
+  if (selectionTicks instanceof Array) {
+    const startingNoteTick = getStartingTickFromNotes(pianoRollStore.notes.filter((note) => note.isSelected));
+    const endingNoteTick = getEndingTickFromNotes(pianoRollStore.notes.filter((note) => note.isSelected));
+    console.log("selection tick before", selectionTicks);
+    selectionTicks = [Math.min(startingNoteTick, selectionTicks[0]), Math.max(endingNoteTick, selectionTicks[1])];
+    console.log("startingNoteTick", startingNoteTick);
+    console.log("endingNoteTick", endingNoteTick);
+    console.log("selectionTicks", selectionTicks);
   }
+  // if (selectionTicks instanceof Array && selectionTicks[0] === selectionTicks[1]) {
+  //   selectionTicks = selectionTicks[0];
+  // }
 
   const selectionLines = () => {
     if (selectionTicks === null) {
