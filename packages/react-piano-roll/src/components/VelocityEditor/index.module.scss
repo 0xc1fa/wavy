@@ -29,6 +29,7 @@
   width: var(--canvas-width);
   flex: 0 0 auto;
   height: 100%;
+  overflow-x: hidden;
 }
 
 .resize-bar {
