@@ -7,9 +7,6 @@ import { baseCanvasWidth } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 
-// interface LaneGridsProps extends React.HTMLAttributes<SVGElement> {
-//   scaleX: number;
-// }
 const LaneGrids: React.FC = memo(() => {
   const theme = useTheme();
   const { tickRange } = useConfig();
@@ -17,7 +14,7 @@ const LaneGrids: React.FC = memo(() => {
   const { scaleX } = useScaleX();
 
   const gridSeparationFactor = getGridSeparationFactor(scaleX);
-  const numberOfGrids = getNumOfGrid(baseCanvasWidth(tickRange));
+  const numberOfGrids = getNumOfGrid(baseCanvasWidth(tickRange), scaleX);
   const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor);
 
   const gridLines = (gridType: "bar" | "quarter" | "quavers") => {

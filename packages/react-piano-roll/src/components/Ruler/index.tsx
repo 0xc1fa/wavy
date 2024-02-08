@@ -12,7 +12,7 @@ interface RulerProps extends React.HTMLAttributes<SVGElement> {
 const Ruler: React.FC<RulerProps> = memo(({ scaleX }) => {
   const { tickRange } = useConfig();
 
-  const numberOfMarkers = getNumOfGrid(baseCanvasWidth(tickRange));
+  const numberOfMarkers = getNumOfGrid(baseCanvasWidth(tickRange), scaleX);
   const gridSeparationFactor = getGridSeparationFactor(scaleX);
 
   const barMarkers = [...Array(numberOfMarkers.bar).keys()]
