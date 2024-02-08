@@ -1,5 +1,10 @@
 import { basePixelsPerBeat, minGridPixel, ticksPerBeat } from "@/constants";
-import { ceilToNearestPowerOfTwo, floorToNearestPowerOfTwo } from "./number";
+import {
+  ceilToNearestPowerOf,
+  ceilToNearestPowerOfTwo,
+  floorToNearestPowerOf,
+  floorToNearestPowerOfTwo,
+} from "./number";
 
 export function getNumOfGrid(baseCanvasWidth: number, scaleX: number) {
   const closestPowerOfTwoScale = ceilToNearestPowerOfTwo(scaleX);
@@ -15,7 +20,8 @@ export function getNumOfGrid(baseCanvasWidth: number, scaleX: number) {
   };
 }
 
-export function getGridSeparationFactor(scaleX: number) {
+/** @returns How far the grid are separated */
+export function getGridSeparationFactor(beatsPerBar: number, scaleX: number) {
   const barGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (scaleX * basePixelsPerBeat * 4));
   const halfBarGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (scaleX * basePixelsPerBeat * 2));
   const quarterGridSeparationFactor = ceilToNearestPowerOfTwo(minGridPixel / (scaleX * basePixelsPerBeat));
@@ -27,6 +33,7 @@ export function getGridSeparationFactor(scaleX: number) {
     quavers: quaversGridSeparationFactor,
   };
 }
+
 
 export function getGridBaseSeparation(gridSeparationFactor: ReturnType<typeof getGridSeparationFactor>) {
   return {
@@ -64,7 +71,7 @@ export function getNearestGridTick(scaleX: number, ticks: number) {
   return upperGridTickDiff < lowerGridTickDiff ? upperGridTick : lowerGridTick;
 }
 
-export function getNearestGridTickWithOffset(scaleX: number, ticks: number,  offset: number) {
+export function getNearestGridTickWithOffset(scaleX: number, ticks: number, offset: number) {
   const ticksInGrid = getTickInGrid(scaleX);
   let upperGridTick;
   let lowerGridTick;

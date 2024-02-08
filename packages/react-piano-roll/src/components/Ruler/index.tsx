@@ -10,10 +10,10 @@ interface RulerProps extends React.HTMLAttributes<SVGElement> {
 }
 
 const Ruler: React.FC<RulerProps> = memo(({ scaleX }) => {
-  const { tickRange } = useConfig();
+  const { tickRange, beatsPerBar } = useConfig();
 
   const numberOfMarkers = getNumOfGrid(baseCanvasWidth(tickRange), scaleX);
-  const gridSeparationFactor = getGridSeparationFactor(scaleX);
+  const gridSeparationFactor = getGridSeparationFactor(beatsPerBar!, scaleX);
 
   const barMarkers = [...Array(numberOfMarkers.bar).keys()]
     .filter((index) => index % gridSeparationFactor.bar === 0)

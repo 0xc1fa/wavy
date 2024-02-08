@@ -1,4 +1,5 @@
 import type { PitchRange } from "@/interfaces/piano-roll-range";
+import { BeatPerBar, BeatUnit } from "@/interfaces/time-signature";
 import { createContext, memo, useContext } from "react";
 
 export type TickRange = [number, number];
@@ -6,6 +7,8 @@ export type TickRange = [number, number];
 export type PianoRollConfig = {
   pitchRange: PitchRange;
   tickRange: TickRange;
+  beatsPerBar?: BeatPerBar,
+  beatUnit?: BeatUnit,
 };
 
 const defaultPianoRollConfig: PianoRollConfig = {
@@ -14,6 +17,8 @@ const defaultPianoRollConfig: PianoRollConfig = {
     numOfKeys: 128,
   },
   tickRange: [0, 480 * 4 * 8],
+  beatsPerBar: 4,
+  beatUnit: 4,
 };
 
 const PianoRollConfigContext = createContext(defaultPianoRollConfig);

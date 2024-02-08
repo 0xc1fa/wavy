@@ -1,8 +1,8 @@
 import styles from "./index.module.scss";
-import { CSSProperties, KeyboardEvent, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { CSSProperties, KeyboardEvent, useLayoutEffect, useMemo, useRef } from "react";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import type { PitchRange } from "@/interfaces/piano-roll-range";
-import { baseCanvasWidth, baseCanvasHeight, getTickFromEvent, getTickFromOffsetX } from "@/helpers/conversion";
+import { baseCanvasWidth, baseCanvasHeight } from "@/helpers/conversion";
 import { ConfigProvider, PianoRollConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScrollToNote } from "@/hooks/useScrollToNote";
 import UpperSection from "./Sections/UpperSection";
@@ -12,8 +12,8 @@ import LowerSection from "./Sections/LowerSection";
 import { ScaleXProvider, useScaleX } from "@/contexts/ScaleXProvider";
 import PianoRollThemeContext from "@/contexts/piano-roll-theme-context";
 import { defaultPianoRollTheme } from "@/store/pianoRollTheme";
-import { basePixelsPerTick } from "@/constants";
-import { PianoRollStoreContext, PianoRollStoreProvider } from "@/store/pianoRollStore";
+import { PianoRollStoreProvider } from "@/store/pianoRollStore";
+import { BeatPerBar, BeatUnit } from "@/interfaces/time-signature";
 
 interface PianoRollProps {
   playheadPosition?: number;
@@ -26,6 +26,8 @@ interface PianoRollProps {
   tickRange?: [number, number];
   style?: CSSProperties;
   pitchRange?: PitchRange;
+  beatsPerBar?: BeatPerBar;
+  beatUnit?: BeatUnit;
 }
 function PianoRoll({
   playheadPosition,
@@ -35,12 +37,12 @@ function PianoRoll({
   style,
   tickRange,
   pitchRange,
+  beatsPerBar,
+  beatUnit,
 }: PianoRollProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   useScrollToNote(containerRef, initialScrollMiddleNote);
   const { scaleX } = useScaleX();
-
-  const offsetX = useRef(0);
 
   const prevScaleX = useRef(scaleX);
   useLayoutEffect(() => {
@@ -76,12 +78,16 @@ const withProvider = (Component: typeof PianoRoll) => {
   return ({
     tickRange = [0, 480 * 4 * 8],
     pitchRange = { startingNoteNum: 0, numOfKeys: 128 },
+    beatsPerBar = 4,
+    beatUnit = 4,
     ...other
   }: PianoRollProps) => {
     const config = useMemo(() => {
       const config: PianoRollConfig = {
         pitchRange: pitchRange,
         tickRange: tickRange,
+        beatsPerBar: beatsPerBar,
+        beatUnit: beatUnit,
       };
       return config;
     }, []);
@@ -91,7 +97,7 @@ const withProvider = (Component: typeof PianoRoll) => {
         <ConfigProvider value={config}>
           <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
             <ScaleXProvider>
-              <Component {...other} tickRange={tickRange} pitchRange={pitchRange} />
+              <Component {...other} tickRange={tickRange} pitchRange={pitchRange} beatsPerBar={beatsPerBar} />
             </ScaleXProvider>
           </PianoRollThemeContext.Provider>
         </ConfigProvider>
