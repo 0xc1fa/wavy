@@ -1,4 +1,4 @@
-import useStore from "../../hooks/useStore";
+import { useStore } from "@/hooks/useStore";
 import NoteBlock from "./NoteBlock";
 import NoteLyric from "./NoteLyric";
 import styles from "./index.module.scss";

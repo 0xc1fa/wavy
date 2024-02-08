@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useStore from "../hooks/useStore";
+import { useStore } from "@/hooks/useStore";
 import { getNotesFromOffsetX } from "@/helpers/conversion";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 

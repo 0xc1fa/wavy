@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import useStore from "../../hooks/useStore";
+import { useStore } from "@/hooks/useStore";
 import styles from "./index.module.scss";
 
 const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => {

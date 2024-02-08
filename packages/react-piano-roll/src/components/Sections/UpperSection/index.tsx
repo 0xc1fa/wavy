@@ -2,18 +2,19 @@ import Ruler from "@/components/Ruler";
 import SelectionBar from "@/components/SelectionBar";
 import TempoInfo from "@/components/TempoInfo";
 import styles from "./index.module.scss";
-import { useStore } from "@/index";
 import { useScaleX } from "@/contexts/ScaleXProvider";
+import SelectionRangeIndicator from "@/components/SelectionRangeIndicator";
 
 const UpperSection: React.FC = () => {
-  const { scaleX } = useScaleX()
+  const { scaleX } = useScaleX();
 
   return (
     <div className={styles["container"]}>
       <TempoInfo />
-      <div>
+      <div style={{ position: "relative" }}>
         <Ruler scaleX={scaleX} />
         <SelectionBar scaleX={scaleX} />
+        <SelectionRangeIndicator />
       </div>
     </div>
   );

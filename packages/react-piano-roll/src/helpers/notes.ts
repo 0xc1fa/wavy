@@ -1,5 +1,5 @@
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
-import useStore from "../hooks/useStore";
+import { useStore } from "@/hooks/useStore";
 
 export function focusNote(e: Event, id: string) {
   const componentRef = e.currentTarget as HTMLDivElement;
@@ -22,13 +22,11 @@ export function getEndingTickFromNotes(notes: TrackNoteEvent[]) {
   return endTick;
 }
 
-export function getSelectionRangeWithSelectedNotes(selectedNotes: TrackNoteEvent[], selectionRange: [number, number]): [number, number] {
-  console.log(selectedNotes)
-
+export function getSelectionRangeWithSelectedNotes(
+  selectedNotes: TrackNoteEvent[],
+  selectionRange: [number, number],
+): [number, number] {
   const startingNoteTick = getStartingTickFromNotes(selectedNotes);
   const endingNoteTick = getEndingTickFromNotes(selectedNotes);
-  console.log('startingNoteTick', startingNoteTick);
-  console.log('endingNoteTick', endingNoteTick);
-  console.log('selectionRange', selectionRange);
   return [Math.min(startingNoteTick, selectionRange[0]), Math.max(endingNoteTick, selectionRange[1])];
 }

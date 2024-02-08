@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import styles from "./index.module.scss";
 import useTheme from "../../../hooks/useTheme";
-import useStore from "../../../hooks/useStore";
+import { useStore } from "@/hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import { baseLaneWidth } from "@/constants";
 import { getMinYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";

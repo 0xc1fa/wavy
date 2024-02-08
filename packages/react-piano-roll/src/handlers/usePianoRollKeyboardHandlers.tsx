@@ -1,9 +1,10 @@
 import { useEffect, useReducer, useRef, useState } from "react";
-import useStore from "../hooks/useStore";
+import { useStore } from "@/hooks/useStore"
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import {
   focusNote,
   getEndingTickFromNotes,
+  getSelectionRangeWithSelectedNotes,
   getStartingTickFromNotes,
   useNotes,
 } from "../helpers/notes";
@@ -21,17 +22,21 @@ type Clipboard = {
 
 type ClipboardAction = {
   type: "setNote";
-  payload: { notes: TrackNoteEvent[] };
+  payload: {
+    notes: TrackNoteEvent[];
+    selectedRange: [number, number];
+  };
 };
 
 function clipboardReducer(state: Clipboard, action: ClipboardAction) {
   switch (action.type) {
     case "setNote":
+      const selectionTicks = getSelectionRangeWithSelectedNotes(action.payload.notes, action.payload.selectedRange);
       return {
         notes: action.payload.notes,
         selectionRegion: {
-          start: getStartingTickFromNotes(action.payload.notes),
-          width: getEndingTickFromNotes(action.payload.notes) - getStartingTickFromNotes(action.payload.notes),
+          start: selectionTicks[0],
+          width: selectionTicks[1] - selectionTicks[0],
         },
       };
     default:
@@ -115,9 +120,21 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
   const onCopy = (event: React.KeyboardEvent) => {
     event.preventDefault();
     event.stopPropagation();
-
-    if (pianoRollStore.selectedNotes.length > 0) {
-      clipboardDispatch({ type: "setNote", payload: { notes: pianoRollStore.selectedNotes } });
+    if (pianoRollStore.selectedNotes.length === 0) {
+      return;
+    }
+    if (pianoRollStore.selectionRange === null) {
+      return;
+    } else if (pianoRollStore.selectionRange instanceof Array) {
+      clipboardDispatch({
+        type: "setNote",
+        payload: { notes: pianoRollStore.selectedNotes(), selectedRange: pianoRollStore.selectionRange },
+      });
+    } else {
+      clipboardDispatch({
+        type: "setNote",
+        payload: { notes: pianoRollStore.selectedNotes(), selectedRange: pianoRollStore.selectionRange },
+      });
     }
   };
 
@@ -126,7 +143,7 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
     event.stopPropagation();
 
     if (pianoRollStore.selectedNotes.length > 0) {
-      clipboardDispatch({ type: "setNote", payload: { notes: pianoRollStore.selectedNotes } });
+      clipboardDispatch({ type: "setNote", payload: { notes: pianoRollStore.selectedNotes(), selectedRange: pianoRollStore.selectionRange! } });
     }
     dispatch({ type: "DELETE_SELECTED_NOTES" });
   };
@@ -136,12 +153,8 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
     event.stopPropagation();
 
     let selectionTicks: number;
-    if (pianoRollStore.selectionTicks === null) {
+    if (pianoRollStore.selectionRange === null) {
       return;
-    } else if (pianoRollStore.selectionTicks instanceof Array) {
-      selectionTicks = pianoRollStore.selectionTicks[0];
-    } else {
-      selectionTicks = pianoRollStore.selectionTicks;
     }
 
     if (clipboard.notes.length === 0) {

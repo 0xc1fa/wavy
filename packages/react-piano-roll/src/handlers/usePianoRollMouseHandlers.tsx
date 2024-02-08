@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { focusNote } from "../helpers/notes";
-import useStore from "../hooks/useStore";
+import { useStore } from "@/hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import _ from "lodash";
 import { getGridOffsetOfTick, getNearestAnchor, getNearestGridTick, getTickInGrid } from "@/helpers/grid";
@@ -270,7 +270,7 @@ export default function usePianoRollMouseHandlers() {
           .map(getTickFromOffsetX.bind(null, scaleX))
           .map(getNearestGridTick.bind(null, scaleX))
           .sort((a, b) => a - b) as [number, number];
-        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: snappedSelection } });
+        dispatch({ type: "SET_SELECTION_RANGE", payload: { range: snappedSelection } });
         break;
       case PianoRollLanesMouseHandlerMode.Vibrato:
         event.shiftKey

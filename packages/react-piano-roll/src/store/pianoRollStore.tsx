@@ -1,5 +1,4 @@
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
-import { isBlackKey } from "../helpers";
 import { createContext, useReducer } from "react";
 import {
   NoteAction,
@@ -17,10 +16,9 @@ import {
   vibratoDepthDelayChangeSelectedNote,
   vibratoRateChangeSelectedNote,
 } from "../actions/note-actions";
-import { SelectionAction, setNoteAsSelected, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
+import { SelectionAction, setNoteAsSelected, setSelectionRange, setSelectionTicks, unselectAllNotes } from "../actions/selection-actions";
 import { HistoryAction, PianoRollHistoryItem, redo, undo } from "../actions/history-action";
 import { MetaAction, setClipSpan } from "@/actions/meta-action";
-import { basePixelsPerBeat, basePixelsPerTick } from "@/constants";
 
 export const PianoRollStoreContext = createContext<ReturnType<typeof usePianoRollStore> | undefined>(undefined);
 
@@ -79,6 +77,8 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
       return setLastModifiedDuration(state, action);
     case "SET_LAST_MODIFIED_VELOCITY":
       return setLastModifiedVelocity(state, action);
+    case "SET_SELECTION_RANGE":
+      return setSelectionRange(state, action);
     default:
       throw new Error();
   }
@@ -109,9 +109,9 @@ export type PianoRollStore = {
   bpm: number;
   lastModifiedVelocity: number;
   lastModifiedDuration: number;
-  selectionTicks: number | [number, number] | null;
+  selectionTicks: number | null;
   selectionRange: [number, number] | null;
-  get selectedNotes(): TrackNoteEvent[];
+  selectedNotes(): TrackNoteEvent[];
 };
 function defaultPianoRollStore(): PianoRollStore {
   return {
@@ -132,7 +132,7 @@ function defaultPianoRollStore(): PianoRollStore {
 
     selectionTicks: 0,
     selectionRange: null,
-    get selectedNotes() {
+    selectedNotes() {
       return this.notes.filter((note) => note.isSelected);
     },
   };
