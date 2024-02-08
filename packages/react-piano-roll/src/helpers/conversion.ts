@@ -13,6 +13,7 @@ import { TrackNoteEvent } from "@/types";
 import { isBlackKey } from ".";
 import { Offset, convertOffsetToObject, convertOffsetToTuple } from "@/interfaces/offset";
 import { TickRange } from "@/contexts/PianoRollConfigProvider";
+import { getTickInGrid } from "./grid";
 
 export function getBeatFromOffsetX(offsetX: number, scaleX: number) {
   return offsetX / (scaleX * basePixelsPerBeat);
@@ -128,8 +129,8 @@ export function getTickFromEvent(scaleX: number, e: PointerEvent | MouseEvent): 
   return getTickFromOffsetX(e.offsetX, scaleX);
 }
 
-export function roundDownTickToNearestGrid(tick: number) {
-  return tick - (tick % ticksPerBeat);
+export function roundDownTickToNearestGrid(tick: number, scaleX: number) {
+  return tick - (tick % getTickInGrid(scaleX));
 }
 
 export function isNoteLeftMarginClicked(numOfKeys: number, scaleX: number, note: TrackNoteEvent, offset: Offset) {

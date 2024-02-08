@@ -312,7 +312,7 @@ export default function usePianoRollMouseHandlers() {
 
   const getTickAndNoteNumFromEvent = (e: PointerEvent) => {
     const noteNum = getNoteNumFromEvent(numOfKeys, e);
-    const ticks = roundDownTickToNearestGrid(getTickFromEvent(scaleX, e));
+    const ticks = roundDownTickToNearestGrid(getTickFromEvent(scaleX, e), scaleX);
     return { ticks, noteNum };
   };
 
