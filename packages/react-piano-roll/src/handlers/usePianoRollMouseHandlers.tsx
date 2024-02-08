@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { focusNote } from "../helpers/notes";
+import { focusNote, getSelectionRangeWithSelectedNotes } from "../helpers/notes";
 import { useStore } from "@/hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import _ from "lodash";
@@ -293,7 +293,20 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const onPointerUp: React.PointerEventHandler = () => {
-    setMouseHandlerMode(PianoRollLanesMouseHandlerMode.None);
+    try {
+      if (mouseHandlerMode === PianoRollLanesMouseHandlerMode.MarqueeSelection) {
+        if (pianoRollStore.selectedNotes().length === 0) {
+          return;
+        }
+        let selectionRange = getSelectionRangeWithSelectedNotes(
+          pianoRollStore.selectedNotes(),
+          pianoRollStore.selectionRange,
+        );
+        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: selectionRange[1] } });
+      }
+    } finally {
+      setMouseHandlerMode(PianoRollLanesMouseHandlerMode.None);
+    }
   };
 
   const onDoubleClick: React.MouseEventHandler = (event) => {
