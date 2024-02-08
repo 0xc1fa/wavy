@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef, useState } from "react";
-import { useStore } from "@/hooks/useStore"
+import { useStore } from "@/hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import {
   focusNote,
@@ -17,7 +17,7 @@ type SelectionRegion = {
 
 type Clipboard = {
   notes: TrackNoteEvent[];
-  selectionRegion: SelectionRegion;
+  selectionWidth: number;
 };
 
 type ClipboardAction = {
@@ -33,12 +33,13 @@ function clipboardReducer(state: Clipboard, action: ClipboardAction) {
     case "setNote":
       const selectionTicks = getSelectionRangeWithSelectedNotes(action.payload.notes, action.payload.selectedRange);
       return {
-        notes: action.payload.notes,
-        selectionRegion: {
-          start: selectionTicks[0],
-          width: selectionTicks[1] - selectionTicks[0],
-        },
-      };
+        notes: action.payload.notes.map((note) => ({
+            ...note,
+            tick: note.tick - selectionTicks[0],
+          }
+        )),
+        selectionWidth: selectionTicks[1] - selectionTicks[0],
+      }
     default:
       throw new Error("Invalid action type");
   }
@@ -49,7 +50,7 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
   const notes = useNotes();
   const [clipboard, clipboardDispatch] = useReducer(clipboardReducer, {
     notes: [],
-    selectionRegion: { start: 0, width: 0 },
+    selectionWidth: 0,
   });
 
   let spaceDown = useRef(false);
@@ -120,31 +121,35 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
   const onCopy = (event: React.KeyboardEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    if (pianoRollStore.selectedNotes.length === 0) {
+    if (pianoRollStore.selectedNotes().length === 0) {
       return;
     }
-    if (pianoRollStore.selectionRange === null) {
-      return;
-    } else if (pianoRollStore.selectionRange instanceof Array) {
-      clipboardDispatch({
-        type: "setNote",
-        payload: { notes: pianoRollStore.selectedNotes(), selectedRange: pianoRollStore.selectionRange },
-      });
-    } else {
-      clipboardDispatch({
-        type: "setNote",
-        payload: { notes: pianoRollStore.selectedNotes(), selectedRange: pianoRollStore.selectionRange },
-      });
-    }
+
+    let selectionRange = getSelectionRangeWithSelectedNotes(
+      pianoRollStore.selectedNotes(),
+      pianoRollStore.selectionRange!,
+    );
+    clipboardDispatch({
+      type: "setNote",
+      payload: { notes: pianoRollStore.selectedNotes(), selectedRange: selectionRange },
+    });
   };
 
   const onCut = (event: React.KeyboardEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (pianoRollStore.selectedNotes.length > 0) {
-      clipboardDispatch({ type: "setNote", payload: { notes: pianoRollStore.selectedNotes(), selectedRange: pianoRollStore.selectionRange! } });
+    if (pianoRollStore.selectedNotes.length === 0) {
+      return;
     }
+    let selectionRange = getSelectionRangeWithSelectedNotes(
+      pianoRollStore.selectedNotes(),
+      pianoRollStore.selectionRange!,
+    );
+    clipboardDispatch({
+      type: "setNote",
+      payload: { notes: pianoRollStore.selectedNotes(), selectedRange: selectionRange },
+    });
     dispatch({ type: "DELETE_SELECTED_NOTES" });
   };
 
@@ -152,8 +157,7 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
     event.preventDefault();
     event.stopPropagation();
 
-    let selectionTicks: number;
-    if (pianoRollStore.selectionRange === null) {
+    if (pianoRollStore.selectionTicks === null) {
       return;
     }
 
@@ -162,10 +166,11 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
     }
     const shiftedNotes = clipboard.notes.map((note) => ({
       ...note,
-      tick: selectionTicks + (note.tick - clipboard.selectionRegion.start),
+      tick: pianoRollStore.selectionTicks! + note.tick,
     }));
     dispatch({ type: "UNSELECTED_ALL_NOTES" });
     dispatch({ type: "ADD_NOTES", payload: { notes: shiftedNotes } });
+    dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: pianoRollStore.selectionTicks! + clipboard.selectionWidth } })
   };
 
   return {

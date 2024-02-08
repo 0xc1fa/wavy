@@ -24,8 +24,11 @@ export function getEndingTickFromNotes(notes: TrackNoteEvent[]) {
 
 export function getSelectionRangeWithSelectedNotes(
   selectedNotes: TrackNoteEvent[],
-  selectionRange: [number, number],
+  selectionRange: [number, number] | null,
 ): [number, number] {
+  if (selectionRange === null) {
+    return [getStartingTickFromNotes(selectedNotes), getEndingTickFromNotes(selectedNotes)];
+  }
   const startingNoteTick = getStartingTickFromNotes(selectedNotes);
   const endingNoteTick = getEndingTickFromNotes(selectedNotes);
   return [Math.min(startingNoteTick, selectionRange[0]), Math.max(endingNoteTick, selectionRange[1])];

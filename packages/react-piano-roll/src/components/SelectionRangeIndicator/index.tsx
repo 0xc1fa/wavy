@@ -1,7 +1,7 @@
 import { basePixelsPerTick } from "@/constants";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { getSelectionRangeWithSelectedNotes } from "@/helpers/notes";
-import { useStore } from "@/index";
+import { useStore } from "@/hooks/useStore";
 
 const triangleWidth = 7;
 const indicatorHeight = 10;
@@ -14,7 +14,7 @@ const SelectionRangeIndicator = () => {
   }
   let selectionRange = getSelectionRangeWithSelectedNotes(
     pianoRollStore.selectedNotes(),
-    pianoRollStore.selectionRange,
+    pianoRollStore.selectionRange
   );
 
   const startingX = Math.round(selectionRange[0] * basePixelsPerTick * scaleX);
