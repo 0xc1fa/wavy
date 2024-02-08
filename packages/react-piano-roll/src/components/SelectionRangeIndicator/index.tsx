@@ -3,8 +3,9 @@ import { useScaleX } from "@/contexts/ScaleXProvider";
 import { getSelectionRangeWithSelectedNotes } from "@/helpers/notes";
 import { useStore } from "@/hooks/useStore";
 
-const triangleWidth = 7;
-const indicatorHeight = 10;
+const triangleWidth = 9;
+const indicatorHeight = 8;
+const triangleHeight = 8;
 const SelectionRangeIndicator = () => {
   const { pianoRollStore } = useStore();
   const { scaleX } = useScaleX();
@@ -14,7 +15,7 @@ const SelectionRangeIndicator = () => {
   }
   let selectionRange = getSelectionRangeWithSelectedNotes(
     pianoRollStore.selectedNotes(),
-    pianoRollStore.selectionRange
+    pianoRollStore.selectionRange,
   );
 
   const startingX = Math.round(selectionRange[0] * basePixelsPerTick * scaleX);
@@ -24,35 +25,29 @@ const SelectionRangeIndicator = () => {
   }
 
   return (
-    <svg width="100%" height={indicatorHeight} style={{ position: "absolute", bottom: -indicatorHeight, left: 0 }}>
+    <svg width="100%" height={triangleHeight} style={{ position: "absolute", bottom: -triangleHeight, left: 0 }}>
       <polygon
         points={`
-          ${startingX - triangleWidth},0
+          ${startingX - (triangleWidth * 0.9)},0
           ${startingX + triangleWidth},0
-          ${startingX},${indicatorHeight}
+          ${startingX},${triangleHeight}
         `}
         fill="#ffffff30"
       />
-      <g style={{ fill: "#ffffff20" }}>
-        <polygon points={`
+      <polygon
+        points={`
             ${startingX + triangleWidth},0
-            ${startingX + triangleWidth},${indicatorHeight}
-            ${startingX},${indicatorHeight}
-          `}
-        />
-        <rect x={startingX + triangleWidth} y="0" width={endingX - startingX - 2 * triangleWidth} height="100%" />
-        <polygon points={`
             ${endingX - triangleWidth},0
-            ${endingX - triangleWidth},${indicatorHeight}
-            ${endingX},${indicatorHeight}
+            ${endingX - (1 - indicatorHeight / triangleHeight) * triangleWidth},${indicatorHeight}
+            ${startingX + (1 - indicatorHeight / triangleHeight) * triangleWidth},${indicatorHeight}
           `}
-        />
-      </g>
+        fill="#ffffff23"
+      />
       <polygon
         points={`
           ${endingX - triangleWidth},0
-          ${endingX + triangleWidth},0
-          ${endingX},${indicatorHeight}
+          ${endingX + (triangleWidth * 0.9)},0
+          ${endingX},${triangleHeight}
         `}
         fill="#ffffff30"
       />
