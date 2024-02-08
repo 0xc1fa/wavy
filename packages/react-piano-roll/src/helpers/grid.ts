@@ -3,10 +3,10 @@ import { ceilToNearestPowerOfTwo, floorToNearestPowerOfTwo } from "./number";
 
 export function getNumOfGrid(baseCanvasWidth: number, scaleX: number) {
   const closestPowerOfTwoScale = ceilToNearestPowerOfTwo(scaleX);
-  const numberOfBarGrids = Math.ceil(baseCanvasWidth / (basePixelsPerBeat * 4));
-  const numberOfHalfBarGrids = Math.ceil(baseCanvasWidth / (basePixelsPerBeat * 2));
-  const numberOfQuarterGrids = Math.ceil(baseCanvasWidth / basePixelsPerBeat);
-  const numberOfQuaversGrids = Math.ceil((baseCanvasWidth * closestPowerOfTwoScale) / basePixelsPerBeat);
+  const numberOfBarGrids = Math.ceil(baseCanvasWidth / (minGridPixel * 4));
+  const numberOfHalfBarGrids = Math.ceil(baseCanvasWidth / (minGridPixel * 2));
+  const numberOfQuarterGrids = Math.ceil(baseCanvasWidth / minGridPixel);
+  const numberOfQuaversGrids = Math.ceil((baseCanvasWidth * closestPowerOfTwoScale) / minGridPixel);
   return {
     bar: numberOfBarGrids,
     halfBar: numberOfHalfBarGrids,
