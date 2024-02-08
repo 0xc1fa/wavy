@@ -134,6 +134,7 @@ export function deleteSelectedNotes(state: PianoRollStore, action: DeleteSelecte
         { type: PianoRollHistoryItemType.DELETE_NOTE, note: notesToBeDeleted },
       ],
     },
+    selectionRange: null,
   };
 }
 

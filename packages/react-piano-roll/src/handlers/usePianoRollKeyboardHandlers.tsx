@@ -34,12 +34,11 @@ function clipboardReducer(state: Clipboard, action: ClipboardAction) {
       const selectionTicks = getSelectionRangeWithSelectedNotes(action.payload.notes, action.payload.selectedRange);
       return {
         notes: action.payload.notes.map((note) => ({
-            ...note,
-            tick: note.tick - selectionTicks[0],
-          }
-        )),
+          ...note,
+          tick: note.tick - selectionTicks[0],
+        })),
         selectionWidth: selectionTicks[1] - selectionTicks[0],
-      }
+      };
     default:
       throw new Error("Invalid action type");
   }
@@ -68,7 +67,8 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
     if (event.metaKey) {
       switch (event.code) {
         case "KeyX":
-          onCut(event);
+          onCopy(event);
+          dispatch({ type: "DELETE_SELECTED_NOTES" });
           break;
         case "KeyC":
           onCopy(event);
@@ -135,24 +135,6 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
     });
   };
 
-  const onCut = (event: React.KeyboardEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (pianoRollStore.selectedNotes.length === 0) {
-      return;
-    }
-    let selectionRange = getSelectionRangeWithSelectedNotes(
-      pianoRollStore.selectedNotes(),
-      pianoRollStore.selectionRange!,
-    );
-    clipboardDispatch({
-      type: "setNote",
-      payload: { notes: pianoRollStore.selectedNotes(), selectedRange: selectionRange },
-    });
-    dispatch({ type: "DELETE_SELECTED_NOTES" });
-  };
-
   const onPaste = (event: React.KeyboardEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -170,7 +152,18 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
     }));
     dispatch({ type: "UNSELECTED_ALL_NOTES" });
     dispatch({ type: "ADD_NOTES", payload: { notes: shiftedNotes } });
-    dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: pianoRollStore.selectionTicks! + clipboard.selectionWidth } })
+    dispatch({
+      type: "SET_SELECTION_TICKS",
+      payload: { ticks: pianoRollStore.selectionTicks! + clipboard.selectionWidth },
+    });
+    dispatch({
+      type: "SET_SELECTION_RANGE",
+      payload: {
+        range: pianoRollStore.selectionRange
+          ? (pianoRollStore.selectionRange.map((item) => item + clipboard.selectionWidth) as [number, number])
+          : null,
+      },
+    });
   };
 
   return {
