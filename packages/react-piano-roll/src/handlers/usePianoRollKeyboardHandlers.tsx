@@ -4,7 +4,6 @@ import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import {
   focusNote,
   getEndingTickFromNotes,
-  getSelectedNotes,
   getStartingTickFromNotes,
   useNotes,
 } from "../helpers/notes";
@@ -117,19 +116,17 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
     event.preventDefault();
     event.stopPropagation();
 
-    const selectedNotes = getSelectedNotes(notes);
-    if (selectedNotes.length > 0) {
-      clipboardDispatch({ type: "setNote", payload: { notes: selectedNotes } });
+    if (pianoRollStore.selectedNotes.length > 0) {
+      clipboardDispatch({ type: "setNote", payload: { notes: pianoRollStore.selectedNotes } });
     }
   };
 
   const onCut = (event: React.KeyboardEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    const selectedNotes = getSelectedNotes(notes);
 
-    if (selectedNotes.length > 0) {
-      clipboardDispatch({ type: "setNote", payload: { notes: selectedNotes } });
+    if (pianoRollStore.selectedNotes.length > 0) {
+      clipboardDispatch({ type: "setNote", payload: { notes: pianoRollStore.selectedNotes } });
     }
     dispatch({ type: "DELETE_SELECTED_NOTES" });
   };

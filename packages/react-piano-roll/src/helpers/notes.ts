@@ -12,11 +12,6 @@ export function useNotes() {
   return pianoRollStore.notes;
 }
 
-export function getSelectedNotes(notes: TrackNoteEvent[]) {
-  const selectedNotes = notes.filter((note) => note.isSelected);
-  return selectedNotes;
-}
-
 export function getStartingTickFromNotes(notes: TrackNoteEvent[]): number {
   const startTick = notes.reduce((min, note) => Math.min(min, note.tick), Infinity);
   return startTick;
@@ -25,4 +20,15 @@ export function getStartingTickFromNotes(notes: TrackNoteEvent[]): number {
 export function getEndingTickFromNotes(notes: TrackNoteEvent[]) {
   const endTick = notes.reduce((max, note) => Math.max(max, note.tick + note.duration), -Infinity);
   return endTick;
+}
+
+export function getSelectionRangeWithSelectedNotes(selectedNotes: TrackNoteEvent[], selectionRange: [number, number]): [number, number] {
+  console.log(selectedNotes)
+
+  const startingNoteTick = getStartingTickFromNotes(selectedNotes);
+  const endingNoteTick = getEndingTickFromNotes(selectedNotes);
+  console.log('startingNoteTick', startingNoteTick);
+  console.log('endingNoteTick', endingNoteTick);
+  console.log('selectionRange', selectionRange);
+  return [Math.min(startingNoteTick, selectionRange[0]), Math.max(endingNoteTick, selectionRange[1])];
 }

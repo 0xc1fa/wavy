@@ -111,6 +111,7 @@ export type PianoRollStore = {
   lastModifiedDuration: number;
   selectionTicks: number | [number, number] | null;
   selectionRange: [number, number] | null;
+  get selectedNotes(): TrackNoteEvent[];
 };
 function defaultPianoRollStore(): PianoRollStore {
   return {
@@ -130,6 +131,9 @@ function defaultPianoRollStore(): PianoRollStore {
     lastModifiedDuration: 480,
 
     selectionTicks: 0,
-    selectionRange: null
+    selectionRange: null,
+    get selectedNotes() {
+      return this.notes.filter((note) => note.isSelected);
+    },
   };
 }
