@@ -19,9 +19,10 @@
   - Or just dont show selection on velocity editor
   - But then need to lose selected when change note
   - Velocity editor should only change the current note in drag mode even if it have move to the range of another note
+- make the velocity tag in velocity editor when hover also appear when dragging
+- Add mini map to show the whole piano roll and where you are now
 
-
-## TODOs
+## TO-DOs
 
 - [x] auto scaling of grid and ruler
   - all other action react to grid
@@ -33,10 +34,7 @@
 - [x] Select notes when dragging not after dragging
 - [ ] Add selected mode for velocity editor
 - [ ] turn PianoRoll flex layout to grid layout
-- [ ] fix range selection
-- [ ] Refactor out constants
 - [ ] Add notes boundary as anchor points
-- [ ] New note size reactive to grid size
 
 ## Roadmap
 
@@ -47,8 +45,14 @@
 - Horizontally scalable
 
 ### 1.1.0
+
+- Customizable theme
+
+### 1.2.0
+
 - Time signature customization
 - Key range customization
 
-### 1.2.0
+### 1.3.0
+
 - Loop area
