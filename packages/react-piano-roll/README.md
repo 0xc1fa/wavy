@@ -6,6 +6,7 @@
 - The color of selection marquee is too ugly
 - The onclick animation of piano keyboard is not working
 - No line between white key lane
+- Range indicator overlap piano keyboard
 
 ## TODOs
 
