@@ -95,8 +95,24 @@ function usePianoRollStore(initialState?: PianoRollStore) {
 
 export type PianoRollStoreContext = ReturnType<typeof usePianoRollStore>;
 
-export type PianoRollStore = ReturnType<typeof defaultPianoRollStore>;
-function defaultPianoRollStore() {
+export type PianoRollStore = {
+  notes: TrackNoteEvent[];
+  notesHistory: {
+    head: number;
+    history: PianoRollHistoryItem[];
+  };
+  noteModificationBuffer: {
+    notesSelected: TrackNoteEvent[];
+    initX: number;
+    initY: number;
+  };
+  bpm: number;
+  lastModifiedVelocity: number;
+  lastModifiedDuration: number;
+  selectionTicks: number | [number, number] | null;
+  selectionRange: [number, number] | null;
+};
+function defaultPianoRollStore(): PianoRollStore {
   return {
     notes: new Array<TrackNoteEvent>(),
     notesHistory: {
@@ -114,5 +130,6 @@ function defaultPianoRollStore() {
     lastModifiedDuration: 480,
 
     selectionTicks: 0,
+    selectionRange: null
   };
 }

@@ -88,8 +88,8 @@ export default function usePianoRollMouseHandlers() {
       });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
     } else {
-      const selectionTicks = getTickFromOffsetX(event.nativeEvent.offsetX, scaleX);
-      const snappedSelection = getNearestGridTick(selectionTicks, scaleX);
+      const selectionTicks = getTickFromOffsetX(scaleX, event.nativeEvent.offsetX);
+      const snappedSelection = getNearestGridTick(scaleX, selectionTicks);
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: snappedSelection } });
       dispatch({
         type: "SET_NOTE_MODIFICATION_BUFFER_WITH_ALL_NOTE",
@@ -105,7 +105,7 @@ export default function usePianoRollMouseHandlers() {
     const bufferedNotes = pianoRollStore.noteModificationBuffer.notesSelected;
     const deltaY = event.nativeEvent.offsetY - pianoRollStore.noteModificationBuffer.initY;
     const deltaX = event.nativeEvent.offsetX - pianoRollStore.noteModificationBuffer.initX;
-    const deltaTicks = getTickFromOffsetX(deltaX, scaleX);
+    const deltaTicks = getTickFromOffsetX(scaleX, deltaX);
     const deltaPitch =
       getNoteNumFromOffsetY(numOfKeys, event.nativeEvent.offsetY) -
       getNoteNumFromOffsetY(numOfKeys, pianoRollStore.noteModificationBuffer.initY);
@@ -136,8 +136,15 @@ export default function usePianoRollMouseHandlers() {
                 bufferedNote.duration +
                 (bufferedNote.tick - (anchor.anchor - _.last(bufferedNotes)!.tick + bufferedNote.tick)),
             }));
-            dispatch({ type: "SET_LAST_MODIFIED_DURATION", payload: { duration: _.last(bufferedNotes)!.duration +
-              (_.last(bufferedNotes)!.tick - (anchor.anchor - _.last(bufferedNotes)!.tick + _.last(bufferedNotes)!.tick)) } })
+            dispatch({
+              type: "SET_LAST_MODIFIED_DURATION",
+              payload: {
+                duration:
+                  _.last(bufferedNotes)!.duration +
+                  (_.last(bufferedNotes)!.tick -
+                    (anchor.anchor - _.last(bufferedNotes)!.tick + _.last(bufferedNotes)!.tick)),
+              },
+            });
           } else {
             return;
           }
@@ -147,7 +154,10 @@ export default function usePianoRollMouseHandlers() {
             tick: Math.min(bufferedNote.tick + bufferedNote.duration - 1, bufferedNote.tick + deltaTicks),
             duration: bufferedNote.duration - deltaTicks,
           }));
-          dispatch({ type: "SET_LAST_MODIFIED_DURATION", payload: { duration: _.last(bufferedNotes)!.duration - deltaTicks } })
+          dispatch({
+            type: "SET_LAST_MODIFIED_DURATION",
+            payload: { duration: _.last(bufferedNotes)!.duration - deltaTicks },
+          });
         } else {
           newNotes = bufferedNotes;
         }
@@ -171,7 +181,16 @@ export default function usePianoRollMouseHandlers() {
               duration:
                 anchor.anchor - _.last(bufferedNotes)!.tick - _.last(bufferedNotes)!.duration + bufferedNote.duration,
             }));
-            dispatch({ type: "SET_LAST_MODIFIED_DURATION", payload: { duration: anchor.anchor - _.last(bufferedNotes)!.tick - _.last(bufferedNotes)!.duration + _.last(bufferedNotes)!.duration, } })
+            dispatch({
+              type: "SET_LAST_MODIFIED_DURATION",
+              payload: {
+                duration:
+                  anchor.anchor -
+                  _.last(bufferedNotes)!.tick -
+                  _.last(bufferedNotes)!.duration +
+                  _.last(bufferedNotes)!.duration,
+              },
+            });
           } else {
             return;
           }
@@ -180,10 +199,13 @@ export default function usePianoRollMouseHandlers() {
             ...bufferedNote,
             duration: bufferedNote.duration + deltaTicks,
           }));
-          dispatch({ type: "SET_LAST_MODIFIED_DURATION", payload: { duration: _.last(bufferedNotes)!.duration + deltaTicks } })
+          dispatch({
+            type: "SET_LAST_MODIFIED_DURATION",
+            payload: { duration: _.last(bufferedNotes)!.duration + deltaTicks },
+          });
         } else {
           newNotes = bufferedNotes;
-          dispatch({ type: "SET_LAST_MODIFIED_DURATION", payload: { duration: _.last(bufferedNotes)!.duration } })
+          dispatch({ type: "SET_LAST_MODIFIED_DURATION", payload: { duration: _.last(bufferedNotes)!.duration } });
         }
         if (guardActive.current) {
           dispatch({
@@ -244,6 +266,10 @@ export default function usePianoRollMouseHandlers() {
             })),
           },
         });
+        const snappedSelection = [startingPosition.x, event.nativeEvent.offsetX]
+          .map(getTickFromOffsetX.bind(null, scaleX))
+          .map(getNearestGridTick.bind(null, scaleX)) as [number, number];
+        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: snappedSelection } });
         break;
       case PianoRollLanesMouseHandlerMode.Vibrato:
         event.shiftKey

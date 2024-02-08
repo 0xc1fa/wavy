@@ -15,11 +15,11 @@ import { Offset, convertOffsetToObject, convertOffsetToTuple } from "@/interface
 import { TickRange } from "@/contexts/PianoRollConfigProvider";
 import { getTickInGrid } from "./grid";
 
-export function getBeatFromOffsetX(offsetX: number, scaleX: number) {
+export function getBeatFromOffsetX(scaleX: number, offsetX: number) {
   return offsetX / (scaleX * basePixelsPerBeat);
 }
 
-export function getTickFromOffsetX(offsetX: number, scaleX: number) {
+export function getTickFromOffsetX(scaleX: number, offsetX: number) {
   return (offsetX / (scaleX * basePixelsPerBeat)) * ticksPerBeat;
 }
 
@@ -42,8 +42,8 @@ export function getCenterYFromNoteNum(numOfKeys: number, noteNum: number) {
 export function getNotesFromOffsetX(scaleX: number, notes: TrackNoteEvent[], offsetX: number) {
   return notes.filter(
     (note) =>
-      note.tick <= getTickFromOffsetX(offsetX, scaleX) &&
-      note.tick + note.duration >= getTickFromOffsetX(offsetX, scaleX),
+      note.tick <= getTickFromOffsetX(scaleX, offsetX) &&
+      note.tick + note.duration >= getTickFromOffsetX(scaleX, offsetX),
   );
 }
 
@@ -70,8 +70,8 @@ export function getNoteFromPosition(
   for (const note of notes.slice().reverse()) {
     if (
       getNoteNumFromOffsetY(numOfKeys, position.offsetY) == note.noteNumber &&
-      getTickFromOffsetX(position.offsetX, scaleX) >= note.tick &&
-      getTickFromOffsetX(position.offsetX, scaleX) <= note.tick + note.duration
+      getTickFromOffsetX(scaleX, position.offsetX) >= note.tick &&
+      getTickFromOffsetX(scaleX, position.offsetX) <= note.tick + note.duration
     ) {
       return note;
     }
@@ -126,7 +126,7 @@ export function getNoteNumFromEvent(numOfKeys: number, e: PointerEvent | MouseEv
 }
 
 export function getTickFromEvent(scaleX: number, e: PointerEvent | MouseEvent): number {
-  return getTickFromOffsetX(e.offsetX, scaleX);
+  return getTickFromOffsetX(scaleX, e.offsetX);
 }
 
 export function roundDownTickToNearestGrid(tick: number, scaleX: number) {
@@ -173,8 +173,8 @@ export function inMarquee(
     getNoteNumFromOffsetY(numOfKeys, marquee.ongoingPosition.y),
   ].sort((a, b) => a - b);
   const [selectedMinTick, selectedMaxTick] = [
-    getTickFromOffsetX(marquee.startingPosition.x, scaleX),
-    getTickFromOffsetX(marquee.ongoingPosition.x, scaleX),
+    getTickFromOffsetX(scaleX, marquee.startingPosition.x),
+    getTickFromOffsetX(scaleX, marquee.ongoingPosition.x),
   ].sort((a, b) => a - b);
 
   return (

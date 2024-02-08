@@ -54,7 +54,7 @@ export function getTickInGrid(scaleX: number) {
   return ticksInGrid;
 }
 
-export function getNearestGridTick(ticks: number, scaleX: number) {
+export function getNearestGridTick(scaleX: number, ticks: number) {
   const ticksInGrid = getTickInGrid(scaleX);
   const upperGridTick = Math.ceil(ticks / ticksInGrid) * ticksInGrid;
   const lowerGridTick = Math.floor(ticks / ticksInGrid) * ticksInGrid;
@@ -64,7 +64,7 @@ export function getNearestGridTick(ticks: number, scaleX: number) {
   return upperGridTickDiff < lowerGridTickDiff ? upperGridTick : lowerGridTick;
 }
 
-export function getNearestGridTickWithOffset(ticks: number, scaleX: number, offset: number) {
+export function getNearestGridTickWithOffset(scaleX: number, ticks: number,  offset: number) {
   const ticksInGrid = getTickInGrid(scaleX);
   let upperGridTick;
   let lowerGridTick;
@@ -84,8 +84,8 @@ export function getNearestGridTickWithOffset(ticks: number, scaleX: number, offs
 
 export function getNearestAnchor(ticks: number, scaleX: number, offset: number) {
   const ticksInGrid = getTickInGrid(scaleX);
-  const nearestGridTick = getNearestGridTick(ticks, scaleX);
-  const nearestGridTickWithOffset = getNearestGridTickWithOffset(ticks, scaleX, offset);
+  const nearestGridTick = getNearestGridTick(scaleX, ticks);
+  const nearestGridTickWithOffset = getNearestGridTickWithOffset(scaleX, ticks, offset);
   const nearestGridTickDiff = Math.abs(nearestGridTick - ticks);
   const nearestGridTickWithOffsetDiff = Math.abs(nearestGridTickWithOffset - ticks);
   const anchor = nearestGridTickDiff < nearestGridTickWithOffsetDiff ? nearestGridTick : nearestGridTickWithOffset;

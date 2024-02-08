@@ -29,7 +29,7 @@ export function unselectAllNotes(state: PianoRollStore, action: UnselectAllNotes
 
 type SetSelectionTicksAction = {
   type: "SET_SELECTION_TICKS";
-  payload: { ticks: number };
+  payload: { ticks: number | [number, number] | null };
 };
 export function setSelectionTicks(state: PianoRollStore, action: SetSelectionTicksAction) {
   return {

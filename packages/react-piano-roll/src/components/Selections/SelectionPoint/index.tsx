@@ -10,7 +10,35 @@ export default function SelectionPoint() {
   const { scaleX } = useScaleX();
 
   const { numOfKeys } = useConfig().pitchRange;
-  const x = pianoRollStore.selectionTicks * basePixelsPerTick * scaleX;
+  let selectionTicks = pianoRollStore.selectionTicks;
+  if (selectionTicks instanceof Array && selectionTicks[0] === selectionTicks[1]) {
+    selectionTicks = selectionTicks[0];
+  }
+
+  const selectionLines = () => {
+    if (selectionTicks === null) {
+      return null;
+    } else if (selectionTicks instanceof Array) {
+      const startingX = selectionTicks[0] * basePixelsPerTick * scaleX;
+      const endingX = selectionTicks[1] * basePixelsPerTick * scaleX;
+      return (
+        <>
+          <line
+            x1={startingX}
+            y1={0}
+            x2={startingX}
+            y2={baseCanvasHeight(numOfKeys)}
+            stroke="#ffffff22"
+            strokeWidth="1"
+          />
+          <line x1={endingX} y1={0} x2={endingX} y2={baseCanvasHeight(numOfKeys)} stroke="#ffffff22" strokeWidth="1" />
+        </>
+      );
+    } else {
+      const x = selectionTicks * basePixelsPerTick * scaleX;
+      return <line x1={x} y1={0} x2={x} y2={baseCanvasHeight(numOfKeys)} stroke="#ffffff22" strokeWidth="1" />;
+    }
+  };
 
   return (
     <svg
@@ -20,7 +48,7 @@ export default function SelectionPoint() {
       height="100%"
       preserveAspectRatio="none"
     >
-      <line x1={x} y1={0} x2={x} y2={baseCanvasHeight(numOfKeys)} stroke="#ffffff22" strokeWidth="1" />
+      {selectionLines()}
     </svg>
   );
 }

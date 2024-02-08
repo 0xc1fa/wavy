@@ -138,12 +138,21 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
     event.preventDefault();
     event.stopPropagation();
 
+    let selectionTicks: number;
+    if (pianoRollStore.selectionTicks === null) {
+      return;
+    } else if (pianoRollStore.selectionTicks instanceof Array) {
+      selectionTicks = pianoRollStore.selectionTicks[0];
+    } else {
+      selectionTicks = pianoRollStore.selectionTicks;
+    }
+
     if (clipboard.notes.length === 0) {
       return;
     }
     const shiftedNotes = clipboard.notes.map((note) => ({
       ...note,
-      tick: pianoRollStore.selectionTicks + (note.tick - clipboard.selectionRegion.start),
+      tick: selectionTicks + (note.tick - clipboard.selectionRegion.start),
     }));
     dispatch({ type: "UNSELECTED_ALL_NOTES" });
     dispatch({ type: "ADD_NOTES", payload: { notes: shiftedNotes } });
