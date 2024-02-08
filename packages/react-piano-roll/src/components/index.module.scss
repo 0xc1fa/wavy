@@ -11,6 +11,12 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
   background-color: var(--black);
+
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   // display: grid;
   // grid-template-areas:
   //   "upper-left upper-right"
@@ -21,5 +27,3 @@
 .container::-webkit-scrollbar {
   display: none;
 }
-
-

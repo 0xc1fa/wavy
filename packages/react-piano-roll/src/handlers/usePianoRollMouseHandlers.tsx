@@ -168,16 +168,19 @@ export default function usePianoRollMouseHandlers() {
               duration:
                 anchor.anchor - _.last(bufferedNotes)!.tick - _.last(bufferedNotes)!.duration + bufferedNote.duration,
             }));
+            dispatch({ type: "SET_LAST_MODIFIED_DURATION", payload: { duration: anchor.anchor - _.last(bufferedNotes)!.tick - _.last(bufferedNotes)!.duration + _.last(bufferedNotes)!.duration, } })
           } else {
             return;
           }
         } else if (guardActive.current === DraggingGuardMode.FineTune) {
           newNotes = bufferedNotes.map((bufferedNote) => ({
             ...bufferedNote,
-            duration: !guardActive.current ? bufferedNote.duration : bufferedNote.duration + deltaTicks,
+            duration: bufferedNote.duration + deltaTicks,
           }));
+          dispatch({ type: "SET_LAST_MODIFIED_DURATION", payload: { duration: _.last(bufferedNotes)!.duration + deltaTicks } })
         } else {
           newNotes = bufferedNotes;
+          dispatch({ type: "SET_LAST_MODIFIED_DURATION", payload: { duration: _.last(bufferedNotes)!.duration } })
         }
         if (guardActive.current) {
           dispatch({
