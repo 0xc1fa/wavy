@@ -253,6 +253,7 @@ export default function usePianoRollMouseHandlers() {
           velocity: bufferedNote.velocity - deltaY / 3,
         }));
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
+        dispatch({ type: "SET_LAST_MODIFIED_VELOCITY", payload: { velocity: noteClicked!.velocity - deltaY / 3 } });
       }
     }
     setOngoingPosition({ x: event.nativeEvent.offsetX, y: event.nativeEvent.offsetY });

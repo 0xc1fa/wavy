@@ -8,6 +8,8 @@ import {
   deleteSelectedNotes,
   modifyingNotes,
   moveNoteAsLatestModified,
+  setLastModifiedDuration,
+  setLastModifiedVelocity,
   setNoteModificationBufferWithAllNote,
   setNoteModificationBufferWithSelectedNote,
   toggleSelectedNoteVibratoMode,
@@ -54,8 +56,6 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
       return updateNoteLyric(state, action);
     case "MOVE_NOTE_AS_LATEST_MODIFIED":
       return moveNoteAsLatestModified(state, action);
-    // case "SET_PIANO_LANE_SCALE_X":
-    //   return setscaleX(state, action);
     case "SET_SELECTION_TICKS":
       return setSelectionTicks(state, action);
     case "DELETE_SELECTED_NOTES":
@@ -75,6 +75,10 @@ function reducer(state: PianoRollStore, action: PianoRollStoreAction) {
       return redo(state, action);
     case "SET_CLIP_SPAN":
       return setClipSpan(state, action);
+    case "SET_LAST_MODIFIED_DURATION":
+      return setLastModifiedDuration(state, action);
+    case "SET_LAST_MODIFIED_VELOCITY":
+      return setLastModifiedVelocity(state, action);
     default:
       throw new Error();
   }
@@ -106,11 +110,8 @@ function defaultPianoRollStore() {
     },
 
     bpm: 120,
-
-    // scaleX: 1,
-    scaleY: 1,
-    newNoteVelocity: 64,
-    newNoteDuration: 480,
+    lastModifiedVelocity: 64,
+    lastModifiedDuration: 480,
 
     selectionTicks: 0,
   };

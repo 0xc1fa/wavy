@@ -87,6 +87,7 @@ export default function useVelocityEditorMouseHandlers() {
           type: "MODIFYING_NOTES",
           payload: { notes: modifiedNotes },
         });
+        dispatch({ type: "SET_LAST_MODIFIED_VELOCITY", payload: { velocity: newVelocity } });
       }
     }
   };

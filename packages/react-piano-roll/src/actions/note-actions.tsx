@@ -18,21 +18,23 @@ export type NoteAction =
   | MoveNoteAsLatestModifiedAction
   | SetNoteModificationBufferWithSelectedNoteAction
   | SetNoteModificationBufferWithAllNoteAction
-  | SetBpmAction;
+  | SetBpmAction
+  | SetLastModifiedVelocityAction
+  | SetLastModifiedDurationAction;
 
 export function createNote(state: PianoRollStore, ticks: number, noteNum: number): TrackNoteEvent {
   return {
     id: uuidv4(),
     tick: ticks,
     noteNumber: noteNum,
-    velocity: state.newNoteVelocity,
+    velocity: state.lastModifiedVelocity,
     lyric: defaultNoteLyric,
-    duration: state.newNoteDuration,
+    duration: state.lastModifiedDuration,
     isSelected: true,
     isActive: true,
     vibratoDepth: 10,
     vibratoRate: 30,
-    vibratoDelay: state.newNoteDuration * 0.3,
+    vibratoDelay: state.lastModifiedDuration * 0.3,
     vibratoMode: VibratoMode.Normal,
   };
 }
@@ -269,5 +271,27 @@ export function setBpm(state: PianoRollStore, action: SetBpmAction) {
   return {
     ...state,
     bpm: action.payload.bpm,
+  };
+}
+
+type SetLastModifiedVelocityAction = {
+  type: "SET_LAST_MODIFIED_VELOCITY";
+  payload: { velocity: number };
+};
+export function setLastModifiedVelocity(state: PianoRollStore, action: SetLastModifiedVelocityAction) {
+  return {
+    ...state,
+    lastModifiedVelocity: action.payload.velocity,
+  };
+}
+
+type SetLastModifiedDurationAction = {
+  type: "SET_LAST_MODIFIED_DURATION";
+  payload: { duration: number };
+};
+export function setLastModifiedDuration(state: PianoRollStore, action: SetLastModifiedDurationAction) {
+  return {
+    ...state,
+    lastModifiedDuration: action.payload.duration,
   };
 }
