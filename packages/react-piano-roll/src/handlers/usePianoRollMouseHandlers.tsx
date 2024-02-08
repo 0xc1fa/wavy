@@ -136,6 +136,8 @@ export default function usePianoRollMouseHandlers() {
                 bufferedNote.duration +
                 (bufferedNote.tick - (anchor.anchor - _.last(bufferedNotes)!.tick + bufferedNote.tick)),
             }));
+            dispatch({ type: "SET_LAST_MODIFIED_DURATION", payload: { duration: _.last(bufferedNotes)!.duration +
+              (_.last(bufferedNotes)!.tick - (anchor.anchor - _.last(bufferedNotes)!.tick + _.last(bufferedNotes)!.tick)) } })
           } else {
             return;
           }
@@ -145,6 +147,7 @@ export default function usePianoRollMouseHandlers() {
             tick: Math.min(bufferedNote.tick + bufferedNote.duration - 1, bufferedNote.tick + deltaTicks),
             duration: bufferedNote.duration - deltaTicks,
           }));
+          dispatch({ type: "SET_LAST_MODIFIED_DURATION", payload: { duration: _.last(bufferedNotes)!.duration - deltaTicks } })
         } else {
           newNotes = bufferedNotes;
         }
