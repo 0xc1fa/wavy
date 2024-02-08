@@ -6,7 +6,56 @@ import { useStore } from "@/hooks/useStore";
 const triangleWidth = 8;
 const indicatorHeight = 8;
 const triangleHeight = 8;
-const SelectionRangeIndicator = () => {
+const SelectionRangeIndicator1 = () => {
+  const { pianoRollStore } = useStore();
+  const { scaleX } = useScaleX();
+
+  if (pianoRollStore.selectionRange === null) {
+    return;
+  }
+  let selectionRange = getSelectionRangeWithSelectedNotes(
+    pianoRollStore.selectedNotes(),
+    pianoRollStore.selectionRange,
+  );
+
+  const startingX = Math.round(selectionRange[0] * basePixelsPerTick * scaleX);
+  const endingX = Math.round(selectionRange[1] * basePixelsPerTick * scaleX);
+  if (startingX === endingX) {
+    return null;
+  }
+
+  return (
+    <svg width="100%" height={triangleHeight} style={{ position: "absolute", bottom: -triangleHeight, left: 0 }}>
+      <polygon
+        points={`
+          ${startingX - (triangleWidth * 0.9)},0
+          ${startingX},0
+          ${startingX},${triangleHeight}
+        `}
+        fill="#ffffff30"
+      />
+      <polygon
+        points={`
+            ${startingX},0
+            ${endingX},0
+            ${endingX},${indicatorHeight}
+            ${startingX},${indicatorHeight}
+          `}
+        fill="#ffffff28"
+      />
+      <polygon
+        points={`
+          ${endingX},0
+          ${endingX + (triangleWidth * 0.9)},0
+          ${endingX},${triangleHeight}
+        `}
+        fill="#ffffff30"
+      />
+    </svg>
+  );
+};
+
+const SelectionRangeIndicator2 = () => {
   const { pianoRollStore } = useStore();
   const { scaleX } = useScaleX();
 
@@ -55,4 +104,4 @@ const SelectionRangeIndicator = () => {
   );
 };
 
-export default SelectionRangeIndicator;
+export default SelectionRangeIndicator1;
