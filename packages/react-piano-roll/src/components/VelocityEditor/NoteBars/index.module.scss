@@ -8,7 +8,6 @@
   align-items: center;
   cursor: ns-resize;
 
-
   &::after {
     visibility: hidden;
     content: attr(data-velocity);

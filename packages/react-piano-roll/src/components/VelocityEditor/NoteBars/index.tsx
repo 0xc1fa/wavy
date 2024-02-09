@@ -30,12 +30,13 @@ const NoteBars: React.FC<Props> = ({ isDragging }) => {
               "--cursor": isDragging ? "grabbing" : "grab",
             } as React.CSSProperties
           }
-          data-id={note.id}
+          data-note-id={note.id}
           data-velocity={note.velocity}
         >
-          <div className={styles["velocity-marker"]} />
+          <div className={styles["velocity-marker"]} data-note-id={note.id} />
           <div
             className={styles["length-marker"]}
+            data-note-id={note.id}
             style={{
               outline: note.isSelected ? `3px solid #ffffff33` : "none",
             }}

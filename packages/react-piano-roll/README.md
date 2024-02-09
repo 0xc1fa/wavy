@@ -8,7 +8,7 @@
 - No line between white key lane
 - Range indicator overlap piano keyboard
 - Note/selecton maquee does not follow overflow scroll (only follow when on move)
-- 0 length note should extend first instead of trimming
+
 - Make pianoroll lane overflow not the whole editor
 - Sometime dragging marker in velocity editor will make other marker shift to the top
 - check if the length is correct if editor staring tick not 0
@@ -20,6 +20,7 @@
   - Velocity editor should only change the current note in drag mode even if it have move to the range of another note
 - make the velocity tag in velocity editor when hover also appear when dragging
 - Add mini map to show the whole piano roll and where you are now
+- very small note should be able to adapt to both trimming and extending
 
 ## TO-DOs
 
