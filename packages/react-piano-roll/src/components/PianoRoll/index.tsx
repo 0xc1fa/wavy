@@ -17,7 +17,7 @@ type Props = {
   attachLyric: boolean;
   playheadPosition: number | undefined;
 };
-const MiddleRightSection: React.FC<Props> = (props) => {
+const PianoRoll: React.FC<Props> = (props) => {
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -47,4 +47,4 @@ const MiddleRightSection: React.FC<Props> = (props) => {
   );
 };
 
-export default MiddleRightSection;
+export default PianoRoll;

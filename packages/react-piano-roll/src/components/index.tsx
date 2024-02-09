@@ -7,15 +7,16 @@ import { ConfigProvider, PianoRollConfig } from "@/contexts/PianoRollConfigProvi
 import { useScrollToNote } from "@/hooks/useScrollToNote";
 import UpperSection from "./Sections/UpperSection";
 import MiddleSection from "./Sections/MiddleSection";
-import MiddleRightSection from "./Sections/MiddleRightSection";
+import MiddleRightSection from "./PianoRoll";
 import LowerSection from "./Sections/LowerSection";
 import { ScaleXProvider, useScaleX } from "@/contexts/ScaleXProvider";
 import PianoRollThemeContext from "@/contexts/piano-roll-theme-context";
 import { defaultPianoRollTheme } from "@/store/pianoRollTheme";
 import { PianoRollStoreProvider } from "@/store/pianoRollStore";
 import { BeatPerBar, BeatUnit } from "@/interfaces/time-signature";
+import { useLeftAnchoredScale } from "@/hooks/useLeftAnchoredScale";
 
-interface PianoRollProps {
+interface MidiEditorProps {
   playheadPosition?: number;
   attachLyric?: boolean;
   initialScrollMiddleNote?: number;
@@ -29,7 +30,7 @@ interface PianoRollProps {
   beatsPerBar?: BeatPerBar;
   beatUnit?: BeatUnit;
 }
-function PianoRoll({
+function MidiEditor({
   playheadPosition,
   attachLyric = false,
   initialScrollMiddleNote = 60,
@@ -39,18 +40,11 @@ function PianoRoll({
   pitchRange,
   beatsPerBar,
   beatUnit,
-}: PianoRollProps) {
+}: MidiEditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  useScrollToNote(containerRef, initialScrollMiddleNote);
   const { scaleX } = useScaleX();
-
-  const prevScaleX = useRef(scaleX);
-  useLayoutEffect(() => {
-    const scaleDifference = scaleX / prevScaleX.current;
-    const scrollLeft = containerRef.current!.scrollLeft + 0.5;
-    containerRef.current!.scrollTo({ left: scrollLeft * scaleDifference });
-    prevScaleX.current = scaleX;
-  }, [scaleX]);
+  useScrollToNote(containerRef, initialScrollMiddleNote);
+  useLeftAnchoredScale(containerRef);
 
   return (
     <div
@@ -74,14 +68,14 @@ function PianoRoll({
   );
 }
 
-const withProvider = (Component: typeof PianoRoll) => {
+const withProvider = (Component: typeof MidiEditor) => {
   return ({
     tickRange = [0, 480 * 4 * 8],
     pitchRange = { startingNoteNum: 0, numOfKeys: 128 },
     beatsPerBar = 4,
     beatUnit = 4,
     ...other
-  }: PianoRollProps) => {
+  }: MidiEditorProps) => {
     const config = useMemo(() => {
       const config: PianoRollConfig = {
         pitchRange: pitchRange,
@@ -106,4 +100,4 @@ const withProvider = (Component: typeof PianoRoll) => {
   };
 };
 
-export default withProvider(PianoRoll);
+export default withProvider(MidiEditor);
