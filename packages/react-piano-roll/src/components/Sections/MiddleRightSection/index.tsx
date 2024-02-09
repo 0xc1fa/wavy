@@ -1,4 +1,3 @@
-import usePianoRollKeyboardHandlers from "@/handlers/usePianoRollKeyboardHandlers";
 import usePianoRollMouseHandlers, { PianoRollLanesMouseHandlerMode } from "@/handlers/usePianoRollMouseHandlers";
 import styles from "./index.module.scss";
 import LaneGrids from "@/components/LaneGrids";
@@ -13,6 +12,7 @@ import { useClipboard } from "@/hooks/useClipboard";
 import { useHandleDelete } from "@/hooks/useHandleDelete";
 import { useHandleSpaceDown } from "@/hooks/useHandleSpaceDown";
 import { useHandleUndoRedo } from "@/hooks/useHandleUndoRedo";
+import { usePresistentPointerMove } from "@/hooks/usePersistentPointerMove";
 
 type Props = {
   attachLyric: boolean;
@@ -20,34 +20,9 @@ type Props = {
 };
 const MiddleRightSection: React.FC<Props> = (props) => {
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
-
-  function continuouslyDispatchPointerMove() {
-    const timeout = setTimeout(() => {
-      if (pianoRollMouseHandlersStates.mouseHandlerMode !== PianoRollLanesMouseHandlerMode.None) {
-        console.log("timer out");
-        containerRef.current!.dispatchEvent(
-          new PointerEvent("pointermove", {
-            bubbles: true,
-            cancelable: true,
-            clientX: pianoRollMouseHandlersStates.currentPointerPos.current.clientX,
-            clientY: pianoRollMouseHandlersStates.currentPointerPos.current.clientY,
-          }),
-        );
-      }
-      continuouslyDispatchPointerMove();
-    }, 1000 / 61);
-    return timeout;
-  }
-
-  useEffect(() => {
-    const timeout = continuouslyDispatchPointerMove();
-    return () => {
-      clearTimeout(timeout);
-    };
-  });
-
   const containerRef = useRef<HTMLDivElement>(null);
 
+  usePresistentPointerMove(containerRef)
   useClipboard(containerRef);
   useHandleDelete(containerRef);
   useHandleSpaceDown(containerRef);
