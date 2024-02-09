@@ -9,48 +9,13 @@ import {
   useNotes,
 } from "../helpers/notes";
 import _ from "lodash";
+import { useClipboard, useClipboardReducer } from "@/hooks/useClipboard";
 
-type SelectionRegion = {
-  start: number;
-  width: number;
-};
-
-type Clipboard = {
-  notes: TrackNoteEvent[];
-  selectionWidth: number;
-};
-
-type ClipboardAction = {
-  type: "setNote";
-  payload: {
-    notes: TrackNoteEvent[];
-    selectedRange: [number, number];
-  };
-};
-
-function clipboardReducer(state: Clipboard, action: ClipboardAction) {
-  switch (action.type) {
-    case "setNote":
-      const selectionTicks = getSelectionRangeWithSelectedNotes(action.payload.notes, action.payload.selectedRange);
-      return {
-        notes: action.payload.notes.map((note) => ({
-          ...note,
-          tick: note.tick - selectionTicks[0],
-        })),
-        selectionWidth: selectionTicks[1] - selectionTicks[0],
-      };
-    default:
-      throw new Error("Invalid action type");
-  }
-}
 
 export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.KeyboardEvent) => void) {
   const { pianoRollStore, dispatch } = useStore();
   const notes = useNotes();
-  const [clipboard, clipboardDispatch] = useReducer(clipboardReducer, {
-    notes: [],
-    selectionWidth: 0,
-  });
+  const { clipboard, clipboardDispatch } = useClipboardReducer();
 
   let spaceDown = useRef(false);
 
@@ -66,16 +31,16 @@ export default function usePianoRollKeyboardHandlers(onSpace?: (event: React.Key
     }
     if (event.metaKey) {
       switch (event.code) {
-        case "KeyX":
-          onCopy(event);
-          dispatch({ type: "DELETE_SELECTED_NOTES" });
-          break;
-        case "KeyC":
-          onCopy(event);
-          break;
-        case "KeyV":
-          onPaste(event);
-          break;
+        // case "KeyX":
+        //   onCopy(event);
+        //   dispatch({ type: "DELETE_SELECTED_NOTES" });
+        //   break;
+        // case "KeyC":
+        //   onCopy(event);
+        //   break;
+        // case "KeyV":
+        //   onPaste(event);
+        //   break;
         case "KeyZ": {
           if (event.shiftKey) {
             dispatch({ type: "REDO" });

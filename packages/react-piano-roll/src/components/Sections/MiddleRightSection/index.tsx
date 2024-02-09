@@ -9,6 +9,7 @@ import Playhead from "@/components/Playhead";
 import LanesBackground from "@/components/LanesBackground";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { useEffect, useRef } from "react";
+import { useClipboard } from "@/hooks/useClipboard";
 
 type Props = {
   attachLyric: boolean;
@@ -17,12 +18,13 @@ type Props = {
 const MiddleRightSection: React.FC<Props> = (props) => {
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const pianoRollKeyboardHandlers = usePianoRollKeyboardHandlers();
-  const { scaleX } = useScaleX()
+
+  const { scaleX } = useScaleX();
 
   function continuouslyDispatchPointerMove() {
     const timeout = setTimeout(() => {
       if (pianoRollMouseHandlersStates.mouseHandlerMode !== PianoRollLanesMouseHandlerMode.None) {
-        console.log("timer out")
+        console.log("timer out");
         containerRef.current!.dispatchEvent(
           new PointerEvent("pointermove", {
             bubbles: true,
@@ -33,8 +35,7 @@ const MiddleRightSection: React.FC<Props> = (props) => {
         );
       }
       continuouslyDispatchPointerMove();
-
-    }, 1000/61);
+    }, 1000 / 61);
     return timeout;
   }
 
@@ -43,12 +44,20 @@ const MiddleRightSection: React.FC<Props> = (props) => {
     return () => {
       clearTimeout(timeout);
     };
-  }, );
+  });
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  useClipboard(containerRef);
+
   return (
-    <div className={styles["pianoroll-lane"]} {...pianoRollMouseHandlers} tabIndex={0} {...pianoRollKeyboardHandlers} ref={containerRef}>
+    <div
+      className={styles["pianoroll-lane"]}
+      {...pianoRollMouseHandlers}
+      tabIndex={0}
+      {...pianoRollKeyboardHandlers}
+      ref={containerRef}
+    >
       <LaneGrids />
       <Selections />
       <Notes attachLyric={props.attachLyric} />
