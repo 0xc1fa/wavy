@@ -1,4 +1,4 @@
-import usePianoRollMouseHandlers, { PianoRollLanesMouseHandlerMode } from "@/handlers/usePianoRollMouseHandlers";
+import usePianoRollMouseHandlers from "@/handlers/usePianoRollMouseHandlers";
 import styles from "./index.module.scss";
 import LaneGrids from "@/components/LaneGrids";
 import Selections from "@/components/Selections";
@@ -6,8 +6,7 @@ import Notes from "@/components/Notes";
 import SelectionArea from "@/components/SelectionMarquee";
 import Playhead from "@/components/Playhead";
 import LanesBackground from "@/components/LanesBackground";
-import { useScaleX } from "@/contexts/ScaleXProvider";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useClipboard } from "@/hooks/useClipboard";
 import { useHandleDelete } from "@/hooks/useHandleDelete";
 import { useHandleSpaceDown } from "@/hooks/useHandleSpaceDown";

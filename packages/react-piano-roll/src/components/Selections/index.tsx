@@ -1,8 +1,31 @@
-import { useNotes } from "../../helpers/notes";
-import SelectionPoint from "./SelectionPoint";
+import { useStore } from "@/hooks/useStore";
+import styles from "./index.module.scss";
+import { basePixelsPerTick } from "@/constants";
+import { baseCanvasHeight } from "@/helpers/conversion";
+import { useConfig } from "@/contexts/PianoRollConfigProvider";
+import { useScaleX } from "@/contexts/ScaleXProvider";
+import { getEndingTickFromNotes, getSelectionRangeWithSelectedNotes, getStartingTickFromNotes } from "@/helpers/notes";
 
-export default function Selections() {
+export default function SelectionPoint() {
+  const { pianoRollStore } = useStore();
+  const { scaleX } = useScaleX();
+  const { numOfKeys } = useConfig().pitchRange;
 
-  return <SelectionPoint />;
+  if (pianoRollStore.selectionTicks === null) {
+    return null;
+  }
 
+  const x = pianoRollStore.selectionTicks * basePixelsPerTick * scaleX;
+
+  return (
+    <svg
+      className={styles["selection--point"]}
+      aria-label="pianoroll-grids"
+      width="100%"
+      height="100%"
+      preserveAspectRatio="none"
+    >
+      <line x1={x} y1={0} x2={x} y2={baseCanvasHeight(numOfKeys)} stroke="#ffffff22" strokeWidth="1" />
+    </svg>
+  );
 }
