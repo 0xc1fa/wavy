@@ -1,5 +1,5 @@
 import usePianoRollKeyboardHandlers from "@/handlers/usePianoRollKeyboardHandlers";
-import usePianoRollMouseHandlers from "@/handlers/usePianoRollMouseHandlers";
+import usePianoRollMouseHandlers, { PianoRollLanesMouseHandlerMode } from "@/handlers/usePianoRollMouseHandlers";
 import styles from "./index.module.scss";
 import LaneGrids from "@/components/LaneGrids";
 import Selections from "@/components/Selections";
@@ -8,6 +8,7 @@ import SelectionArea from "@/components/SelectionMarquee";
 import Playhead from "@/components/Playhead";
 import LanesBackground from "@/components/LanesBackground";
 import { useScaleX } from "@/contexts/ScaleXProvider";
+import { useEffect, useRef } from "react";
 
 type Props = {
   attachLyric: boolean;
@@ -18,8 +19,36 @@ const MiddleRightSection: React.FC<Props> = (props) => {
   const pianoRollKeyboardHandlers = usePianoRollKeyboardHandlers();
   const { scaleX } = useScaleX()
 
+  function continuouslyDispatchPointerMove() {
+    const timeout = setTimeout(() => {
+      if (pianoRollMouseHandlersStates.mouseHandlerMode !== PianoRollLanesMouseHandlerMode.None) {
+        console.log("timer out")
+        containerRef.current!.dispatchEvent(
+          new PointerEvent("pointermove", {
+            bubbles: true,
+            cancelable: true,
+            clientX: pianoRollMouseHandlersStates.currentPointerPos.current.clientX,
+            clientY: pianoRollMouseHandlersStates.currentPointerPos.current.clientY,
+          }),
+        );
+      }
+      continuouslyDispatchPointerMove();
+
+    }, 1000/61);
+    return timeout;
+  }
+
+  useEffect(() => {
+    const timeout = continuouslyDispatchPointerMove();
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, );
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
   return (
-    <div className={styles["pianoroll-lane"]} {...pianoRollMouseHandlers} tabIndex={0} {...pianoRollKeyboardHandlers}>
+    <div className={styles["pianoroll-lane"]} {...pianoRollMouseHandlers} tabIndex={0} {...pianoRollKeyboardHandlers} ref={containerRef}>
       <LaneGrids />
       <Selections />
       <Notes attachLyric={props.attachLyric} />

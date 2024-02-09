@@ -60,6 +60,8 @@ export default function usePianoRollMouseHandlers() {
   const [ongoingPosition, setOngoingPosition] = useState({ x: 0, y: 0 });
   const guardActive = useRef(DraggingGuardMode.UnderThreshold);
 
+  const currentPointerPos = useRef({ clientX: 0, clientY: 0 });
+
   useEffect(() => {
     document.body.style.cursor = cursorStyle;
   }, [cursorStyle]);
@@ -110,6 +112,8 @@ export default function usePianoRollMouseHandlers() {
     const deltaPitch =
       getNoteNumFromOffsetY(numOfKeys, event.nativeEvent.offsetY) -
       getNoteNumFromOffsetY(numOfKeys, pianoRollStore.noteModificationBuffer.initY);
+
+    currentPointerPos.current = { clientX: event.nativeEvent.clientX, clientY: event.nativeEvent.clientY };
     if (Math.abs(deltaTicks) > getTickInGrid(scaleX)) {
       guardActive.current = DraggingGuardMode.SnapToGrid;
     } else if (Math.abs(deltaTicks) > 96 && guardActive.current < DraggingGuardMode.FineTune) {
@@ -414,6 +418,7 @@ export default function usePianoRollMouseHandlers() {
       startingPosition,
       ongoingPosition,
       cursorStyle,
+      currentPointerPos
     },
   };
 }

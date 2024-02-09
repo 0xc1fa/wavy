@@ -3,13 +3,11 @@
 ## Bugs
 
 - A small gap appear when the piano roll is scrolled all the way to the bottom
-- The color of selection marquee is too ugly
 - The onclick animation of piano keyboard is not working
 - No line between white key lane
 - Range indicator overlap piano keyboard
 - Note/selecton maquee does not follow overflow scroll (only follow when on move)
 - Make pianoroll lane overflow not the whole editor
-- Sometime dragging marker in velocity editor will make other marker shift to the top
 - check if the length is correct if editor staring tick not 0
 - Add mini map to show the whole piano roll and where you are now
 - very small note should be able to adapt to both trimming and extending
