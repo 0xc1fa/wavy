@@ -211,7 +211,7 @@ export default function usePianoRollMouseHandlers() {
         if (guardActive.current) {
           dispatch({
             type: "SET_SELECTION_TICKS",
-            payload: { ticks: _.last(newNotes)!.tick + _.last(newNotes)!.duration },
+            payload: { ticks: Math.max(_.last(newNotes)!.tick + _.last(newNotes)!.duration, _.last(newNotes)!.tick) },
           });
         }
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
@@ -362,17 +362,17 @@ export default function usePianoRollMouseHandlers() {
 
   const setMouseHandlerModeForNote = (event: React.PointerEvent<Element>, noteClicked: TrackNoteEvent) => {
     if (
+      isNoteRightMarginClicked(numOfKeys, scaleX, noteClicked!, [event.nativeEvent.offsetX, event.nativeEvent.offsetY])
+    ) {
+      dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick + noteClicked.duration } });
+      setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesExtending);
+    } else if (
       isNoteLeftMarginClicked(numOfKeys, scaleX, noteClicked!, {
         x: event.nativeEvent.offsetX,
         y: event.nativeEvent.offsetY,
       })
     ) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesTrimming);
-    } else if (
-      isNoteRightMarginClicked(numOfKeys, scaleX, noteClicked!, [event.nativeEvent.offsetX, event.nativeEvent.offsetY])
-    ) {
-      dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick + noteClicked.duration } });
-      setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesExtending);
     } else if (event.nativeEvent.altKey) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.Vibrato);
     } else if (event.nativeEvent.metaKey) {

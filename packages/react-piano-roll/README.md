@@ -2,7 +2,6 @@
 
 ## Bugs
 
-- Selection marquee that drag outside the piano roll will make the piano roll extend and scroll
 - A small gap appear when the piano roll is scrolled all the way to the bottom
 - The color of selection marquee is too ugly
 - The onclick animation of piano keyboard is not working
