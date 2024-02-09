@@ -70,7 +70,7 @@ function MidiEditor({
 
 const withProvider = (Component: typeof MidiEditor) => {
   return ({
-    tickRange = [0, 480 * 4 * 8],
+    tickRange = [480 * 4 * 0, 480 * 4 * 8],
     pitchRange = { startingNoteNum: 0, numOfKeys: 128 },
     beatsPerBar = 4,
     beatUnit = 4,

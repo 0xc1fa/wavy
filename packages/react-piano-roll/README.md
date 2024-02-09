@@ -8,7 +8,7 @@
 - Range indicator overlap piano keyboard
 - Note/selecton maquee does not follow overflow scroll (only follow when on move)
 - Make pianoroll lane overflow not the whole editor
-- check if the length is correct if editor staring tick not 0
+- the length is correct but staring bar is not correct if editor staring tick not 0
 - Add mini map to show the whole piano roll and where you are now
 - very small note should be able to adapt to both trimming and extending
 

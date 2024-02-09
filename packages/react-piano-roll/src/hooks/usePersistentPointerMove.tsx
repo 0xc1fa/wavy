@@ -37,6 +37,6 @@ function continuouslyDispatchPointerMove<T extends HTMLElement>(ref: RefObject<T
         }),
       );
     continuouslyDispatchPointerMove(ref, clientPos);
-  }, 1000 / 61);
+  }, 1000 / 30);
   return timeout;
 }
