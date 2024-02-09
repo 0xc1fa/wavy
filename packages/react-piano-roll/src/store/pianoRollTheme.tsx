@@ -28,8 +28,8 @@ export function defaultPianoRollTheme() {
       blackLaneColor: "#232323",
     },
     selection: {
-      selectionAreaBorderColor: "#0000ddee",
-      selectionAreaFillColor: "#00009933",
+      selectionAreaBorderColor: "#21215feb",
+      selectionAreaFillColor: "#11118b33",
     },
     grid: {
       color: {

@@ -29,7 +29,8 @@
   }
 
   &:hover::after,
-  &:focus::after {
+  &:focus::after,
+  &:active::after {
     visibility: visible;
     transition-delay: 0.5s;
   }
