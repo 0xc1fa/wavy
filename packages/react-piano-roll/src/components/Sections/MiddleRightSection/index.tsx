@@ -10,6 +10,8 @@ import LanesBackground from "@/components/LanesBackground";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { useEffect, useRef } from "react";
 import { useClipboard } from "@/hooks/useClipboard";
+import { useHandleDelete } from "@/hooks/useHandleDelete";
+import { useHandleSpaceDown } from "@/hooks/useHandleSpaceDown";
 
 type Props = {
   attachLyric: boolean;
@@ -49,6 +51,8 @@ const MiddleRightSection: React.FC<Props> = (props) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useClipboard(containerRef);
+  useHandleDelete(containerRef);
+  useHandleSpaceDown(containerRef);
 
   return (
     <div
