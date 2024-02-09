@@ -1,3 +1,8 @@
+.note-bar-container {
+  height: var(--container-height);
+  position: relative;
+}
+
 .marker-container {
   position: absolute;
   left: var(--marker-left);
@@ -45,6 +50,4 @@
   flex: 1 1 auto;
 }
 
-.note-bar-container {
-  height: var(--container-height);
-}
+
