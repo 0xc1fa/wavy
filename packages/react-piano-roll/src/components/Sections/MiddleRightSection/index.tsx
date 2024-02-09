@@ -12,6 +12,7 @@ import { useEffect, useRef } from "react";
 import { useClipboard } from "@/hooks/useClipboard";
 import { useHandleDelete } from "@/hooks/useHandleDelete";
 import { useHandleSpaceDown } from "@/hooks/useHandleSpaceDown";
+import { useHandleUndoRedo } from "@/hooks/useHandleUndoRedo";
 
 type Props = {
   attachLyric: boolean;
@@ -19,9 +20,6 @@ type Props = {
 };
 const MiddleRightSection: React.FC<Props> = (props) => {
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
-  const pianoRollKeyboardHandlers = usePianoRollKeyboardHandlers();
-
-  const { scaleX } = useScaleX();
 
   function continuouslyDispatchPointerMove() {
     const timeout = setTimeout(() => {
@@ -53,15 +51,10 @@ const MiddleRightSection: React.FC<Props> = (props) => {
   useClipboard(containerRef);
   useHandleDelete(containerRef);
   useHandleSpaceDown(containerRef);
+  useHandleUndoRedo(containerRef);
 
   return (
-    <div
-      className={styles["pianoroll-lane"]}
-      {...pianoRollMouseHandlers}
-      tabIndex={0}
-      {...pianoRollKeyboardHandlers}
-      ref={containerRef}
-    >
+    <div className={styles["pianoroll-lane"]} {...pianoRollMouseHandlers} tabIndex={0} ref={containerRef}>
       <LaneGrids />
       <Selections />
       <Notes attachLyric={props.attachLyric} />
