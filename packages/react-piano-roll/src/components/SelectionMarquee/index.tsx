@@ -23,6 +23,7 @@ function SelectionMarquee({ mouseHandlersStates, style }: SelectionMarqueeProps)
   const height = bottom - top;
 
   return mouseHandlersStates.mouseHandlerMode === PianoRollLanesMouseHandlerMode.MarqueeSelection ? (
+    <div className={styles["marquee-container"]}>
     <div
       aria-label="piano-roll-selection-area"
       className={styles["selection--marquee"]}
@@ -38,6 +39,7 @@ function SelectionMarquee({ mouseHandlersStates, style }: SelectionMarqueeProps)
         } as React.CSSProperties
       }
     />
+    </div>
   ) : (
     <></>
   );

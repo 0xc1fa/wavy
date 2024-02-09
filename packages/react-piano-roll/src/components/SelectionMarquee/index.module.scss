@@ -1,3 +1,8 @@
+.marquee-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
 .selection--marquee {
   position: absolute;
   top: var(--top) !important;
