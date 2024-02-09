@@ -1,7 +1,7 @@
 import { getSelectionRangeWithSelectedNotes } from "@/helpers/notes";
 import { TrackNoteEvent } from "@/types";
 import { Dispatch, RefObject, useEffect, useReducer } from "react";
-import { useStore } from "..";
+import { useStore } from "@/hooks/useStore";
 import { PianoRollStore, PianoRollStoreAction } from "@/store/pianoRollStore";
 
 export function useClipboard<T extends HTMLElement>(ref: RefObject<T>) {

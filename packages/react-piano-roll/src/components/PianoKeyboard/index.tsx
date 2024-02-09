@@ -4,7 +4,7 @@ import styles from "./index.module.scss";
 import { baseCanvasHeight, getMinYFromNoteNum, getNoteNameFromNoteNum } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
-export default function PianoKeyboard() {
+const PianoKeyboard = () => {
   const { startingNoteNum, numOfKeys } = useConfig().pitchRange;
 
   const keyNums = [];
@@ -86,3 +86,5 @@ export default function PianoKeyboard() {
     </div>
   );
 }
+
+export default PianoKeyboard;

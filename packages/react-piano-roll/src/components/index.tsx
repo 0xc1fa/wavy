@@ -7,7 +7,7 @@ import { ConfigProvider, PianoRollConfig } from "@/contexts/PianoRollConfigProvi
 import { useScrollToNote } from "@/hooks/useScrollToNote";
 import UpperSection from "./Sections/UpperSection";
 import MiddleSection from "./Sections/MiddleSection";
-import MiddleRightSection from "./PianoRoll";
+import PianoRoll from "./PianoRoll";
 import LowerSection from "./Sections/LowerSection";
 import { ScaleXProvider, useScaleX } from "@/contexts/ScaleXProvider";
 import PianoRollThemeContext from "@/contexts/piano-roll-theme-context";
@@ -15,21 +15,11 @@ import { defaultPianoRollTheme } from "@/store/pianoRollTheme";
 import { PianoRollStoreProvider } from "@/store/pianoRollStore";
 import { BeatPerBar, BeatUnit } from "@/interfaces/time-signature";
 import { useLeftAnchoredScale } from "@/hooks/useLeftAnchoredScale";
+import Rulers from "./Rulers";
+import VelocityEditor from "./VelocityEditor";
+import PianoKeyboard from "./PianoKeyboard";
+import { useSyncScrollTop } from "@/hooks/useLinkScrollTop";
 
-interface MidiEditorProps {
-  playheadPosition?: number;
-  attachLyric?: boolean;
-  initialScrollMiddleNote?: number;
-  onSpace?: (event: KeyboardEvent<HTMLDivElement>) => void;
-  onNoteCreate?: (notes: TrackNoteEvent[]) => void;
-  onNoteUpdate?: (notes: TrackNoteEvent[]) => void;
-  onNoteSelect?: (notes: TrackNoteEvent[]) => void;
-  tickRange?: [number, number];
-  style?: CSSProperties;
-  pitchRange?: PitchRange;
-  beatsPerBar?: BeatPerBar;
-  beatUnit?: BeatUnit;
-}
 function MidiEditor({
   playheadPosition,
   attachLyric = false,
@@ -42,9 +32,13 @@ function MidiEditor({
   beatUnit,
 }: MidiEditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const keybordRef = useRef<HTMLDivElement>(null);
+  const pianoRollRef = useRef<HTMLDivElement>(null);
   const { scaleX } = useScaleX();
-  useScrollToNote(containerRef, initialScrollMiddleNote);
-  useLeftAnchoredScale(containerRef);
+  // useScrollToNote(containerRef, initialScrollMiddleNote);
+  // useLeftAnchoredScale(containerRef);
+
+  useSyncScrollTop(pianoRollRef, keybordRef);
 
   return (
     <div
@@ -59,13 +53,67 @@ function MidiEditor({
       }
       tabIndex={0}
     >
-      <UpperSection />
-      <MiddleSection>
-        <MiddleRightSection attachLyric={attachLyric} playheadPosition={playheadPosition} />
-      </MiddleSection>
-      <LowerSection />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "auto 1fr",
+          width: "800px",
+        }}
+      >
+        <div
+          ref={keybordRef}
+          style={{
+            overflowY: "scroll",
+            height: "600px",
+            overscrollBehavior: "none",
+            // willChange: "scroll-position",
+          }}
+        >
+          <div style={{ height: "49px"}}> </div>
+          <PianoKeyboard />
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridAutoRows: "auto 1fr auto",
+            overflowX: "scroll",
+            overflowY: "hidden",
+            overscrollBehavior: "none",
+            height: "600px",
+          }}
+        >
+          <Rulers />
+          <div
+            ref={pianoRollRef}
+            style={{
+              overflowY: "scroll",
+              // willChange: "scroll-position",
+              // width: "fit-content",
+              overscrollBehavior: "none",
+            }}
+          >
+            <PianoRoll attachLyric={attachLyric} playheadPosition={playheadPosition} />
+          </div>
+          <VelocityEditor />
+        </div>
+      </div>
     </div>
   );
+}
+
+interface MidiEditorProps {
+  playheadPosition?: number;
+  attachLyric?: boolean;
+  initialScrollMiddleNote?: number;
+  onSpace?: (event: KeyboardEvent<HTMLDivElement>) => void;
+  onNoteCreate?: (notes: TrackNoteEvent[]) => void;
+  onNoteUpdate?: (notes: TrackNoteEvent[]) => void;
+  onNoteSelect?: (notes: TrackNoteEvent[]) => void;
+  tickRange?: [number, number];
+  style?: CSSProperties;
+  pitchRange?: PitchRange;
+  beatsPerBar?: BeatPerBar;
+  beatUnit?: BeatUnit;
 }
 
 const withProvider = (Component: typeof MidiEditor) => {

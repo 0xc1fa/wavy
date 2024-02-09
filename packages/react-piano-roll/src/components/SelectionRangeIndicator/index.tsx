@@ -25,7 +25,7 @@ const SelectionRangeIndicator1 = () => {
   }
 
   return (
-    <svg width="100%" height={triangleHeight} style={{ position: "absolute", bottom: -triangleHeight, left: 0 }}>
+    <svg width="100%" height={triangleHeight} style={{ position: "absolute", bottom: -triangleHeight, left: 0 , zIndex: "10"}}>
       <polygon
         points={`
           ${startingX - (triangleWidth * 0.9)},0

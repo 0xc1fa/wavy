@@ -21,7 +21,7 @@ const PianoRoll: React.FC<Props> = (props) => {
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  usePresistentPointerMove(containerRef)
+  usePresistentPointerMove(containerRef);
   useClipboard(containerRef);
   useHandleDelete(containerRef);
   useHandleSpaceDown(containerRef);
