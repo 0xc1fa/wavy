@@ -1,14 +1,13 @@
 # react-piano-roll
 
 ## Bugs
-
+- Range indicator overlap piano keyboard
 - A small gap appear when the piano roll is scrolled all the way to the bottom
 - The onclick animation of piano keyboard is not working
+- the length is correct but staring bar is not correct if editor staring tick not 0
 - No line between white key lane
-- Range indicator overlap piano keyboard
 - Note/selecton maquee does not follow overflow scroll (only follow when on move)
 - Make pianoroll lane overflow not the whole editor
-- the length is correct but staring bar is not correct if editor staring tick not 0
 - Add mini map to show the whole piano roll and where you are now
 - very small note should be able to adapt to both trimming and extending
 
