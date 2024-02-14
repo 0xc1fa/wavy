@@ -322,12 +322,13 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const onDoubleClick: React.MouseEventHandler = (event) => {
-    const relativeX = getRelativeX(event)
-    const relativeY = getRelativeY(event)
-    const noteClicked = getNoteFromPosition(scaleX, numOfKeys, pianoRollStore.notes, [
-      relativeX,
-      relativeY,
-    ]);
+    const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event)
+    // const relativeX = getRelativeX(event)
+    // const relativeY = getRelativeY(event)
+    // const noteClicked = getNoteFromPosition(scaleX, numOfKeys, pianoRollStore.notes, [
+    //   relativeX,
+    //   relativeY,
+    // ]);
     if (noteClicked && event.altKey) {
       dispatch({ type: "TOGGLE_SELECTED_NOTE_VIBRATO_MODE" });
     } else if (noteClicked) {

@@ -17,7 +17,6 @@ export function useHandleDelete<T extends HTMLElement>(ref: RefObject<T>) {
 
 function handleDelete(event: KeyboardEvent, pianoRollStore: PianoRollStore, dispatch: Dispatch<PianoRollStoreAction>) {
   if (event.code === "Delete" || event.code === "Backspace") {
-    event.preventDefault();
     deleteNotes(event, pianoRollStore, dispatch);
   }
 }
@@ -28,7 +27,7 @@ function deleteNotes(event: KeyboardEvent, pianoRollStore: PianoRollStore, dispa
 
   if (focusedElement && focusedElement.hasAttributes()) {
     Array.from(focusedElement.attributes).forEach((attr) => {
-      if (attr.name === "data-noteid") {
+      if (attr.name === "data-note-id") {
         if (pianoRollStore.notes.filter((note) => note.id === attr.value)) {
           flag = false;
         }
