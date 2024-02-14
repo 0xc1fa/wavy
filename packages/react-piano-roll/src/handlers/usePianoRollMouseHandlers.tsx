@@ -338,39 +338,6 @@ export default function usePianoRollMouseHandlers() {
     }
   };
 
-  const onWheel: React.WheelEventHandler = (event) => {
-    if (!event.ctrlKey) {
-      return;
-    }
-    event.preventDefault();
-    const minScaleX = (800 - 50) / baseCanvasWidth(tickRange);
-    const multiplier = -0.01;
-    const newPianoRollScaleX = scaleX * (1 + event.deltaY * multiplier);
-    setScaleX(Math.max(minScaleX, newPianoRollScaleX));
-
-    // dispatch({
-    //   type: "SET_PIANO_LANE_SCALE_X",
-    //   payload: { scaleX: Math.max(minScaleX, newPianoRollScaleX) },
-    // });
-  };
-
-  // const updateCursorStyle = (e: PointerEvent) => {
-  //   const target = e.currentTarget as HTMLElement;
-
-  //   const noteHovered = getNoteObjectFromEvent(pianoRollStore.notes, e);
-  //   // const noteHovered = getNoteFromPosition(scaleX, numOfKeys, pianoRollStore.notes, [e.offsetX, e.offsetY]);
-  //   const isBoundaryHovered =
-  //     noteHovered &&
-  //     (isNoteLeftMarginClicked(numOfKeys, scaleX, noteHovered, {
-  //       x: e.offsetX,
-  //       y: e.offsetY,
-  //     }) ||
-  //       isNoteRightMarginClicked(numOfKeys, scaleX, noteHovered, {
-  //         x: e.offsetX,
-  //         y: e.offsetY,
-  //       }));
-  //   setCursorStyle(isBoundaryHovered ? "col-resize" : "default");
-  // };
 
   const getTickAndNoteNumFromEvent = (e: PointerEvent) => {
     const noteNum = getNoteNumFromEvent(numOfKeys, e);
@@ -423,7 +390,6 @@ export default function usePianoRollMouseHandlers() {
       onDoubleClick,
       onPointerMove,
       onPointerUp,
-      onWheel,
     },
     pianoRollMouseHandlersStates: {
       mouseHandlerMode,

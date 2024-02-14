@@ -12,6 +12,7 @@ import { useHandleDelete } from "@/hooks/useHandleDelete";
 import { useHandleSpaceDown } from "@/hooks/useHandleSpaceDown";
 import { useHandleUndoRedo } from "@/hooks/useHandleUndoRedo";
 import { usePresistentPointerMove } from "@/hooks/usePresistentPointerMove";
+import { useHandleRescale } from "./hooks/useHandleRescale";
 
 type Props = {
   attachLyric: boolean;
@@ -27,6 +28,7 @@ const PianoRoll: React.FC<Props> = memo((props) => {
   useHandleDelete(containerRef);
   useHandleSpaceDown(containerRef);
   useHandleUndoRedo(containerRef);
+  useHandleRescale(containerRef);
 
   return (
     <div className={styles["pianoroll-lane"]} {...pianoRollMouseHandlers} tabIndex={0} ref={containerRef}>

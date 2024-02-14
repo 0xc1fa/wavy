@@ -19,13 +19,11 @@ export function getNoteIdFromEvent(event: React.PointerEvent<Element> | React.Mo
 export function getRelativeX(event: PointerEvent | MouseEvent): number {
   const currentTarget = event.currentTarget as HTMLElement;
   const relativeX = event.clientX - currentTarget.getBoundingClientRect().left + currentTarget.scrollLeft;
-  console.log("relativeX" ,relativeX)
   return relativeX;
 }
 
 export function getRelativeY(event: PointerEvent | MouseEvent): number {
   const currentTarget = event.currentTarget as HTMLElement;
   const relativeY = event.clientY - currentTarget.getBoundingClientRect().top + currentTarget.scrollTop;
-  console.log("relativeY", relativeY)
   return relativeY;
 }
