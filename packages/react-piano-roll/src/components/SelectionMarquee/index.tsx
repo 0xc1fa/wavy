@@ -9,10 +9,10 @@ interface SelectionMarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
 function SelectionMarquee({ mouseHandlersStates, style }: SelectionMarqueeProps) {
   const theme = useTheme();
 
-  const startingPositionX = mouseHandlersStates.startingPosition.x;
-  const startingPositionY = mouseHandlersStates.startingPosition.y;
-  const ongoingPositionX = mouseHandlersStates.ongoingPosition.x;
-  const ongoingPositionY = mouseHandlersStates.ongoingPosition.y;
+  const startingPositionX = mouseHandlersStates.startingPosition.current.x;
+  const startingPositionY = mouseHandlersStates.startingPosition.current.y;
+  const ongoingPositionX = mouseHandlersStates.ongoingPosition.current.x;
+  const ongoingPositionY = mouseHandlersStates.ongoingPosition.current.y;
 
   const left = Math.min(startingPositionX, ongoingPositionX);
   const right = Math.max(startingPositionX, ongoingPositionX);

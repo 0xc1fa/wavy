@@ -6,13 +6,21 @@
   width: var(--width);
   height: var(--height);
   text-align: left;
-  pointer-events: none;
-  background: transparent;
   color: white;
   text-shadow: 0 0 5px #00000066;
   padding: 0 7px;
-  border: none;
   font-size: small;
+
+  background: var(--background);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  filter: saturate(var(--saturation));
+  overflow: hidden;
+  cursor: default;
+}
+
+.lyric:focus {
+  outline: 3px solid #ffffff33 !important;
 }
 
 .lyric::placeholder {

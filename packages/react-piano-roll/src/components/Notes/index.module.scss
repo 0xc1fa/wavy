@@ -2,6 +2,11 @@
   position: absolute;
   inset: 0;
   overflow-x: hidden;
+  pointer-events: none;
+}
+
+.notes-container * {
+  pointer-events: auto;
 }
 
 .note {
