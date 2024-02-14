@@ -9,6 +9,14 @@ export function focusNote(e: Event, id: string) {
   childElement!.focus();
 }
 
+export function getNoteByHtmlElement<T extends HTMLElement>(notes: TrackNoteEvent[], element: T): TrackNoteEvent | null {
+  const noteId = element.getAttribute("data-note-id");
+  if (!noteId) {
+    return null;
+  }
+  return notes.find((note) => note.id === noteId) || null;
+}
+
 // export function focusNote<T extends HTMLElement>(noteElement: T): void {
 //   const inputElement = noteElement.querySelector("&+input") as HTMLInputElement;
 //   console.log(noteElement);

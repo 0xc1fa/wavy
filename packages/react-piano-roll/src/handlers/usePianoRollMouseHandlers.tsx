@@ -1,5 +1,5 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { focusNote, getSelectionRangeWithSelectedNotes } from "../helpers/notes";
+import { focusNote, getNoteByHtmlElement, getSelectionRangeWithSelectedNotes } from "../helpers/notes";
 import { useStore } from "@/hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import _ from "lodash";
@@ -20,6 +20,7 @@ import {
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
+import { draggableBoundaryPixel } from "@/constants";
 
 export enum PianoRollLanesMouseHandlerMode {
   DragAndDrop,
@@ -69,11 +70,11 @@ export default function usePianoRollMouseHandlers() {
 
   const onPointerDown: React.PointerEventHandler = (event) => {
     (event.target as HTMLElement).setPointerCapture(event.nativeEvent.pointerId);
-    console.log(event.target)
+    console.log(event.target);
     guardActive.current = DraggingGuardMode.UnderThreshold;
     dispatch({ type: "SET_SELECTION_RANGE", payload: { range: null } });
-    const relativeX = getRelativeX(event);
-    const relativeY = getRelativeY(event);
+    const relativeX = getRelativeX(event.nativeEvent);
+    const relativeY = getRelativeY(event.nativeEvent);
 
     const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
     console.log(noteClicked);
@@ -111,8 +112,8 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const onPointerMove: React.PointerEventHandler = (event) => {
-    const relativeX = getRelativeX(event);
-    const relativeY = getRelativeY(event);
+    const relativeX = getRelativeX(event.nativeEvent);
+    const relativeY = getRelativeY(event.nativeEvent);
     const bufferedNotes = pianoRollStore.noteModificationBuffer.notesSelected;
     const deltaY = relativeY - pianoRollStore.noteModificationBuffer.initY;
     const deltaX = relativeX - pianoRollStore.noteModificationBuffer.initX;
@@ -378,17 +379,15 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const setMouseHandlerModeForNote = (event: React.PointerEvent<Element>, noteClicked: TrackNoteEvent) => {
-    const relativeX = getRelativeX(event);
-    const relativeY = getRelativeY(event);
-    if (isNoteRightMarginClicked(numOfKeys, scaleX, noteClicked!, [relativeX, relativeY])) {
+    const eventTarget = event.target as HTMLElement;
+
+    const isNoteLeftMarginClicked = event.nativeEvent.offsetX <= draggableBoundaryPixel;
+    const isNoteRightMarginClicked = event.nativeEvent.offsetX >= eventTarget.clientWidth - draggableBoundaryPixel;
+
+    if (isNoteRightMarginClicked) {
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick + noteClicked.duration } });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesExtending);
-    } else if (
-      isNoteLeftMarginClicked(numOfKeys, scaleX, noteClicked!, {
-        x: relativeX,
-        y: relativeY,
-      })
-    ) {
+    } else if (isNoteLeftMarginClicked) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesTrimming);
     } else if (event.nativeEvent.altKey) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.Vibrato);
