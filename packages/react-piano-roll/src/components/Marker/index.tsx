@@ -6,7 +6,7 @@ import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { getEndingTickFromNotes, getSelectionRangeWithSelectedNotes, getStartingTickFromNotes } from "@/helpers/notes";
 
-export default function SelectionPoint() {
+export default function Marker() {
   const { pianoRollStore } = useStore();
   const { scaleX } = useScaleX();
   const { numOfKeys } = useConfig().pitchRange;

@@ -68,6 +68,7 @@ export default function usePianoRollMouseHandlers() {
   }, [cursorStyle]);
 
   const onPointerDown: React.PointerEventHandler = (event) => {
+    console.log("pointerdown", event.target);
     event.currentTarget.setPointerCapture(event.nativeEvent.pointerId);
     guardActive.current = DraggingGuardMode.UnderThreshold;
     dispatch({ type: "SET_SELECTION_RANGE", payload: { range: null } });
@@ -75,7 +76,7 @@ export default function usePianoRollMouseHandlers() {
     const relativeY = getRelativeY(event);
 
     const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
-    console.log(noteClicked)
+    console.log(noteClicked);
     // const noteClicked = getNoteFromEvent(numOfKeys, scaleX, pianoRollStore.notes, event.nativeEvent);
     setNoteSelection(event, noteClicked);
     if (noteClicked) {
@@ -110,6 +111,7 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const onPointerMove: React.PointerEventHandler = (event) => {
+    console.log("pointermove", event.target);
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
     const bufferedNotes = pianoRollStore.noteModificationBuffer.notesSelected;
@@ -322,7 +324,7 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const onDoubleClick: React.MouseEventHandler = (event) => {
-    const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event)
+    const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
     // const relativeX = getRelativeX(event)
     // const relativeY = getRelativeY(event)
     // const noteClicked = getNoteFromPosition(scaleX, numOfKeys, pianoRollStore.notes, [
@@ -361,9 +363,7 @@ export default function usePianoRollMouseHandlers() {
   const setMouseHandlerModeForNote = (event: React.PointerEvent<Element>, noteClicked: TrackNoteEvent) => {
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
-    if (
-      isNoteRightMarginClicked(numOfKeys, scaleX, noteClicked!, [relativeX, relativeY])
-    ) {
+    if (isNoteRightMarginClicked(numOfKeys, scaleX, noteClicked!, [relativeX, relativeY])) {
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick + noteClicked.duration } });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesExtending);
     } else if (
@@ -404,7 +404,7 @@ export default function usePianoRollMouseHandlers() {
   return {
     pianoRollMouseHandlers: {
       onPointerDown,
-      onDoubleClick,
+      // onDoubleClick,
       onPointerMove,
       onPointerUp,
     },
@@ -413,7 +413,7 @@ export default function usePianoRollMouseHandlers() {
       startingPosition,
       ongoingPosition,
       cursorStyle,
-      currentPointerPos
+      currentPointerPos,
     },
   };
 }

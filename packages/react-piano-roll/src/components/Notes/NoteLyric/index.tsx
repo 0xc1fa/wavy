@@ -1,11 +1,16 @@
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import styles from "./index.module.scss";
 import { useStore } from "@/hooks/useStore";
-import { memo } from "react";
+import { memo, useRef } from "react";
 import { baseLaneWidth } from "@/constants";
 import { getMinYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
+
+const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => {
+  event?.currentTarget.focus();
+  console.log("dbl", event.currentTarget);
+};
 
 interface NoteLyricProps extends React.HTMLAttributes<HTMLInputElement> {
   note: TrackNoteEvent;
@@ -14,6 +19,8 @@ function NoteLyric({ note, style }: NoteLyricProps) {
   const { dispatch } = useStore();
   const { numOfKeys } = useConfig().pitchRange;
   const { scaleX } = useScaleX();
+
+  const ref = useRef<HTMLInputElement>(null);
 
   const handleKeyPress: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === "Enter") (event.target as HTMLInputElement).blur();
@@ -47,6 +54,7 @@ function NoteLyric({ note, style }: NoteLyricProps) {
 
   return (
     <input
+      ref={ref}
       type="text"
       data-note-id={note.id}
       className={styles["lyric"]}
@@ -61,6 +69,8 @@ function NoteLyric({ note, style }: NoteLyricProps) {
         } as React.CSSProperties
       }
       value={note.lyric}
+      onPointerDown={(event) => event.preventDefault()}
+      onDoubleClick={handleDoubleClick}
       onBlur={handleBlur}
       onKeyDown={handleKeyPress}
       onChange={onChange}

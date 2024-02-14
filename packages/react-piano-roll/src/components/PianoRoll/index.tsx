@@ -1,18 +1,18 @@
 import usePianoRollMouseHandlers from "@/handlers/usePianoRollMouseHandlers";
 import styles from "./index.module.scss";
 import LaneGrids from "@/components/LaneGrids";
-import Selections from "@/components/Selections";
+import Marker from "@/components/Marker";
 import Notes from "@/components/Notes";
-import SelectionArea from "@/components/SelectionMarquee";
+import SelectionMarquee from "@/components/SelectionMarquee";
 import Playhead from "@/components/Playhead";
 import LanesBackground from "@/components/LanesBackground";
 import { memo, useRef } from "react";
-import { useClipboard } from "@/hooks/useClipboard";
-import { useHandleDelete } from "@/hooks/useHandleDelete";
-import { useHandleSpaceDown } from "@/hooks/useHandleSpaceDown";
-import { useHandleUndoRedo } from "@/hooks/useHandleUndoRedo";
+import { useClipboard } from "@/components/PianoRoll/handlers/useClipboard";
+import { useHandleDelete } from "@/components/PianoRoll/handlers/useHandleDelete";
+import { useHandleSpaceDown } from "@/components/PianoRoll/handlers/useHandleSpaceDown";
+import { useHandleUndoRedo } from "@/components/PianoRoll/handlers/useHandleUndoRedo";
 import { usePresistentPointerMove } from "@/hooks/usePresistentPointerMove";
-import { useHandleScaleX } from "@/hooks/useHandleScaleX";
+import { useHandleScaleX } from "@/components/PianoRoll/handlers/useHandleScaleX";
 
 type Props = {
   attachLyric: boolean;
@@ -33,18 +33,10 @@ const PianoRoll: React.FC<Props> = memo((props) => {
   return (
     <div className={styles["pianoroll-lane"]} {...pianoRollMouseHandlers} tabIndex={0} ref={containerRef}>
       <LaneGrids />
-      <Selections />
+      <Marker />
       <Notes attachLyric={props.attachLyric} />
-      <SelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
+      <SelectionMarquee mouseHandlersStates={pianoRollMouseHandlersStates} />
       {props.playheadPosition !== undefined && <Playhead playheadPosition={props.playheadPosition} />}
-      {/* <div
-        style={{
-          position: "absolute",
-          inset: "0",
-          width: "100%",
-          height: "100%",
-        }}
-      /> */}
       <LanesBackground />
     </div>
   );
