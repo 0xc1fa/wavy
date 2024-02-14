@@ -1,4 +1,5 @@
-.selection--point {
+.marker {
   position: absolute;
   inset: 0;
+  pointer-events: none;
 }

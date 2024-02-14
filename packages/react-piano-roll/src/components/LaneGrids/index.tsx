@@ -27,7 +27,7 @@ const LaneGrids: React.FC = memo(() => {
   };
 
   return (
-    <svg className={styles["grid"]} aria-label="pianoroll-grids" width="100%" height="100%" preserveAspectRatio="none">
+    <svg className={styles["grid"]} width="100%" height="100%" preserveAspectRatio="none">
       {gridSeparationFactor.quavers !== 1 ? gridLines("quavers") : []}
       {gridLines("quarter")}
       {gridLines("bar")}

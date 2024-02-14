@@ -17,7 +17,6 @@ import { BeatPerBar, BeatUnit } from "@/interfaces/time-signature";
 import { useLeftAnchoredScale } from "@/components/handlers/useLeftAnchoredScale";
 import PianoKeyboard from "./PianoKeyboard";
 import ScrollSync from "./SyncScroll";
-import SyncScrollDivs2 from "./SyncScroll2";
 
 interface MidiEditorProps {
   playheadPosition?: number;

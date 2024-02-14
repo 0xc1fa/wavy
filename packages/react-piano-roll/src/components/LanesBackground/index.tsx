@@ -15,7 +15,7 @@ const LanesBackground: React.FC = memo(() => {
     const keyColor = isBlackKey(noteNumber) ? theme.lane.blackLaneColor : theme.lane.whiteLaneColor;
     const yPosition = baseCanvasHeight(numOfKeys) - (noteNumber + 1) * baseLaneWidth;
 
-    return <rect key={noteNumber} x={0} y={yPosition} width="100%" height={baseLaneWidth} fill={keyColor} />;
+    return <rect key={noteNumber} data-note-num={noteNumber} x={0} y={yPosition} width="100%" height={baseLaneWidth} fill={keyColor} />;
   });
 
   return (

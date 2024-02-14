@@ -19,8 +19,8 @@ export default function Marker() {
 
   return (
     <svg
-      className={styles["selection--point"]}
-      aria-label="pianoroll-grids"
+      className={styles["marker"]}
+      aria-label="marker"
       width="100%"
       height="100%"
       preserveAspectRatio="none"

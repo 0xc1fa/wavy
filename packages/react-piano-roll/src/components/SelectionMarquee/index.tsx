@@ -25,7 +25,7 @@ function SelectionMarquee({ mouseHandlersStates, style }: SelectionMarqueeProps)
   return mouseHandlersStates.mouseHandlerMode === PianoRollLanesMouseHandlerMode.MarqueeSelection ? (
     <div className={styles["marquee-container"]}>
     <div
-      aria-label="piano-roll-selection-area"
+      aria-label="selection-marquee"
       className={styles["selection--marquee"]}
       style={
         {
