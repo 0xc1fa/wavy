@@ -5,6 +5,7 @@ import { baseCanvasHeight } from "@/helpers/conversion";
 import { isBlackKey } from "@/helpers";
 import _ from "lodash";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
+import styles from "./index.module.scss";
 
 const LanesBackground: React.FC = memo(() => {
   const theme = useTheme();
@@ -15,7 +16,15 @@ const LanesBackground: React.FC = memo(() => {
     const keyColor = isBlackKey(noteNumber) ? theme.lane.blackLaneColor : theme.lane.whiteLaneColor;
     const yPosition = baseCanvasHeight(numOfKeys) - (noteNumber + 1) * baseLaneWidth;
 
-    return <rect key={noteNumber} data-note-num={noteNumber} x={0} y={yPosition} width="100%" height={baseLaneWidth} fill={keyColor} />;
+    return (
+      <rect
+        data-note-num={noteNumber}
+        className={[styles.lane, isBlackKey(noteNumber) ? styles.blackLane : styles.whiteLane].join(" ")}
+        key={noteNumber}
+        // x={0}
+        y={yPosition}
+      />
+    );
   });
 
   return (
@@ -23,6 +32,6 @@ const LanesBackground: React.FC = memo(() => {
       {lanes}
     </svg>
   );
-})
+});
 
 export default LanesBackground;
