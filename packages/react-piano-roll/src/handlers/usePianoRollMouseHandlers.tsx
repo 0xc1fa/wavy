@@ -72,7 +72,7 @@ export default function usePianoRollMouseHandlers() {
     guardActive.current = DraggingGuardMode.UnderThreshold;
     dispatch({ type: "SET_SELECTION_RANGE", payload: { range: null } });
     const relativeX = getRelativeX(event.nativeEvent);
-    const relativeY = getRelativeY(event);
+    const relativeY = getRelativeY(event.nativeEvent);
 
     const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
     console.log(noteClicked)
@@ -336,22 +336,6 @@ export default function usePianoRollMouseHandlers() {
     }
   };
 
-  const onWheel: React.WheelEventHandler = (event) => {
-    if (!event.ctrlKey) {
-      return;
-    }
-    event.preventDefault();
-    const minScaleX = (800 - 50) / baseCanvasWidth(tickRange);
-    const multiplier = -0.01;
-    const newPianoRollScaleX = scaleX * (1 + event.deltaY * multiplier);
-    setScaleX(Math.max(minScaleX, newPianoRollScaleX));
-
-    // dispatch({
-    //   type: "SET_PIANO_LANE_SCALE_X",
-    //   payload: { scaleX: Math.max(minScaleX, newPianoRollScaleX) },
-    // });
-  };
-
   const updateCursorStyle = (e: PointerEvent) => {
     const target = e.currentTarget as HTMLElement;
     const noteHovered = getNoteFromPosition(scaleX, numOfKeys, pianoRollStore.notes, [e.offsetX, e.offsetY]);
@@ -423,7 +407,6 @@ export default function usePianoRollMouseHandlers() {
       onDoubleClick,
       onPointerMove,
       onPointerUp,
-      onWheel,
     },
     pianoRollMouseHandlersStates: {
       mouseHandlerMode,
