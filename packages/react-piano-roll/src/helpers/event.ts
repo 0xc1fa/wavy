@@ -16,14 +16,14 @@ export function getNoteIdFromEvent(event: React.PointerEvent<Element> | React.Mo
   return noteId ? noteId : null;
 }
 
-export function getRelativeX(event: PointerEvent | MouseEvent): number {
+export function getRelativeX(event: React.PointerEvent<Element> | React.MouseEvent<Element>): number {
   const currentTarget = event.currentTarget as HTMLElement;
-  const relativeX = event.clientX - currentTarget.getBoundingClientRect().left + currentTarget.scrollLeft;
+  const relativeX = event.clientX - currentTarget.getBoundingClientRect().left + event.currentTarget.scrollLeft;
   return relativeX;
 }
 
-export function getRelativeY(event: PointerEvent | MouseEvent): number {
+export function getRelativeY(event: React.PointerEvent<Element> | React.MouseEvent<Element>): number {
   const currentTarget = event.currentTarget as HTMLElement;
-  const relativeY = event.clientY - currentTarget.getBoundingClientRect().top + currentTarget.scrollTop;
+  const relativeY = event.clientY - currentTarget.getBoundingClientRect().top + event.currentTarget.scrollTop;
   return relativeY;
 }

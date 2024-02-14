@@ -71,8 +71,8 @@ export default function usePianoRollMouseHandlers() {
     event.currentTarget.setPointerCapture(event.nativeEvent.pointerId);
     guardActive.current = DraggingGuardMode.UnderThreshold;
     dispatch({ type: "SET_SELECTION_RANGE", payload: { range: null } });
-    const relativeX = getRelativeX(event.nativeEvent);
-    const relativeY = getRelativeY(event.nativeEvent);
+    const relativeX = getRelativeX(event);
+    const relativeY = getRelativeY(event);
 
     const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
     console.log(noteClicked)
@@ -110,8 +110,8 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const onPointerMove: React.PointerEventHandler = (event) => {
-    const relativeX = getRelativeX(event.nativeEvent);
-    const relativeY = getRelativeY(event.nativeEvent);
+    const relativeX = getRelativeX(event);
+    const relativeY = getRelativeY(event);
     const bufferedNotes = pianoRollStore.noteModificationBuffer.notesSelected;
     const deltaY = relativeY - pianoRollStore.noteModificationBuffer.initY;
     const deltaX = relativeX - pianoRollStore.noteModificationBuffer.initX;
@@ -323,8 +323,8 @@ export default function usePianoRollMouseHandlers() {
 
   const onDoubleClick: React.MouseEventHandler = (event) => {
     const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event)
-    // const relativeX = getRelativeX(event.nativeEvent)
-    // const relativeY = getRelativeY(event.nativeEvent)
+    // const relativeX = getRelativeX(event)
+    // const relativeY = getRelativeY(event)
     // const noteClicked = getNoteFromPosition(scaleX, numOfKeys, pianoRollStore.notes, [
     //   relativeX,
     //   relativeY,
@@ -359,8 +359,8 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const setMouseHandlerModeForNote = (event: React.PointerEvent<Element>, noteClicked: TrackNoteEvent) => {
-    const relativeX = getRelativeX(event.nativeEvent);
-    const relativeY = getRelativeY(event.nativeEvent);
+    const relativeX = getRelativeX(event);
+    const relativeY = getRelativeY(event);
     if (
       isNoteRightMarginClicked(numOfKeys, scaleX, noteClicked!, [relativeX, relativeY])
     ) {
