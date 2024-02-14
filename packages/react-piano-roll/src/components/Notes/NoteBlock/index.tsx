@@ -20,6 +20,7 @@ function NoteBlock({ note }: NoteBlockProps) {
     <div
       aria-label="piano-roll-note"
       className={styles["note"]}
+      data-note-id={note.id}
       style={
         {
           "--saturation": `${0.2 + (note.velocity / 127) * 0.8}`,

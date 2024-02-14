@@ -1,9 +1,8 @@
 import { PianoRollStoreAction } from "@/store/pianoRollStore";
 import { Dispatch, RefObject, useEffect } from "react";
-import { useStore } from "..";
+import { useStore } from "@/hooks/useStore";
 
 export function useHandleUndoRedo<T extends HTMLElement>(ref: RefObject<T>) {
-
   const { dispatch } = useStore();
   const handleUndoWarper = (event: KeyboardEvent) => handleUndo(event, dispatch);
   const handleRedoWarper = (event: KeyboardEvent) => handleRedo(event, dispatch);
@@ -15,24 +14,20 @@ export function useHandleUndoRedo<T extends HTMLElement>(ref: RefObject<T>) {
     return () => {
       ref.current!.removeEventListener("keydown", handleUndoWarper);
       ref.current!.removeEventListener("keydown", handleRedoWarper);
-    }
-
-  })
-
+    };
+  });
 }
 
 function handleRedo(event: KeyboardEvent, dispatch: Dispatch<PianoRollStoreAction>) {
   if (event.shiftKey && event.code === "KeyZ") {
-    event.preventDefault()
+    event.preventDefault();
     dispatch({ type: "REDO" });
   }
-
 }
 
 function handleUndo(event: KeyboardEvent, dispatch: Dispatch<PianoRollStoreAction>) {
   if (!event.shiftKey && event.code === "KeyZ") {
-    event.preventDefault()
+    event.preventDefault();
     dispatch({ type: "REDO" });
   }
-
 }

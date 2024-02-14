@@ -11,6 +11,7 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
       {pianoRollStore.notes.map((note) => (
         <div
           className={styles["note"]}
+          data-note-id={note.id}
           data-note-num={note.noteNumber}
           data-start-time={note.tick}
           data-duration={note.duration}

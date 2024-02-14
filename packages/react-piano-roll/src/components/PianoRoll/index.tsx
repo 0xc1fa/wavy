@@ -6,22 +6,23 @@ import Notes from "@/components/Notes";
 import SelectionArea from "@/components/SelectionMarquee";
 import Playhead from "@/components/Playhead";
 import LanesBackground from "@/components/LanesBackground";
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import { useClipboard } from "@/hooks/useClipboard";
 import { useHandleDelete } from "@/hooks/useHandleDelete";
 import { useHandleSpaceDown } from "@/hooks/useHandleSpaceDown";
 import { useHandleUndoRedo } from "@/hooks/useHandleUndoRedo";
-import { usePresistentPointerMove } from "@/hooks/usePersistentPointerMove";
+import { usePresistentPointerMove } from "@/hooks/usePresistentPointerMove";
 
 type Props = {
   attachLyric: boolean;
   playheadPosition: number | undefined;
 };
-const PianoRoll: React.FC<Props> = (props) => {
+const PianoRoll: React.FC<Props> = memo((props) => {
+  console.log("PianoRoll");
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  usePresistentPointerMove(containerRef)
+  // usePresistentPointerMove(containerRef)
   useClipboard(containerRef);
   useHandleDelete(containerRef);
   useHandleSpaceDown(containerRef);
@@ -34,17 +35,17 @@ const PianoRoll: React.FC<Props> = (props) => {
       <Notes attachLyric={props.attachLyric} />
       <SelectionArea mouseHandlersStates={pianoRollMouseHandlersStates} />
       {props.playheadPosition !== undefined && <Playhead playheadPosition={props.playheadPosition} />}
-      <div
+      {/* <div
         style={{
           position: "absolute",
           inset: "0",
           width: "100%",
           height: "100%",
         }}
-      />
+      /> */}
       <LanesBackground />
     </div>
   );
-};
+});
 
 export default PianoRoll;

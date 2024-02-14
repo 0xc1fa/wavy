@@ -7,7 +7,7 @@ import { ConfigProvider, PianoRollConfig } from "@/contexts/PianoRollConfigProvi
 import { useScrollToNote } from "@/hooks/useScrollToNote";
 import UpperSection from "./Sections/UpperSection";
 import MiddleSection from "./Sections/MiddleSection";
-import MiddleRightSection from "./PianoRoll";
+import PianoRoll from "./PianoRoll";
 import LowerSection from "./Sections/LowerSection";
 import { ScaleXProvider, useScaleX } from "@/contexts/ScaleXProvider";
 import PianoRollThemeContext from "@/contexts/piano-roll-theme-context";
@@ -15,6 +15,9 @@ import { defaultPianoRollTheme } from "@/store/pianoRollTheme";
 import { PianoRollStoreProvider } from "@/store/pianoRollStore";
 import { BeatPerBar, BeatUnit } from "@/interfaces/time-signature";
 import { useLeftAnchoredScale } from "@/hooks/useLeftAnchoredScale";
+import PianoKeyboard from "./PianoKeyboard";
+import ScrollSync from "./SyncScroll";
+import SyncScrollDivs2 from "./SyncScroll2";
 
 interface MidiEditorProps {
   playheadPosition?: number;
@@ -45,6 +48,36 @@ function MidiEditor({
   const { scaleX } = useScaleX();
   useScrollToNote(containerRef, initialScrollMiddleNote);
   useLeftAnchoredScale(containerRef);
+  // return <PianoRoll attachLyric={attachLyric} playheadPosition={playheadPosition} />;
+
+  // return (
+  //   <div
+  //     className={`${styles["container"]} piano-roll`}
+  //     ref={containerRef}
+  //     style={
+  //       {
+  //         "--canvas-width": `${baseCanvasWidth(tickRange!) * scaleX}px`,
+  //         "--canvas-height": `${baseCanvasHeight(pitchRange!.numOfKeys)}px`,
+  //         display: "flex",
+  //         ...style,
+  //       } as React.CSSProperties
+  //     }
+  //     tabIndex={0}
+  //   >
+  //     <SyncScrollDivs2
+  //       pkeyboard={<PianoKeyboard />}
+  //       proll={<PianoRoll attachLyric={attachLyric} playheadPosition={playheadPosition} />}
+  //     />
+  //     {/* <ScrollSync>
+  //       <ScrollSync.Panel style={{ height: "600px" }}>
+  //         <PianoKeyboard />
+  //       </ScrollSync.Panel>
+  //       <ScrollSync.Panel style={{ height: "600px", width: "800px" }}>
+  //         <PianoRoll attachLyric={attachLyric} playheadPosition={playheadPosition} />
+  //       </ScrollSync.Panel>
+  //     </ScrollSync> */}
+  //   </div>
+  // );
 
   return (
     <div
@@ -60,9 +93,13 @@ function MidiEditor({
       tabIndex={0}
     >
       <UpperSection />
-      <MiddleSection>
-        <MiddleRightSection attachLyric={attachLyric} playheadPosition={playheadPosition} />
-      </MiddleSection>
+      <div className={styles["middle-container"]}>
+        <PianoKeyboard />
+        <div className={styles["lane-container"]}>
+          <PianoRoll attachLyric={attachLyric} playheadPosition={playheadPosition} />
+        </div>
+      </div>
+      {/* <MiddleSection></MiddleSection> */}
       <LowerSection />
     </div>
   );

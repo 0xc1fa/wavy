@@ -1,6 +1,6 @@
 import { PianoRollStore, PianoRollStoreAction } from "@/store/pianoRollStore";
 import { Dispatch, RefObject, useEffect } from "react";
-import { useStore } from "..";
+import { useStore } from "@/hooks/useStore";
 
 export function useHandleDelete<T extends HTMLElement>(ref: RefObject<T>) {
 

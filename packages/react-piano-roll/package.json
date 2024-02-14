@@ -11,13 +11,14 @@
     "README.md"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf build && rollup -c",
-    "watch": "rollup -c -w"
+    "watch": "rollup -c -w",
+    "test-ct": "playwright test -c playwright-ct.config.ts"
   },
   "author": "Chan Yat Fu",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@playwright/experimental-ct-react": "^1.41.2",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",

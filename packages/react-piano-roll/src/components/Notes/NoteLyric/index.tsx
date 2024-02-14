@@ -48,7 +48,7 @@ function NoteLyric({ note, style }: NoteLyricProps) {
   return (
     <input
       type="text"
-      data-noteid={note.id}
+      data-note-id={note.id}
       className={styles["lyric"]}
       placeholder=" - "
       style={

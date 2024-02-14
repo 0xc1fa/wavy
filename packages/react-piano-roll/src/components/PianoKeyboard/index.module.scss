@@ -18,6 +18,8 @@
   left: 0;
 
   width: var(--white-key-width);
+  // height: calc(76 * var(--white-key-height) + var(--black-key-height));
+  height: 3200px;
   flex: 0 0 auto;
   z-index: 1;
 

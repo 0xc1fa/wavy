@@ -3,18 +3,12 @@ import { useStore } from "@/hooks/useStore";
 import { getNotesFromOffsetX } from "@/helpers/conversion";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { TrackNoteEvent } from "@/types";
-import { getNoteIdFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
+import { getNoteIdFromEvent, getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
 
 enum VelocityEditorMouseHandlerMode {
   Idle,
   SelectAndDrag,
   Pencil,
-}
-
-function getNoteObjectFromEvent(notes: TrackNoteEvent[], event: React.PointerEvent<Element>): TrackNoteEvent | null {
-  const noteId = getNoteIdFromEvent(event);
-  const note = notes.find((note) => note.id === noteId);
-  return note ? note : null;
 }
 
 type Buffer = {

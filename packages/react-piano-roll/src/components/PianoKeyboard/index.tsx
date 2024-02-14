@@ -3,8 +3,10 @@ import { isBlackKey } from "../../helpers";
 import styles from "./index.module.scss";
 import { baseCanvasHeight, getMinYFromNoteNum, getNoteNameFromNoteNum } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
+import { memo } from "react";
 
-export default function PianoKeyboard() {
+const PianoKeyboard = memo(() => {
+  console.log("PianoKeyboard")
   const { startingNoteNum, numOfKeys } = useConfig().pitchRange;
 
   const keyNums = [];
@@ -85,4 +87,6 @@ export default function PianoKeyboard() {
       })}
     </div>
   );
-}
+});
+
+export default PianoKeyboard;
