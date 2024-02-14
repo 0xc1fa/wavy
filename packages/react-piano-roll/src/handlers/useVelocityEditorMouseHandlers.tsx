@@ -46,7 +46,7 @@ export default function useVelocityEditorMouseHandlers() {
       }
       dispatch({
         type: "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE",
-        payload: { initX: getRelativeX(event.nativeEvent), initY: getRelativeY(event.nativeEvent) },
+        payload: { initX: getRelativeX(event), initY: getRelativeY(event) },
       });
     }
   };
@@ -56,7 +56,7 @@ export default function useVelocityEditorMouseHandlers() {
       return;
     }
     const containerHeight = event.currentTarget.clientHeight;
-    const relativeY = getRelativeY(event.nativeEvent);
+    const relativeY = getRelativeY(event);
     const initVelocity = getVelocityByRelativeY(containerHeight, pianoRollStore.noteModificationBuffer.initY);
     const currentVelocity = getVelocityByRelativeY(containerHeight, relativeY);
     const deltaVelocity = currentVelocity - initVelocity;

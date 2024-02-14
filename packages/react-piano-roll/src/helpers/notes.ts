@@ -3,18 +3,10 @@ import { useStore } from "@/hooks/useStore";
 
 export function focusNote(e: Event, id: string) {
   const componentRef = e.currentTarget as HTMLDivElement;
-  const childElement = componentRef.querySelector(`[data-note-id="${id}"]`) as HTMLInputElement;
+  const childElement = componentRef.querySelector(`[data-note-id="${id}"] input`) as HTMLInputElement;
   console.log(childElement);
   console.log;
   childElement!.focus();
-}
-
-export function getNoteByHtmlElement<T extends HTMLElement>(notes: TrackNoteEvent[], element: T): TrackNoteEvent | null {
-  const noteId = element.getAttribute("data-note-id");
-  if (!noteId) {
-    return null;
-  }
-  return notes.find((note) => note.id === noteId) || null;
 }
 
 // export function focusNote<T extends HTMLElement>(noteElement: T): void {

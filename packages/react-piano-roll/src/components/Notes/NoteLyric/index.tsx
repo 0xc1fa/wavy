@@ -6,7 +6,6 @@ import { baseLaneWidth } from "@/constants";
 import { getMinYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
-import useTheme from "@/hooks/useTheme";
 
 interface NoteLyricProps extends React.HTMLAttributes<HTMLInputElement> {
   note: TrackNoteEvent;
@@ -15,7 +14,6 @@ function NoteLyric({ note, style }: NoteLyricProps) {
   const { dispatch } = useStore();
   const { numOfKeys } = useConfig().pitchRange;
   const { scaleX } = useScaleX();
-  const theme = useTheme();
 
   const handleKeyPress: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === "Enter") (event.target as HTMLInputElement).blur();
@@ -47,15 +45,10 @@ function NoteLyric({ note, style }: NoteLyricProps) {
     });
   };
 
-
   return (
     <input
       type="text"
       data-note-id={note.id}
-      data-note-num={note.noteNumber}
-      data-start-time={note.tick}
-      data-duration={note.duration}
-      data-velocity={note.velocity}
       className={styles["lyric"]}
       placeholder=" - "
       style={
@@ -64,18 +57,10 @@ function NoteLyric({ note, style }: NoteLyricProps) {
           "--left": `${getOffsetXFromTick(scaleX, note.tick)}px`,
           "--width": `${getOffsetXFromTick(scaleX, note.duration)}px`,
           "--height": `${baseLaneWidth}px`,
-          "--saturation": `${0.2 + (note.velocity / 127) * 0.8}`,
-          "--note-width": `${getOffsetXFromTick(scaleX, note.duration)}px`,
-          "--note-height": `${baseLaneWidth}px`,
-          "--background": note.isSelected ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
-          "--border-color": note.isSelected ? theme.note.noteBorderColor : theme.note.noteBorderColor,
-          "--border-radius": `${theme.note.noteBorderRadius}px`,
-          outline: note.isSelected ? `3px solid #ffffff33` : "none",
           ...style,
         } as React.CSSProperties
       }
       value={note.lyric}
-      onPointerDown={(event) => event.preventDefault()}
       onBlur={handleBlur}
       onKeyDown={handleKeyPress}
       onChange={onChange}
