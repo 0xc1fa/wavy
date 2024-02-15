@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { focusNote, getSelectionRangeWithSelectedNotes } from "../helpers/notes";
+import { focusNote, getSelectionRangeWithSelectedNotes } from "../../../helpers/notes";
 import { useStore } from "@/hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import _ from "lodash";
@@ -49,9 +49,9 @@ export type NotesModificationBuffer = {
   initX: number;
 };
 
-export default function usePianoRollMouseHandlers() {
+export function useHandleNoteCreationAndModification() {
   const { pianoRollStore, dispatch } = useStore();
-  const { scaleX, setScaleX } = useScaleX();
+  const { scaleX } = useScaleX();
   const { numOfKeys } = useConfig().pitchRange;
 
   const [cursorStyle, setCursorStyle] = useState<"default" | "col-resize">("default");
@@ -64,7 +64,7 @@ export default function usePianoRollMouseHandlers() {
     document.body.style.cursor = cursorStyle;
   }, [cursorStyle]);
 
-  const onPointerDown: React.PointerEventHandler = (event) => {
+  const useHandleNoteCreationAndModificationPD: React.PointerEventHandler = (event) => {
     guardActive.current = DraggingGuardMode.UnderThreshold;
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
@@ -97,7 +97,7 @@ export default function usePianoRollMouseHandlers() {
     }
   };
 
-  const onPointerMove: React.PointerEventHandler = (event) => {
+  const useHandleNoteCreationAndModificationPM: React.PointerEventHandler = (event) => {
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
     const bufferedNotes = pianoRollStore.noteModificationBuffer.notesSelected;
@@ -259,18 +259,10 @@ export default function usePianoRollMouseHandlers() {
               payload: { depthOffset: deltaY, delayOffset: deltaX },
             });
         break;
-      // case PianoRollLanesMouseHandlerMode.Velocity: {
-      //   const newNotes = bufferedNotes.map((bufferedNote) => ({
-      //     ...bufferedNote,
-      //     velocity: bufferedNote.velocity - deltaY / 3,
-      //   }));
-      //   dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
-      //   dispatch({ type: "SET_LAST_MODIFIED_VELOCITY", payload: { velocity: noteClicked!.velocity - deltaY / 3 } });
-      // }
     }
   };
 
-  const onPointerUp: React.PointerEventHandler = () => {
+  const useHandleNoteCreationAndModificationPU: React.PointerEventHandler = () => {
     setMouseHandlerMode(PianoRollLanesMouseHandlerMode.None);
   };
 
@@ -319,13 +311,8 @@ export default function usePianoRollMouseHandlers() {
   };
 
   return {
-    pianoRollMouseHandlers: {
-      onPointerDown,
-      onPointerMove,
-      onPointerUp,
-    },
-    pianoRollMouseHandlersStates: {
-      cursorStyle,
-    },
+    useHandleNoteCreationAndModificationPD,
+    useHandleNoteCreationAndModificationPM,
+    useHandleNoteCreationAndModificationPU,
   };
 }

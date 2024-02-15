@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useStore } from "@/hooks/useStore";
 import styles from "./index.module.scss";
 import LaneGrids from "../LaneGrids";
-import useVelocityEditorMouseHandlers from "../../handlers/useVelocityEditorMouseHandlers";
+import useVelocityEditorMouseHandlers from "./NoteBars/handlers/useVelocityEditorMouseHandlers";
 import useTheme from "../../hooks/useTheme";
 import VelocityRuler from "./VelocityRuler";
 import { getOffsetXFromTick } from "@/helpers/conversion";

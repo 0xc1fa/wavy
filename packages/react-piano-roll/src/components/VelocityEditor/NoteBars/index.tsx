@@ -1,4 +1,4 @@
-import useVelocityEditorMouseHandlers from "@/handlers/useVelocityEditorMouseHandlers";
+import useVelocityEditorMouseHandlers from "./handlers/useVelocityEditorMouseHandlers";
 import styles from "./index.module.scss";
 import { useStore } from "@/hooks/useStore";
 import { getOffsetXFromTick } from "@/helpers/conversion";

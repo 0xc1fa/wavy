@@ -1,4 +1,4 @@
-import usePianoRollMouseHandlers from "@/handlers/usePianoRollMouseHandlers";
+import {useHandleNoteCreationAndModification} from "./handlers/useHandleNoteCreationAndModification";
 import styles from "./index.module.scss";
 import LaneGrids from "@/components/LaneGrids";
 import Marker from "@/components/Marker";
@@ -10,7 +10,6 @@ import { memo, useRef } from "react";
 import { useClipboard } from "@/components/Notes/handlers/useClipboard";
 import { useHandleSpaceDown } from "@/components/PianoRoll/handlers/useHandleSpaceDown";
 import { useHandleUndoRedo } from "@/components/PianoRoll/handlers/useHandleUndoRedo";
-import { usePresistentPointerMove } from "@/hooks/usePresistentPointerMove";
 import { useHandleScaleX } from "@/components/PianoRoll/handlers/useHandleScaleX";
 import { useHandleMarqueeSelection } from "./handlers/useHandleMarqueeSelection";
 import { useHandleRangeSelection } from "./handlers/useHandleRangeSelection";
@@ -20,10 +19,13 @@ type Props = {
   playheadPosition: number | undefined;
 };
 const PianoRoll: React.FC<Props> = memo((props) => {
-  const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
+  const {
+    useHandleNoteCreationAndModificationPD,
+    useHandleNoteCreationAndModificationPM,
+    useHandleNoteCreationAndModificationPU,
+  } = useHandleNoteCreationAndModification();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // usePresistentPointerMove(containerRef)
   useClipboard(containerRef);
   useHandleSpaceDown(containerRef);
   useHandleUndoRedo(containerRef);
@@ -35,16 +37,16 @@ const PianoRoll: React.FC<Props> = memo((props) => {
     onPointerDown(event: React.PointerEvent) {
       handleMarqueeSelectionPD(event);
       handleRangeSelectionPD(event);
-      pianoRollMouseHandlers.onPointerDown(event);
+      useHandleNoteCreationAndModificationPD(event);
     },
     onPointerMove(event: React.PointerEvent) {
       handleMarqueeSelectionPM(event);
       handleRangeSelectionPM(event);
-      pianoRollMouseHandlers.onPointerMove(event);
+      useHandleNoteCreationAndModificationPM(event);
     },
     onPointerUp(event: React.PointerEvent) {
       handleMarqueeSelectionPU(event);
-      pianoRollMouseHandlers.onPointerUp(event);
+      useHandleNoteCreationAndModificationPU(event);
     },
   };
 
