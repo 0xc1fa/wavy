@@ -7,7 +7,7 @@ import SelectionMarquee from "@/components/SelectionMarquee";
 import Playhead from "@/components/Playhead";
 import LanesBackground from "@/components/LanesBackground";
 import { memo, useRef } from "react";
-import { useClipboard } from "@/components/PianoRoll/handlers/useClipboard";
+import { useClipboard } from "@/components/Notes/handlers/useClipboard";
 import { useHandleSpaceDown } from "@/components/PianoRoll/handlers/useHandleSpaceDown";
 import { useHandleUndoRedo } from "@/components/PianoRoll/handlers/useHandleUndoRedo";
 import { usePresistentPointerMove } from "@/hooks/usePresistentPointerMove";
@@ -23,7 +23,7 @@ const PianoRoll: React.FC<Props> = memo((props) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // usePresistentPointerMove(containerRef)
-  useClipboard(containerRef);
+  // useClipboard(containerRef);
   useHandleSpaceDown(containerRef);
   useHandleUndoRedo(containerRef);
   useHandleScaleX(containerRef);

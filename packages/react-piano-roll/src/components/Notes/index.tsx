@@ -4,12 +4,14 @@ import NoteLyric from "./NoteLyric";
 import styles from "./index.module.scss";
 import { useRef } from "react";
 import { useHandleDelete } from "./handlers/useHandleDelete";
+import { useClipboard } from "./handlers/useClipboard";
 
 export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
   const { pianoRollStore } = useStore();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useHandleDelete(containerRef)
+  useHandleDelete(containerRef);
+  useClipboard(containerRef);
 
   return (
     <div className={styles["notes-container"]} ref={containerRef} tabIndex={0}>
