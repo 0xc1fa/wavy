@@ -2,12 +2,17 @@ import { useStore } from "@/hooks/useStore";
 import NoteBlock from "./NoteBlock";
 import NoteLyric from "./NoteLyric";
 import styles from "./index.module.scss";
+import { useRef } from "react";
+import { useHandleDelete } from "./handlers/useHandleDelete";
 
 export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
   const { pianoRollStore } = useStore();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useHandleDelete(containerRef)
 
   return (
-    <div className={styles["notes-container"]}>
+    <div className={styles["notes-container"]} ref={containerRef} tabIndex={0}>
       {pianoRollStore.notes.map((note) => (
         <div
           className={styles["note"]}

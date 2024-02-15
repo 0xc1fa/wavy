@@ -3,20 +3,20 @@ import { Dispatch, RefObject, useEffect } from "react";
 import { useStore } from "@/hooks/useStore";
 
 export function useHandleDelete<T extends HTMLElement>(ref: RefObject<T>) {
-
   const { pianoRollStore, dispatch } = useStore();
 
-  const deleteWarper = (event: KeyboardEvent) => handleDelete(event, pianoRollStore, dispatch);
   useEffect(() => {
+    const deleteWarper = (event: KeyboardEvent) => handleDelete(event, pianoRollStore, dispatch);
     ref.current!.addEventListener("keydown", deleteWarper);
     return () => {
       ref.current!.removeEventListener("keydown", deleteWarper);
-    }
-  }, [])
+    };
+  }, []);
 }
 
 function handleDelete(event: KeyboardEvent, pianoRollStore: PianoRollStore, dispatch: Dispatch<PianoRollStoreAction>) {
   if (event.code === "Delete" || event.code === "Backspace") {
+    console.log("delete")
     deleteNotes(event, pianoRollStore, dispatch);
   }
 }

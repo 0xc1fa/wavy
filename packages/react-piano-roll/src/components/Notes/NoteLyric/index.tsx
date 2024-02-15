@@ -69,6 +69,7 @@ function NoteLyric({ note, style }: NoteLyricProps) {
         } as React.CSSProperties
       }
       value={note.lyric}
+      // the prevent default also prevent the input from blur when clicking on another note
       onPointerDown={(event) => event.preventDefault()}
       onDoubleClick={handleDoubleClick}
       onBlur={handleBlur}

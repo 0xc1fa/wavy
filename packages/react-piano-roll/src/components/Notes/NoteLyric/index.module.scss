@@ -6,13 +6,17 @@
   width: var(--width);
   height: var(--height);
   text-align: left;
-  pointer-events: none;
   background: transparent;
   color: white;
   text-shadow: 0 0 5px #00000066;
   padding: 0 7px;
   border: none;
   font-size: small;
+  cursor: default;
+}
+
+.lyric:focus {
+  cursor: text;
 }
 
 .lyric::placeholder {

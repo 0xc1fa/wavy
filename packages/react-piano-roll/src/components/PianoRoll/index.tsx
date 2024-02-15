@@ -8,7 +8,6 @@ import Playhead from "@/components/Playhead";
 import LanesBackground from "@/components/LanesBackground";
 import { memo, useRef } from "react";
 import { useClipboard } from "@/components/PianoRoll/handlers/useClipboard";
-import { useHandleDelete } from "@/components/PianoRoll/handlers/useHandleDelete";
 import { useHandleSpaceDown } from "@/components/PianoRoll/handlers/useHandleSpaceDown";
 import { useHandleUndoRedo } from "@/components/PianoRoll/handlers/useHandleUndoRedo";
 import { usePresistentPointerMove } from "@/hooks/usePresistentPointerMove";
@@ -25,10 +24,10 @@ const PianoRoll: React.FC<Props> = memo((props) => {
 
   // usePresistentPointerMove(containerRef)
   useClipboard(containerRef);
-  useHandleDelete(containerRef);
   useHandleSpaceDown(containerRef);
   useHandleUndoRedo(containerRef);
   useHandleScaleX(containerRef);
+
 
   return (
     <div className={styles["pianoroll-lane"]} {...pianoRollMouseHandlers} tabIndex={0} ref={containerRef}>
