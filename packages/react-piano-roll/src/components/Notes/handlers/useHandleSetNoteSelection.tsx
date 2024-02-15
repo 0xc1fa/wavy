@@ -9,7 +9,7 @@ export function useHandleSetNoteSelection() {
     const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
     setNoteSelection(event, noteClicked);
   }
-  
+
   const setNoteSelection = (event: React.PointerEvent<Element>, noteClicked: TrackNoteEvent | null) => {
     if (!noteClicked) {
       if (!event.shiftKey) {
@@ -27,9 +27,12 @@ export function useHandleSetNoteSelection() {
         payload: { noteId: noteClicked?.id! },
       });
     }
+    if (noteClicked) {
+      dispatch({ type: "MOVE_NOTE_AS_LATEST_MODIFIED", payload: { noteId: noteClicked.id } });
+    }
   };
 
   return {
-    handleSetNoteSelectionPD
-  }
+    handleSetNoteSelectionPD,
+  };
 }

@@ -75,7 +75,7 @@ export default function usePianoRollMouseHandlers() {
     const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
     if (noteClicked) {
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick } });
-      dispatch({ type: "MOVE_NOTE_AS_LATEST_MODIFIED", payload: { noteId: noteClicked.id } });
+      // dispatch({ type: "MOVE_NOTE_AS_LATEST_MODIFIED", payload: { noteId: noteClicked.id } });
       setMouseHandlerModeForNote(event, noteClicked);
       dispatch({
         type: "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE",
