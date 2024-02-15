@@ -53,7 +53,6 @@ export default function usePianoRollMouseHandlers() {
   const { pianoRollStore, dispatch } = useStore();
   const { scaleX, setScaleX } = useScaleX();
   const { numOfKeys } = useConfig().pitchRange;
-  const { tickRange } = useConfig();
 
   const [cursorStyle, setCursorStyle] = useState<"default" | "col-resize">("default");
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None);
@@ -68,14 +67,12 @@ export default function usePianoRollMouseHandlers() {
   }, [cursorStyle]);
 
   const onPointerDown: React.PointerEventHandler = (event) => {
-    // event.currentTarget.setPointerCapture(event.nativeEvent.pointerId);
     guardActive.current = DraggingGuardMode.UnderThreshold;
     dispatch({ type: "SET_SELECTION_RANGE", payload: { range: null } });
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
 
     const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
-    setNoteSelection(event, noteClicked);
     if (noteClicked) {
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick } });
       dispatch({ type: "MOVE_NOTE_AS_LATEST_MODIFIED", payload: { noteId: noteClicked.id } });
@@ -332,25 +329,6 @@ export default function usePianoRollMouseHandlers() {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.Velocity);
     } else {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
-    }
-  };
-
-  const setNoteSelection = (event: React.PointerEvent<Element>, noteClicked: TrackNoteEvent | null) => {
-    if (!noteClicked) {
-      if (!event.shiftKey) {
-        dispatch({ type: "UNSELECTED_ALL_NOTES" });
-      }
-    } else if (!noteClicked.isSelected && !event.shiftKey) {
-      dispatch({ type: "UNSELECTED_ALL_NOTES" });
-      dispatch({
-        type: "SET_NOTE_AS_SELECTED",
-        payload: { noteId: noteClicked?.id! },
-      });
-    } else {
-      dispatch({
-        type: "SET_NOTE_AS_SELECTED",
-        payload: { noteId: noteClicked?.id! },
-      });
     }
   };
 
