@@ -259,14 +259,14 @@ export default function usePianoRollMouseHandlers() {
               payload: { depthOffset: deltaY, delayOffset: deltaX },
             });
         break;
-      case PianoRollLanesMouseHandlerMode.Velocity: {
-        const newNotes = bufferedNotes.map((bufferedNote) => ({
-          ...bufferedNote,
-          velocity: bufferedNote.velocity - deltaY / 3,
-        }));
-        dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
-        dispatch({ type: "SET_LAST_MODIFIED_VELOCITY", payload: { velocity: noteClicked!.velocity - deltaY / 3 } });
-      }
+      // case PianoRollLanesMouseHandlerMode.Velocity: {
+      //   const newNotes = bufferedNotes.map((bufferedNote) => ({
+      //     ...bufferedNote,
+      //     velocity: bufferedNote.velocity - deltaY / 3,
+      //   }));
+      //   dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
+      //   dispatch({ type: "SET_LAST_MODIFIED_VELOCITY", payload: { velocity: noteClicked!.velocity - deltaY / 3 } });
+      // }
     }
   };
 

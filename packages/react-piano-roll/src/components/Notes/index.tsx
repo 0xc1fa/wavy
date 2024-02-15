@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { useHandleDelete } from "./handlers/useHandleDelete";
 import { useClipboard } from "./handlers/useClipboard";
 import { useHandleSetNoteSelection } from "./handlers/useHandleSetNoteSelection";
+import { useHandleSetVelocity } from "./handlers/useHandleSetVelocity";
 
 export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
   const { pianoRollStore } = useStore();
@@ -14,10 +15,24 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
   useHandleDelete(containerRef);
   useClipboard(containerRef);
 
-  const { handleSetNoteSelectionPD } = useHandleSetNoteSelection()
+  const { handleSetNoteSelectionPD } = useHandleSetNoteSelection();
+  const { handleSetVelocityPD, handleSetVelocityPM, handleSetVelocityPU } = useHandleSetVelocity();
+
+  const handlers = {
+    onPointerDown(event: React.PointerEvent) {
+      handleSetNoteSelectionPD(event);
+      handleSetVelocityPD(event);
+    },
+    onPointerMove(event: React.PointerEvent) {
+      handleSetVelocityPM(event);
+    },
+    onPointerUp(event: React.PointerEvent) {
+      handleSetVelocityPU(event);
+    },
+  };
 
   return (
-    <div className={styles["notes-container"]} ref={containerRef} tabIndex={0} onPointerDown={handleSetNoteSelectionPD}>
+    <div className={styles["notes-container"]} ref={containerRef} tabIndex={0} {...handlers}>
       {pianoRollStore.notes.map((note) => (
         <div
           className={styles["note"]}
