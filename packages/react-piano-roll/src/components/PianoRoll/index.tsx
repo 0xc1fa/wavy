@@ -12,29 +12,45 @@ import { useHandleSpaceDown } from "@/components/PianoRoll/handlers/useHandleSpa
 import { useHandleUndoRedo } from "@/components/PianoRoll/handlers/useHandleUndoRedo";
 import { usePresistentPointerMove } from "@/hooks/usePresistentPointerMove";
 import { useHandleScaleX } from "@/components/PianoRoll/handlers/useHandleScaleX";
+import { useHandleMarqueeSelection } from "./handlers/useHandleMarqueeSelection";
 
 type Props = {
   attachLyric: boolean;
   playheadPosition: number | undefined;
 };
 const PianoRoll: React.FC<Props> = memo((props) => {
-  console.log("PianoRoll");
   const { pianoRollMouseHandlers, pianoRollMouseHandlersStates } = usePianoRollMouseHandlers();
   const containerRef = useRef<HTMLDivElement>(null);
 
   // usePresistentPointerMove(containerRef)
-  // useClipboard(containerRef);
+  useClipboard(containerRef);
   useHandleSpaceDown(containerRef);
   useHandleUndoRedo(containerRef);
   useHandleScaleX(containerRef);
+  const { marqueePosition, handleMarqueeSelectionPD, handleMarqueeSelectionPM, handleMarqueeSelectionPU } =
+    useHandleMarqueeSelection();
 
+  const handlers = {
+    onPointerDown(event: React.PointerEvent) {
+      handleMarqueeSelectionPD(event);
+      pianoRollMouseHandlers.onPointerDown(event);
+    },
+    onPointerMove(event: React.PointerEvent) {
+      handleMarqueeSelectionPM(event);
+      pianoRollMouseHandlers.onPointerMove(event);
+    },
+    onPointerUp(event: React.PointerEvent) {
+      handleMarqueeSelectionPU(event);
+      pianoRollMouseHandlers.onPointerUp(event);
+    },
+  };
 
   return (
-    <div className={styles["pianoroll-lane"]} {...pianoRollMouseHandlers} tabIndex={0} ref={containerRef}>
+    <div className={styles["pianoroll-lane"]} {...handlers} tabIndex={0} ref={containerRef}>
       <LaneGrids />
       <Marker />
       <Notes attachLyric={props.attachLyric} />
-      <SelectionMarquee mouseHandlersStates={pianoRollMouseHandlersStates} />
+      <SelectionMarquee marqueePosition={marqueePosition} />
       {props.playheadPosition !== undefined && <Playhead playheadPosition={props.playheadPosition} />}
       <LanesBackground />
     </div>

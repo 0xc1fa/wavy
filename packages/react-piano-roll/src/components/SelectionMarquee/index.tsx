@@ -1,18 +1,22 @@
 import { memo } from "react";
 import useTheme from "../../hooks/useTheme";
 import styles from "./index.module.scss";
-import { PianoRollLanesMouseHandlerMode, PianoRollMouseHandlersStates } from "../../handlers/usePianoRollMouseHandlers";
+import { MarqueePosition } from "../PianoRoll/handlers/useHandleMarqueeSelection";
 
 interface SelectionMarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
-  mouseHandlersStates: PianoRollMouseHandlersStates;
+  marqueePosition: MarqueePosition | null;
 }
-function SelectionMarquee({ mouseHandlersStates, style }: SelectionMarqueeProps) {
+function SelectionMarquee({ marqueePosition, style }: SelectionMarqueeProps) {
   const theme = useTheme();
 
-  const startingPositionX = mouseHandlersStates.startingPosition.x;
-  const startingPositionY = mouseHandlersStates.startingPosition.y;
-  const ongoingPositionX = mouseHandlersStates.ongoingPosition.x;
-  const ongoingPositionY = mouseHandlersStates.ongoingPosition.y;
+  if (!marqueePosition) {
+    return <div className={styles["marquee-container"]} />;
+  }
+
+  const startingPositionX = marqueePosition[0].x;
+  const startingPositionY = marqueePosition[0].y;
+  const ongoingPositionX = marqueePosition[1].x;
+  const ongoingPositionY = marqueePosition[1].y;
 
   const left = Math.min(startingPositionX, ongoingPositionX);
   const right = Math.max(startingPositionX, ongoingPositionX);
@@ -22,26 +26,24 @@ function SelectionMarquee({ mouseHandlersStates, style }: SelectionMarqueeProps)
   const width = right - left;
   const height = bottom - top;
 
-  return mouseHandlersStates.mouseHandlerMode === PianoRollLanesMouseHandlerMode.MarqueeSelection ? (
+  return (
     <div className={styles["marquee-container"]}>
-    <div
-      aria-label="selection-marquee"
-      className={styles["selection--marquee"]}
-      style={
-        {
-          "--top": `${top}px`,
-          "--left": `${left}px`,
-          "--width": `${width}px`,
-          "--height": `${height}px`,
-          "--background-color": theme.selection.selectionAreaFillColor,
-          "--border-color": theme.selection.selectionAreaBorderColor,
-          ...style,
-        } as React.CSSProperties
-      }
-    />
+      <div
+        aria-label="selection-marquee"
+        className={styles["selection--marquee"]}
+        style={
+          {
+            "--top": `${top}px`,
+            "--left": `${left}px`,
+            "--width": `${width}px`,
+            "--height": `${height}px`,
+            "--background-color": theme.selection.selectionAreaFillColor,
+            "--border-color": theme.selection.selectionAreaBorderColor,
+            ...style,
+          } as React.CSSProperties
+        }
+      />
     </div>
-  ) : (
-    <></>
   );
 }
 

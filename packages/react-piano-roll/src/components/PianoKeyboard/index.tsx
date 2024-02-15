@@ -6,7 +6,6 @@ import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { memo } from "react";
 
 const PianoKeyboard = memo(() => {
-  console.log("PianoKeyboard")
   const { startingNoteNum, numOfKeys } = useConfig().pitchRange;
 
   const keyNums = [];

@@ -68,7 +68,6 @@ export default function usePianoRollMouseHandlers() {
   }, [cursorStyle]);
 
   const onPointerDown: React.PointerEventHandler = (event) => {
-    console.log("pointerdown", event.target);
     // event.currentTarget.setPointerCapture(event.nativeEvent.pointerId);
     guardActive.current = DraggingGuardMode.UnderThreshold;
     dispatch({ type: "SET_SELECTION_RANGE", payload: { range: null } });
@@ -76,8 +75,6 @@ export default function usePianoRollMouseHandlers() {
     const relativeY = getRelativeY(event);
 
     const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
-    console.log(noteClicked);
-    // const noteClicked = getNoteFromEvent(numOfKeys, scaleX, pianoRollStore.notes, event.nativeEvent);
     setNoteSelection(event, noteClicked);
     if (noteClicked) {
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick } });
@@ -104,14 +101,12 @@ export default function usePianoRollMouseHandlers() {
         type: "SET_NOTE_MODIFICATION_BUFFER_WITH_ALL_NOTE",
         payload: { initX: relativeX, initY: relativeY },
       });
-      setMouseHandlerMode(PianoRollLanesMouseHandlerMode.MarqueeSelection);
     }
     setStartingPosition({ x: relativeX, y: relativeY });
     setOngoingPosition({ x: relativeX, y: relativeY });
   };
 
   const onPointerMove: React.PointerEventHandler = (event) => {
-    console.log("pointermove", event.target);
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
     const bufferedNotes = pianoRollStore.noteModificationBuffer.notesSelected;
@@ -266,20 +261,6 @@ export default function usePianoRollMouseHandlers() {
         break;
       }
       case PianoRollLanesMouseHandlerMode.MarqueeSelection:
-        dispatch({
-          type: "MODIFYING_NOTES",
-          payload: {
-            notes: bufferedNotes.map((note) => ({
-              ...note,
-              isSelected: inMarquee(numOfKeys, scaleX, note, {
-                startingPosition,
-                ongoingPosition,
-              })
-                ? !note.isSelected
-                : note.isSelected,
-            })),
-          },
-        });
         const snappedSelection = [startingPosition.x, relativeX]
           .map(getTickFromOffsetX.bind(null, scaleX))
           .map(getNearestGridTick.bind(null, scaleX))
@@ -307,35 +288,7 @@ export default function usePianoRollMouseHandlers() {
   };
 
   const onPointerUp: React.PointerEventHandler = () => {
-    try {
-      if (mouseHandlerMode === PianoRollLanesMouseHandlerMode.MarqueeSelection) {
-        if (pianoRollStore.selectedNotes().length === 0) {
-          return;
-        }
-        let selectionRange = getSelectionRangeWithSelectedNotes(
-          pianoRollStore.selectedNotes(),
-          pianoRollStore.selectionRange,
-        );
-        dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: selectionRange[1] } });
-      }
-    } finally {
-      setMouseHandlerMode(PianoRollLanesMouseHandlerMode.None);
-    }
-  };
-
-  const onDoubleClick: React.MouseEventHandler = (event) => {
-    const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
-    // const relativeX = getRelativeX(event)
-    // const relativeY = getRelativeY(event)
-    // const noteClicked = getNoteFromPosition(scaleX, numOfKeys, pianoRollStore.notes, [
-    //   relativeX,
-    //   relativeY,
-    // ]);
-    if (noteClicked && event.altKey) {
-      dispatch({ type: "TOGGLE_SELECTED_NOTE_VIBRATO_MODE" });
-    } else if (noteClicked) {
-      focusNote(event.nativeEvent, noteClicked.id);
-    }
+    setMouseHandlerMode(PianoRollLanesMouseHandlerMode.None);
   };
 
   const updateCursorStyle = (e: PointerEvent) => {
@@ -404,16 +357,11 @@ export default function usePianoRollMouseHandlers() {
   return {
     pianoRollMouseHandlers: {
       onPointerDown,
-      // onDoubleClick,
       onPointerMove,
       onPointerUp,
     },
     pianoRollMouseHandlersStates: {
-      mouseHandlerMode,
-      startingPosition,
-      ongoingPosition,
       cursorStyle,
-      currentPointerPos,
     },
   };
 }

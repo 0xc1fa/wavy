@@ -4,15 +4,14 @@ import { useStore } from "@/hooks/useStore";
 export function focusNote(e: Event, id: string) {
   const componentRef = e.currentTarget as HTMLDivElement;
   const childElement = componentRef.querySelector(`[data-note-id="${id}"] input`) as HTMLInputElement;
-  console.log(childElement);
-  console.log;
+
   childElement!.focus();
 }
 
 // export function focusNote<T extends HTMLElement>(noteElement: T): void {
 //   const inputElement = noteElement.querySelector("&+input") as HTMLInputElement;
-//   console.log(noteElement);
-//   console.log(inputElement);
+//
+//
 //   noteElement.focus();
 // }
 

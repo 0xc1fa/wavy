@@ -8,13 +8,9 @@ export function quantizeTick(tick: number, quantize: number) {
 //   return trackNoteEvent.sort((a, b) => a.tick - b.tick);
 // }
 
-export function logOffsetPos(desc: string, e: PointerEvent | MouseEvent) {
-  console.log(`${desc}, X: ${e.offsetX}, Y: ${e.offsetY}`);
-}
+export function logOffsetPos(desc: string, e: PointerEvent | MouseEvent) {}
 
-export function debug(desc: string) {
-  console.log(`${desc}, ${new Date().getTime()}`);
-}
+export function debug(desc: string) {}
 
 export function getFrequencyFromNoteNum(noteNum: number) {
   return 440 * Math.pow(2, (noteNum - 69) / 12);

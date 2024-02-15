@@ -9,7 +9,6 @@ import { useScaleX } from "@/contexts/ScaleXProvider";
 
 const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => {
   event?.currentTarget.focus();
-  console.log("dbl", event.currentTarget);
 };
 
 interface NoteLyricProps extends React.HTMLAttributes<HTMLInputElement> {

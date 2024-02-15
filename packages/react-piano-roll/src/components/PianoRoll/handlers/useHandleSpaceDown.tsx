@@ -24,7 +24,6 @@ function handleSpaceDown(event: KeyboardEvent, spaceDown: MutableRefObject<boole
       return;
     }
     spaceDown.current = true;
-    console.log("space down");
   }
 }
 

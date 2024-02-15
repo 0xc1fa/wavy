@@ -22,7 +22,7 @@ export function useHandleUndoRedo<T extends HTMLElement>(ref: RefObject<T>) {
 function handleRedo(event: KeyboardEvent, dispatch: Dispatch<PianoRollStoreAction>) {
   if (event.shiftKey && event.code === "KeyZ") {
     event.preventDefault();
-    console.log("redo");
+
     dispatch({ type: "REDO" });
   }
 }
@@ -30,7 +30,7 @@ function handleRedo(event: KeyboardEvent, dispatch: Dispatch<PianoRollStoreActio
 function handleUndo(event: KeyboardEvent, dispatch: Dispatch<PianoRollStoreAction>) {
   if (!event.shiftKey && event.code === "KeyZ") {
     event.preventDefault();
-    console.log("undo");
+
     dispatch({ type: "REDO" });
   }
 }

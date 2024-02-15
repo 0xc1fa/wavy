@@ -16,7 +16,6 @@ export function useHandleDelete<T extends HTMLElement>(ref: RefObject<T>) {
 
 function handleDelete(event: KeyboardEvent, pianoRollStore: PianoRollStore, dispatch: Dispatch<PianoRollStoreAction>) {
   if (event.code === "Delete" || event.code === "Backspace") {
-    console.log("delete")
     deleteNotes(event, pianoRollStore, dispatch);
   }
 }
