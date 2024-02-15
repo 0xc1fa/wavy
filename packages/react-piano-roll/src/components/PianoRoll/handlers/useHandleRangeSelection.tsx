@@ -3,7 +3,6 @@ import { getTickFromOffsetX } from "@/helpers/conversion";
 import { getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
 import { getNearestGridTick } from "@/helpers/grid";
 import { useStore } from "@/hooks/useStore";
-import { set } from "lodash";
 import { useRef } from "react";
 
 export function useHandleRangeSelection() {
@@ -14,9 +13,11 @@ export function useHandleRangeSelection() {
 
   const handleRangeSelectionPD: React.PointerEventHandler = (event) => {
     const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
+    dispatch({ type: "SET_SELECTION_RANGE", payload: { range: null } });
     if (noteClicked || event.metaKey) {
       return;
     }
+
     event.currentTarget.setPointerCapture(event.nativeEvent.pointerId);
     const relativeX = getRelativeX(event);
     startingPositionX.current = relativeX;

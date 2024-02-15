@@ -66,7 +66,6 @@ export default function usePianoRollMouseHandlers() {
 
   const onPointerDown: React.PointerEventHandler = (event) => {
     guardActive.current = DraggingGuardMode.UnderThreshold;
-    dispatch({ type: "SET_SELECTION_RANGE", payload: { range: null } });
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
 
