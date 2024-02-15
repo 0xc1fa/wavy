@@ -13,6 +13,7 @@ import { useHandleUndoRedo } from "@/components/PianoRoll/handlers/useHandleUndo
 import { usePresistentPointerMove } from "@/hooks/usePresistentPointerMove";
 import { useHandleScaleX } from "@/components/PianoRoll/handlers/useHandleScaleX";
 import { useHandleMarqueeSelection } from "./handlers/useHandleMarqueeSelection";
+import { useHandleRangeSelection } from "./handlers/useHandleRangeSelection";
 
 type Props = {
   attachLyric: boolean;
@@ -29,14 +30,16 @@ const PianoRoll: React.FC<Props> = memo((props) => {
   useHandleScaleX(containerRef);
   const { marqueePosition, handleMarqueeSelectionPD, handleMarqueeSelectionPM, handleMarqueeSelectionPU } =
     useHandleMarqueeSelection();
-
+  const { handleRangeSelectionPD, handleRangeSelectionPM } = useHandleRangeSelection();
   const handlers = {
     onPointerDown(event: React.PointerEvent) {
       handleMarqueeSelectionPD(event);
+      handleRangeSelectionPD(event);
       pianoRollMouseHandlers.onPointerDown(event);
     },
     onPointerMove(event: React.PointerEvent) {
       handleMarqueeSelectionPM(event);
+      handleRangeSelectionPM(event);
       pianoRollMouseHandlers.onPointerMove(event);
     },
     onPointerUp(event: React.PointerEvent) {

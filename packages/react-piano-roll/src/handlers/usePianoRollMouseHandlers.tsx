@@ -56,8 +56,6 @@ export default function usePianoRollMouseHandlers() {
 
   const [cursorStyle, setCursorStyle] = useState<"default" | "col-resize">("default");
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None);
-  const [startingPosition, setStartingPosition] = useState({ x: 0, y: 0 });
-  const [ongoingPosition, setOngoingPosition] = useState({ x: 0, y: 0 });
   const guardActive = useRef(DraggingGuardMode.UnderThreshold);
 
   const currentPointerPos = useRef({ clientX: 0, clientY: 0 });
@@ -75,7 +73,6 @@ export default function usePianoRollMouseHandlers() {
     const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
     if (noteClicked) {
       dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick } });
-      // dispatch({ type: "MOVE_NOTE_AS_LATEST_MODIFIED", payload: { noteId: noteClicked.id } });
       setMouseHandlerModeForNote(event, noteClicked);
       dispatch({
         type: "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE",
@@ -99,8 +96,6 @@ export default function usePianoRollMouseHandlers() {
         payload: { initX: relativeX, initY: relativeY },
       });
     }
-    setStartingPosition({ x: relativeX, y: relativeY });
-    setOngoingPosition({ x: relativeX, y: relativeY });
   };
 
   const onPointerMove: React.PointerEventHandler = (event) => {
@@ -257,13 +252,6 @@ export default function usePianoRollMouseHandlers() {
         dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
         break;
       }
-      case PianoRollLanesMouseHandlerMode.MarqueeSelection:
-        const snappedSelection = [startingPosition.x, relativeX]
-          .map(getTickFromOffsetX.bind(null, scaleX))
-          .map(getNearestGridTick.bind(null, scaleX))
-          .sort((a, b) => a - b) as [number, number];
-        dispatch({ type: "SET_SELECTION_RANGE", payload: { range: snappedSelection } });
-        break;
       case PianoRollLanesMouseHandlerMode.Vibrato:
         event.shiftKey
           ? dispatch({ type: "VIBRATO_RATE_CHANGE_SELECTED_NOTE", payload: { rateOffset: deltaY } })
@@ -281,7 +269,6 @@ export default function usePianoRollMouseHandlers() {
         dispatch({ type: "SET_LAST_MODIFIED_VELOCITY", payload: { velocity: noteClicked!.velocity - deltaY / 3 } });
       }
     }
-    setOngoingPosition({ x: relativeX, y: relativeY });
   };
 
   const onPointerUp: React.PointerEventHandler = () => {
