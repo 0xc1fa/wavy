@@ -1,5 +1,6 @@
 import { TrackNoteEvent } from "@/types";
-import { PianoRollStore } from "@/store/pianoRollStore";
+import { atom } from "jotai";
+import { notesAtom } from "./note";
 
 export enum PianoRollHistoryItemType {
   ADD_NOTE,
@@ -12,39 +13,50 @@ export type PianoRollHistoryItem = {
   note: TrackNoteEvent[];
 };
 
-type PianoRollHistory = {
+export type NotesHistory = {
   head: number;
-  history: PianoRollHistoryItem[];
-};
-
-export type HistoryAction =
-  // | AppendHistoryAction
-  UndoAction | RedoAction;
-
-type UndoAction = { type: "UNDO" };
-export function undo(state: PianoRollStore, action: UndoAction) {
-
-  const { history, head } = state.notesHistory;
-
-  const edgeCases =
-    history.length === 0 || // There is no history
-    head === -1; // Already at the beginning of history
-  if (edgeCases) {
-    return state;
-  }
-
-  const prevNoteHistory = getPrevNoteHistory(state.notes, state.notesHistory);
-  return {
-    ...state,
-    notes: prevNoteHistory,
-    notesHistory: {
-      ...state.notesHistory,
-      head: head - 1,
-    },
-  };
+  history: PianoRollHistoryItem[]
 }
 
-function getPrevNoteHistory(notes: TrackNoteEvent[], history: PianoRollHistory): TrackNoteEvent[] {
+export const notesHistoryAtom = atom<NotesHistory>({
+  head: -1,
+  history: new Array<PianoRollHistoryItem>(),
+})
+
+export const undoHistoryAtom = atom(null, (get, set) => {
+  const { history, head }= get(notesHistoryAtom)
+  const edgeCases = history.length === 0 || head === -1;
+  if (edgeCases) {
+    return get(notesHistoryAtom);
+  }
+
+  const prevNoteHistory = getPrevNoteHistory(get(notesAtom), get(notesHistoryAtom))
+
+  set(notesAtom, prevNoteHistory);
+  set(notesHistoryAtom, {
+    history,
+    head: head - 1,
+  });
+})
+
+export const redoHistoryAtom = atom(null, (get, set) => {
+  const { history, head } = get(notesHistoryAtom)
+  const edgeCases = history.length === 0 || head === history.length - 1;
+  if (edgeCases) {
+    return get(notesHistoryAtom);
+  }
+
+  const nextNoteHistory = getNextNoteHistory(get(notesAtom), get(notesHistoryAtom))
+
+  set(notesAtom, nextNoteHistory);
+  set(notesHistoryAtom, {
+    history,
+    head: head + 1,
+  });
+})
+
+
+function getPrevNoteHistory(notes: TrackNoteEvent[], history: NotesHistory): TrackNoteEvent[] {
   const nearestHistory = history.history[history.head];
   switch (nearestHistory.type) {
     case PianoRollHistoryItemType.ADD_NOTE: {
@@ -65,29 +77,8 @@ function getPrevNoteHistory(notes: TrackNoteEvent[], history: PianoRollHistory):
   }
 }
 
-type RedoAction = { type: "REDO" };
-export function redo(state: PianoRollStore, action: RedoAction) {
-  const { history, head } = state.notesHistory;
-  const edgeCases =
-    history.length === 0 || // There is no history
-    head === history.length - 1; // Already at the end of history
 
-  if (edgeCases) {
-    return state;
-  }
-
-  const nextNoteHistory = getNextNoteHistory(state.notes, state.notesHistory);
-  return {
-    ...state,
-    notes: nextNoteHistory,
-    notesHistory: {
-      ...state.notesHistory,
-      head: head + 1,
-    },
-  };
-}
-
-function getNextNoteHistory(notes: TrackNoteEvent[], history: PianoRollHistory): TrackNoteEvent[] {
+function getNextNoteHistory(notes: TrackNoteEvent[], history: NotesHistory): TrackNoteEvent[] {
   const nearestHistory = history.history[history.head + 1];
   switch (nearestHistory.type) {
     case PianoRollHistoryItemType.ADD_NOTE: {
@@ -108,6 +99,6 @@ function getNextNoteHistory(notes: TrackNoteEvent[], history: PianoRollHistory):
   }
 }
 
-export function getChoppedHistoryAfterHead(history: PianoRollHistory): PianoRollHistoryItem[] {
+export function getChoppedHistoryAfterHead(history: NotesHistory): PianoRollHistoryItem[] {
   return history.history.slice(0, history.head + 1);
 }

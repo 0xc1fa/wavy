@@ -1,4 +1,4 @@
-import { useStore } from "@/hooks/useStore";
+// import { useStore } from "@/hooks/useStore";
 import NoteBlock from "./NoteBlock";
 import NoteLyric from "./NoteLyric";
 import styles from "./index.module.scss";
@@ -7,9 +7,12 @@ import { useHandleDelete } from "./handlers/useHandleDelete";
 import { useClipboard } from "./handlers/useClipboard";
 import { useHandleSetNoteSelection } from "./handlers/useHandleSetNoteSelection";
 import { useHandleSetVelocity } from "./handlers/useHandleSetVelocity";
+import { useAtomValue } from "jotai";
+import { notesAtom } from "@/atoms/note";
 
 export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
-  const { pianoRollStore } = useStore();
+  // const { pianoRollStore } = useStore();
+  const notes = useAtomValue(notesAtom)
   const containerRef = useRef<HTMLDivElement>(null);
 
   useHandleDelete(containerRef);
@@ -33,7 +36,7 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
 
   return (
     <div className={styles["notes-container"]} ref={containerRef} tabIndex={0} {...handlers}>
-      {pianoRollStore.notes.map((note) => (
+      {notes.map((note) => (
         <div
           className={styles["note"]}
           data-note-id={note.id}

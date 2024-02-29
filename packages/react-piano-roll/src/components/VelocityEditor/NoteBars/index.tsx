@@ -1,17 +1,18 @@
 import useVelocityEditorMouseHandlers from "./handlers/useVelocityEditorMouseHandlers";
 import styles from "./index.module.scss";
-import { useStore } from "@/hooks/useStore";
 import { getOffsetXFromTick } from "@/helpers/conversion";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import useTheme from "@/hooks/useTheme";
+import { useAtomValue } from "jotai";
+import { notesAtom } from "@/atoms/note";
 
 type Props = {
   isDragging: boolean;
 };
 const NoteBars: React.FC<Props> = ({ isDragging }) => {
   const mouseHandlers = useVelocityEditorMouseHandlers();
-  const { pianoRollStore } = useStore();
-  const { notes } = pianoRollStore;
+  // const { pianoRollStore } = useStore();
+  const notes = useAtomValue(notesAtom);
   const { scaleX } = useScaleX();
   const theme = useTheme();
 

@@ -1,21 +1,24 @@
-import { useStore } from "@/hooks/useStore";
+// import { useStore } from "@/hooks/useStore";
 import styles from "./index.module.scss";
 import { basePixelsPerTick } from "@/constants";
 import { baseCanvasHeight } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { getEndingTickFromNotes, getSelectionRangeWithSelectedNotes, getStartingTickFromNotes } from "@/helpers/notes";
+import { useAtom } from "jotai";
+import { selectionTicksAtom } from "@/atoms/selection-ticks";
 
 export default function Marker() {
-  const { pianoRollStore } = useStore();
+  // const { pianoRollStore } = useStore();
+  const [selectionTicks] = useAtom(selectionTicksAtom)
   const { scaleX } = useScaleX();
   const { numOfKeys } = useConfig().pitchRange;
 
-  if (pianoRollStore.selectionTicks === null) {
+  if (selectionTicks === null) {
     return null;
   }
 
-  const x = pianoRollStore.selectionTicks * basePixelsPerTick * scaleX;
+  const x = selectionTicks * basePixelsPerTick * scaleX;
 
   return (
     <svg

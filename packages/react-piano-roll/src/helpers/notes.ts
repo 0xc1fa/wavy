@@ -1,5 +1,5 @@
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
-import { useStore } from "@/hooks/useStore";
+// import { useStore } from "@/hooks/useStore";
 
 export function focusNote(e: Event, id: string) {
   const componentRef = e.currentTarget as HTMLDivElement;
@@ -15,10 +15,6 @@ export function focusNote(e: Event, id: string) {
 //   noteElement.focus();
 // }
 
-export function useNotes() {
-  const { pianoRollStore } = useStore();
-  return pianoRollStore.notes;
-}
 
 export function getStartingTickFromNotes(notes: TrackNoteEvent[]): number {
   const startTick = notes.reduce((min, note) => Math.min(min, note.tick), Infinity);

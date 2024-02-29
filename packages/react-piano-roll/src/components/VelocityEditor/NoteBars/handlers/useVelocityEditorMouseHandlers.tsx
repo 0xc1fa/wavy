@@ -1,9 +1,12 @@
 import { useRef, useState } from "react";
-import { useStore } from "@/hooks/useStore";
+// import { useStore } from "@/hooks/useStore";
 import { getNotesFromOffsetX } from "@/helpers/conversion";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { TrackNoteEvent } from "@/types";
 import { getNoteIdFromEvent, getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
+import { useAtomValue, useSetAtom } from "jotai";
+import { modifyingNotesAtom, notesAtom, setNoteAsSelectedAtom, unselectAllNotesAtom } from "@/atoms/note";
+import { noteModificationBufferAtom, setNoteModificationBufferWithAllNotesAtom } from "@/atoms/note-modification-buffer";
 
 enum VelocityEditorMouseHandlerMode {
   Idle,
@@ -18,17 +21,24 @@ type Buffer = {
 
 export default function useVelocityEditorMouseHandlers() {
   const [mouseHandlerMode, setMouseHandlerMode] = useState(VelocityEditorMouseHandlerMode.SelectAndDrag);
-  const { pianoRollStore, dispatch } = useStore();
+  // const { pianoRollStore, dispatch } = useStore();
+  const notes = useAtomValue(notesAtom);
+  const noteModificationBuffer = useAtomValue(noteModificationBufferAtom);
+  const unselectedAllNotes = useSetAtom(unselectAllNotesAtom);
+  const setNotesAsSelected = useSetAtom(setNoteAsSelectedAtom);
+  const setNoteModificationBufferWithSelectedNote = useSetAtom(setNoteModificationBufferWithAllNotesAtom);
+  const modifyingNote = useSetAtom(modifyingNotesAtom)
+
   const { scaleX } = useScaleX();
   const noteClicked = useRef<TrackNoteEvent | null>(null);
 
   const onPointerDown: React.PointerEventHandler = (event) => {
     event.currentTarget.setPointerCapture(event.pointerId);
 
-    noteClicked.current = getNoteObjectFromEvent(pianoRollStore.notes, event);
+    noteClicked.current = getNoteObjectFromEvent(notes, event);
     if (!noteClicked.current) {
       if (!event.shiftKey) {
-        dispatch({ type: "UNSELECTED_ALL_NOTES" });
+        unselectedAllNotes();
       }
       return;
     }
@@ -37,17 +47,11 @@ export default function useVelocityEditorMouseHandlers() {
       if (noteClicked.current.isSelected) {
       } else {
         if (!event.shiftKey) {
-          dispatch({ type: "UNSELECTED_ALL_NOTES" });
+          unselectedAllNotes();
         }
-        dispatch({
-          type: "SET_NOTE_AS_SELECTED",
-          payload: { noteId: noteClicked.current.id },
-        });
+        setNotesAsSelected(noteClicked.current.id);
       }
-      dispatch({
-        type: "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE",
-        payload: { initX: getRelativeX(event), initY: getRelativeY(event) },
-      });
+      setNoteModificationBufferWithSelectedNote({ initX: getRelativeX(event), initY: getRelativeY(event) });
     }
   };
 
@@ -57,30 +61,24 @@ export default function useVelocityEditorMouseHandlers() {
     }
     const containerHeight = event.currentTarget.clientHeight;
     const relativeY = getRelativeY(event);
-    const initVelocity = getVelocityByRelativeY(containerHeight, pianoRollStore.noteModificationBuffer.initY);
+    const initVelocity = getVelocityByRelativeY(containerHeight, noteModificationBuffer.initY);
     const currentVelocity = getVelocityByRelativeY(containerHeight, relativeY);
     const deltaVelocity = currentVelocity - initVelocity;
     if (mouseHandlerMode === VelocityEditorMouseHandlerMode.Pencil) {
-      const notes = getNotesFromOffsetX(scaleX, pianoRollStore.notes, event.clientX);
-      const newNote = notes.map((note) => ({
+      const notesGot = getNotesFromOffsetX(scaleX, notes, event.clientX);
+      const newNote = notesGot.map((note) => ({
         ...note,
         velocity: currentVelocity,
         isSelected: true,
       }));
-      dispatch({
-        type: "MODIFYING_NOTES",
-        payload: { notes: newNote },
-      });
+      modifyingNote(newNote)
     } else if (mouseHandlerMode === VelocityEditorMouseHandlerMode.SelectAndDrag) {
-      const newNote = pianoRollStore.noteModificationBuffer.notesSelected.map((note) => ({
+      const newNote = noteModificationBuffer.notesSelected.map((note) => ({
         ...note,
         velocity: note.velocity + deltaVelocity,
         isSelected: true,
       }));
-      dispatch({
-        type: "MODIFYING_NOTES",
-        payload: { notes: newNote },
-      });
+      modifyingNote(newNote)
     }
   };
 

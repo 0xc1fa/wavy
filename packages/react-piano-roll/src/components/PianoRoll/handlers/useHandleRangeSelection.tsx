@@ -1,19 +1,24 @@
+import { notesAtom } from "@/atoms/note";
+import { selectionRangeAtom } from "@/atoms/selection-ticks";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { getTickFromOffsetX } from "@/helpers/conversion";
 import { getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
 import { getNearestGridTick } from "@/helpers/grid";
-import { useStore } from "@/hooks/useStore";
+import { useAtomValue, useSetAtom } from "jotai";
+// import { useStore } from "@/hooks/useStore";
 import { useRef } from "react";
 
 export function useHandleRangeSelection() {
-  const { pianoRollStore, dispatch } = useStore();
+  // const { pianoRollStore, dispatch } = useStore();
+  const notes = useAtomValue(notesAtom)
+  const setSelectionRange = useSetAtom(selectionRangeAtom)
   const { scaleX } = useScaleX();
 
   const startingPositionX = useRef(0);
 
   const handleRangeSelectionPD: React.PointerEventHandler = (event) => {
-    const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
-    dispatch({ type: "SET_SELECTION_RANGE", payload: { range: null } });
+    const noteClicked = getNoteObjectFromEvent(notes, event);
+    setSelectionRange(null);
     if (noteClicked || event.metaKey) {
       return;
     }
@@ -33,7 +38,7 @@ export function useHandleRangeSelection() {
       .map(getTickFromOffsetX.bind(null, scaleX))
       .map(getNearestGridTick.bind(null, scaleX))
       .sort((a, b) => a - b) as [number, number];
-    dispatch({ type: "SET_SELECTION_RANGE", payload: { range: snappedSelection } });
+      setSelectionRange(snappedSelection)
   };
 
   return { handleRangeSelectionPD, handleRangeSelectionPM };

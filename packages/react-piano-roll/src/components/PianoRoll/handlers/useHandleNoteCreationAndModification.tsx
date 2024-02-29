@@ -1,18 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { focusNote, getSelectionRangeWithSelectedNotes } from "../../../helpers/notes";
-import { useStore } from "@/hooks/useStore";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import _ from "lodash";
 import { getGridOffsetOfTick, getNearestAnchor, getNearestGridTick, getTickInGrid } from "@/helpers/grid";
 import {
-  baseCanvasWidth,
-  getNoteFromEvent,
   getNoteFromPosition,
   getNoteNumFromEvent,
   getNoteNumFromOffsetY,
   getTickFromEvent,
   getTickFromOffsetX,
-  inMarquee,
   isNoteLeftMarginClicked,
   isNoteRightMarginClicked,
   roundDownTickToNearestGrid,
@@ -20,6 +15,15 @@ import {
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
+import { useAtomValue, useSetAtom } from "jotai";
+import { addNoteAtom, modifyingNotesAtom, notesAtom } from "@/atoms/note";
+import {
+  noteModificationBufferAtom,
+  setNoteModificationBufferWithAllNotesAtom,
+  setNoteModificationBufferWithSelectedNotesAtom,
+} from "@/atoms/note-modification-buffer";
+import { selectionTicksAtom } from "@/atoms/selection-ticks";
+import { lastModifiedDurationAtom } from "@/atoms/last-modified";
 
 export enum PianoRollLanesMouseHandlerMode {
   DragAndDrop,
@@ -50,7 +54,17 @@ export type NotesModificationBuffer = {
 };
 
 export function useHandleNoteCreationAndModification() {
-  const { pianoRollStore, dispatch } = useStore();
+  // const { pianoRollStore, dispatch } = useStore();
+  const notes = useAtomValue(notesAtom);
+  const noteModificationBuffer = useAtomValue(noteModificationBufferAtom);
+
+  const addNote = useSetAtom(addNoteAtom);
+  const setSelectionTicks = useSetAtom(selectionTicksAtom);
+  const setNoteModificationBufferWithSelectedNotes = useSetAtom(setNoteModificationBufferWithSelectedNotesAtom);
+  const setNoteModificationBufferWithAllNotes = useSetAtom(setNoteModificationBufferWithAllNotesAtom);
+  const setLastModifiedDuration = useSetAtom(lastModifiedDurationAtom);
+  const modifyingNotes = useSetAtom(modifyingNotesAtom);
+
   const { scaleX } = useScaleX();
   const { numOfKeys } = useConfig().pitchRange;
 
@@ -69,44 +83,34 @@ export function useHandleNoteCreationAndModification() {
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
 
-    const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
+    const noteClicked = getNoteObjectFromEvent(notes, event);
     if (noteClicked) {
-      dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick } });
+      setSelectionTicks(noteClicked.tick);
       setMouseHandlerModeForNote(event, noteClicked);
-      dispatch({
-        type: "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE",
-        payload: { initX: relativeX, initY: relativeY },
-      });
+      setNoteModificationBufferWithSelectedNotes({ initX: relativeX, initY: relativeY });
     } else if (event.metaKey) {
       const { ticks, noteNum } = getTickAndNoteNumFromEvent(event.nativeEvent);
-      dispatch({ type: "ADD_NOTE", payload: { ticks, noteNum } });
-      dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: ticks } });
-      dispatch({
-        type: "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE",
-        payload: { initX: relativeX, initY: relativeY },
-      });
+      addNote({ ticks, noteNum });
+      setSelectionTicks(ticks);
+      setNoteModificationBufferWithSelectedNotes({ initX: relativeX, initY: relativeY });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
     } else {
       const selectionTicks = getTickFromOffsetX(scaleX, relativeX);
       const snappedSelection = getNearestGridTick(scaleX, selectionTicks);
-      dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: snappedSelection } });
-      dispatch({
-        type: "SET_NOTE_MODIFICATION_BUFFER_WITH_ALL_NOTE",
-        payload: { initX: relativeX, initY: relativeY },
-      });
+      setSelectionTicks(snappedSelection);
+      setNoteModificationBufferWithAllNotes({ initX: relativeX, initY: relativeY });
     }
   };
 
   const useHandleNoteCreationAndModificationPM: React.PointerEventHandler = (event) => {
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
-    const bufferedNotes = pianoRollStore.noteModificationBuffer.notesSelected;
-    const deltaY = relativeY - pianoRollStore.noteModificationBuffer.initY;
-    const deltaX = relativeX - pianoRollStore.noteModificationBuffer.initX;
+    const bufferedNotes = noteModificationBuffer.notesSelected;
+    const deltaY = relativeY - noteModificationBuffer.initY;
+    const deltaX = relativeX - noteModificationBuffer.initX;
     const deltaTicks = getTickFromOffsetX(scaleX, deltaX);
     const deltaPitch =
-      getNoteNumFromOffsetY(numOfKeys, relativeY) -
-      getNoteNumFromOffsetY(numOfKeys, pianoRollStore.noteModificationBuffer.initY);
+      getNoteNumFromOffsetY(numOfKeys, relativeY) - getNoteNumFromOffsetY(numOfKeys, noteModificationBuffer.initY);
 
     currentPointerPos.current = { clientX: event.nativeEvent.clientX, clientY: event.nativeEvent.clientY };
     if (Math.abs(deltaTicks) > getTickInGrid(scaleX)) {
@@ -136,15 +140,11 @@ export function useHandleNoteCreationAndModification() {
                 bufferedNote.duration +
                 (bufferedNote.tick - (anchor.anchor - _.last(bufferedNotes)!.tick + bufferedNote.tick)),
             }));
-            dispatch({
-              type: "SET_LAST_MODIFIED_DURATION",
-              payload: {
-                duration:
-                  _.last(bufferedNotes)!.duration +
-                  (_.last(bufferedNotes)!.tick -
-                    (anchor.anchor - _.last(bufferedNotes)!.tick + _.last(bufferedNotes)!.tick)),
-              },
-            });
+            setLastModifiedDuration(
+              _.last(bufferedNotes)!.duration +
+                (_.last(bufferedNotes)!.tick -
+                  (anchor.anchor - _.last(bufferedNotes)!.tick + _.last(bufferedNotes)!.tick)),
+            );
           } else {
             return;
           }
@@ -154,17 +154,14 @@ export function useHandleNoteCreationAndModification() {
             tick: Math.min(bufferedNote.tick + bufferedNote.duration - 1, bufferedNote.tick + deltaTicks),
             duration: bufferedNote.duration - deltaTicks,
           }));
-          dispatch({
-            type: "SET_LAST_MODIFIED_DURATION",
-            payload: { duration: _.last(bufferedNotes)!.duration - deltaTicks },
-          });
+          setLastModifiedDuration(_.last(bufferedNotes)!.duration - deltaTicks);
         } else {
           newNotes = bufferedNotes;
         }
         if (guardActive.current) {
-          dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: _.last(newNotes)!.tick } });
+          setSelectionTicks(_.last(newNotes)!.tick);
         }
-        dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
+        modifyingNotes(newNotes);
         break;
       }
       case PianoRollLanesMouseHandlerMode.NotesExtending: {
@@ -181,16 +178,12 @@ export function useHandleNoteCreationAndModification() {
               duration:
                 anchor.anchor - _.last(bufferedNotes)!.tick - _.last(bufferedNotes)!.duration + bufferedNote.duration,
             }));
-            dispatch({
-              type: "SET_LAST_MODIFIED_DURATION",
-              payload: {
-                duration:
-                  anchor.anchor -
-                  _.last(bufferedNotes)!.tick -
-                  _.last(bufferedNotes)!.duration +
-                  _.last(bufferedNotes)!.duration,
-              },
-            });
+            setLastModifiedDuration(
+              anchor.anchor -
+                _.last(bufferedNotes)!.tick -
+                _.last(bufferedNotes)!.duration +
+                _.last(bufferedNotes)!.duration,
+            );
           } else {
             return;
           }
@@ -199,21 +192,15 @@ export function useHandleNoteCreationAndModification() {
             ...bufferedNote,
             duration: bufferedNote.duration + deltaTicks,
           }));
-          dispatch({
-            type: "SET_LAST_MODIFIED_DURATION",
-            payload: { duration: _.last(bufferedNotes)!.duration + deltaTicks },
-          });
+          setLastModifiedDuration(_.last(bufferedNotes)!.duration + deltaTicks)
         } else {
           newNotes = bufferedNotes;
-          dispatch({ type: "SET_LAST_MODIFIED_DURATION", payload: { duration: _.last(bufferedNotes)!.duration } });
+          setLastModifiedDuration(_.last(bufferedNotes)!.duration)
         }
         if (guardActive.current) {
-          dispatch({
-            type: "SET_SELECTION_TICKS",
-            payload: { ticks: Math.max(_.last(newNotes)!.tick + _.last(newNotes)!.duration, _.last(newNotes)!.tick) },
-          });
+          setSelectionTicks(Math.max(_.last(newNotes)!.tick + _.last(newNotes)!.duration, _.last(newNotes)!.tick))
         }
-        dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
+        modifyingNotes(newNotes);
         break;
       }
       case PianoRollLanesMouseHandlerMode.DragAndDrop: {
@@ -246,18 +233,18 @@ export function useHandleNoteCreationAndModification() {
           }));
         }
         if (guardActive.current) {
-          dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: _.last(newNotes)!.tick } });
+          setSelectionTicks(_.last(newNotes)!.tick)
         }
-        dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
+        modifyingNotes(newNotes)
         break;
       }
-      case PianoRollLanesMouseHandlerMode.Vibrato:
-        event.shiftKey
-          ? dispatch({ type: "VIBRATO_RATE_CHANGE_SELECTED_NOTE", payload: { rateOffset: deltaY } })
-          : dispatch({
-              type: "VIBRATO_DEPTH_DELAY_CHANGE_SELECTED_NOTE",
-              payload: { depthOffset: deltaY, delayOffset: deltaX },
-            });
+      // case PianoRollLanesMouseHandlerMode.Vibrato:
+      //   event.shiftKey
+      //     ? dispatch({ type: "VIBRATO_RATE_CHANGE_SELECTED_NOTE", payload: { rateOffset: deltaY } })
+      //     : dispatch({
+      //         type: "VIBRATO_DEPTH_DELAY_CHANGE_SELECTED_NOTE",
+      //         payload: { depthOffset: deltaY, delayOffset: deltaX },
+      //       });
         break;
     }
   };
@@ -268,7 +255,7 @@ export function useHandleNoteCreationAndModification() {
 
   const updateCursorStyle = (e: PointerEvent) => {
     const target = e.currentTarget as HTMLElement;
-    const noteHovered = getNoteFromPosition(scaleX, numOfKeys, pianoRollStore.notes, [e.offsetX, e.offsetY]);
+    const noteHovered = getNoteFromPosition(scaleX, numOfKeys, notes, [e.offsetX, e.offsetY]);
     const isBoundaryHovered =
       noteHovered &&
       (isNoteLeftMarginClicked(numOfKeys, scaleX, noteHovered, {
@@ -292,7 +279,8 @@ export function useHandleNoteCreationAndModification() {
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
     if (isNoteRightMarginClicked(numOfKeys, scaleX, noteClicked!, [relativeX, relativeY])) {
-      dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick + noteClicked.duration } });
+      setSelectionTicks(noteClicked.tick + noteClicked.duration)
+      // dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick + noteClicked.duration } });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesExtending);
     } else if (
       isNoteLeftMarginClicked(numOfKeys, scaleX, noteClicked!, {

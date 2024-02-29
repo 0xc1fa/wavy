@@ -1,17 +1,26 @@
 import { getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
-import { useStore } from "@/hooks/useStore";
+// import { useStore } from "@/hooks/useStore";
 import { useRef } from "react";
 import _ from "lodash";
+import { useAtom, useSetAtom } from "jotai";
+import { modifyingNotesAtom, notesAtom } from "@/atoms/note";
+import { noteModificationBufferAtom, setNoteModificationBufferWithAllNotesAtom, setNoteModificationBufferWithSelectedNotesAtom } from "@/atoms/note-modification-buffer";
+import { lastModifiedVelocityAtom } from "@/atoms/last-modified";
 
 export function useHandleSetVelocity() {
-  const { pianoRollStore, dispatch } = useStore();
+  // const { pianoRollStore, dispatch } = useStore();
   const active = useRef(false);
+  const [notes] = useAtom(notesAtom);
+  const [noteModificationBuffer] = useAtom(noteModificationBufferAtom)
+  const [,setNoteModificationBufferWithSelectedNotes] = useAtom(setNoteModificationBufferWithSelectedNotesAtom)
+  const [,modifyingNotes] = useAtom(modifyingNotesAtom)
+  const setLastModifiedVelocityAtom = useSetAtom(lastModifiedVelocityAtom)
 
   const handleSetVelocityPD: React.PointerEventHandler = (event) => {
     if (!event.metaKey) {
       return;
     }
-    const noteClicked = getNoteObjectFromEvent(pianoRollStore.notes, event);
+    const noteClicked = getNoteObjectFromEvent(notes, event);
     if (!noteClicked) {
       return;
     }
@@ -19,26 +28,23 @@ export function useHandleSetVelocity() {
     event.currentTarget.setPointerCapture(event.nativeEvent.pointerId);
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
-    dispatch({
-      type: "SET_NOTE_MODIFICATION_BUFFER_WITH_SELECTED_NOTE",
-      payload: { initX: relativeX, initY: relativeY },
-    });
+    setNoteModificationBufferWithSelectedNotes({ initX: relativeX, initY: relativeY })
   };
 
   const handleSetVelocityPM: React.PointerEventHandler = (event) => {
     if (!active.current) {
       return;
     }
-    const bufferedNotes = pianoRollStore.noteModificationBuffer.notesSelected;
+    const bufferedNotes = noteModificationBuffer.notesSelected;
     const noteClicked = _.last(bufferedNotes);
     const relativeY = getRelativeY(event);
-    const deltaY = relativeY - pianoRollStore.noteModificationBuffer.initY;
+    const deltaY = relativeY - noteModificationBuffer.initY;
     const newNotes = bufferedNotes.map((bufferedNote) => ({
       ...bufferedNote,
       velocity: bufferedNote.velocity - deltaY / 3,
     }));
-    dispatch({ type: "MODIFYING_NOTES", payload: { notes: newNotes } });
-    dispatch({ type: "SET_LAST_MODIFIED_VELOCITY", payload: { velocity: noteClicked!.velocity - deltaY / 3 } });
+    modifyingNotes(newNotes);
+    setLastModifiedVelocityAtom(noteClicked!.velocity - deltaY / 3)
   };
 
   const handleSetVelocityPU: React.PointerEventHandler = (event) => {

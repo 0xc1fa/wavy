@@ -1,15 +1,44 @@
+import { addNotesAtom, deleteSelectedNotesAtom, selectedNotesAtom, unselectAllNotesAtom } from "@/atoms/note";
+import { selectionRangeAtom, selectionTicksAtom } from "@/atoms/selection-ticks";
 import { getSelectionRangeWithSelectedNotes } from "@/helpers/notes";
 import { TrackNoteEvent } from "@/types";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Dispatch, RefObject, useEffect, useReducer } from "react";
-import { useStore } from "@/hooks/useStore";
-import { PianoRollStore, PianoRollStoreAction } from "@/store/pianoRollStore";
 
 export function useClipboard<T extends HTMLElement>(ref: RefObject<T>) {
-  const {clipboard, clipboardDispatch} = useClipboardReducer();
-  const {pianoRollStore, dispatch} = useStore();
-  const copyWarper = (event: KeyboardEvent) => handleCopy(event, pianoRollStore, clipboardDispatch)
-  const pasteWarper = (event: KeyboardEvent) => handlePaste(event, pianoRollStore, clipboard, dispatch)
-  const cutWarper = (event: KeyboardEvent) => handleCut(event, pianoRollStore, clipboardDispatch, dispatch)
+  const { clipboard, clipboardDispatch } = useClipboardReducer();
+  const selectedNotes = useAtomValue(selectedNotesAtom);
+  const [selectionTicks, setSelectionTicks] = useAtom(selectionTicksAtom);
+  const [selectionRange, setSelectionRange] = useAtom(selectionRangeAtom);
+  const setterGroup = {
+    unselectAllNotes: useSetAtom(unselectAllNotesAtom),
+    addNotes: useSetAtom(addNotesAtom),
+    setSelectionTicks,
+    setSelectionRange,
+  };
+  const deleteSelectedNotes = useSetAtom(deleteSelectedNotesAtom);
+  const copyWarper = (event: KeyboardEvent) => {
+    if (event.metaKey && event.code === "KeyC") {
+      event.preventDefault();
+      event.stopPropagation();
+      copyNotes(selectedNotes, selectionRange, clipboardDispatch);
+    }
+  };
+  const pasteWarper = (event: KeyboardEvent) => {
+    if (event.metaKey && event.code === "KeyV") {
+      event.preventDefault();
+      event.stopPropagation();
+      pasteNotes(selectionTicks, selectionRange, clipboard, setterGroup);
+    }
+  };
+  const cutWarper = (event: KeyboardEvent) => {
+    if (event.metaKey && event.code === "KeyX") {
+      event.preventDefault();
+      event.stopPropagation();
+      copyNotes(selectedNotes, selectionRange, clipboardDispatch);
+      deleteSelectedNotes();
+    }
+  };
 
   useEffect(() => {
     ref.current!.addEventListener("keydown", copyWarper);
@@ -20,53 +49,38 @@ export function useClipboard<T extends HTMLElement>(ref: RefObject<T>) {
       ref.current!.removeEventListener("keydown", copyWarper);
       ref.current!.removeEventListener("keydown", cutWarper);
       ref.current!.removeEventListener("keydown", pasteWarper);
-    }
-  })
-
-}
-
-function handleCopy(event: KeyboardEvent, pianoRollStore: PianoRollStore, clipboardDispatch: Dispatch<ClipboardAction>) {
-  if (event.metaKey && event.code === "KeyC") {
-    event.preventDefault();
-    event.stopPropagation();
-    copyNotes(pianoRollStore, clipboardDispatch);
-  }
-}
-
-function copyNotes(pianoRollStore: PianoRollStore, clipboardDispatch: Dispatch<ClipboardAction>) {
-  if (pianoRollStore.selectedNotes().length === 0) {
-    return;
-  }
-
-  let selectionRange = getSelectionRangeWithSelectedNotes(
-    pianoRollStore.selectedNotes(),
-    pianoRollStore.selectionRange!,
-  );
-  clipboardDispatch({
-    type: "setNote",
-    payload: { notes: pianoRollStore.selectedNotes(), selectedRange: selectionRange },
+    };
   });
 }
 
-function handleCut(event: KeyboardEvent, pianoRollStore: PianoRollStore, clipboardDispatch: Dispatch<ClipboardAction>, storeDispatch: Dispatch<PianoRollStoreAction>) {
-  if (event.metaKey && event.code === "KeyX") {
-    event.preventDefault();
-    event.stopPropagation();
-    copyNotes(pianoRollStore, clipboardDispatch);
-    storeDispatch({ type: "DELETE_SELECTED_NOTES" });
+function copyNotes(
+  selectedNotes: TrackNoteEvent[],
+  selectionRange: [number, number] | null,
+  clipboardDispatch: Dispatch<ClipboardAction>,
+) {
+  if (selectedNotes.length === 0) {
+    return;
   }
+
+  let totalSelectionRange = getSelectionRangeWithSelectedNotes(selectedNotes, selectionRange!);
+  clipboardDispatch({
+    type: "setNote",
+    payload: { notes: selectedNotes, selectedRange: totalSelectionRange },
+  });
 }
 
-function handlePaste(event: KeyboardEvent, pianoRollStore: PianoRollStore, clipboard: Clipboard, storeDispatch: Dispatch<PianoRollStoreAction>) {
-  if (event.metaKey && event.code === "KeyV") {
-    event.preventDefault();
-    event.stopPropagation();
-    pasteNotes(pianoRollStore, clipboard, storeDispatch);
-  }
-}
-
-function pasteNotes(pianoRollStore: PianoRollStore, clipboard: Clipboard, storeDispatch: Dispatch<PianoRollStoreAction>) {
-  if (pianoRollStore.selectionTicks === null) {
+function pasteNotes(
+  selectionTicks: number | null,
+  selectionRange: [number, number] | null,
+  clipboard: Clipboard,
+  storeDispatch: {
+    unselectAllNotes: () => void;
+    addNotes: (notes: TrackNoteEvent[]) => void;
+    setSelectionTicks: (ticks: number) => void;
+    setSelectionRange: (range: [number, number] | null) => void;
+  },
+) {
+  if (selectionTicks === null) {
     return;
   }
 
@@ -75,29 +89,22 @@ function pasteNotes(pianoRollStore: PianoRollStore, clipboard: Clipboard, storeD
   }
   const shiftedNotes = clipboard.notes.map((note) => ({
     ...note,
-    tick: pianoRollStore.selectionTicks! + note.tick,
+    tick: selectionTicks! + note.tick,
   }));
-  storeDispatch({ type: "UNSELECTED_ALL_NOTES" });
-  storeDispatch({ type: "ADD_NOTES", payload: { notes: shiftedNotes } });
-  storeDispatch({
-    type: "SET_SELECTION_TICKS",
-    payload: { ticks: pianoRollStore.selectionTicks! + clipboard.selectionWidth },
-  });
-  storeDispatch({
-    type: "SET_SELECTION_RANGE",
-    payload: {
-      range: pianoRollStore.selectionRange
-        ? (pianoRollStore.selectionRange.map((item) => item + clipboard.selectionWidth) as [number, number])
-        : null,
-    },
-  });
+  storeDispatch.unselectAllNotes();
+  storeDispatch.addNotes(shiftedNotes);
+
+  storeDispatch.setSelectionTicks(selectionTicks! + clipboard.selectionWidth);
+  storeDispatch.setSelectionRange(
+    selectionRange ? (selectionRange.map((item) => item + clipboard.selectionWidth) as [number, number]) : null,
+  );
 }
 
 export function useClipboardReducer() {
   const defaultClipboard: Clipboard = {
     notes: [],
     selectionWidth: 0,
-  }
+  };
   const [clipboard, clipboardDispatch] = useReducer(clipboardReducer, defaultClipboard);
   return { clipboard, clipboardDispatch };
 }

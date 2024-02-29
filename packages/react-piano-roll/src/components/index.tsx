@@ -12,11 +12,12 @@ import LowerSection from "./Sections/LowerSection";
 import { ScaleXProvider, useScaleX } from "@/contexts/ScaleXProvider";
 import PianoRollThemeContext from "@/contexts/piano-roll-theme-context";
 import { defaultPianoRollTheme } from "@/store/pianoRollTheme";
-import { PianoRollStoreProvider } from "@/store/pianoRollStore";
+// import { PianoRollStoreProvider } from "@/store/pianoRollStore";
 import { BeatPerBar, BeatUnit } from "@/interfaces/time-signature";
 import { useLeftAnchoredScale } from "@/components/handlers/useLeftAnchoredScale";
 import PianoKeyboard from "./PianoKeyboard";
 import ScrollSync from "./SyncScroll";
+import { Provider as JotaiProvider } from "jotai";
 
 interface MidiEditorProps {
   playheadPosition?: number;
@@ -123,7 +124,7 @@ const withProvider = (Component: typeof MidiEditor) => {
     }, []);
 
     return (
-      <PianoRollStoreProvider>
+      <JotaiProvider>
         <ConfigProvider value={config}>
           <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
             <ScaleXProvider>
@@ -131,7 +132,7 @@ const withProvider = (Component: typeof MidiEditor) => {
             </ScaleXProvider>
           </PianoRollThemeContext.Provider>
         </ConfigProvider>
-      </PianoRollStoreProvider>
+      </JotaiProvider>
     );
   };
 };

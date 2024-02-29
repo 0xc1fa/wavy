@@ -1,23 +1,26 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { useStore } from "@/hooks/useStore";
+// import { useStore } from "@/hooks/useStore";
 import styles from "./index.module.scss";
+import { useAtom, useAtomValue } from "jotai";
+import { bpmAtom } from "@/atoms/bpm";
 
 const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => {
   event?.currentTarget.focus();
 };
 
 export default function TempoInfo() {
-  const { pianoRollStore, dispatch } = useStore();
+  // const { pianoRollStore, dispatch } = useStore();
+  const [bpm, setBpm] = useAtom(bpmAtom)
 
   const [isDragging, setIsDragging] = useState(false);
   const [inintialY, setInitialY] = useState(0);
 
-  const [inputValue, setInputValue] = useState(pianoRollStore.bpm.toString());
+  const [inputValue, setInputValue] = useState(bpm.toString());
   const bufferedValue = useRef(inputValue);
 
   useEffect(() => {
-    setInputValue(pianoRollStore.bpm.toString());
-  }, [pianoRollStore.bpm]);
+    setInputValue(bpm.toString());
+  }, [bpm]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setInputValue(event.currentTarget.value);
@@ -49,10 +52,10 @@ export default function TempoInfo() {
       const value = parseFloat(inputValue);
       if (!isNaN(value)) {
         const clampedValue = Math.max(40, Math.min(200, value));
-        dispatch({ type: "SET_BPM", payload: { bpm: clampedValue } });
+        setBpm(clampedValue);
         setInputValue(clampedValue.toString());
       } else {
-        setInputValue(pianoRollStore.bpm.toString());
+        setInputValue(bpm.toString());
       }
       event.currentTarget.blur();
     }

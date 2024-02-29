@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useStore } from "@/hooks/useStore";
 import styles from "./index.module.scss";
 import LaneGrids from "../LaneGrids";
 import useVelocityEditorMouseHandlers from "./NoteBars/handlers/useVelocityEditorMouseHandlers";

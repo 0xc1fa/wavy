@@ -1,12 +1,17 @@
-import { PianoRollStore, PianoRollStoreAction } from "@/store/pianoRollStore";
+import { deleteSelectedNotesAtom, notesAtom } from "@/atoms/note";
+import { TrackNoteEvent } from "@/types";
+import { useAtom, useSetAtom } from "jotai";
 import { Dispatch, RefObject, useEffect } from "react";
-import { useStore } from "@/hooks/useStore";
 
 export function useHandleDelete<T extends HTMLElement>(ref: RefObject<T>) {
-  const { pianoRollStore, dispatch } = useStore();
-
+  const [notes] = useAtom(notesAtom);
+  const deleteSelectedNotes = useSetAtom(deleteSelectedNotesAtom);
   useEffect(() => {
-    const deleteWarper = (event: KeyboardEvent) => handleDelete(event, pianoRollStore, dispatch);
+    const deleteWarper = (event: KeyboardEvent) => {
+      if (event.code === "Delete" || event.code === "Backspace") {
+        deleteNotes(event, notes, deleteSelectedNotes);
+      }
+    }
     ref.current!.addEventListener("keydown", deleteWarper);
     return () => {
       ref.current!.removeEventListener("keydown", deleteWarper);
@@ -14,20 +19,14 @@ export function useHandleDelete<T extends HTMLElement>(ref: RefObject<T>) {
   }, []);
 }
 
-function handleDelete(event: KeyboardEvent, pianoRollStore: PianoRollStore, dispatch: Dispatch<PianoRollStoreAction>) {
-  if (event.code === "Delete" || event.code === "Backspace") {
-    deleteNotes(event, pianoRollStore, dispatch);
-  }
-}
-
-function deleteNotes(event: KeyboardEvent, pianoRollStore: PianoRollStore, dispatch: Dispatch<PianoRollStoreAction>) {
+function deleteNotes(event: KeyboardEvent, notes: TrackNoteEvent[], deleteSelectedNotes: () => void) {
   let focusedElement = document.activeElement;
   let flag = true;
 
   if (focusedElement && focusedElement.hasAttributes()) {
     Array.from(focusedElement.attributes).forEach((attr) => {
       if (attr.name === "data-note-id") {
-        if (pianoRollStore.notes.filter((note) => note.id === attr.value)) {
+        if (notes.filter((note) => note.id === attr.value)) {
           flag = false;
         }
       }
@@ -35,6 +34,6 @@ function deleteNotes(event: KeyboardEvent, pianoRollStore: PianoRollStore, dispa
   }
   if (flag) {
     event.preventDefault();
-    dispatch({ type: "DELETE_SELECTED_NOTES" });
+    deleteSelectedNotes();
   }
 }

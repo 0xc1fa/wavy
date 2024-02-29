@@ -1,11 +1,13 @@
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import styles from "./index.module.scss";
-import { useStore } from "@/hooks/useStore";
+// import { useStore } from "@/hooks/useStore";
 import { memo, useRef } from "react";
 import { baseLaneWidth } from "@/constants";
 import { getMinYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
+import { useAtom } from "jotai";
+import { updateNoteLyricAtom } from "@/atoms/note";
 
 const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => {
   event?.currentTarget.focus();
@@ -15,7 +17,8 @@ interface NoteLyricProps extends React.HTMLAttributes<HTMLInputElement> {
   note: TrackNoteEvent;
 }
 function NoteLyric({ note, style }: NoteLyricProps) {
-  const { dispatch } = useStore();
+  // const { dispatch } = useStore();
+  const [, updateNoteLyric] = useAtom(updateNoteLyricAtom);
   const { numOfKeys } = useConfig().pitchRange;
   const { scaleX } = useScaleX();
 
@@ -35,20 +38,14 @@ function NoteLyric({ note, style }: NoteLyricProps) {
     };
     const applyChanges = () => {
       const id = getTargetId();
-      dispatch({
-        type: "UPDATE_NOTE_LYRIC",
-        payload: { noteId: id, lyric: target.value },
-      });
+      updateNoteLyric({ noteId: id, lyric: target.value })
     };
     trimValue();
     applyChanges();
   };
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    dispatch({
-      type: "UPDATE_NOTE_LYRIC",
-      payload: { noteId: note.id, lyric: event.target.value },
-    });
+    updateNoteLyric({ noteId: note.id, lyric: event.target.value })
   };
 
   return (

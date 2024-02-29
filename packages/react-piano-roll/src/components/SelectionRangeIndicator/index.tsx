@@ -1,25 +1,29 @@
+import { selectedNotesAtom } from "@/atoms/note";
+import { selectionRangeAtom } from "@/atoms/selection-ticks";
 import { basePixelsPerTick } from "@/constants";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { getSelectionRangeWithSelectedNotes } from "@/helpers/notes";
-import { useStore } from "@/hooks/useStore";
+import { useAtomValue } from "jotai";
+// import { useStore } from "@/hooks/useStore";
 
 const triangleWidth = 8;
 const indicatorHeight = 8;
 const triangleHeight = 8;
 const SelectionRangeIndicator1 = () => {
-  const { pianoRollStore } = useStore();
+  const selectionRange = useAtomValue(selectionRangeAtom)
+  const selectedNotes = useAtomValue(selectedNotesAtom)
   const { scaleX } = useScaleX();
 
-  if (pianoRollStore.selectionRange === null) {
+  if (selectionRange === null) {
     return;
   }
-  let selectionRange = getSelectionRangeWithSelectedNotes(
-    pianoRollStore.selectedNotes(),
-    pianoRollStore.selectionRange,
+  let totalSelectionRange = getSelectionRangeWithSelectedNotes(
+    selectedNotes,
+    selectionRange,
   );
 
-  const startingX = Math.round(selectionRange[0] * basePixelsPerTick * scaleX);
-  const endingX = Math.round(selectionRange[1] * basePixelsPerTick * scaleX);
+  const startingX = Math.round(totalSelectionRange[0] * basePixelsPerTick * scaleX);
+  const endingX = Math.round(totalSelectionRange[1] * basePixelsPerTick * scaleX);
   if (startingX === endingX) {
     return null;
   }
@@ -56,19 +60,21 @@ const SelectionRangeIndicator1 = () => {
 };
 
 const SelectionRangeIndicator2 = () => {
-  const { pianoRollStore } = useStore();
+  const selectionRange = useAtomValue(selectionRangeAtom)
+  const selectedNotes = useAtomValue(selectedNotesAtom)
+
   const { scaleX } = useScaleX();
 
-  if (pianoRollStore.selectionRange === null) {
+  if (selectionRange === null) {
     return;
   }
-  let selectionRange = getSelectionRangeWithSelectedNotes(
-    pianoRollStore.selectedNotes(),
-    pianoRollStore.selectionRange,
+  let totalSelectionRange = getSelectionRangeWithSelectedNotes(
+    selectedNotes,
+    selectionRange,
   );
 
-  const startingX = Math.round(selectionRange[0] * basePixelsPerTick * scaleX);
-  const endingX = Math.round(selectionRange[1] * basePixelsPerTick * scaleX);
+  const startingX = Math.round(totalSelectionRange[0] * basePixelsPerTick * scaleX);
+  const endingX = Math.round(totalSelectionRange[1] * basePixelsPerTick * scaleX);
   if (startingX === endingX) {
     return null;
   }
