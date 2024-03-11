@@ -1,31 +1,26 @@
-import { TbHandMove } from "react-icons/tb";
-import { FaEraser } from "react-icons/fa6";
-import { GrSelect } from "react-icons/gr";
-import { RiPencilFill } from "react-icons/ri";
+import { RxGroup } from "react-icons/rx";
+import { RxPencil1 } from "react-icons/rx";
 import styles from "./index.module.scss";
 import React, { useState } from "react";
-import { CgNametag } from "react-icons/cg";
-import { cn } from "@/helpers/className";
+import { RxColumnSpacing } from "react-icons/rx";
+import { RxHobbyKnife } from "react-icons/rx";
+import { RxDotsHorizontal } from "react-icons/rx";
+import { RxDimensions } from "react-icons/rx";
+import { RxHand } from "react-icons/rx";
+import { RxQuote } from "react-icons/rx";
+import cx from "clsx";
 
 interface ModeSelectProps extends React.HTMLAttributes<HTMLDivElement> {}
 export default function ModeSelect(props: ModeSelectProps) {
   const modes = [
-    {
-      name: "pencil",
-      icon: <RiPencilFill />,
-    },
-    {
-      name: "drag",
-      icon: <TbHandMove />,
-    },
-    {
-      name: "eraser",
-      icon: <FaEraser />,
-    },
-    {
-      name: "select",
-      icon: <GrSelect />,
-    },
+    { name: "pencil", icon: <RxPencil1 /> },
+    { name: "hand", icon: <RxHand /> },
+    { name: "lyric", icon: <RxQuote /> },
+    { name: "dimensions", icon: <RxDimensions /> },
+    { name: "select", icon: <RxGroup /> },
+    { name: "legato", icon: <RxColumnSpacing /> },
+    { name: "slice", icon: <RxHobbyKnife /> },
+    { name: "more", icon: <RxDotsHorizontal /> },
   ] as const;
   const [selected, setSelected] = useState<(typeof modes)[number]["name"]>("pencil");
 
@@ -34,7 +29,7 @@ export default function ModeSelect(props: ModeSelectProps) {
       {modes.map((item) => (
         <div
           key={item.name}
-          className={cn(styles.item, selected === item.name && styles.selectedItem)}
+          className={cx(styles.item, selected === item.name && styles.selectedItem)}
           onClick={() => setSelected(item.name)}
         >
           {item.icon}
