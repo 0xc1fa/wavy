@@ -18,6 +18,7 @@ import { useLeftAnchoredScale } from "@/components/handlers/useLeftAnchoredScale
 import PianoKeyboard from "./PianoKeyboard";
 import ScrollSync from "./SyncScroll";
 import { Provider as JotaiProvider } from "jotai";
+import ModeSelect from "./ModeSelect";
 
 interface MidiEditorProps {
   playheadPosition?: number;
@@ -101,6 +102,7 @@ function MidiEditor({
       </div>
       {/* <MiddleSection></MiddleSection> */}
       <LowerSection />
+      <ModeSelect/>
     </div>
   );
 }

@@ -6,7 +6,10 @@ import { TrackNoteEvent } from "@/types";
 import { getNoteIdFromEvent, getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
 import { useAtomValue, useSetAtom } from "jotai";
 import { modifyingNotesAtom, notesAtom, setNoteAsSelectedAtom, unselectAllNotesAtom } from "@/atoms/note";
-import { noteModificationBufferAtom, setNoteModificationBufferWithAllNotesAtom } from "@/atoms/note-modification-buffer";
+import {
+  noteModificationBufferAtom,
+  setNoteModificationBufferWithAllNotesAtom,
+} from "@/atoms/note-modification-buffer";
 
 enum VelocityEditorMouseHandlerMode {
   Idle,
@@ -27,7 +30,7 @@ export default function useVelocityEditorMouseHandlers() {
   const unselectedAllNotes = useSetAtom(unselectAllNotesAtom);
   const setNotesAsSelected = useSetAtom(setNoteAsSelectedAtom);
   const setNoteModificationBufferWithSelectedNote = useSetAtom(setNoteModificationBufferWithAllNotesAtom);
-  const modifyingNote = useSetAtom(modifyingNotesAtom)
+  const modifyingNote = useSetAtom(modifyingNotesAtom);
 
   const { scaleX } = useScaleX();
   const noteClicked = useRef<TrackNoteEvent | null>(null);
@@ -71,14 +74,14 @@ export default function useVelocityEditorMouseHandlers() {
         velocity: currentVelocity,
         isSelected: true,
       }));
-      modifyingNote(newNote)
+      modifyingNote(newNote);
     } else if (mouseHandlerMode === VelocityEditorMouseHandlerMode.SelectAndDrag) {
       const newNote = noteModificationBuffer.notesSelected.map((note) => ({
         ...note,
         velocity: note.velocity + deltaVelocity,
         isSelected: true,
       }));
-      modifyingNote(newNote)
+      modifyingNote(newNote);
     }
   };
 

@@ -13,6 +13,7 @@ import { useHandleUndoRedo } from "@/components/PianoRoll/handlers/useHandleUndo
 import { useHandleScaleX } from "@/components/PianoRoll/handlers/useHandleScaleX";
 import { useHandleMarqueeSelection } from "./handlers/useHandleMarqueeSelection";
 import { useHandleRangeSelection } from "./handlers/useHandleRangeSelection";
+import ModeSelect from "../ModeSelect";
 
 type Props = {
   attachLyric: boolean;

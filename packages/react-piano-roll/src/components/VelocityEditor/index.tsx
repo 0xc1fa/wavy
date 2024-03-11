@@ -45,6 +45,7 @@ export default function VelocityEditor() {
 
   return (
     <div className={styles["outer-container"]}>
+
       <div className={styles["resize-bar"]} {...resizeBarHandlers} />
       <div
         className={styles["inner-container"]}

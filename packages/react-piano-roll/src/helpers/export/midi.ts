@@ -54,7 +54,7 @@ enum MetaEvent {
   SequencerSpecific = 0x7f,
 }
 
-export default function createMIDIFile(notes: TrackNoteEvent[]) {
+export function createMIDIFile(notes: TrackNoteEvent[]) {
   const headerChunk = getHeaderChunk(MidiFormat.SingleTrack, 1, 9600);
   const trackChunk = getTrackChunk(notes);
 
@@ -64,7 +64,7 @@ export default function createMIDIFile(notes: TrackNoteEvent[]) {
   return buffer;
 }
 
-export function downloadMidi(notes: TrackNoteEvent[]) {
+export function exportAsMidi(notes: TrackNoteEvent[]) {
   const buffer = createMIDIFile(notes);
   const blob = new Blob([buffer], { type: "audio/midi" });
   const url = URL.createObjectURL(blob);

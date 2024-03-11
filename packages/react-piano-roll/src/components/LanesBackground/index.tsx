@@ -21,7 +21,7 @@ const LanesBackground: React.FC = memo(() => {
         data-note-num={noteNumber}
         className={[styles.lane, isBlackKey(noteNumber) ? styles.blackLane : styles.whiteLane].join(" ")}
         key={noteNumber}
-        // x={0}
+        width="100%"
         y={yPosition}
       />
     );
