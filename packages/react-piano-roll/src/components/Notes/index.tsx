@@ -8,12 +8,14 @@ import { useClipboard } from "./handlers/useClipboard";
 import { useHandleSetNoteSelection } from "./handlers/useHandleSetNoteSelection";
 import { useHandleSetVelocity } from "./handlers/useHandleSetVelocity";
 import { useAtomValue } from "jotai";
-import { notesAtom } from "@/atoms/note";
+import { notesAtom } from "@/store/note";
+import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
 export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
   // const { pianoRollStore } = useStore();
-  const notes = useAtomValue(notesAtom)
+  const notes = useAtomValue(notesAtom);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { rendering } = useConfig();
 
   useHandleDelete(containerRef);
   useClipboard(containerRef);
@@ -34,6 +36,8 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
     },
   };
 
+
+
   return (
     <div className={styles["notes-container"]} ref={containerRef} tabIndex={0} {...handlers}>
       {notes.map((note) => (
@@ -43,8 +47,8 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
           data-note-num={note.noteNumber}
           data-start-time={note.tick}
           data-duration={note.duration}
-          data-velocity={note.velocity}
           key={note.id}
+          style={{opacity: rendering ? 0.7 : 1,}}
         >
           <NoteBlock note={note} />
           {attachLyric && <NoteLyric note={note} />}

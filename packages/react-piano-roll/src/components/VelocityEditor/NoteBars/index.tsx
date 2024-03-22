@@ -4,7 +4,7 @@ import { getOffsetXFromTick } from "@/helpers/conversion";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import useTheme from "@/hooks/useTheme";
 import { useAtomValue } from "jotai";
-import { notesAtom } from "@/atoms/note";
+import { notesAtom } from "@/store/note";
 
 type Props = {
   isDragging: boolean;

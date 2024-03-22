@@ -1,5 +1,5 @@
-import { notesAtom } from "@/atoms/note";
-import { selectionRangeAtom } from "@/atoms/selection-ticks";
+import { notesAtom } from "@/store/note";
+import { selectionRangeAtom } from "@/store/selection-ticks";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { getTickFromOffsetX } from "@/helpers/conversion";
 import { getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
@@ -10,8 +10,8 @@ import { useRef } from "react";
 
 export function useHandleRangeSelection() {
   // const { pianoRollStore, dispatch } = useStore();
-  const notes = useAtomValue(notesAtom)
-  const setSelectionRange = useSetAtom(selectionRangeAtom)
+  const notes = useAtomValue(notesAtom);
+  const setSelectionRange = useSetAtom(selectionRangeAtom);
   const { scaleX } = useScaleX();
 
   const startingPositionX = useRef(0);
@@ -38,7 +38,7 @@ export function useHandleRangeSelection() {
       .map(getTickFromOffsetX.bind(null, scaleX))
       .map(getNearestGridTick.bind(null, scaleX))
       .sort((a, b) => a - b) as [number, number];
-      setSelectionRange(snappedSelection)
+    setSelectionRange(snappedSelection);
   };
 
   return { handleRangeSelectionPD, handleRangeSelectionPM };

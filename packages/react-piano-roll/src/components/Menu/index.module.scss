@@ -1,0 +1,31 @@
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  // transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  background-color: #232323;
+  border-radius: 0 0 0.5rem 0;
+  border: 1px solid #2c2c2c;
+  overflow: hidden;
+}
+
+.container:hover .collaspeItem {
+  display: block;
+}
+
+.item {
+  padding: 0.6rem;
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: background-color 0.2s;
+}
+
+.item:hover {
+  background-color: #2c2c2c;
+}
+
+.collaspeItem {
+  display: none;
+}

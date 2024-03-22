@@ -16,14 +16,14 @@ import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
 import { useAtomValue, useSetAtom } from "jotai";
-import { addNoteAtom, modifyingNotesAtom, notesAtom } from "@/atoms/note";
+import { addNoteAtom, modifyingNotesAtom, notesAtom } from "@/store/note";
 import {
   noteModificationBufferAtom,
   setNoteModificationBufferWithAllNotesAtom,
   setNoteModificationBufferWithSelectedNotesAtom,
-} from "@/atoms/note-modification-buffer";
-import { selectionTicksAtom } from "@/atoms/selection-ticks";
-import { lastModifiedDurationAtom } from "@/atoms/last-modified";
+} from "@/store/note-modification-buffer";
+import { selectionTicksAtom } from "@/store/selection-ticks";
+import { lastModifiedDurationAtom } from "@/store/last-modified";
 
 export enum PianoRollLanesMouseHandlerMode {
   DragAndDrop,
@@ -192,59 +192,60 @@ export function useHandleNoteCreationAndModification() {
             ...bufferedNote,
             duration: bufferedNote.duration + deltaTicks,
           }));
-          setLastModifiedDuration(_.last(bufferedNotes)!.duration + deltaTicks)
+          setLastModifiedDuration(_.last(bufferedNotes)!.duration + deltaTicks);
         } else {
           newNotes = bufferedNotes;
-          setLastModifiedDuration(_.last(bufferedNotes)!.duration)
+          setLastModifiedDuration(_.last(bufferedNotes)!.duration);
         }
         if (guardActive.current) {
-          setSelectionTicks(Math.max(_.last(newNotes)!.tick + _.last(newNotes)!.duration, _.last(newNotes)!.tick))
+          setSelectionTicks(Math.max(_.last(newNotes)!.tick + _.last(newNotes)!.duration, _.last(newNotes)!.tick));
         }
         modifyingNotes(newNotes);
         break;
       }
-      case PianoRollLanesMouseHandlerMode.DragAndDrop: {
-        let newNotes;
-        if (guardActive.current === DraggingGuardMode.SnapToGrid) {
-          const anchor = getNearestAnchor(
-            noteClicked!.tick + deltaTicks,
-            scaleX,
-            getGridOffsetOfTick(noteClicked!.tick, scaleX),
-          );
-          if (anchor.proximity) {
+      case PianoRollLanesMouseHandlerMode.DragAndDrop:
+        {
+          let newNotes;
+          if (guardActive.current === DraggingGuardMode.SnapToGrid) {
+            const anchor = getNearestAnchor(
+              noteClicked!.tick + deltaTicks,
+              scaleX,
+              getGridOffsetOfTick(noteClicked!.tick, scaleX),
+            );
+            if (anchor.proximity) {
+              newNotes = bufferedNotes.map((bufferedNote) => ({
+                ...bufferedNote,
+                noteNumber: bufferedNote.noteNumber + deltaPitch,
+                tick: anchor.anchor - _.last(bufferedNotes)!.tick + bufferedNote.tick,
+              }));
+            } else {
+              return;
+            }
+          } else if (guardActive.current === DraggingGuardMode.FineTune) {
             newNotes = bufferedNotes.map((bufferedNote) => ({
               ...bufferedNote,
               noteNumber: bufferedNote.noteNumber + deltaPitch,
-              tick: anchor.anchor - _.last(bufferedNotes)!.tick + bufferedNote.tick,
+              tick: bufferedNote.tick + deltaTicks,
             }));
           } else {
-            return;
+            newNotes = bufferedNotes.map((bufferedNote) => ({
+              ...bufferedNote,
+              noteNumber: bufferedNote.noteNumber + deltaPitch,
+            }));
           }
-        } else if (guardActive.current === DraggingGuardMode.FineTune) {
-          newNotes = bufferedNotes.map((bufferedNote) => ({
-            ...bufferedNote,
-            noteNumber: bufferedNote.noteNumber + deltaPitch,
-            tick: bufferedNote.tick + deltaTicks,
-          }));
-        } else {
-          newNotes = bufferedNotes.map((bufferedNote) => ({
-            ...bufferedNote,
-            noteNumber: bufferedNote.noteNumber + deltaPitch,
-          }));
+          if (guardActive.current) {
+            setSelectionTicks(_.last(newNotes)!.tick);
+          }
+          modifyingNotes(newNotes);
+          break;
         }
-        if (guardActive.current) {
-          setSelectionTicks(_.last(newNotes)!.tick)
-        }
-        modifyingNotes(newNotes)
-        break;
-      }
-      // case PianoRollLanesMouseHandlerMode.Vibrato:
-      //   event.shiftKey
-      //     ? dispatch({ type: "VIBRATO_RATE_CHANGE_SELECTED_NOTE", payload: { rateOffset: deltaY } })
-      //     : dispatch({
-      //         type: "VIBRATO_DEPTH_DELAY_CHANGE_SELECTED_NOTE",
-      //         payload: { depthOffset: deltaY, delayOffset: deltaX },
-      //       });
+        // case PianoRollLanesMouseHandlerMode.Vibrato:
+        //   event.shiftKey
+        //     ? dispatch({ type: "VIBRATO_RATE_CHANGE_SELECTED_NOTE", payload: { rateOffset: deltaY } })
+        //     : dispatch({
+        //         type: "VIBRATO_DEPTH_DELAY_CHANGE_SELECTED_NOTE",
+        //         payload: { depthOffset: deltaY, delayOffset: deltaX },
+        //       });
         break;
     }
   };
@@ -279,7 +280,7 @@ export function useHandleNoteCreationAndModification() {
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
     if (isNoteRightMarginClicked(numOfKeys, scaleX, noteClicked!, [relativeX, relativeY])) {
-      setSelectionTicks(noteClicked.tick + noteClicked.duration)
+      setSelectionTicks(noteClicked.tick + noteClicked.duration);
       // dispatch({ type: "SET_SELECTION_TICKS", payload: { ticks: noteClicked.tick + noteClicked.duration } });
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesExtending);
     } else if (

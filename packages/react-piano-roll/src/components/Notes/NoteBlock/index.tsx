@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import styles from "./index.module.scss";
 import useTheme from "../../../hooks/useTheme";
 // import { useStore } from "@/hooks/useStore";
@@ -14,7 +14,13 @@ interface NoteBlockProps extends React.HTMLAttributes<HTMLDivElement> {
 function NoteBlock({ note }: NoteBlockProps) {
   const theme = useTheme();
   const { scaleX } = useScaleX();
-  const { numOfKeys } = useConfig().pitchRange;
+  // const { numOfKeys } = useConfig().pitchRange;
+  const {
+    pitchRange: { numOfKeys },
+    rendering,
+  } = useConfig();
+
+  useEffect(() => console.log("Context rendering", rendering), [rendering]);
 
   return (
     <div
@@ -31,6 +37,8 @@ function NoteBlock({ note }: NoteBlockProps) {
           "--background": note.isSelected ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
           "--border-color": note.isSelected ? theme.note.noteBorderColor : theme.note.noteBorderColor,
           "--border-radius": `${theme.note.noteBorderRadius}px`,
+          // opacity: rendering ? 0.7 : 1,
+          // opacity: 0.5,
           outline: note.isSelected ? `3px solid #ffffff33` : "none",
         } as React.CSSProperties
       }

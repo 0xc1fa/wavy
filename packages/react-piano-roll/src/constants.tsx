@@ -7,6 +7,6 @@ export const baseKeyWidth = 25;
 export const blackKeyLengthRatio = 0.5;
 export const draggableBoundaryPixel = 10;
 export const basePixelsPerTick = basePixelsPerBeat / ticksPerBeat;
-export const defaultNoteLyric = "";
+export const defaultNoteLyric = "啦";
 export const baseWhiteKeyWidth = (baseKeyWidth * 12) / 7;
 export const baseBlackKeyLength = baseKeyLength * blackKeyLengthRatio;

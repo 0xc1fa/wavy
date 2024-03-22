@@ -7,7 +7,7 @@ import { getMinYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { useAtom } from "jotai";
-import { updateNoteLyricAtom } from "@/atoms/note";
+import { updateNoteLyricAtom } from "@/store/note";
 
 const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => {
   event?.currentTarget.focus();
@@ -38,14 +38,14 @@ function NoteLyric({ note, style }: NoteLyricProps) {
     };
     const applyChanges = () => {
       const id = getTargetId();
-      updateNoteLyric({ noteId: id, lyric: target.value })
+      updateNoteLyric({ noteId: id, lyric: target.value });
     };
     trimValue();
     applyChanges();
   };
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    updateNoteLyric({ noteId: note.id, lyric: event.target.value })
+    updateNoteLyric({ noteId: note.id, lyric: event.target.value });
   };
 
   return (

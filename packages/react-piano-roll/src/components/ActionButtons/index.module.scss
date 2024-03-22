@@ -1,11 +1,10 @@
 .container {
   position: fixed;
-  bottom: 14rem;
+  bottom: 13.5rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
   display: flex;
-  // column-gap: 0.25rem;
   background-color: #232323;
   border-radius: 0.5rem;
   border: 1px solid #2c2c2c;
@@ -15,7 +14,7 @@
 .item {
   padding: 0.6rem;
   cursor: pointer;
-  font-size: 1.25rem;
+  font-size: 1.4rem;
   transition: background-color 0.2s;
 }
 

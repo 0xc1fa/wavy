@@ -1,5 +1,5 @@
 // import { PianoRollStoreAction } from "@/store/pianoRollStore";
-import { redoHistoryAtom, undoHistoryAtom } from "@/atoms/history";
+import { redoHistoryAtom, undoHistoryAtom } from "@/store/history";
 import { useSetAtom } from "jotai";
 import { Dispatch, RefObject, useEffect } from "react";
 // import { useStore } from "@/hooks/useStore";
@@ -14,16 +14,16 @@ export function useHandleUndoRedo<T extends HTMLElement>(ref: RefObject<T>) {
       if (!event.shiftKey && event.code === "KeyZ") {
         event.preventDefault();
 
-        redo()
+        redo();
       }
-    }
+    };
     const handleRedoWarper = (event: KeyboardEvent) => {
       if (!event.shiftKey && event.code === "KeyZ") {
         event.preventDefault();
 
         redo();
       }
-    }
+    };
 
     ref.current!.addEventListener("keydown", handleUndoWarper);
     ref.current!.addEventListener("keydown", handleRedoWarper);

@@ -1,4 +1,4 @@
-import { deleteSelectedNotesAtom, notesAtom } from "@/atoms/note";
+import { deleteSelectedNotesAtom, notesAtom } from "@/store/note";
 import { TrackNoteEvent } from "@/types";
 import { useAtom, useSetAtom } from "jotai";
 import { Dispatch, RefObject, useEffect } from "react";
@@ -11,7 +11,7 @@ export function useHandleDelete<T extends HTMLElement>(ref: RefObject<T>) {
       if (event.code === "Delete" || event.code === "Backspace") {
         deleteNotes(event, notes, deleteSelectedNotes);
       }
-    }
+    };
     ref.current!.addEventListener("keydown", deleteWarper);
     return () => {
       ref.current!.removeEventListener("keydown", deleteWarper);

@@ -1,5 +1,5 @@
-import { addNotesAtom, deleteSelectedNotesAtom, selectedNotesAtom, unselectAllNotesAtom } from "@/atoms/note";
-import { selectionRangeAtom, selectionTicksAtom } from "@/atoms/selection-ticks";
+import { addNotesAtom, deleteSelectedNotesAtom, selectedNotesAtom, unselectAllNotesAtom } from "@/store/note";
+import { selectionRangeAtom, selectionTicksAtom } from "@/store/selection-ticks";
 import { getSelectionRangeWithSelectedNotes } from "@/helpers/notes";
 import { TrackNoteEvent } from "@/types";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";

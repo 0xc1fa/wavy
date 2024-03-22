@@ -1,84 +1,58 @@
 import styles from "./index.module.scss";
-import { CSSProperties, KeyboardEvent, useLayoutEffect, useMemo, useRef } from "react";
+import { CSSProperties, KeyboardEvent, useEffect, useRef } from "react";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import type { PitchRange } from "@/interfaces/piano-roll-range";
 import { baseCanvasWidth, baseCanvasHeight } from "@/helpers/conversion";
-import { ConfigProvider, PianoRollConfig } from "@/contexts/PianoRollConfigProvider";
+import { ConfigProvider } from "@/contexts/PianoRollConfigProvider";
 import { useScrollToNote } from "@/components/handlers/useScrollToNote";
 import UpperSection from "./Sections/UpperSection";
-import MiddleSection from "./Sections/MiddleSection";
 import PianoRoll from "./PianoRoll";
 import LowerSection from "./Sections/LowerSection";
 import { ScaleXProvider, useScaleX } from "@/contexts/ScaleXProvider";
 import PianoRollThemeContext from "@/contexts/piano-roll-theme-context";
 import { defaultPianoRollTheme } from "@/store/pianoRollTheme";
-// import { PianoRollStoreProvider } from "@/store/pianoRollStore";
 import { BeatPerBar, BeatUnit } from "@/interfaces/time-signature";
 import { useLeftAnchoredScale } from "@/components/handlers/useLeftAnchoredScale";
 import PianoKeyboard from "./PianoKeyboard";
-import ScrollSync from "./SyncScroll";
 import { Provider as JotaiProvider } from "jotai";
-import ModeSelect from "./ModeSelect";
+import ActionButtons, { ActionItem, ActionItemElement } from "./ActionButtons";
+import Menu from "./Menu";
+import { useNotes } from "..";
 
-interface MidiEditorProps {
+export interface MidiEditorProps {
   playheadPosition?: number;
   attachLyric?: boolean;
   initialScrollMiddleNote?: number;
-  onSpace?: (event: KeyboardEvent<HTMLDivElement>) => void;
-  onNoteCreate?: (notes: TrackNoteEvent[]) => void;
+  onPlay?: (event: KeyboardEvent<HTMLDivElement>) => void;
+  onPause?: (event: KeyboardEvent<HTMLDivElement>) => void;
   onNoteUpdate?: (notes: TrackNoteEvent[]) => void;
-  onNoteSelect?: (notes: TrackNoteEvent[]) => void;
   tickRange?: [number, number];
   style?: CSSProperties;
   pitchRange?: PitchRange;
   beatsPerBar?: BeatPerBar;
   beatUnit?: BeatUnit;
+  rendering?: boolean;
+  children?: ActionItemElement | ActionItemElement[];
 }
-function MidiEditor({
-  playheadPosition,
-  attachLyric = false,
-  initialScrollMiddleNote = 60,
-  onSpace,
-  style,
-  tickRange,
-  pitchRange,
-  beatsPerBar,
-  beatUnit,
-}: MidiEditorProps) {
+const defaultProps = {
+  attachLyric: false,
+  initialScrollMiddleNote: 60,
+  rendering: false,
+  tickRange: [480 * 4 * 0, 480 * 4 * 8] as [number, number],
+  pitchRange: { startingNoteNum: 0, numOfKeys: 128 },
+  beatsPerBar: 4 as BeatPerBar,
+  beatUnit: 4 as BeatUnit,
+};
+type MidiEditorPropsWithDefaults = typeof defaultProps & MidiEditorProps
+
+function MidiEditor(props: MidiEditorPropsWithDefaults) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scaleX } = useScaleX();
-  useScrollToNote(containerRef, initialScrollMiddleNote);
+  const notes = useNotes();
+  useScrollToNote(containerRef, props.initialScrollMiddleNote);
   useLeftAnchoredScale(containerRef);
-  // return <PianoRoll attachLyric={attachLyric} playheadPosition={playheadPosition} />;
 
-  // return (
-  //   <div
-  //     className={`${styles["container"]} piano-roll`}
-  //     ref={containerRef}
-  //     style={
-  //       {
-  //         "--canvas-width": `${baseCanvasWidth(tickRange!) * scaleX}px`,
-  //         "--canvas-height": `${baseCanvasHeight(pitchRange!.numOfKeys)}px`,
-  //         display: "flex",
-  //         ...style,
-  //       } as React.CSSProperties
-  //     }
-  //     tabIndex={0}
-  //   >
-  //     <SyncScrollDivs2
-  //       pkeyboard={<PianoKeyboard />}
-  //       proll={<PianoRoll attachLyric={attachLyric} playheadPosition={playheadPosition} />}
-  //     />
-  //     {/* <ScrollSync>
-  //       <ScrollSync.Panel style={{ height: "600px" }}>
-  //         <PianoKeyboard />
-  //       </ScrollSync.Panel>
-  //       <ScrollSync.Panel style={{ height: "600px", width: "800px" }}>
-  //         <PianoRoll attachLyric={attachLyric} playheadPosition={playheadPosition} />
-  //       </ScrollSync.Panel>
-  //     </ScrollSync> */}
-  //   </div>
-  // );
+  useEffect(() => props.onNoteUpdate?.(notes), [notes]);
 
   return (
     <div
@@ -86,9 +60,9 @@ function MidiEditor({
       ref={containerRef}
       style={
         {
-          "--canvas-width": `${baseCanvasWidth(tickRange!) * scaleX}px`,
-          "--canvas-height": `${baseCanvasHeight(pitchRange!.numOfKeys)}px`,
-          ...style,
+          "--canvas-width": `${baseCanvasWidth(props.tickRange!) * scaleX}px`,
+          "--canvas-height": `${baseCanvasHeight(props.pitchRange!.numOfKeys)}px`,
+          ...props.style,
         } as React.CSSProperties
       }
       tabIndex={0}
@@ -97,46 +71,30 @@ function MidiEditor({
       <div className={styles["middle-container"]}>
         <PianoKeyboard />
         <div className={styles["lane-container"]}>
-          <PianoRoll attachLyric={attachLyric} playheadPosition={playheadPosition} />
+          <PianoRoll attachLyric={props.attachLyric} playheadPosition={props.playheadPosition} />
         </div>
       </div>
-      {/* <MiddleSection></MiddleSection> */}
       <LowerSection />
-      <ModeSelect/>
+      <Menu />
+      <ActionButtons>{props.children}</ActionButtons>
     </div>
   );
 }
 
-const withProvider = (Component: typeof MidiEditor) => {
-  return ({
-    tickRange = [480 * 4 * 0, 480 * 4 * 8],
-    pitchRange = { startingNoteNum: 0, numOfKeys: 128 },
-    beatsPerBar = 4,
-    beatUnit = 4,
-    ...other
-  }: MidiEditorProps) => {
-    const config = useMemo(() => {
-      const config: PianoRollConfig = {
-        pitchRange: pitchRange,
-        tickRange: tickRange,
-        beatsPerBar: beatsPerBar,
-        beatUnit: beatUnit,
-      };
-      return config;
-    }, []);
-
-    return (
-      <JotaiProvider>
-        <ConfigProvider value={config}>
-          <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
-            <ScaleXProvider>
-              <Component {...other} tickRange={tickRange} pitchRange={pitchRange} beatsPerBar={beatsPerBar} />
-            </ScaleXProvider>
-          </PianoRollThemeContext.Provider>
-        </ConfigProvider>
-      </JotaiProvider>
-    );
-  };
+function MidiEditorWrapper(props: MidiEditorProps) {
+  const newProps = { ...defaultProps, ...props };
+  return (
+    <JotaiProvider>
+      <ConfigProvider value={newProps}>
+        <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
+          <ScaleXProvider>
+            <MidiEditor {...newProps} />
+          </ScaleXProvider>
+        </PianoRollThemeContext.Provider>
+      </ConfigProvider>
+    </JotaiProvider>
+  );
 };
 
-export default withProvider(MidiEditor);
+MidiEditorWrapper.ActionItem = ActionItem;
+export default MidiEditorWrapper;

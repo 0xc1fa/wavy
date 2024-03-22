@@ -1,4 +1,4 @@
-import {useHandleNoteCreationAndModification} from "./handlers/useHandleNoteCreationAndModification";
+import { useHandleNoteCreationAndModification } from "./handlers/useHandleNoteCreationAndModification";
 import styles from "./index.module.scss";
 import LaneGrids from "@/components/LaneGrids";
 import Marker from "@/components/Marker";
@@ -13,7 +13,7 @@ import { useHandleUndoRedo } from "@/components/PianoRoll/handlers/useHandleUndo
 import { useHandleScaleX } from "@/components/PianoRoll/handlers/useHandleScaleX";
 import { useHandleMarqueeSelection } from "./handlers/useHandleMarqueeSelection";
 import { useHandleRangeSelection } from "./handlers/useHandleRangeSelection";
-import ModeSelect from "../ModeSelect";
+import ModeSelect from "../ActionButtons";
 
 type Props = {
   attachLyric: boolean;

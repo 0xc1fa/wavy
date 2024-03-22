@@ -1,3 +1,4 @@
+import { MidiEditorProps } from "@/components";
 import type { PitchRange } from "@/interfaces/piano-roll-range";
 import { BeatPerBar, BeatUnit } from "@/interfaces/time-signature";
 import { createContext, memo, useContext } from "react";
@@ -9,6 +10,7 @@ export type PianoRollConfig = {
   tickRange: TickRange;
   beatsPerBar?: BeatPerBar,
   beatUnit?: BeatUnit,
+  rendering: boolean;
 };
 
 const defaultPianoRollConfig: PianoRollConfig = {
@@ -19,6 +21,7 @@ const defaultPianoRollConfig: PianoRollConfig = {
   tickRange: [0, 480 * 4 * 8],
   beatsPerBar: 4,
   beatUnit: 4,
+  rendering: false,
 };
 
 const PianoRollConfigContext = createContext(defaultPianoRollConfig);

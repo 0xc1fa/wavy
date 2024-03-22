@@ -1,6 +1,6 @@
-import { modifyingNotesAtom, notesAtom, selectedNotesAtom } from "@/atoms/note";
-import { noteModificationBufferAtom } from "@/atoms/note-modification-buffer";
-import { selectionRangeAtom, selectionTicksAtom } from "@/atoms/selection-ticks";
+import { modifyingNotesAtom, notesAtom, selectedNotesAtom } from "@/store/note";
+import { noteModificationBufferAtom } from "@/store/note-modification-buffer";
+import { selectionRangeAtom, selectionTicksAtom } from "@/store/selection-ticks";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { inMarquee } from "@/helpers/conversion";
@@ -14,9 +14,9 @@ export type MarqueePosition = [{ x: number; y: number }, { x: number; y: number 
 export function useHandleMarqueeSelection() {
   // const { pianoRollStore, dispatch } = useStore();
   const notes = useAtomValue(notesAtom);
-  const selectedNotes = useAtomValue(selectedNotesAtom)
-  const selectionRange = useAtomValue(selectionRangeAtom)
-  const setSelectionTicks = useSetAtom(selectionTicksAtom)
+  const selectedNotes = useAtomValue(selectedNotesAtom);
+  const selectionRange = useAtomValue(selectionRangeAtom);
+  const setSelectionTicks = useSetAtom(selectionTicksAtom);
   const noteModificationBuffer = useAtomValue(noteModificationBufferAtom);
   const modifyingNotes = useSetAtom(modifyingNotesAtom);
 
@@ -70,10 +70,7 @@ export function useHandleMarqueeSelection() {
     if (selectedNotes.length === 0) {
       return;
     }
-    let newSelectionRange = getSelectionRangeWithSelectedNotes(
-      selectedNotes,
-      selectionRange,
-    );
+    let newSelectionRange = getSelectionRangeWithSelectedNotes(selectedNotes, selectionRange);
     setSelectionTicks(newSelectionRange[1]);
   };
 

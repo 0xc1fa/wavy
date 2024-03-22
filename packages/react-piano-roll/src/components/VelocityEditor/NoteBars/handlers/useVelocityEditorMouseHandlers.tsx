@@ -5,11 +5,11 @@ import { useScaleX } from "@/contexts/ScaleXProvider";
 import { TrackNoteEvent } from "@/types";
 import { getNoteIdFromEvent, getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
 import { useAtomValue, useSetAtom } from "jotai";
-import { modifyingNotesAtom, notesAtom, setNoteAsSelectedAtom, unselectAllNotesAtom } from "@/atoms/note";
+import { modifyingNotesAtom, notesAtom, setNoteAsSelectedAtom, unselectAllNotesAtom } from "@/store/note";
 import {
   noteModificationBufferAtom,
   setNoteModificationBufferWithAllNotesAtom,
-} from "@/atoms/note-modification-buffer";
+} from "@/store/note-modification-buffer";
 
 enum VelocityEditorMouseHandlerMode {
   Idle,

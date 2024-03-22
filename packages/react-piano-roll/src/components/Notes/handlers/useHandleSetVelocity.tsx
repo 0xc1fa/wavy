@@ -3,18 +3,22 @@ import { getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/ev
 import { useRef } from "react";
 import _ from "lodash";
 import { useAtom, useSetAtom } from "jotai";
-import { modifyingNotesAtom, notesAtom } from "@/atoms/note";
-import { noteModificationBufferAtom, setNoteModificationBufferWithAllNotesAtom, setNoteModificationBufferWithSelectedNotesAtom } from "@/atoms/note-modification-buffer";
-import { lastModifiedVelocityAtom } from "@/atoms/last-modified";
+import { modifyingNotesAtom, notesAtom } from "@/store/note";
+import {
+  noteModificationBufferAtom,
+  setNoteModificationBufferWithAllNotesAtom,
+  setNoteModificationBufferWithSelectedNotesAtom,
+} from "@/store/note-modification-buffer";
+import { lastModifiedVelocityAtom } from "@/store/last-modified";
 
 export function useHandleSetVelocity() {
   // const { pianoRollStore, dispatch } = useStore();
   const active = useRef(false);
   const [notes] = useAtom(notesAtom);
-  const [noteModificationBuffer] = useAtom(noteModificationBufferAtom)
-  const [,setNoteModificationBufferWithSelectedNotes] = useAtom(setNoteModificationBufferWithSelectedNotesAtom)
-  const [,modifyingNotes] = useAtom(modifyingNotesAtom)
-  const setLastModifiedVelocityAtom = useSetAtom(lastModifiedVelocityAtom)
+  const [noteModificationBuffer] = useAtom(noteModificationBufferAtom);
+  const [, setNoteModificationBufferWithSelectedNotes] = useAtom(setNoteModificationBufferWithSelectedNotesAtom);
+  const [, modifyingNotes] = useAtom(modifyingNotesAtom);
+  const setLastModifiedVelocityAtom = useSetAtom(lastModifiedVelocityAtom);
 
   const handleSetVelocityPD: React.PointerEventHandler = (event) => {
     if (!event.metaKey) {
@@ -28,7 +32,7 @@ export function useHandleSetVelocity() {
     event.currentTarget.setPointerCapture(event.nativeEvent.pointerId);
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
-    setNoteModificationBufferWithSelectedNotes({ initX: relativeX, initY: relativeY })
+    setNoteModificationBufferWithSelectedNotes({ initX: relativeX, initY: relativeY });
   };
 
   const handleSetVelocityPM: React.PointerEventHandler = (event) => {
@@ -44,7 +48,7 @@ export function useHandleSetVelocity() {
       velocity: bufferedNote.velocity - deltaY / 3,
     }));
     modifyingNotes(newNotes);
-    setLastModifiedVelocityAtom(noteClicked!.velocity - deltaY / 3)
+    setLastModifiedVelocityAtom(noteClicked!.velocity - deltaY / 3);
   };
 
   const handleSetVelocityPU: React.PointerEventHandler = (event) => {

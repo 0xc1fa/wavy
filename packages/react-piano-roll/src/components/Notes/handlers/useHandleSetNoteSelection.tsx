@@ -1,14 +1,14 @@
-import { moveNoteAsLatestModifiedAtom, notesAtom, setNoteAsSelectedAtom, unselectAllNotesAtom } from "@/atoms/note";
+import { moveNoteAsLatestModifiedAtom, notesAtom, setNoteAsSelectedAtom, unselectAllNotesAtom } from "@/store/note";
 import { getNoteObjectFromEvent } from "@/helpers/event";
 import { TrackNoteEvent } from "@/types";
 import { useAtom } from "jotai";
 
 export function useHandleSetNoteSelection() {
   // const { pianoRollStore, dispatch } = useStore();
-  const [notes] = useAtom(notesAtom)
-  const [, unselectAllNotes] = useAtom(unselectAllNotesAtom)
-  const [, setNoteAsSelected] = useAtom(setNoteAsSelectedAtom)
-  const [, moveNoteAsLatestModified] = useAtom(moveNoteAsLatestModifiedAtom)
+  const [notes] = useAtom(notesAtom);
+  const [, unselectAllNotes] = useAtom(unselectAllNotesAtom);
+  const [, setNoteAsSelected] = useAtom(setNoteAsSelectedAtom);
+  const [, moveNoteAsLatestModified] = useAtom(moveNoteAsLatestModifiedAtom);
 
   function handleSetNoteSelectionPD(event: React.PointerEvent<Element>) {
     const noteClicked = getNoteObjectFromEvent(notes, event);
@@ -27,7 +27,7 @@ export function useHandleSetNoteSelection() {
       setNoteAsSelected(noteClicked?.id!);
     }
     if (noteClicked) {
-      moveNoteAsLatestModified(noteClicked.id)
+      moveNoteAsLatestModified(noteClicked.id);
     }
   };
 
