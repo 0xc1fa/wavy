@@ -39,6 +39,9 @@ export default function SvsPianoRoll(props: SvsPianoRollProps) {
         attachLyric
         onNoteUpdate={() => audioStatusDispatch("NOTE_MODIFIED")}
         rendering={!audioStatus.getIsUpToDate()}
+        onPlay={() => audioRef.current?.play()}
+        onPause={() => audioRef.current?.pause()}
+        
       >
         <RenderAction
           setAudioSource={setAudioSource}
