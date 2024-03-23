@@ -2,7 +2,6 @@
 import { useBlobUrl } from "@/hooks/useBlobUrl";
 import { sendAudioProcessingRequest } from "@/utils/sendAudioProcessingRequest";
 import { debounce } from "lodash";
-import { Dispatch, useState } from "react";
 import { TrackNoteEvent } from "react-piano-roll/dist/types";
 import { saveAs } from "file-saver";
 import { PianoRoll } from "react-piano-roll";
@@ -14,6 +13,7 @@ export interface RenderActionProps {
   setAudioSource: ReturnType<typeof useBlobUrl>[1];
   audioStatus: ReturnType<typeof useAudioStatus>[0];
   setAudioStatus: ReturnType<typeof useAudioStatus>[1];
+  audioRef: React.RefObject<HTMLAudioElement>;
 }
 export default function RenderAction(props: RenderActionProps) {
   const debouncedSendAudioProcessingRequest = debounce(sendAudioProcessingRequest, 800);
@@ -34,13 +34,22 @@ export default function RenderAction(props: RenderActionProps) {
         })),
     ).then((res) => {
       props.setAudioSource(res);
-      saveAs(res!, "audio.wav");
+      // if (props.audioRef.current?.paused === false) props.audioRef.current?.pause();
       props.setAudioStatus("RENDERING_DONE");
+      // props.audioRef.current?.pause();
+      // props.audioRef.current?.load();
+      // props.audioRef.current?.play();
+      saveAs(res!, "audio.wav");
     });
   };
 
   return (
-    <PianoRoll.Action name="render" onClick={renderAudio} disabled={props.audioStatus.getIsRenderingDisabled()} controls>
+    <PianoRoll.Action
+      name="render"
+      onClick={renderAudio}
+      disabled={props.audioStatus.getIsRenderingDisabled()}
+      controls
+    >
       {props.audioStatus.getIsUpToDate() ? (
         <RxCheck />
       ) : (
