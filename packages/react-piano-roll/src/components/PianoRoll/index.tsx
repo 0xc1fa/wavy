@@ -6,7 +6,7 @@ import Notes from "@/components/Notes";
 import SelectionMarquee from "@/components/SelectionMarquee";
 import Playhead from "@/components/Playhead";
 import LanesBackground from "@/components/LanesBackground";
-import { memo, useRef } from "react";
+import { memo, useImperativeHandle, useRef } from "react";
 import { useClipboard } from "@/components/Notes/handlers/useClipboard";
 import { useHandleSpaceDown } from "@/components/PianoRoll/handlers/useHandleSpaceDown";
 import { useHandleUndoRedo } from "@/components/PianoRoll/handlers/useHandleUndoRedo";
@@ -28,7 +28,7 @@ const PianoRoll: React.FC<Props> = memo((props) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useClipboard(containerRef);
-  useHandleSpaceDown(containerRef);
+  // useHandleSpaceDown(containerRef);
   useHandleUndoRedo(containerRef);
   useHandleScaleX(containerRef);
   const { marqueePosition, handleMarqueeSelectionPD, handleMarqueeSelectionPM, handleMarqueeSelectionPU } =
@@ -54,10 +54,11 @@ const PianoRoll: React.FC<Props> = memo((props) => {
   return (
     <div className={styles["pianoroll-lane"]} {...handlers} tabIndex={0} ref={containerRef}>
       <LaneGrids />
+      {/* <Playhead /> */}
       <Marker />
       <Notes attachLyric={props.attachLyric} />
       <SelectionMarquee marqueePosition={marqueePosition} />
-      {props.playheadPosition !== undefined && <Playhead playheadPosition={props.playheadPosition} />}
+      {/* {props.playheadPosition !== undefined && <Playhead playheadPosition={props.playheadPosition} />} */}
       <LanesBackground />
     </div>
   );

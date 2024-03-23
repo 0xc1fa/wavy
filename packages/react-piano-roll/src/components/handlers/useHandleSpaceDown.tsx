@@ -1,3 +1,4 @@
+import { useEventListener } from "@/hooks/useEventListener";
 import { MutableRefObject, RefObject, useEffect, useRef } from "react";
 
 export function useHandleSpaceDown<T extends HTMLElement>(ref: RefObject<T>) {
@@ -11,10 +12,22 @@ export function useHandleSpaceDown<T extends HTMLElement>(ref: RefObject<T>) {
         return;
       }
       if (isPlaying.current) {
-        ref.current!.dispatchEvent(new CustomEvent("pause"));
+        ref.current!.dispatchEvent(
+          new CustomEvent("pause", {
+            bubbles: true,
+            cancelable: true,
+            detail: {},
+          }),
+        );
         isPlaying.current = false;
       } else {
-        ref.current!.dispatchEvent(new CustomEvent("play"));
+        ref.current!.dispatchEvent(
+          new CustomEvent("play", {
+            bubbles: true,
+            cancelable: true,
+            detail: {},
+          }),
+        );
         isPlaying.current = true;
       }
       spaceDown.current = true;
@@ -26,6 +39,8 @@ export function useHandleSpaceDown<T extends HTMLElement>(ref: RefObject<T>) {
       spaceDown.current = false;
     }
   };
+
+  // useEventListener(ref, "keydown", spaceDownHandler);
 
   useEffect(() => {
     ref.current!.addEventListener("keydown", spaceDownHandler);

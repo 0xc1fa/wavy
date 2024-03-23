@@ -1,5 +1,5 @@
 import styles from "./index.module.scss";
-import { CSSProperties, KeyboardEvent, useEffect, useRef } from "react";
+import { CSSProperties, forwardRef, KeyboardEvent, useEffect, useImperativeHandle, useRef } from "react";
 import { TrackNoteEvent } from "@/types/TrackNoteEvent";
 import type { PitchRange } from "@/interfaces/piano-roll-range";
 import { baseCanvasWidth, baseCanvasHeight } from "@/helpers/conversion";
@@ -18,13 +18,16 @@ import { Provider as JotaiProvider } from "jotai";
 import ActionBar, { ActionItem, ActionItemElement } from "./ActionButtons";
 import Menu from "./Menu";
 import { useNotes } from "..";
+import { useHandleSpaceDown } from "./handlers/useHandleSpaceDown";
+import { useEventListener } from "@/hooks/useEventListener";
 
 export interface MidiEditorProps {
   playheadPosition?: number;
   attachLyric?: boolean;
   initialScrollMiddleNote?: number;
-  onPlay?: (event: KeyboardEvent<HTMLDivElement>) => void;
-  onPause?: (event: KeyboardEvent<HTMLDivElement>) => void;
+  onPlay?: () => void;
+  onPause?: () => void;
+  onTimeUpdate?: () => void;
   onNoteUpdate?: (notes: TrackNoteEvent[]) => void;
   tickRange?: [number, number];
   style?: CSSProperties;
@@ -43,16 +46,36 @@ const defaultProps = {
   beatsPerBar: 4 as BeatPerBar,
   beatUnit: 4 as BeatUnit,
 };
-type MidiEditorPropsWithDefaults = typeof defaultProps & MidiEditorProps
+type MidiEditorPropsWithDefaults = typeof defaultProps & MidiEditorProps;
 
-function MidiEditor(props: MidiEditorPropsWithDefaults) {
+const MidiEditor = forwardRef((props: MidiEditorPropsWithDefaults, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scaleX } = useScaleX();
   const notes = useNotes();
   useScrollToNote(containerRef, props.initialScrollMiddleNote);
   useLeftAnchoredScale(containerRef);
+  useHandleSpaceDown(containerRef);
 
   useEffect(() => props.onNoteUpdate?.(notes), [notes]);
+  useEventListener(containerRef, "play", (event) => {
+    console.log("play");
+    props.onPlay?.();
+  });
+  useEventListener(containerRef, "pause", (event) => props.onPause?.());
+  useEventListener(containerRef, "timeupdate", (event) => props.onTimeUpdate?.());
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      get currentTime() {
+        return containerRef.current;
+      },
+      get paused() {
+        return 0;
+      },
+    }),
+    [],
+  );
 
   return (
     <div
@@ -79,7 +102,7 @@ function MidiEditor(props: MidiEditorPropsWithDefaults) {
       <ActionBar>{props.children}</ActionBar>
     </div>
   );
-}
+});
 
 function MidiEditorWrapper(props: MidiEditorProps) {
   const newProps = { ...defaultProps, ...props };
@@ -94,7 +117,7 @@ function MidiEditorWrapper(props: MidiEditorProps) {
       </ConfigProvider>
     </JotaiProvider>
   );
-};
+}
 
 MidiEditorWrapper.Action = ActionItem;
 export default MidiEditorWrapper;
