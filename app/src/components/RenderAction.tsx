@@ -10,12 +10,12 @@ import { RxCheck } from "react-icons/rx";
 import { RxMagicWand } from "react-icons/rx";
 import { useAudioStatus } from "@/hooks/useAudioStatus";
 
-export interface RenderActionItemProps {
+export interface RenderActionProps {
   setAudioSource: ReturnType<typeof useBlobUrl>[1];
   audioStatus: ReturnType<typeof useAudioStatus>[0];
   setAudioStatus: ReturnType<typeof useAudioStatus>[1];
 }
-export default function RenderActionItem(props: RenderActionItemProps) {
+export default function RenderAction(props: RenderActionProps) {
   const debouncedSendAudioProcessingRequest = debounce(sendAudioProcessingRequest, 800);
 
   const renderAudio = (notes: TrackNoteEvent[]) => {
@@ -40,12 +40,12 @@ export default function RenderActionItem(props: RenderActionItemProps) {
   };
 
   return (
-    <PianoRoll.ActionItem name="render" onClick={renderAudio} disabled={props.audioStatus.getIsRenderingDisabled()}>
+    <PianoRoll.Action name="render" onClick={renderAudio} disabled={props.audioStatus.getIsRenderingDisabled()} controls>
       {props.audioStatus.getIsUpToDate() ? (
         <RxCheck />
       ) : (
         <RxMagicWand style={{ animation: props.audioStatus.rendering ? "wiggle 2s infinite" : "" }} />
       )}
-    </PianoRoll.ActionItem>
+    </PianoRoll.Action>
   );
 }

@@ -2,9 +2,10 @@
 import { useBlobUrl } from "@/hooks/useBlobUrl";
 import { useReducer } from "react";
 import { PianoRoll } from "react-piano-roll";
-import RenderActionItem from "./RenderActionItem";
+import RenderAction from "./RenderAction";
 import { useDebug } from "@/hooks/useDebug";
 import { useAudioStatus } from "@/hooks/useAudioStatus";
+import SetLegatoAction from "./SetLegatoAction";
 
 export interface SvsPianoRollProps extends React.HTMLAttributes<HTMLDivElement> {}
 export default function SvsPianoRoll(props: SvsPianoRollProps) {
@@ -23,11 +24,12 @@ export default function SvsPianoRoll(props: SvsPianoRollProps) {
         onNoteUpdate={() => audioStatusDispatch("NOTE_MODIFIED")}
         rendering={!audioStatus.getIsUpToDate()}
       >
-        <RenderActionItem
+        <RenderAction
           setAudioSource={setAudioSource}
           audioStatus={audioStatus}
           setAudioStatus={audioStatusDispatch}
         />
+        <SetLegatoAction />
       </PianoRoll>
     </>
   );
