@@ -9,6 +9,8 @@ import { RxDimensions } from "react-icons/rx";
 import { RxHand } from "react-icons/rx";
 import { RxQuote } from "react-icons/rx";
 import cx from "clsx/lite";
+import { useNotes } from "@/hooks/useNotes";
+import { TrackNoteEvent } from "@/types";
 
 interface ActionButtonsProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: ActionItemElement | ActionItemElement[];
@@ -40,28 +42,28 @@ export default function ActionButtons(props: ActionButtonsProps) {
   //   </div>
   // );
 
-
-  return (
-    <div {...props} className={styles.container} />
-  );
+  return <div {...props} className={styles.container} />;
 }
 
-
-export type ActionItemElement = React.ReactElement<ComponentProps<typeof ActionItem>>
+export type ActionItemElement = React.ReactElement<ComponentProps<typeof ActionItem>>;
 export interface ActionItemProps {
   name: string;
-  onClick: () => void;
+  onClick: (notes: TrackNoteEvent[]) => void;
   children: React.ReactNode;
+  disabled?: boolean;
 }
-export function ActionItem({ name, onClick, children }: ActionItemProps) {
+export function ActionItem(props: ActionItemProps) {
+  const notes = useNotes();
   return (
     <button
-      key={name}
-      data-name={name}
+      key={props.name}
+      data-name={props.name}
       className={cx(styles.item)}
-      onClick={onClick}
+      onClick={() => props.onClick(notes)}
+      disabled={props.disabled}
+      style={{ pointerEvents: props.disabled ? "none" : undefined, opacity: props.disabled ? 0.5 : undefined}}
     >
-      {children}
+      {props.children}
     </button>
   );
 }
