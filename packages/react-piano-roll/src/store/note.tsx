@@ -9,6 +9,9 @@ import _ from "lodash";
 import { noteModificationBufferAtom } from "./note-modification-buffer";
 
 export const notesAtom = atom(new Array<TrackNoteEvent>());
+export const setNotesAtom = atom(null, (get, set, payload: TrackNoteEvent[]) => {
+  set(notesAtom, payload);
+})
 
 export const selectedNotesAtom = atom((get) => get(notesAtom).filter((note) => note.isSelected));
 

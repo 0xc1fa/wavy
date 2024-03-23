@@ -15,7 +15,7 @@ import { BeatPerBar, BeatUnit } from "@/interfaces/time-signature";
 import { useLeftAnchoredScale } from "@/components/handlers/useLeftAnchoredScale";
 import PianoKeyboard from "./PianoKeyboard";
 import { Provider as JotaiProvider } from "jotai";
-import ActionButtons, { ActionItem, ActionItemElement } from "./ActionButtons";
+import ActionBar, { ActionItem, ActionItemElement } from "./ActionButtons";
 import Menu from "./Menu";
 import { useNotes } from "..";
 
@@ -76,7 +76,7 @@ function MidiEditor(props: MidiEditorPropsWithDefaults) {
       </div>
       <LowerSection />
       <Menu />
-      <ActionButtons>{props.children}</ActionButtons>
+      <ActionBar>{props.children}</ActionBar>
     </div>
   );
 }
@@ -96,5 +96,5 @@ function MidiEditorWrapper(props: MidiEditorProps) {
   );
 };
 
-MidiEditorWrapper.ActionItem = ActionItem;
+MidiEditorWrapper.Action = ActionItem;
 export default MidiEditorWrapper;
