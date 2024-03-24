@@ -13,14 +13,12 @@ export function useHandleUndoRedo<T extends HTMLElement>(ref: RefObject<T>) {
     const handleUndoWarper = (event: KeyboardEvent) => {
       if (!event.shiftKey && event.code === "KeyZ") {
         event.preventDefault();
-
-        redo();
+        undo();
       }
     };
     const handleRedoWarper = (event: KeyboardEvent) => {
-      if (!event.shiftKey && event.code === "KeyZ") {
+      if (event.shiftKey && event.code === "KeyZ") {
         event.preventDefault();
-
         redo();
       }
     };

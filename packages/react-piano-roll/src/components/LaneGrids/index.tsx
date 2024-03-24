@@ -9,11 +9,11 @@ import { useScaleX } from "@/contexts/ScaleXProvider";
 
 const LaneGrids: React.FC = memo(() => {
   const theme = useTheme();
-  const { tickRange, beatsPerBar } = useConfig();
+  const { tickRange, timeSignature } = useConfig();
 
   const { scaleX } = useScaleX();
 
-  const gridSeparationFactor = getGridSeparationFactor(beatsPerBar!, scaleX);
+  const gridSeparationFactor = getGridSeparationFactor(timeSignature![0], scaleX);
   const numberOfGrids = getNumOfGrid(baseCanvasWidth(tickRange), scaleX);
   const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor);
 

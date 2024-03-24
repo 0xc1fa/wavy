@@ -4,7 +4,7 @@ import { getSelectionRangeWithSelectedNotes } from "@/helpers/notes";
 import { PianoRollNote } from "@/types";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Dispatch, RefObject, useEffect, useReducer } from "react";
-import { create } from "lodash";
+import { v4 as uuidv4 } from "uuid";
 
 export function useClipboard<T extends HTMLElement>(ref: RefObject<T>) {
   const { clipboard, clipboardDispatch } = useClipboardReducer();
@@ -38,6 +38,7 @@ export function useClipboard<T extends HTMLElement>(ref: RefObject<T>) {
       }
       const shiftedNotes = clipboard.notes.map((note) => ({
         ...note,
+        id: uuidv4(),
         tick: selectionTicks! + note.tick,
       }));
       setSelectedNoteIds(new Set());
