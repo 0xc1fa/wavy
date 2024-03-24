@@ -8,10 +8,10 @@ import {
   draggableBoundaryPixel,
   ticksPerBeat,
 } from "@/constants";
-import { PitchRange } from "@/interfaces/piano-roll-range";
-import { TrackNoteEvent } from "@/types";
+import { PitchRange } from "@/types/piano-roll-range";
+import { PianoRollNote } from "@/types";
 import { isBlackKey } from ".";
-import { Offset, convertOffsetToObject, convertOffsetToTuple } from "@/interfaces/offset";
+import { Offset, convertOffsetToObject, convertOffsetToTuple } from "@/types/offset";
 import { TickRange } from "@/contexts/PianoRollConfigProvider";
 import { getTickInGrid } from "./grid";
 
@@ -39,7 +39,7 @@ export function getCenterYFromNoteNum(numOfKeys: number, noteNum: number) {
   return (getMinYFromNoteNum(numOfKeys, noteNum) + getMaxYFromNoteNum(numOfKeys, noteNum)) / 2;
 }
 
-export function getNotesFromOffsetX(scaleX: number, notes: TrackNoteEvent[], offsetX: number) {
+export function getNotesFromOffsetX(scaleX: number, notes: PianoRollNote[], offsetX: number) {
   return notes.filter(
     (note) =>
       note.tick <= getTickFromOffsetX(scaleX, offsetX) &&
@@ -61,9 +61,9 @@ export function getOffsetXFromTick(scaleX: number, tick: number) {
 export function getNoteFromPosition(
   scaleX: number,
   numOfKeys: number,
-  notes: TrackNoteEvent[],
+  notes: PianoRollNote[],
   position: { offsetX: number; offsetY: number } | [number, number],
-): TrackNoteEvent | null {
+): PianoRollNote | null {
   if (Array.isArray(position)) {
     position = { offsetX: position[0], offsetY: position[1] };
   }
@@ -115,9 +115,9 @@ export function getPianoKeyNumFromPosition(range: PitchRange, x: number, y: numb
 export function getNoteFromEvent(
   numOfKeys: number,
   scaleX: number,
-  notes: TrackNoteEvent[],
+  notes: PianoRollNote[],
   e: PointerEvent | MouseEvent,
-): TrackNoteEvent | null {
+): PianoRollNote | null {
   return getNoteFromPosition(scaleX, numOfKeys, notes, [e.offsetX, e.offsetY]);
 }
 
@@ -133,7 +133,7 @@ export function roundDownTickToNearestGrid(tick: number, scaleX: number) {
   return tick - (tick % getTickInGrid(scaleX));
 }
 
-export function isNoteLeftMarginClicked(numOfKeys: number, scaleX: number, note: TrackNoteEvent, offset: Offset) {
+export function isNoteLeftMarginClicked(numOfKeys: number, scaleX: number, note: PianoRollNote, offset: Offset) {
   offset = convertOffsetToObject(offset);
   if (
     getNoteNumFromOffsetY(numOfKeys, offset.y) == note.noteNumber &&
@@ -146,7 +146,7 @@ export function isNoteLeftMarginClicked(numOfKeys: number, scaleX: number, note:
   }
 }
 
-export function isNoteRightMarginClicked(numOfKeys: number, scaleX: number, note: TrackNoteEvent, offset: Offset) {
+export function isNoteRightMarginClicked(numOfKeys: number, scaleX: number, note: PianoRollNote, offset: Offset) {
   offset = convertOffsetToObject(offset);
   if (
     getNoteNumFromOffsetY(numOfKeys, offset.y) == note.noteNumber &&
@@ -162,7 +162,7 @@ export function isNoteRightMarginClicked(numOfKeys: number, scaleX: number, note
 export function inMarquee(
   numOfKeys: number,
   scaleX: number,
-  note: TrackNoteEvent,
+  note: PianoRollNote,
   marquee: {
     startingPosition: { x: number; y: number };
     ongoingPosition: { x: number; y: number };

@@ -1,4 +1,4 @@
-import { TrackNoteEvent } from "@/types/TrackNoteEvent";
+import { PianoRollNote } from "@/types/PianoRollNote";
 // import { useStore } from "@/hooks/useStore";
 
 export function focusNote(e: Event, id: string) {
@@ -15,19 +15,18 @@ export function focusNote(e: Event, id: string) {
 //   noteElement.focus();
 // }
 
-
-export function getStartingTickFromNotes(notes: TrackNoteEvent[]): number {
+export function getStartingTickFromNotes(notes: PianoRollNote[]): number {
   const startTick = notes.reduce((min, note) => Math.min(min, note.tick), Infinity);
   return startTick;
 }
 
-export function getEndingTickFromNotes(notes: TrackNoteEvent[]) {
+export function getEndingTickFromNotes(notes: PianoRollNote[]) {
   const endTick = notes.reduce((max, note) => Math.max(max, note.tick + note.duration), -Infinity);
   return endTick;
 }
 
 export function getSelectionRangeWithSelectedNotes(
-  selectedNotes: TrackNoteEvent[],
+  selectedNotes: PianoRollNote[],
   selectionRange: [number, number] | null,
 ): [number, number] {
   if (selectionRange === null) {

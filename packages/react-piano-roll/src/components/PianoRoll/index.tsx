@@ -17,7 +17,7 @@ import ModeSelect from "../ActionButtons";
 
 type Props = {
   attachLyric: boolean;
-  playheadPosition: number | undefined;
+  currentTime: number | undefined;
 };
 const PianoRoll: React.FC<Props> = memo((props) => {
   const {
@@ -54,11 +54,10 @@ const PianoRoll: React.FC<Props> = memo((props) => {
   return (
     <div className={styles["pianoroll-lane"]} {...handlers} tabIndex={0} ref={containerRef}>
       <LaneGrids />
-      {/* <Playhead /> */}
       <Marker />
       <Notes attachLyric={props.attachLyric} />
       <SelectionMarquee marqueePosition={marqueePosition} />
-      {/* {props.playheadPosition !== undefined && <Playhead playheadPosition={props.playheadPosition} />} */}
+      {props.currentTime !== undefined && <Playhead currentTime={props.currentTime} />}
       <LanesBackground />
     </div>
   );

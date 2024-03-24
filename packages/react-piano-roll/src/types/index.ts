@@ -1,2 +1,2 @@
-export * from "./TrackNoteEvent";
+export * from "./PianoRollNote";
 export * from "./VibratoMode";

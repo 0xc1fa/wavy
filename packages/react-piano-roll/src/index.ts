@@ -1,5 +1,6 @@
 export { default as PianoRoll } from "./components";
 export type { ActionItemProps } from "./components/ActionButtons";
+export type { MidiEditorHandle } from "./components";
 export { PianoRollStoreProvider } from "./providers";
 // export { useStore } from "./hooks/useStore";
 export { useNotes } from './hooks/useNotes';

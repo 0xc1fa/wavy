@@ -1,4 +1,4 @@
-import { TrackNoteEvent } from "@/types/TrackNoteEvent";
+import { PianoRollNote } from "@/types/PianoRollNote";
 import styles from "./index.module.scss";
 // import { useStore } from "@/hooks/useStore";
 import { memo, useRef } from "react";
@@ -14,7 +14,7 @@ const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => 
 };
 
 interface NoteLyricProps extends React.HTMLAttributes<HTMLInputElement> {
-  note: TrackNoteEvent;
+  note: PianoRollNote;
 }
 function NoteLyric({ note, style }: NoteLyricProps) {
   // const { dispatch } = useStore();

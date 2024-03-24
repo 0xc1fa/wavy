@@ -3,8 +3,8 @@ import styles from "./index.module.scss";
 import { getOffsetXFromTick } from "@/helpers/conversion";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import useTheme from "@/hooks/useTheme";
-import { useAtomValue } from "jotai";
-import { notesAtom } from "@/store/note";
+import { useAtom, useAtomValue } from "jotai";
+import { notesAtom, selectedNoteIdsAtom } from "@/store/note";
 
 type Props = {
   isDragging: boolean;
@@ -15,6 +15,7 @@ const NoteBars: React.FC<Props> = ({ isDragging }) => {
   const notes = useAtomValue(notesAtom);
   const { scaleX } = useScaleX();
   const theme = useTheme();
+  const [selectedNoteIds] = useAtom(selectedNoteIdsAtom)
 
   return (
     <div className={styles["note-bar-container"]} {...mouseHandlers}>
@@ -27,7 +28,7 @@ const NoteBars: React.FC<Props> = ({ isDragging }) => {
               "--marker-left": `${getOffsetXFromTick(scaleX, note.tick)}px`,
               "--marker-top": `${1 - note.velocity / 128}`,
               "--marker-width": `${getOffsetXFromTick(scaleX, note.duration)}px`,
-              "--marker-color": note.isSelected ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
+              "--marker-color": selectedNoteIds.has(note.id) ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
               "--cursor": isDragging ? "grabbing" : "grab",
             } as React.CSSProperties
           }
@@ -39,7 +40,7 @@ const NoteBars: React.FC<Props> = ({ isDragging }) => {
             className={styles["length-marker"]}
             data-note-id={note.id}
             style={{
-              outline: note.isSelected ? `3px solid #ffffff33` : "none",
+              outline: selectedNoteIds.has(note.id) ? `3px solid #ffffff33` : "none",
             }}
           />
         </div>

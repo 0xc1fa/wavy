@@ -1,13 +1,12 @@
-import { moveNoteAsLatestModifiedAtom, notesAtom, setNoteAsSelectedAtom, unselectAllNotesAtom } from "@/store/note";
+import { moveNoteAsLatestModifiedAtom, notesAtom, selectedNoteIdsAtom } from "@/store/note";
 import { getNoteObjectFromEvent } from "@/helpers/event";
-import { TrackNoteEvent } from "@/types";
+import { PianoRollNote } from "@/types";
 import { useAtom } from "jotai";
+import { create } from "mutative";
 
 export function useHandleSetNoteSelection() {
-  // const { pianoRollStore, dispatch } = useStore();
   const [notes] = useAtom(notesAtom);
-  const [, unselectAllNotes] = useAtom(unselectAllNotesAtom);
-  const [, setNoteAsSelected] = useAtom(setNoteAsSelectedAtom);
+  const [selectedNoteIds, setSelectedNoteIds] = useAtom(selectedNoteIdsAtom);
   const [, moveNoteAsLatestModified] = useAtom(moveNoteAsLatestModifiedAtom);
 
   function handleSetNoteSelectionPD(event: React.PointerEvent<Element>) {
@@ -15,16 +14,15 @@ export function useHandleSetNoteSelection() {
     setNoteSelection(event, noteClicked);
   }
 
-  const setNoteSelection = (event: React.PointerEvent<Element>, noteClicked: TrackNoteEvent | null) => {
+  const setNoteSelection = (event: React.PointerEvent<Element>, noteClicked: PianoRollNote | null) => {
     if (!noteClicked) {
       if (!event.shiftKey) {
-        unselectAllNotes();
+        setSelectedNoteIds(new Set())
       }
-    } else if (!noteClicked.isSelected && !event.shiftKey) {
-      unselectAllNotes();
-      setNoteAsSelected(noteClicked?.id!);
+    } else if (!selectedNoteIds.has(noteClicked.id) && !event.shiftKey) {
+      setSelectedNoteIds(new Set([noteClicked.id]));
     } else {
-      setNoteAsSelected(noteClicked?.id!);
+      setSelectedNoteIds(prev => create(prev, (draft) => draft.add(noteClicked.id)))
     }
     if (noteClicked) {
       moveNoteAsLatestModified(noteClicked.id);

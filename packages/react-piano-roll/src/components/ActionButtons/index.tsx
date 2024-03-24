@@ -10,9 +10,9 @@ import { RxHand } from "react-icons/rx";
 import { RxQuote } from "react-icons/rx";
 import cx from "clsx/lite";
 import { useNotes } from "@/hooks/useNotes";
-import { TrackNoteEvent } from "@/types";
+import { PianoRollNote } from "@/types";
 import { useAtom } from "jotai";
-import { setNotesAtom } from "@/store/note";
+import { notesAtom } from "@/store/note";
 
 interface ActionButtonsProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: ActionItemElement | ActionItemElement[];
@@ -49,8 +49,8 @@ export default function ActionBar(props: ActionButtonsProps) {
 
 export type ActionItemElement = React.ReactElement<ComponentProps<typeof ActionItem>>;
 
-type ActionItemGetter = (get: TrackNoteEvent[]) => void;
-type ActionItemGetterSetter = (get: TrackNoteEvent[], set: (notes: TrackNoteEvent[]) => void) => void;
+type ActionItemGetter = (get: PianoRollNote[]) => void;
+type ActionItemGetterSetter = (get: PianoRollNote[], set: (notes: PianoRollNote[]) => void) => void;
 type ActionItemCallback = ActionItemGetter | ActionItemGetterSetter;
 
 export type ActionItemProps = {
@@ -61,8 +61,7 @@ export type ActionItemProps = {
   children: React.ReactNode;
 } & ({ controls: true; children: React.ReactNode } | { controls: false | undefined });
 export const ActionItem = forwardRef((props: ActionItemProps, ref) => {
-  const notes = useNotes();
-  const [, setNotes] = useAtom(setNotesAtom);
+  const [notes, setNotes] = useAtom(notesAtom);
 
   useImperativeHandle(
     ref,

@@ -1,4 +1,4 @@
-import { modifyingNotesAtom, notesAtom, selectedNotesAtom } from "@/store/note";
+import { modifyingNotesAtom, notesAtom, selectedNoteIdsAtom, selectedNotesAtom } from "@/store/note";
 import { noteModificationBufferAtom } from "@/store/note-modification-buffer";
 import { selectionRangeAtom, selectionTicksAtom } from "@/store/selection-ticks";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
@@ -9,6 +9,7 @@ import { getSelectionRangeWithSelectedNotes } from "@/helpers/notes";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 // import { useStore } from "@/hooks/useStore";
 import React, { useEffect, useRef, useState } from "react";
+import { create } from "mutative";
 
 export type MarqueePosition = [{ x: number; y: number }, { x: number; y: number }];
 export function useHandleMarqueeSelection() {
@@ -19,6 +20,7 @@ export function useHandleMarqueeSelection() {
   const setSelectionTicks = useSetAtom(selectionTicksAtom);
   const noteModificationBuffer = useAtomValue(noteModificationBufferAtom);
   const modifyingNotes = useSetAtom(modifyingNotesAtom);
+  const [selectedNoteIds, setSelectedNoteIds] = useAtom(selectedNoteIdsAtom);
 
   const { scaleX } = useScaleX();
   const { numOfKeys } = useConfig().pitchRange;
@@ -49,17 +51,27 @@ export function useHandleMarqueeSelection() {
       { x: prev![0].x, y: prev![0].y },
       { x: relativeX, y: relativeY },
     ]);
-    modifyingNotes(
-      bufferedNotes.map((note) => ({
-        ...note,
-        isSelected: inMarquee(numOfKeys, scaleX, note, {
-          startingPosition: marqueePosition[0],
-          ongoingPosition: marqueePosition[1],
-        })
-          ? !note.isSelected
-          : note.isSelected,
-      })),
+
+    const newNotes = bufferedNotes.filter((note) =>
+      inMarquee(numOfKeys, scaleX, note, {
+        startingPosition: marqueePosition[0],
+        ongoingPosition: { x: relativeX, y: relativeY },
+      }),
     );
+    if (newNotes.length === 0) {
+      return;
+    }
+
+    bufferedNotes.forEach((note) => {
+      const noteIsSelected = selectedNoteIds.has(note.id);
+      const isInMarquee = inMarquee(numOfKeys, scaleX, note, {
+        startingPosition: marqueePosition[0],
+        ongoingPosition: marqueePosition[1],
+      })
+      if (isInMarquee) {
+        setSelectedNoteIds(prev => create(prev, draft => draft.add(note.id)))
+      }
+    })
   };
 
   const handleMarqueeSelectionPU: React.PointerEventHandler = (event) => {

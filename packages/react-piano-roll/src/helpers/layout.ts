@@ -1,10 +1,5 @@
-import { TrackNoteEvent } from "@/types";
+import { PianoRollNote } from "@/types";
 
-export function getPianoRollViewPortTickRange() {
+export function getPianoRollViewPortTickRange() {}
 
-}
-
-export function isMouseNoteInViewport(note: TrackNoteEvent, event: MouseEvent) {
-
-
-}
+export function isMouseNoteInViewport(note: PianoRollNote, event: MouseEvent) {}

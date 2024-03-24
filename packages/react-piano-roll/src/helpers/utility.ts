@@ -1,11 +1,11 @@
-// import { TrackNoteEvent } from "@/core/Track";
+// import { PianoRollNote } from "@/core/Track";
 
 export function quantizeTick(tick: number, quantize: number) {
   return Math.round(tick / quantize) * quantize;
 }
 
-// export function sortTrackNoteEvent(trackNoteEvent: TrackNoteEvent[]) {
-//   return trackNoteEvent.sort((a, b) => a.tick - b.tick);
+// export function sortPianoRollNote(PianoRollNote: PianoRollNote[]) {
+//   return PianoRollNote.sort((a, b) => a.tick - b.tick);
 // }
 
 export function logOffsetPos(desc: string, e: PointerEvent | MouseEvent) {}

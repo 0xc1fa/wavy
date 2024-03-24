@@ -2,14 +2,15 @@ import { useRef, useState } from "react";
 // import { useStore } from "@/hooks/useStore";
 import { getNotesFromOffsetX } from "@/helpers/conversion";
 import { useScaleX } from "@/contexts/ScaleXProvider";
-import { TrackNoteEvent } from "@/types";
+import { PianoRollNote } from "@/types";
 import { getNoteIdFromEvent, getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
-import { useAtomValue, useSetAtom } from "jotai";
-import { modifyingNotesAtom, notesAtom, setNoteAsSelectedAtom, unselectAllNotesAtom } from "@/store/note";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { modifyingNotesAtom, notesAtom, selectedNoteIdsAtom } from "@/store/note";
 import {
   noteModificationBufferAtom,
   setNoteModificationBufferWithAllNotesAtom,
 } from "@/store/note-modification-buffer";
+import { create } from "mutative";
 
 enum VelocityEditorMouseHandlerMode {
   Idle,
@@ -18,22 +19,20 @@ enum VelocityEditorMouseHandlerMode {
 }
 
 type Buffer = {
-  bufferedNotes: TrackNoteEvent[];
+  bufferedNotes: PianoRollNote[];
   bufferedY: number;
 };
 
 export default function useVelocityEditorMouseHandlers() {
   const [mouseHandlerMode, setMouseHandlerMode] = useState(VelocityEditorMouseHandlerMode.SelectAndDrag);
-  // const { pianoRollStore, dispatch } = useStore();
   const notes = useAtomValue(notesAtom);
   const noteModificationBuffer = useAtomValue(noteModificationBufferAtom);
-  const unselectedAllNotes = useSetAtom(unselectAllNotesAtom);
-  const setNotesAsSelected = useSetAtom(setNoteAsSelectedAtom);
+  const [selectedNoteIds, setSelectedNoteIds] = useAtom(selectedNoteIdsAtom)
   const setNoteModificationBufferWithSelectedNote = useSetAtom(setNoteModificationBufferWithAllNotesAtom);
   const modifyingNote = useSetAtom(modifyingNotesAtom);
 
   const { scaleX } = useScaleX();
-  const noteClicked = useRef<TrackNoteEvent | null>(null);
+  const noteClicked = useRef<PianoRollNote | null>(null);
 
   const onPointerDown: React.PointerEventHandler = (event) => {
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -41,18 +40,21 @@ export default function useVelocityEditorMouseHandlers() {
     noteClicked.current = getNoteObjectFromEvent(notes, event);
     if (!noteClicked.current) {
       if (!event.shiftKey) {
-        unselectedAllNotes();
+        // unselectedAllNotes();
+        setSelectedNoteIds(new Set());
       }
       return;
     }
     if (mouseHandlerMode === VelocityEditorMouseHandlerMode.Pencil) {
     } else if (mouseHandlerMode === VelocityEditorMouseHandlerMode.SelectAndDrag) {
-      if (noteClicked.current.isSelected) {
+      if (selectedNoteIds.has(noteClicked.current.id)) {
       } else {
         if (!event.shiftKey) {
-          unselectedAllNotes();
+          setSelectedNoteIds(new Set());
         }
-        setNotesAsSelected(noteClicked.current.id);
+        if (noteClicked.current !== null) {
+          setSelectedNoteIds(prev => create(prev, (draft) => draft.add(noteClicked.current!.id)));
+        }
       }
       setNoteModificationBufferWithSelectedNote({ initX: getRelativeX(event), initY: getRelativeY(event) });
     }
@@ -72,14 +74,14 @@ export default function useVelocityEditorMouseHandlers() {
       const newNote = notesGot.map((note) => ({
         ...note,
         velocity: currentVelocity,
-        isSelected: true,
+        // isSelected: true,
       }));
       modifyingNote(newNote);
     } else if (mouseHandlerMode === VelocityEditorMouseHandlerMode.SelectAndDrag) {
       const newNote = noteModificationBuffer.notesSelected.map((note) => ({
         ...note,
         velocity: note.velocity + deltaVelocity,
-        isSelected: true,
+        // isSelected: true,
       }));
       modifyingNote(newNote);
     }

@@ -1,4 +1,4 @@
-import { TrackNoteEvent } from "@/types/TrackNoteEvent";
+import { PianoRollNote } from "@/types/PianoRollNote";
 
 enum MidiFormat {
   SingleTrack,
@@ -54,7 +54,7 @@ enum MetaEvent {
   SequencerSpecific = 0x7f,
 }
 
-export function createMIDIFile(notes: TrackNoteEvent[]) {
+export function createMIDIFile(notes: PianoRollNote[]) {
   const headerChunk = getHeaderChunk(MidiFormat.SingleTrack, 1, 9600);
   const trackChunk = getTrackChunk(notes);
 
@@ -64,7 +64,7 @@ export function createMIDIFile(notes: TrackNoteEvent[]) {
   return buffer;
 }
 
-export function exportAsMidi(notes: TrackNoteEvent[]) {
+export function exportAsMidi(notes: PianoRollNote[]) {
   const buffer = createMIDIFile(notes);
   const blob = new Blob([buffer], { type: "audio/midi" });
   const url = URL.createObjectURL(blob);
@@ -93,11 +93,10 @@ function getHeaderChunk(format: MidiFormat, numOfTracks: number, ticksPerQuarter
   return [...MThd, ...length, ...formatType, ...numOfTracksBytes, ...timeDivisionBytes];
 }
 
-function getTrackChunk(data: TrackNoteEvent[]): number[] {
+function getTrackChunk(data: PianoRollNote[]): number[] {
   const MTrk = [0x4d, 0x54, 0x72, 0x6b];
   const noteStartEvents: AbsoluteTimedMidiChannelEvent[] = data
     .slice()
-    .filter((note) => note.isActive)
     .map((note) => ({
       type: ChannelEventType.NoteOn,
       noteNumber: note.noteNumber,
@@ -105,9 +104,7 @@ function getTrackChunk(data: TrackNoteEvent[]): number[] {
       velocity: note.velocity,
     }));
   const noteEndEvents: AbsoluteTimedMidiChannelEvent[] = data
-    .slice()
-    .filter((note) => note.isActive)
-    .map((note) => ({
+    .slice()    .map((note) => ({
       type: ChannelEventType.NoteOff,
       noteNumber: note.noteNumber,
       tick: note.tick + note.duration,

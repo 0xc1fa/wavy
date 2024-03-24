@@ -1,10 +1,10 @@
-import { TrackNoteEvent } from "@/types";
+import { PianoRollNote } from "@/types";
 import React from "react";
 
 export function getNoteObjectFromEvent(
-  notes: TrackNoteEvent[],
+  notes: PianoRollNote[],
   event: React.PointerEvent<Element> | React.MouseEvent<Element>,
-): TrackNoteEvent | null {
+): PianoRollNote | null {
   const noteId = getNoteIdFromEvent(event);
   const note = notes.find((note) => note.id === noteId);
   return note ? note : null;

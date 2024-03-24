@@ -1,5 +1,5 @@
 import { saveAs } from "file-saver";
-import { TrackNoteEvent } from "@/types";
+import { PianoRollNote } from "@/types";
 
 type Note = {
   id: string;
@@ -17,7 +17,7 @@ type ExportFileFormat = {
   };
 };
 
-export function toExportNoteType(notes: TrackNoteEvent[]) {
+export function toExportNoteType(notes: PianoRollNote[]) {
   return notes.map((n) => ({
     id: n.id,
     start: n.tick,

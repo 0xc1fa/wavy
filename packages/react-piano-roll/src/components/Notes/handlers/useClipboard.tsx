@@ -1,17 +1,18 @@
-import { addNotesAtom, deleteSelectedNotesAtom, selectedNotesAtom, unselectAllNotesAtom } from "@/store/note";
+import { addNotesAtom, deleteSelectedNotesAtom, selectedNoteIdsAtom, selectedNotesAtom } from "@/store/note";
 import { selectionRangeAtom, selectionTicksAtom } from "@/store/selection-ticks";
 import { getSelectionRangeWithSelectedNotes } from "@/helpers/notes";
-import { TrackNoteEvent } from "@/types";
+import { PianoRollNote } from "@/types";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Dispatch, RefObject, useEffect, useReducer } from "react";
+import { create } from "lodash";
 
 export function useClipboard<T extends HTMLElement>(ref: RefObject<T>) {
   const { clipboard, clipboardDispatch } = useClipboardReducer();
   const selectedNotes = useAtomValue(selectedNotesAtom);
   const [selectionTicks, setSelectionTicks] = useAtom(selectionTicksAtom);
   const [selectionRange, setSelectionRange] = useAtom(selectionRangeAtom);
+  const [_, setSelectedNoteIds] = useAtom(selectedNoteIdsAtom);
   const setterGroup = {
-    unselectAllNotes: useSetAtom(unselectAllNotesAtom),
     addNotes: useSetAtom(addNotesAtom),
     setSelectionTicks,
     setSelectionRange,
@@ -28,7 +29,25 @@ export function useClipboard<T extends HTMLElement>(ref: RefObject<T>) {
     if (event.metaKey && event.code === "KeyV") {
       event.preventDefault();
       event.stopPropagation();
-      pasteNotes(selectionTicks, selectionRange, clipboard, setterGroup);
+      if (selectionTicks === null) {
+        return;
+      }
+
+      if (clipboard.notes.length === 0) {
+        return;
+      }
+      const shiftedNotes = clipboard.notes.map((note) => ({
+        ...note,
+        tick: selectionTicks! + note.tick,
+      }));
+      setSelectedNoteIds(new Set());
+      setterGroup.addNotes(shiftedNotes);
+
+      setterGroup.setSelectionTicks(selectionTicks! + clipboard.selectionWidth);
+      setterGroup.setSelectionRange(
+        selectionRange ? (selectionRange.map((item) => item + clipboard.selectionWidth) as [number, number]) : null,
+      );
+      // pasteNotes(selectionTicks, selectionRange, clipboard, setterGroup);
     }
   };
   const cutWarper = (event: KeyboardEvent) => {
@@ -54,7 +73,7 @@ export function useClipboard<T extends HTMLElement>(ref: RefObject<T>) {
 }
 
 function copyNotes(
-  selectedNotes: TrackNoteEvent[],
+  selectedNotes: PianoRollNote[],
   selectionRange: [number, number] | null,
   clipboardDispatch: Dispatch<ClipboardAction>,
 ) {
@@ -75,7 +94,7 @@ function pasteNotes(
   clipboard: Clipboard,
   storeDispatch: {
     unselectAllNotes: () => void;
-    addNotes: (notes: TrackNoteEvent[]) => void;
+    addNotes: (notes: PianoRollNote[]) => void;
     setSelectionTicks: (ticks: number) => void;
     setSelectionRange: (range: [number, number] | null) => void;
   },
@@ -110,14 +129,14 @@ export function useClipboardReducer() {
 }
 
 type Clipboard = {
-  notes: TrackNoteEvent[];
+  notes: PianoRollNote[];
   selectionWidth: number;
 };
 
 type ClipboardAction = {
   type: "setNote";
   payload: {
-    notes: TrackNoteEvent[];
+    notes: PianoRollNote[];
     selectedRange: [number, number];
   };
 };

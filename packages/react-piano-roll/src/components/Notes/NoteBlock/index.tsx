@@ -2,19 +2,23 @@ import React, { memo, useEffect } from "react";
 import styles from "./index.module.scss";
 import useTheme from "../../../hooks/useTheme";
 // import { useStore } from "@/hooks/useStore";
-import { TrackNoteEvent } from "@/types/TrackNoteEvent";
+import { PianoRollNote } from "@/types/PianoRollNote";
 import { baseLaneWidth } from "@/constants";
 import { getMinYFromNoteNum, getOffsetXFromTick } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
+import { useAtom } from "jotai";
+import { selectedNoteIdsAtom } from "@/store/note";
 
 interface NoteBlockProps extends React.HTMLAttributes<HTMLDivElement> {
-  note: TrackNoteEvent;
+  note: PianoRollNote;
 }
 function NoteBlock({ note }: NoteBlockProps) {
   const theme = useTheme();
   const { scaleX } = useScaleX();
-  // const { numOfKeys } = useConfig().pitchRange;
+  const [selectedNoteIds] = useAtom(selectedNoteIdsAtom);
+  const noteIsSelected = selectedNoteIds.has(note.id);
+
   const {
     pitchRange: { numOfKeys },
     rendering,
@@ -34,12 +38,10 @@ function NoteBlock({ note }: NoteBlockProps) {
           "--left": `${getOffsetXFromTick(scaleX, note.tick)}px`,
           "--note-width": `${getOffsetXFromTick(scaleX, note.duration)}px`,
           "--note-height": `${baseLaneWidth}px`,
-          "--background": note.isSelected ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
-          "--border-color": note.isSelected ? theme.note.noteBorderColor : theme.note.noteBorderColor,
+          "--background": noteIsSelected ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
+          "--border-color": noteIsSelected ? theme.note.noteBorderColor : theme.note.noteBorderColor,
           "--border-radius": `${theme.note.noteBorderRadius}px`,
-          // opacity: rendering ? 0.7 : 1,
-          // opacity: 0.5,
-          outline: note.isSelected ? `3px solid #ffffff33` : "none",
+          outline: noteIsSelected ? `3px solid #ffffff33` : "none",
         } as React.CSSProperties
       }
     />

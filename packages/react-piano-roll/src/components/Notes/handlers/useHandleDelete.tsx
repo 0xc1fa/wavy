@@ -1,5 +1,5 @@
 import { deleteSelectedNotesAtom, notesAtom } from "@/store/note";
-import { TrackNoteEvent } from "@/types";
+import { PianoRollNote } from "@/types";
 import { useAtom, useSetAtom } from "jotai";
 import { Dispatch, RefObject, useEffect } from "react";
 
@@ -19,7 +19,7 @@ export function useHandleDelete<T extends HTMLElement>(ref: RefObject<T>) {
   }, []);
 }
 
-function deleteNotes(event: KeyboardEvent, notes: TrackNoteEvent[], deleteSelectedNotes: () => void) {
+function deleteNotes(event: KeyboardEvent, notes: PianoRollNote[], deleteSelectedNotes: () => void) {
   let focusedElement = document.activeElement;
   let flag = true;
 

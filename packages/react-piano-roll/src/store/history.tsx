@@ -1,4 +1,4 @@
-import { TrackNoteEvent } from "@/types";
+import { PianoRollNote } from "@/types";
 import { atom } from "jotai";
 import { notesAtom } from "./note";
 
@@ -10,53 +10,52 @@ export enum PianoRollHistoryItemType {
 
 export type PianoRollHistoryItem = {
   type: PianoRollHistoryItemType;
-  note: TrackNoteEvent[];
+  note: PianoRollNote[];
 };
 
 export type NotesHistory = {
   head: number;
-  history: PianoRollHistoryItem[]
-}
+  history: PianoRollHistoryItem[];
+};
 
 export const notesHistoryAtom = atom<NotesHistory>({
   head: -1,
   history: new Array<PianoRollHistoryItem>(),
-})
+});
 
 export const undoHistoryAtom = atom(null, (get, set) => {
-  const { history, head }= get(notesHistoryAtom)
+  const { history, head } = get(notesHistoryAtom);
   const edgeCases = history.length === 0 || head === -1;
   if (edgeCases) {
     return get(notesHistoryAtom);
   }
 
-  const prevNoteHistory = getPrevNoteHistory(get(notesAtom), get(notesHistoryAtom))
+  const prevNoteHistory = getPrevNoteHistory(get(notesAtom), get(notesHistoryAtom));
 
   set(notesAtom, prevNoteHistory);
   set(notesHistoryAtom, {
     history,
     head: head - 1,
   });
-})
+});
 
 export const redoHistoryAtom = atom(null, (get, set) => {
-  const { history, head } = get(notesHistoryAtom)
+  const { history, head } = get(notesHistoryAtom);
   const edgeCases = history.length === 0 || head === history.length - 1;
   if (edgeCases) {
     return get(notesHistoryAtom);
   }
 
-  const nextNoteHistory = getNextNoteHistory(get(notesAtom), get(notesHistoryAtom))
+  const nextNoteHistory = getNextNoteHistory(get(notesAtom), get(notesHistoryAtom));
 
   set(notesAtom, nextNoteHistory);
   set(notesHistoryAtom, {
     history,
     head: head + 1,
   });
-})
+});
 
-
-function getPrevNoteHistory(notes: TrackNoteEvent[], history: NotesHistory): TrackNoteEvent[] {
+function getPrevNoteHistory(notes: PianoRollNote[], history: NotesHistory): PianoRollNote[] {
   const nearestHistory = history.history[history.head];
   switch (nearestHistory.type) {
     case PianoRollHistoryItemType.ADD_NOTE: {
@@ -69,7 +68,7 @@ function getPrevNoteHistory(notes: TrackNoteEvent[], history: NotesHistory): Tra
     case PianoRollHistoryItemType.MODIFY_NOTE: {
       const modifiedNoteIds = new Map(nearestHistory.note.map((note) => [note.id, note]));
       return notes.map((note) =>
-        modifiedNoteIds.has(note.id) ? (modifiedNoteIds.get(note.id) as TrackNoteEvent) : note,
+        modifiedNoteIds.has(note.id) ? (modifiedNoteIds.get(note.id) as PianoRollNote) : note,
       );
     }
     default:
@@ -77,8 +76,7 @@ function getPrevNoteHistory(notes: TrackNoteEvent[], history: NotesHistory): Tra
   }
 }
 
-
-function getNextNoteHistory(notes: TrackNoteEvent[], history: NotesHistory): TrackNoteEvent[] {
+function getNextNoteHistory(notes: PianoRollNote[], history: NotesHistory): PianoRollNote[] {
   const nearestHistory = history.history[history.head + 1];
   switch (nearestHistory.type) {
     case PianoRollHistoryItemType.ADD_NOTE: {
@@ -91,7 +89,7 @@ function getNextNoteHistory(notes: TrackNoteEvent[], history: NotesHistory): Tra
     case PianoRollHistoryItemType.MODIFY_NOTE: {
       const modifiedNoteIds = new Map(nearestHistory.note.map((note) => [note.id, note]));
       return notes.map((note) =>
-        modifiedNoteIds.has(note.id) ? (modifiedNoteIds.get(note.id) as TrackNoteEvent) : note,
+        modifiedNoteIds.has(note.id) ? (modifiedNoteIds.get(note.id) as PianoRollNote) : note,
       );
     }
     default:

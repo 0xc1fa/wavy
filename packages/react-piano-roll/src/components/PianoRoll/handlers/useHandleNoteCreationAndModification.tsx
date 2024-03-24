@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { TrackNoteEvent } from "@/types/TrackNoteEvent";
+import { PianoRollNote } from "@/types/PianoRollNote";
 import _ from "lodash";
 import { getGridOffsetOfTick, getNearestAnchor, getNearestGridTick, getTickInGrid } from "@/helpers/grid";
 import {
@@ -48,13 +48,12 @@ export type PianoRollMouseHandlersStates = {
 };
 
 export type NotesModificationBuffer = {
-  notesSelected: TrackNoteEvent[];
+  notesSelected: PianoRollNote[];
   initY: number;
   initX: number;
 };
 
 export function useHandleNoteCreationAndModification() {
-  // const { pianoRollStore, dispatch } = useStore();
   const notes = useAtomValue(notesAtom);
   const noteModificationBuffer = useAtomValue(noteModificationBufferAtom);
 
@@ -239,13 +238,6 @@ export function useHandleNoteCreationAndModification() {
           modifyingNotes(newNotes);
           break;
         }
-        // case PianoRollLanesMouseHandlerMode.Vibrato:
-        //   event.shiftKey
-        //     ? dispatch({ type: "VIBRATO_RATE_CHANGE_SELECTED_NOTE", payload: { rateOffset: deltaY } })
-        //     : dispatch({
-        //         type: "VIBRATO_DEPTH_DELAY_CHANGE_SELECTED_NOTE",
-        //         payload: { depthOffset: deltaY, delayOffset: deltaX },
-        //       });
         break;
     }
   };
@@ -276,7 +268,7 @@ export function useHandleNoteCreationAndModification() {
     return { ticks, noteNum };
   };
 
-  const setMouseHandlerModeForNote = (event: React.PointerEvent<Element>, noteClicked: TrackNoteEvent) => {
+  const setMouseHandlerModeForNote = (event: React.PointerEvent<Element>, noteClicked: PianoRollNote) => {
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
     if (isNoteRightMarginClicked(numOfKeys, scaleX, noteClicked!, [relativeX, relativeY])) {
