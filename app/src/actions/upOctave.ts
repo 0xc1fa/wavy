@@ -1,10 +1,11 @@
-import { TrackNoteEvent } from "react-piano-roll/dist/types";
+import { PianoRollData } from "react-piano-roll";
+import { PianoRollNote } from "react-piano-roll/dist/types";
 
-export function upOctave(notes: TrackNoteEvent[], setNotes: (notes: TrackNoteEvent[]) => void) {
-  let selectedNotes = notes.filter((note) => note.isSelected).sort((a, b) => a.tick - b.tick);
-  let unselectedNotes = notes.filter((note) => !note.isSelected);
+export function upOctave(data: PianoRollData, set: (data: PianoRollData) => void) {
+  let selectedNotes = data.notes.filter((note) => note.isSelected).sort((a, b) => a.tick - b.tick);
+  let unselectedNotes = data.notes.filter((note) => !note.isSelected);
   for (let i = 0; i < selectedNotes.length; i++) {
     selectedNotes[i].noteNumber = selectedNotes[i].noteNumber + 12;
   }
-  setNotes([...unselectedNotes, ...selectedNotes]);
-};
+  set({ notes: [...unselectedNotes, ...selectedNotes] });
+}

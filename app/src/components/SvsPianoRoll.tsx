@@ -1,6 +1,6 @@
 "use client";
 import { useBlobUrl } from "@/hooks/useBlobUrl";
-import { PianoRoll } from "react-piano-roll";
+import { MidiEditorHandle, PianoRoll } from "react-piano-roll";
 import RenderAction from "./RenderAction";
 import { useDebug } from "@/hooks/useDebug";
 import { useAudioStatus } from "@/hooks/useAudioStatus";
@@ -17,6 +17,7 @@ export default function SvsPianoRoll(props: SvsPianoRollProps) {
   const [audioSource, setAudioSource] = useBlobUrl();
   const [audioStatus, audioStatusDispatch] = useAudioStatus();
   const audioRef = useRef<HTMLAudioElement>(null);
+  const pianorollRef = useRef<MidiEditorHandle>(null);
 
   useEffect(() => {
     if (audioSource) {
@@ -32,16 +33,24 @@ export default function SvsPianoRoll(props: SvsPianoRollProps) {
 
   return (
     <>
-      <audio controls ref={audioRef}>
+      <audio
+        ref={audioRef}
+        onTimeUpdate={() => {
+          if (pianorollRef.current) {
+            pianorollRef.current.currentTime = audioRef.current?.currentTime!
+          }
+        }}
+        onEnded={() => pianorollRef.current?.pause()}
+      >
         <source src={audioSource?.url} type="audio/wav" />
       </audio>
       <PianoRoll
-        attachLyric
+        lyric
         onNoteUpdate={() => audioStatusDispatch("NOTE_MODIFIED")}
-        rendering={!audioStatus.getIsUpToDate()}
+        loading={!audioStatus.getIsUpToDate()}
         onPlay={() => audioRef.current?.play()}
         onPause={() => audioRef.current?.pause()}
-        
+        ref={pianorollRef}
       >
         <RenderAction
           setAudioSource={setAudioSource}
@@ -50,15 +59,15 @@ export default function SvsPianoRoll(props: SvsPianoRollProps) {
           audioRef={audioRef}
         />
 
-        <PianoRoll.Action name="legato" onClick={setLegato} controls>
+        <PianoRoll.Action name="legato" onClick={setLegato}>
           <RxColumnSpacing />
         </PianoRoll.Action>
 
-        <PianoRoll.Action name="up-octave" onClick={upOctave} controls>
+        <PianoRoll.Action name="up-octave" onClick={upOctave}>
           <RxPinTop />
         </PianoRoll.Action>
 
-        <PianoRoll.Action name="down-octave" onClick={downOctave} controls>
+        <PianoRoll.Action name="down-octave" onClick={downOctave}>
           <RxPinBottom />
         </PianoRoll.Action>
       </PianoRoll>

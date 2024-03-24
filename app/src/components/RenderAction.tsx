@@ -2,9 +2,9 @@
 import { useBlobUrl } from "@/hooks/useBlobUrl";
 import { sendAudioProcessingRequest } from "@/utils/sendAudioProcessingRequest";
 import { debounce } from "lodash";
-import { TrackNoteEvent } from "react-piano-roll/dist/types";
+import { PianoRollNote } from "react-piano-roll/dist/types";
 import { saveAs } from "file-saver";
-import { PianoRoll } from "react-piano-roll";
+import { PianoRoll, PianoRollData } from "react-piano-roll";
 import { RxCheck } from "react-icons/rx";
 import { RxMagicWand } from "react-icons/rx";
 import { useAudioStatus } from "@/hooks/useAudioStatus";
@@ -18,12 +18,12 @@ export interface RenderActionProps {
 export default function RenderAction(props: RenderActionProps) {
   const debouncedSendAudioProcessingRequest = debounce(sendAudioProcessingRequest, 800);
 
-  const renderAudio = (notes: TrackNoteEvent[]) => {
+  const renderAudio = (data: PianoRollData) => {
     console.log("RenderActionItem clicked");
     props.setAudioStatus("RENDERING_REQUESTED");
     sendAudioProcessingRequest(
       120,
-      notes
+      data.notes
         .filter((note) => note.lyric)
         .map((note) => ({
           ...note,
@@ -34,11 +34,7 @@ export default function RenderAction(props: RenderActionProps) {
         })),
     ).then((res) => {
       props.setAudioSource(res);
-      // if (props.audioRef.current?.paused === false) props.audioRef.current?.pause();
       props.setAudioStatus("RENDERING_DONE");
-      // props.audioRef.current?.pause();
-      // props.audioRef.current?.load();
-      // props.audioRef.current?.play();
       saveAs(res!, "audio.wav");
     });
   };
@@ -48,7 +44,6 @@ export default function RenderAction(props: RenderActionProps) {
       name="render"
       onClick={renderAudio}
       disabled={props.audioStatus.getIsRenderingDisabled()}
-      controls
     >
       {props.audioStatus.getIsUpToDate() ? (
         <RxCheck />
