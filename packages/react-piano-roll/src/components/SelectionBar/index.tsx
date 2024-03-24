@@ -8,10 +8,10 @@ interface RulerProps extends React.HTMLAttributes<SVGElement> {
   scaleX: number;
 }
 export default function SelectionBar({ scaleX }: RulerProps) {
-  const { tickRange, beatsPerBar } = useConfig();
+  const { tickRange, timeSignature } = useConfig();
 
   const numberOfGrids = getNumOfGrid(baseCanvasWidth(tickRange), scaleX);
-  const gridSeparationFactor = getGridSeparationFactor(beatsPerBar!, scaleX);
+  const gridSeparationFactor = getGridSeparationFactor(timeSignature![0], scaleX);
   const gridBaseSeparation = getGridBaseSeparation(gridSeparationFactor);
   const rulerHeight = 30;
   const markeraHeight = {

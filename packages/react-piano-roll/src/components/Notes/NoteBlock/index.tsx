@@ -21,10 +21,10 @@ function NoteBlock({ note }: NoteBlockProps) {
 
   const {
     pitchRange: { numOfKeys },
-    rendering,
+    loading,
   } = useConfig();
 
-  useEffect(() => console.log("Context rendering", rendering), [rendering]);
+  useEffect(() => console.log("Context rendering", loading), [loading]);
 
   return (
     <div

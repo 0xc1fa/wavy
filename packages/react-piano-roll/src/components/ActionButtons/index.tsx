@@ -12,10 +12,11 @@ import cx from "clsx/lite";
 import { useNotes } from "@/hooks/useNotes";
 import { PianoRollNote } from "@/types";
 import { useAtom } from "jotai";
-import { notesAtom } from "@/store/note";
+import { notesAtom, selectedNoteIdsAtom } from "@/store/note";
+import { PianoRollData } from "@/types/PianoRollData";
 
 interface ActionButtonsProps extends React.HTMLAttributes<HTMLDivElement> {
-  children?: ActionItemElement | ActionItemElement[];
+  children?: React.ReactNode;
 }
 export default function ActionBar(props: ActionButtonsProps) {
   const modes = [
@@ -49,39 +50,39 @@ export default function ActionBar(props: ActionButtonsProps) {
 
 export type ActionItemElement = React.ReactElement<ComponentProps<typeof ActionItem>>;
 
-type ActionItemGetter = (get: PianoRollNote[]) => void;
-type ActionItemGetterSetter = (get: PianoRollNote[], set: (notes: PianoRollNote[]) => void) => void;
+type ActionItemGetter = (get: PianoRollData) => void;
+type ActionItemGetterSetter = (get: PianoRollData, set: (notes: PianoRollData) => void) => void;
 type ActionItemCallback = ActionItemGetter | ActionItemGetterSetter;
 
 export type ActionItemProps = {
   name: string;
   onClick: ActionItemCallback;
   disabled?: boolean;
-  controls?: boolean;
-  children: React.ReactNode;
-} & ({ controls: true; children: React.ReactNode } | { controls: false | undefined });
+  children?: React.ReactNode;
+  hotkey?: string;
+};
 export const ActionItem = forwardRef((props: ActionItemProps, ref) => {
   const [notes, setNotes] = useAtom(notesAtom);
+  const [selectedNoteIds, setSelectedNoteIds] = useAtom(selectedNoteIdsAtom);
 
-  useImperativeHandle(
-    ref,
-    () => ({
-      exec() {
-        props.onClick(notes, setNotes);
-      },
-    }),
-    [notes, setNotes],
-  );
+  const data = {
+    notes: notes.map((note) => ({ ...note, isSelected: selectedNoteIds.has(note.id) })),
+  };
+  const set = (data: PianoRollData) => {
+    setNotes(data.notes);
+    setSelectedNoteIds(new Set(data.notes.filter((note) => note.isSelected).map((note) => note.id)));
+  };
 
   return (
     <button
       key={props.name}
       data-name={props.name}
+      data-hotkey={props.hotkey}
       className={cx(styles.item)}
-      onClick={() => props.onClick(notes, setNotes)}
+      onClick={() => props.onClick(data, set)}
       disabled={props.disabled}
       style={{ pointerEvents: props.disabled ? "none" : undefined, opacity: props.disabled ? 0.5 : undefined }}
-      hidden={!props.controls}
+      hidden={props.children === undefined}
     >
       {props.children}
     </button>

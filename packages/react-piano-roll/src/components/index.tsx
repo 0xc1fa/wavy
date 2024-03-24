@@ -15,16 +15,14 @@ import { BeatPerBar, BeatUnit } from "@/types/time-signature";
 import { useLeftAnchoredScale } from "@/components/handlers/useLeftAnchoredScale";
 import PianoKeyboard from "./PianoKeyboard";
 import { Provider as JotaiProvider } from "jotai";
-import ActionBar, { ActionItem, ActionItemElement } from "./ActionButtons";
+import ActionBar, { ActionItem } from "./ActionButtons";
 import Menu from "./Menu";
 import { useNotes } from "..";
 import { useHandleSpaceDown } from "./handlers/useHandleSpaceDown";
 import { useEventListener } from "@/hooks/useEventListener";
-import { extend } from "lodash";
 
 export interface MidiEditorProps {
-  playheadPosition?: number;
-  attachLyric?: boolean;
+  lyric?: boolean;
   initialScrollMiddleNote?: number;
   onPlay?: () => void;
   onPause?: () => void;
@@ -32,20 +30,18 @@ export interface MidiEditorProps {
   onNoteUpdate?: (notes: PianoRollNote[]) => void;
   tickRange?: [number, number];
   style?: CSSProperties;
+  timeSignature?: [BeatPerBar, BeatUnit];
   pitchRange?: PitchRange;
-  beatsPerBar?: BeatPerBar;
-  beatUnit?: BeatUnit;
-  rendering?: boolean;
-  children?: ActionItemElement | ActionItemElement[];
+  loading?: boolean;
+  children?: React.ReactNode;
 }
-const defaultProps = {
-  attachLyric: false,
+export const defaultProps = {
+  lyric: false,
   initialScrollMiddleNote: 60,
-  rendering: false,
+  loading: false,
   tickRange: [480 * 4 * 0, 480 * 4 * 8] as [number, number],
   pitchRange: { startingNoteNum: 0, numOfKeys: 128 },
-  beatsPerBar: 4 as BeatPerBar,
-  beatUnit: 4 as BeatUnit,
+  timeSignature: [4, 4] as [BeatPerBar, BeatUnit],
 };
 type MidiEditorPropsWithDefaults = typeof defaultProps & MidiEditorProps;
 
@@ -127,7 +123,7 @@ const MidiEditor = forwardRef<MidiEditorHandle, MidiEditorPropsWithDefaults>((pr
       <div className={styles["middle-container"]}>
         <PianoKeyboard />
         <div className={styles["lane-container"]}>
-          <PianoRoll attachLyric={props.attachLyric} currentTime={currentTime} />
+          <PianoRoll attachLyric={props.lyric} currentTime={currentTime} />
         </div>
       </div>
       <LowerSection />

@@ -15,7 +15,7 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
   // const { pianoRollStore } = useStore();
   const notes = useAtomValue(notesAtom);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { rendering } = useConfig();
+  const { loading } = useConfig();
 
   useHandleDelete(containerRef);
   useClipboard(containerRef);
@@ -48,7 +48,7 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
           data-start-time={note.tick}
           data-duration={note.duration}
           key={note.id}
-          style={{opacity: rendering ? 0.7 : 1,}}
+          style={{opacity: loading ? 0.7 : 1,}}
         >
           <NoteBlock note={note} />
           {attachLyric && <NoteLyric note={note} />}
