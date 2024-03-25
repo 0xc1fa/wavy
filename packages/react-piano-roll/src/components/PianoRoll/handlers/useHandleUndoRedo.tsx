@@ -5,7 +5,6 @@ import { Dispatch, RefObject, useEffect } from "react";
 // import { useStore } from "@/hooks/useStore";
 
 export function useHandleUndoRedo<T extends HTMLElement>(ref: RefObject<T>) {
-  // const { dispatch } = useStore();
   const redo = useSetAtom(redoHistoryAtom);
   const undo = useSetAtom(undoHistoryAtom);
 

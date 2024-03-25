@@ -37,7 +37,7 @@ export interface MidiEditorProps {
 }
 export const defaultProps = {
   lyric: false,
-  initialScrollMiddleNote: 60,
+  initialScrollMiddleNote: 75,
   loading: false,
   tickRange: [480 * 4 * 0, 480 * 4 * 8] as [number, number],
   pitchRange: { startingNoteNum: 0, numOfKeys: 128 },

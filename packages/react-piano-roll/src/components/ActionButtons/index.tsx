@@ -7,13 +7,16 @@ import { RxHobbyKnife } from "react-icons/rx";
 import { RxDotsHorizontal } from "react-icons/rx";
 import { RxDimensions } from "react-icons/rx";
 import { RxHand } from "react-icons/rx";
-import { RxQuote } from "react-icons/rx";
+import { RxQuote, RxCopy, RxScissors, RxClipboard } from "react-icons/rx";
 import cx from "clsx/lite";
 import { useNotes } from "@/hooks/useNotes";
 import { PianoRollNote } from "@/types";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { notesAtom, selectedNoteIdsAtom } from "@/store/note";
 import { PianoRollData } from "@/types/PianoRollData";
+import { redoHistoryAtom, undoHistoryAtom } from "@/store/history";
+import { LuUndo2, LuRedo2 } from "react-icons/lu";
+import { useCopy, useCut, usePaste } from "@/hooks/useClipboard";
 
 interface ActionButtonsProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
@@ -30,6 +33,11 @@ export default function ActionBar(props: ActionButtonsProps) {
     { name: "more", icon: <RxDotsHorizontal /> },
   ] as const;
   const [selected, setSelected] = useState<(typeof modes)[number]["name"]>("pencil");
+  const redo = useSetAtom(redoHistoryAtom);
+  const undo = useSetAtom(undoHistoryAtom);
+  const copy = useCopy();
+  const cut = useCut();
+  const paste = usePaste();
 
   // return (
   //   <div {...props} className={styles.container}>
@@ -45,7 +53,26 @@ export default function ActionBar(props: ActionButtonsProps) {
   //   </div>
   // );
 
-  return <div {...props} className={styles.container} />;
+  return (
+    <div {...props} className={styles.container}>
+      {props.children}
+      <ActionItem name="undo" onClick={undo}>
+        <LuUndo2 />
+      </ActionItem>
+      <ActionItem name="undo" onClick={redo}>
+        <LuRedo2 />
+      </ActionItem>
+      <ActionItem name="copy" onClick={copy}>
+        <RxCopy />
+      </ActionItem>
+      <ActionItem name="cut" onClick={cut}>
+        <RxScissors />
+      </ActionItem>
+      <ActionItem name="paste" onClick={paste}>
+        <RxClipboard />
+      </ActionItem>
+    </div>
+  );
 }
 
 export type ActionItemElement = React.ReactElement<ComponentProps<typeof ActionItem>>;

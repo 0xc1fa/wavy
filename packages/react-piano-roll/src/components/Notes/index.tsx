@@ -4,7 +4,7 @@ import NoteLyric from "./NoteLyric";
 import styles from "./index.module.scss";
 import { useRef } from "react";
 import { useHandleDelete } from "./handlers/useHandleDelete";
-import { useClipboard } from "./handlers/useClipboard";
+import { useClipboardKeyboardShortcut } from "./handlers/useClipboardKeyboardShortcut";
 import { useHandleSetNoteSelection } from "./handlers/useHandleSetNoteSelection";
 import { useHandleSetVelocity } from "./handlers/useHandleSetVelocity";
 import { useAtomValue } from "jotai";
@@ -18,7 +18,7 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
   const { loading } = useConfig();
 
   useHandleDelete(containerRef);
-  useClipboard(containerRef);
+  useClipboardKeyboardShortcut(containerRef);
 
   const { handleSetNoteSelectionPD } = useHandleSetNoteSelection();
   const { handleSetVelocityPD, handleSetVelocityPM, handleSetVelocityPU } = useHandleSetVelocity();
@@ -36,8 +36,6 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
     },
   };
 
-
-
   return (
     <div className={styles["notes-container"]} ref={containerRef} tabIndex={0} {...handlers}>
       {notes.map((note) => (
@@ -48,7 +46,7 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
           data-start-time={note.tick}
           data-duration={note.duration}
           key={note.id}
-          style={{opacity: loading ? 0.7 : 1,}}
+          style={{ opacity: loading ? 0.55 : 1 }}
         >
           <NoteBlock note={note} />
           {attachLyric && <NoteLyric note={note} />}
