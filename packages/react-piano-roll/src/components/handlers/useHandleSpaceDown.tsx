@@ -40,15 +40,6 @@ export function useHandleSpaceDown<T extends HTMLElement>(ref: RefObject<T>) {
     }
   };
 
-  // useEventListener(ref, "keydown", spaceDownHandler);
-
-  useEffect(() => {
-    ref.current!.addEventListener("keydown", spaceDownHandler);
-    ref.current!.addEventListener("keyup", spaceUpHandler);
-
-    return () => {
-      ref.current!.removeEventListener("keydown", spaceDownHandler);
-      ref.current!.removeEventListener("keyup", spaceUpHandler);
-    };
-  }, []);
+  useEventListener("keydown", spaceDownHandler, ref);
+  useEventListener("keyup", spaceUpHandler, ref);
 }

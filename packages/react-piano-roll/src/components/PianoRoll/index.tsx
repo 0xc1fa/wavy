@@ -8,7 +8,6 @@ import Playhead from "@/components/Playhead";
 import LanesBackground from "@/components/LanesBackground";
 import { memo, useImperativeHandle, useRef } from "react";
 import { useClipboardKeyboardShortcut } from "@/components/Notes/handlers/useClipboardKeyboardShortcut";
-import { useHandleSpaceDown } from "@/components/PianoRoll/handlers/useHandleSpaceDown";
 import { useHandleUndoRedo } from "@/components/PianoRoll/handlers/useHandleUndoRedo";
 import { useHandleScaleX } from "@/components/PianoRoll/handlers/useHandleScaleX";
 import { useHandleMarqueeSelection } from "./handlers/useHandleMarqueeSelection";

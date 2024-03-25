@@ -64,15 +64,15 @@ const MidiEditor = forwardRef<MidiEditorHandle, MidiEditorPropsWithDefaults>((pr
   const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => props.onNoteUpdate?.(notes), [notes]);
-  useEventListener(containerRef, "play", (event) => {
+  useEventListener("play", (event) => {
     paused.current = false;
     props.onPlay?.();
-  });
-  useEventListener(containerRef, "pause", (event) => {
+  }, containerRef);
+  useEventListener("pause", (event) => {
     paused.current = true;
     props.onPause?.();
-  });
-  useEventListener(containerRef, "timeupdate", (event) => props.onTimeUpdate?.());
+  }, containerRef);
+  useEventListener("timeupdate", (event) => props.onTimeUpdate?.(), containerRef);
 
   useImperativeHandle(
     ref,

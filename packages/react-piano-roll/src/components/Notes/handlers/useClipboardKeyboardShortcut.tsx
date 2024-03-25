@@ -3,18 +3,12 @@ import { useEventListener } from "@/hooks/useEventListener";
 import { useCopy, useCut, usePaste } from "@/hooks/useClipboard";
 
 export function useClipboardKeyboardShortcut<T extends HTMLElement>(ref: RefObject<T>) {
-  const keyCodeMapping = { KeyC: useCopy(), KeyX: useCut(), KeyV: usePaste() };
+  const keyCodeMapping = { KeyC: useCopy(), KeyX: useCut(), KeyV: usePaste() } as const;
 
-  function isValidKeys<T extends keyof typeof keyCodeMapping>(code: string): code is T {
-    return code in keyCodeMapping;
-  }
-
-  const clipbaordHandler = (event: KeyboardEvent) => {
-    if (!event.metaKey || !isValidKeys(event.code)) return;
+  useEventListener( "keydown", (event: KeyboardEvent) => {
+    if (!event.metaKey || !(event.code in keyCodeMapping)) return;
     event.preventDefault();
     event.stopPropagation();
-    keyCodeMapping[event.code]();
-  };
-
-  useEventListener(ref, "keydown", clipbaordHandler);
+    keyCodeMapping[event.code as keyof typeof keyCodeMapping]();
+  }, ref);
 }
