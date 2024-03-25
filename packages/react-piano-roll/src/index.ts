@@ -1,8 +1,7 @@
 export { default as PianoRoll } from "./components";
 export type { ActionItemProps } from "./components/ActionButtons";
 export type { MidiEditorHandle } from "./components";
-export type { PianoRollData } from "./types/PianoRollData"
-export { PianoRollStoreProvider } from "./providers";
+export type { PianoRollData } from "./types/PianoRollData"d
 // export { useStore } from "./hooks/useStore";
 export { saveProject } from './helpers/export/saveProject';
 export { exportAsMidi, createMIDIFile } from "./helpers/export/midi";
