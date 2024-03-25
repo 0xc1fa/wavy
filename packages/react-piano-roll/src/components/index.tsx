@@ -14,12 +14,12 @@ import { defaultPianoRollTheme } from "@/store/pianoRollTheme";
 import { BeatPerBar, BeatUnit } from "@/types/time-signature";
 import { useLeftAnchoredScale } from "@/components/handlers/useLeftAnchoredScale";
 import PianoKeyboard from "./PianoKeyboard";
-import { Provider as JotaiProvider } from "jotai";
+import { Provider as JotaiProvider, useAtom } from "jotai";
 import ActionBar, { ActionItem } from "./ActionButtons";
 import Menu from "./Menu";
-import { useNotes } from "..";
 import { useHandleSpaceDown } from "./handlers/useHandleSpaceDown";
 import { useEventListener } from "@/hooks/useEventListener";
+import { notesAtom } from "@/store/note";
 
 export interface MidiEditorProps {
   lyric?: boolean;
@@ -55,7 +55,7 @@ export type MidiEditorHandle = {
 const MidiEditor = forwardRef<MidiEditorHandle, MidiEditorPropsWithDefaults>((props, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scaleX } = useScaleX();
-  const notes = useNotes();
+  const [notes] = useAtom(notesAtom);
   useScrollToNote(containerRef, props.initialScrollMiddleNote);
   useLeftAnchoredScale(containerRef);
   useHandleSpaceDown(containerRef);
@@ -64,14 +64,22 @@ const MidiEditor = forwardRef<MidiEditorHandle, MidiEditorPropsWithDefaults>((pr
   const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => props.onNoteUpdate?.(notes), [notes]);
-  useEventListener("play", (event) => {
-    paused.current = false;
-    props.onPlay?.();
-  }, containerRef);
-  useEventListener("pause", (event) => {
-    paused.current = true;
-    props.onPause?.();
-  }, containerRef);
+  useEventListener(
+    "play",
+    (event) => {
+      paused.current = false;
+      props.onPlay?.();
+    },
+    containerRef,
+  );
+  useEventListener(
+    "pause",
+    (event) => {
+      paused.current = true;
+      props.onPause?.();
+    },
+    containerRef,
+  );
   useEventListener("timeupdate", (event) => props.onTimeUpdate?.(), containerRef);
 
   useImperativeHandle(

@@ -1,7 +1,7 @@
 import { RxGroup } from "react-icons/rx";
 import { RxPencil1 } from "react-icons/rx";
 import styles from "./index.module.scss";
-import React, { ComponentProps, forwardRef, useImperativeHandle, useState } from "react";
+import React, { ComponentProps, forwardRef, useState } from "react";
 import { RxColumnSpacing } from "react-icons/rx";
 import { RxHobbyKnife } from "react-icons/rx";
 import { RxDotsHorizontal } from "react-icons/rx";
@@ -9,8 +9,6 @@ import { RxDimensions } from "react-icons/rx";
 import { RxHand } from "react-icons/rx";
 import { RxQuote, RxCopy, RxScissors, RxClipboard } from "react-icons/rx";
 import cx from "clsx/lite";
-import { useNotes } from "@/hooks/useNotes";
-import { PianoRollNote } from "@/types";
 import { useAtom, useSetAtom } from "jotai";
 import { notesAtom, selectedNoteIdsAtom } from "@/store/note";
 import { PianoRollData } from "@/types/PianoRollData";

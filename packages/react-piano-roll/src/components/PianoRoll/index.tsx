@@ -27,7 +27,6 @@ const PianoRoll: React.FC<Props> = memo((props) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useClipboardKeyboardShortcut(containerRef);
-  // useHandleSpaceDown(containerRef);
   useHandleUndoRedo(containerRef);
   useHandleScaleX(containerRef);
   const { marqueePosition, handleMarqueeSelectionPD, handleMarqueeSelectionPM, handleMarqueeSelectionPU } =
