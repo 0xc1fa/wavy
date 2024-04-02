@@ -2,8 +2,6 @@
 import { useBlobUrl } from "@/hooks/useBlobUrl";
 import { sendAudioProcessingRequest } from "@/utils/sendAudioProcessingRequest";
 import { debounce } from "lodash";
-import { PianoRollNote } from "react-piano-roll/dist/types";
-import { saveAs } from "file-saver";
 import { PianoRoll, PianoRollData } from "react-piano-roll";
 import { RxCheck } from "react-icons/rx";
 import { RxMagicWand } from "react-icons/rx";
@@ -22,7 +20,7 @@ export default function RenderAction(props: RenderActionProps) {
     console.log("RenderActionItem clicked");
     props.setAudioStatus("RENDERING_REQUESTED");
     sendAudioProcessingRequest(
-      120,
+      data.bpm,
       data.notes
         .filter((note) => note.lyric)
         .map((note) => ({
@@ -31,20 +29,16 @@ export default function RenderAction(props: RenderActionProps) {
           duration: note.duration,
           lyric: note.lyric,
           noteNumber: note.noteNumber,
-        })),
+        }))
+        .sort((a, b) => a.tick - b.tick),
     ).then((res) => {
       props.setAudioSource(res);
       props.setAudioStatus("RENDERING_DONE");
-      saveAs(res!, "audio.wav");
     });
   };
 
   return (
-    <PianoRoll.Action
-      name="render"
-      onClick={renderAudio}
-      disabled={props.audioStatus.getIsRenderingDisabled()}
-    >
+    <PianoRoll.Action name="render" onClick={renderAudio} disabled={props.audioStatus.getIsRenderingDisabled()}>
       {props.audioStatus.getIsUpToDate() ? (
         <RxCheck />
       ) : (

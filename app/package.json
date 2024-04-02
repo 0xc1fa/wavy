@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "antd": "^5.15.3",
     "file-saver": "^2.0.5",
     "lodash": "^4.17.21",
     "mutative": "^1.0.3",

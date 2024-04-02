@@ -2,15 +2,24 @@
 import { useBlobUrl } from "@/hooks/useBlobUrl";
 import { MidiEditorHandle, PianoRoll } from "react-piano-roll";
 import RenderAction from "./RenderAction";
-import { useDebug } from "@/hooks/useDebug";
+import { saveAs } from "file-saver";
 import { useAudioStatus } from "@/hooks/useAudioStatus";
-import { RxPinTop } from "react-icons/rx";
-import { RxPinBottom } from "react-icons/rx";
-import { RxColumnSpacing } from "react-icons/rx";
+import {
+  RxChevronUp,
+  RxChevronDown,
+  RxDoubleArrowLeft,
+  RxDoubleArrowRight,
+  RxDownload,
+  RxColumnSpacing,
+} from "react-icons/rx";
 import { upOctave } from "@/actions/upOctave";
 import { downOctave } from "@/actions/downOctave";
 import { setLegato } from "@/actions/setLegato";
 import { useEffect, useRef } from "react";
+import { halfTime } from "@/actions/halfTime";
+import { doubleTime } from "@/actions/doubleTime";
+import ImportAction from "./ImportAction";
+import { IoSaveOutline } from "react-icons/io5";
 
 export interface SvsPianoRollProps extends React.HTMLAttributes<HTMLDivElement> {}
 export default function SvsPianoRoll(props: SvsPianoRollProps) {
@@ -31,13 +40,33 @@ export default function SvsPianoRoll(props: SvsPianoRollProps) {
     }
   }, [audioSource]);
 
+  useEffect(() => {
+    const interval = setInterval(function () {
+      if (!audioRef.current?.paused) {
+        requestAnimationFrame(() => {
+          audioRef.current?.dispatchEvent(new Event("timeupdate"));
+        });
+      }
+    }, 1000 / 60);
+    return () => clearInterval(interval);
+  });
+
+  const exportData = (data: any) => {
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(JSON.stringify(data))}`;
+    const link = document.createElement("a");
+    link.href = jsonString;
+    link.download = "data.pianoroll";
+
+    link.click();
+  };
+
   return (
     <>
       <audio
         ref={audioRef}
         onTimeUpdate={() => {
           if (pianorollRef.current) {
-            pianorollRef.current.currentTime = audioRef.current?.currentTime!
+            pianorollRef.current.currentTime = audioRef.current?.currentTime! * 960;
           }
         }}
         onEnded={() => pianorollRef.current?.pause()}
@@ -48,7 +77,7 @@ export default function SvsPianoRoll(props: SvsPianoRollProps) {
         lyric
         onNoteUpdate={() => audioStatusDispatch("NOTE_MODIFIED")}
         loading={!audioStatus.getIsUpToDate()}
-        onPlay={() => audioRef.current?.play()}
+        onPlay={() => audioRef.current && ((audioRef.current.currentTime = 0), audioRef.current.play())}
         onPause={() => audioRef.current?.pause()}
         ref={pianorollRef}
       >
@@ -58,17 +87,44 @@ export default function SvsPianoRoll(props: SvsPianoRollProps) {
           setAudioStatus={audioStatusDispatch}
           audioRef={audioRef}
         />
+        <PianoRoll.Action
+          name="download"
+          onClick={() => saveAs(audioSource?.blob!, "audio.wav")}
+          disabled={audioSource === null}
+        >
+          <RxDownload />
+        </PianoRoll.Action>
+
+        <ImportAction />
+
+        <PianoRoll.Action
+          name="save"
+          onClick={(data) => {
+            console.log(JSON.stringify(data));
+            exportData(data);
+          }}
+        >
+          <IoSaveOutline />
+        </PianoRoll.Action>
+
+        <PianoRoll.Action name="upOctave" onClick={upOctave}>
+          <RxChevronUp />
+        </PianoRoll.Action>
+
+        <PianoRoll.Action name="downOctave" onClick={downOctave}>
+          <RxChevronDown />
+        </PianoRoll.Action>
+
+        <PianoRoll.Action name="halfTime" onClick={halfTime}>
+          <RxDoubleArrowLeft />
+        </PianoRoll.Action>
+
+        <PianoRoll.Action name="doubleTime" onClick={doubleTime}>
+          <RxDoubleArrowRight />
+        </PianoRoll.Action>
 
         <PianoRoll.Action name="legato" onClick={setLegato}>
           <RxColumnSpacing />
-        </PianoRoll.Action>
-
-        <PianoRoll.Action name="up-octave" onClick={upOctave}>
-          <RxPinTop />
-        </PianoRoll.Action>
-
-        <PianoRoll.Action name="down-octave" onClick={downOctave}>
-          <RxPinBottom />
         </PianoRoll.Action>
       </PianoRoll>
     </>
