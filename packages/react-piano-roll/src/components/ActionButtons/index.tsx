@@ -1,7 +1,7 @@
 import { RxGroup } from "react-icons/rx";
 import { RxPencil1 } from "react-icons/rx";
 import styles from "./index.module.scss";
-import React, { ComponentProps, forwardRef, useState } from "react";
+import React, { ComponentProps, forwardRef, useImperativeHandle, useState } from "react";
 import { RxColumnSpacing } from "react-icons/rx";
 import { RxHobbyKnife } from "react-icons/rx";
 import { RxDotsHorizontal } from "react-icons/rx";
@@ -9,12 +9,13 @@ import { RxDimensions } from "react-icons/rx";
 import { RxHand } from "react-icons/rx";
 import { RxQuote, RxCopy, RxScissors, RxClipboard } from "react-icons/rx";
 import cx from "clsx/lite";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { notesAtom, selectedNoteIdsAtom } from "@/store/note";
 import { PianoRollData } from "@/types/PianoRollData";
 import { redoHistoryAtom, undoHistoryAtom } from "@/store/history";
 import { LuUndo2, LuRedo2 } from "react-icons/lu";
 import { useCopy, useCut, usePaste } from "@/hooks/useClipboard";
+import { bpmAtom } from "@/store/bpm";
 
 interface ActionButtonsProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
@@ -36,20 +37,6 @@ export default function ActionBar(props: ActionButtonsProps) {
   const copy = useCopy();
   const cut = useCut();
   const paste = usePaste();
-
-  // return (
-  //   <div {...props} className={styles.container}>
-  //     {modes.map((item) => (
-  //       <button
-  //         key={item.name}
-  //         className={cx(styles.item, selected === item.name && styles.selectedItem)}
-  //         onClick={() => setSelected(item.name)}
-  //       >
-  //         {item.icon}
-  //       </button>
-  //     ))}
-  //   </div>
-  // );
 
   return (
     <div {...props} className={styles.container}>
@@ -81,22 +68,42 @@ type ActionItemCallback = ActionItemGetter | ActionItemGetterSetter;
 
 export type ActionItemProps = {
   name: string;
-  onClick: ActionItemCallback;
+  onClick: (data: PianoRollData, set: (notes: Partial<PianoRollData>) => void) => void;
   disabled?: boolean;
   children?: React.ReactNode;
   hotkey?: string;
 };
-export const ActionItem = forwardRef((props: ActionItemProps, ref) => {
+
+export type PianoRollActionElement = {
+  click: () => void;
+};
+
+export const ActionItem = forwardRef<PianoRollActionElement, ActionItemProps>((props, ref) => {
   const [notes, setNotes] = useAtom(notesAtom);
+  const [bpm, setBpm] = useAtom(bpmAtom);
   const [selectedNoteIds, setSelectedNoteIds] = useAtom(selectedNoteIdsAtom);
 
-  const data = {
+  const data: PianoRollData = {
     notes: notes.map((note) => ({ ...note, isSelected: selectedNoteIds.has(note.id) })),
+    bpm: bpm,
   };
-  const set = (data: PianoRollData) => {
-    setNotes(data.notes);
-    setSelectedNoteIds(new Set(data.notes.filter((note) => note.isSelected).map((note) => note.id)));
+  const set = (data: Partial<PianoRollData>) => {
+    if (data.notes !== undefined) {
+      setNotes(data.notes);
+      setSelectedNoteIds(new Set(data.notes.filter((note) => note.isSelected).map((note) => note.id)));
+    }
+    if (data.bpm !== undefined) {
+      setBpm(data.bpm);
+    }
   };
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      click: () => props.onClick(data, set),
+    }),
+    [data, set, props.onClick],
+  );
 
   return (
     <button
