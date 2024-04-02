@@ -9,6 +9,10 @@ This is a component library for pianoroll in React. Functionalities included:
 - Zooming
 - Scrolling
 
+## Demo
+
+![pianoroll](https://github.com/chanyatfu/react-piano-roll/assets/45863731/9500026e-d8c0-44e8-912f-6f35fce22082)
+
 ## Examples
 
 `import Pianoroll, { PianorollProvider } from 'react-piano-roll';`
