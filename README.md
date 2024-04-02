@@ -21,7 +21,7 @@ Wrap your component with `<PianorollProvider />` and then use `<Pianoroll />` in
 
 Inside main.js:
 
-```
+```tsx
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
@@ -40,7 +40,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 Inside App.tsx:
 
-```
+```tsx
 import { PianoRoll } from "react-piano-roll";
 
 function App() {
