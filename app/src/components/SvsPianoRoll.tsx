@@ -19,6 +19,7 @@ import { halfTime, doubleTime } from "@/actions/scaleNoteTime";
 import ImportAction from "./ImportAction";
 import { IoSaveOutline } from "react-icons/io5";
 import { useLoadAudioSource } from "@/hooks/useLoadAudioSource";
+import { useFrequentAudioTimeupdate } from "@/hooks/useFrequentAudioTimeupdate";
 
 export interface SvsPianoRollProps extends React.HTMLAttributes<HTMLDivElement> {}
 export default function SvsPianoRoll(props: SvsPianoRollProps) {
@@ -28,17 +29,7 @@ export default function SvsPianoRoll(props: SvsPianoRollProps) {
   const pianorollRef = useRef<MidiEditorHandle>(null);
 
   useLoadAudioSource(audioRef, audioSource);
-
-  useEffect(() => {
-    const interval = setInterval(function () {
-      if (!audioRef.current?.paused) {
-        requestAnimationFrame(() => {
-          audioRef.current?.dispatchEvent(new Event("timeupdate"));
-        });
-      }
-    }, 1000 / 60);
-    return () => clearInterval(interval);
-  });
+  useFrequentAudioTimeupdate(audioRef);
 
   const exportData = (data: any) => {
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(JSON.stringify(data))}`;
