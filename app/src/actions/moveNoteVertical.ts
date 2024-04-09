@@ -3,8 +3,8 @@ import { PianoRollData } from "react-piano-roll";
 
 export function moveNoteVertical(semitone: number) {
   return function (data: PianoRollData, set: (notes: Partial<PianoRollData>) => void) {
-    let selectedNotes = sortNotes(getSelectedNotes(data));
-    let unselectedNotes = getUnselectedNotes(data);
+    const selectedNotes = sortNotes(getSelectedNotes(data));
+    const unselectedNotes = getUnselectedNotes(data);
     selectedNotes.forEach((_, i) => {
       selectedNotes[i].noteNumber = selectedNotes[i].noteNumber + semitone;
     });

@@ -1,7 +1,6 @@
 "use client";
 import { useBlobUrl } from "@/hooks/useBlobUrl";
 import { sendAudioProcessingRequest } from "@/utils/sendAudioProcessingRequest";
-import { debounce } from "lodash";
 import { PianoRoll, PianoRollData } from "react-piano-roll";
 import { RxCheck } from "react-icons/rx";
 import { RxMagicWand } from "react-icons/rx";
@@ -14,8 +13,6 @@ export interface RenderActionProps {
   audioRef: React.RefObject<HTMLAudioElement>;
 }
 export default function RenderAction(props: RenderActionProps) {
-  const debouncedSendAudioProcessingRequest = debounce(sendAudioProcessingRequest, 800);
-
   const renderAudio = (data: PianoRollData) => {
     console.log("RenderActionItem clicked");
     props.setAudioStatus("RENDERING_REQUESTED");

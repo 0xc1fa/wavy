@@ -1,19 +1,14 @@
-// import { renderHook } from "@testing-library/react";
-import React, { useRef } from "react";
 import { useLoadAudioSource } from "./useLoadAudioSource";
 import { useBlobUrl, type BlobWithUrl } from "./useBlobUrl";
 import { renderHook } from "@testing-library/react";
-import exp from "constants";
-import { before } from "lodash";
-
-type AudioSourceType = Parameters<typeof useLoadAudioSource>[1];
+import { RefObject } from "react";
 
 describe("useLoadAudioSource", () => {
   beforeAll(() => {
     global.URL.createObjectURL = jest.fn(() => "mockAudioUrl");
   });
   it("does nothing if audio ref is null", () => {
-    const audioRef: any = {
+    const audioRef = {
       current: null,
     };
 
@@ -27,7 +22,7 @@ describe("useLoadAudioSource", () => {
   });
 
   it("sets audio source and loads new audio when provided", () => {
-    const audioRef: any = {
+    const audioRef = {
       current: {
         paused: true,
         load: jest.fn(),
@@ -35,7 +30,7 @@ describe("useLoadAudioSource", () => {
         pause: jest.fn(),
         src: "",
       },
-    };
+    } as unknown as RefObject<HTMLAudioElement>;
 
     const dummyBlob = new Blob(["dummy content"], { type: "audio/mp3" });
     const { result } = renderHook(() => useBlobUrl(dummyBlob));
@@ -49,7 +44,7 @@ describe("useLoadAudioSource", () => {
   });
 
   it("pauses, sets source, and reloads if audio is playing", () => {
-    const audioRef: any = {
+    const audioRef = {
       current: {
         paused: false,
         load: jest.fn(),
@@ -57,7 +52,7 @@ describe("useLoadAudioSource", () => {
         pause: jest.fn(),
         src: "",
       },
-    };
+    } as unknown as RefObject<HTMLAudioElement>;
     const dummyBlob = new Blob(["dummy content"], { type: "audio/mp3" });
     const { result } = renderHook(() => useBlobUrl(dummyBlob));
 

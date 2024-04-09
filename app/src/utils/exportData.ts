@@ -4,4 +4,4 @@ export function exportData<T>(data: T) {
   link.href = jsonString;
   link.download = "data.pianoroll";
   link.click();
-};
+}

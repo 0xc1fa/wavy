@@ -1,9 +1,9 @@
 import { useReducer } from "react";
 
 export type BlobWithUrl = {
-  blob: Blob | null;
+  blob: Blob;
   url: string;
-};
+} | null;
 
 export const useBlobUrl = (initialBlob?: Blob | null) => {
   const getObjectFromBlob = (blob: Blob) => ({ blob: blob, url: URL.createObjectURL(blob) });

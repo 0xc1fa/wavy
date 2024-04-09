@@ -1,5 +1,4 @@
-// notesOperations.test.js
-import { downOctave, upOctave } from "./moveNoteVertical";
+import { upOctave } from "./moveNoteVertical";
 import { PianoRollData } from "react-piano-roll";
 
 describe("moveNoteVertical", () => {

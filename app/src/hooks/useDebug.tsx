@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
-export function useDebug(state: any) {
+export function useDebug<T>(state: T) {
   useEffect(() => {
-    console.log(state)
-  }, [state])
+    console.log(state);
+  }, [state]);
 }

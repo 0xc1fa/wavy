@@ -14,7 +14,7 @@ import {
 } from "react-icons/rx";
 import { downOctave, upOctave } from "@/actions/moveNoteVertical";
 import { setLegato } from "@/actions/setLegato";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { halfTime, doubleTime } from "@/actions/scaleNoteTime";
 import ImportAction from "./ImportAction";
 import { IoSaveOutline } from "react-icons/io5";
@@ -23,8 +23,8 @@ import { useFrequentAudioTimeupdate } from "@/hooks/useFrequentAudioTimeupdate";
 import { exportData } from "@/utils/exportData";
 import React from "react";
 
-export interface SvsPianoRollProps extends React.HTMLAttributes<HTMLDivElement> {}
-export default function SvsPianoRoll(props: SvsPianoRollProps) {
+
+export default function SvsPianoRoll() {
   const [audioSource, setAudioSource] = useBlobUrl();
   const [audioStatus, audioStatusDispatch] = useAudioStatus();
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -38,9 +38,10 @@ export default function SvsPianoRoll(props: SvsPianoRollProps) {
       <audio
         ref={audioRef}
         onTimeUpdate={() => {
-          if (pianorollRef.current) {
-            pianorollRef.current.currentTime = audioRef.current?.currentTime! * 960;
+          if (!audioRef.current || !pianorollRef.current) {
+            return;
           }
+          pianorollRef.current.currentTime = audioRef.current.currentTime * 960;
         }}
         onEnded={() => pianorollRef.current?.pause()}
       >
@@ -62,7 +63,7 @@ export default function SvsPianoRoll(props: SvsPianoRollProps) {
         />
         <PianoRoll.Action
           name="download"
-          onClick={() => saveAs(audioSource?.blob!, "audio.wav")}
+          onClick={() => audioSource && saveAs(audioSource.blob, "audio.wav")}
           disabled={audioSource === null}
         >
           <RxDownload />
