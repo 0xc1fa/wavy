@@ -1,5 +1,7 @@
 # ReactPianoRoll
 
+[![Code Climate maintainability](https://codeclimate.com/github/chanyatfu/react-midi-editor.png)](https://codeclimate.com/github/chanyatfu/react-midi-editor)
+
 This is a component library for pianoroll in React. Functionalities included:
 
 - Note creation, dragging and deletion
