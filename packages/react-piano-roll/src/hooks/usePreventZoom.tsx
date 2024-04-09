@@ -20,12 +20,7 @@ function usePreventZoom(scrollCheck = true, keyboardCheck = true) {
       if (
         keyboardCheck &&
         event.ctrlKey &&
-        (event.keyCode == 61 ||
-          event.keyCode == 107 ||
-          event.keyCode == 173 ||
-          event.keyCode == 109 ||
-          event.keyCode == 187 ||
-          event.keyCode == 189)
+        (event.keyCode in [61, 107, 173, 109, 187, 189])
       ) {
         event.preventDefault();
       }
