@@ -5,6 +5,14 @@ export function useHandleSpaceDown<T extends HTMLElement>(ref: RefObject<T>) {
   let spaceDown = useRef(false);
   const isPlaying = useRef(false);
 
+  function createEvent(type: string) {
+    return new CustomEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      detail: {},
+    });
+  }
+
   const spaceDownHandler = (event: KeyboardEvent) => {
     if (event.code === "Space") {
       event.preventDefault();
@@ -12,22 +20,10 @@ export function useHandleSpaceDown<T extends HTMLElement>(ref: RefObject<T>) {
         return;
       }
       if (isPlaying.current) {
-        ref.current!.dispatchEvent(
-          new CustomEvent("pause", {
-            bubbles: true,
-            cancelable: true,
-            detail: {},
-          }),
-        );
+        ref.current!.dispatchEvent(createEvent("pause"));
         isPlaying.current = false;
       } else {
-        ref.current!.dispatchEvent(
-          new CustomEvent("play", {
-            bubbles: true,
-            cancelable: true,
-            detail: {},
-          }),
-        );
+        ref.current!.dispatchEvent(createEvent("play"));
         isPlaying.current = true;
       }
       spaceDown.current = true;
