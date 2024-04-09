@@ -1,6 +1,6 @@
 import { useReducer } from "react";
 
-type BlobWithUrl = {
+export type BlobWithUrl = {
   blob: Blob | null;
   url: string;
 };
