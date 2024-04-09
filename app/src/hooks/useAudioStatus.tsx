@@ -6,7 +6,7 @@ export type AudioStatus = {
   getIsRenderingDisabled(): boolean;
   getIsUpToDate(): boolean;
 };
-export type AudioStatusAction = "NOTE_MODIFIED" | "RENDERING_REQUESTED" | "RENDERING_DONE";
+export type AudioStatusAction = "NOTE_MODIFIED" | "RENDERING_REQUESTED" | "RENDERING_DONE" | "RENDERING_FAILED";
 
 export function useAudioStatus() {
   return useReducer(
@@ -18,6 +18,8 @@ export function useAudioStatus() {
           return { ...state, rendering: false };
         case "NOTE_MODIFIED":
           return { ...state, valid: false };
+        case "RENDERING_FAILED":
+          return { ...state, error: true };
       }
     },
     {

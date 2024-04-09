@@ -32,6 +32,10 @@ export default function RenderAction(props: RenderActionProps) {
         }))
         .sort((a, b) => a.tick - b.tick),
     ).then((res) => {
+      if (!res) {
+        props.setAudioStatus("RENDERING_FAILED");
+        return;
+      }
       props.setAudioSource(res);
       props.setAudioStatus("RENDERING_DONE");
     });
