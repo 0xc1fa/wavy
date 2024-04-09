@@ -16,14 +16,21 @@ export function getNoteIdFromEvent(event: React.PointerEvent<Element> | React.Mo
   return noteId ? noteId : null;
 }
 
-export function getRelativeX(event: React.PointerEvent<Element> | React.MouseEvent<Element>): number {
-  const currentTarget = event.currentTarget as HTMLElement;
-  const relativeX = event.clientX - currentTarget.getBoundingClientRect().left + event.currentTarget.scrollLeft;
-  return relativeX;
+export function getRelativeAxis(axis: "x" | "y") {
+  const lookup = {
+    x: { client: "clientX", bounding: "left", scroll: "scrollLeft" },
+    y: { client: "clientY", bounding: "top", scroll: "scrollTop" },
+  } as const;
+
+  return (event: React.PointerEvent<Element> | React.MouseEvent<Element>) => {
+    const currentTarget = event.currentTarget as HTMLElement;
+    const relative =
+      event[lookup[axis].client] -
+      currentTarget.getBoundingClientRect()[lookup[axis].bounding] +
+      event.currentTarget[lookup[axis].scroll];
+    return relative;
+  };
 }
 
-export function getRelativeY(event: React.PointerEvent<Element> | React.MouseEvent<Element>): number {
-  const currentTarget = event.currentTarget as HTMLElement;
-  const relativeY = event.clientY - currentTarget.getBoundingClientRect().top + event.currentTarget.scrollTop;
-  return relativeY;
-}
+export const getRelativeX = getRelativeAxis("x");
+export const getRelativeY = getRelativeAxis("y");
