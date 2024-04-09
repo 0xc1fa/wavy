@@ -1,11 +1,16 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-
+import nextJest from 'next/jest.js'
 import type {Config} from 'jest';
 
-const config: Config = {
-  verbose: true,
-  preset: 'ts-jest',
-  testEnvironment: "jsdom",
-};
+const createJestConfig = nextJest({
+  dir: './',
+})
 
-export default config;
+const config: Config = {
+  coverageProvider: 'v8',
+  testEnvironment: 'jsdom',
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/$1",
+  },
+}
+
+export default createJestConfig(config)
