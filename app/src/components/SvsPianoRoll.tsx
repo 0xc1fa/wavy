@@ -12,12 +12,10 @@ import {
   RxDownload,
   RxColumnSpacing,
 } from "react-icons/rx";
-import { upOctave } from "@/actions/upOctave";
-import { downOctave } from "@/actions/downOctave";
+import { downOctave, upOctave } from "@/actions/moveNoteVertical";
 import { setLegato } from "@/actions/setLegato";
 import { useEffect, useRef } from "react";
-import { halfTime } from "@/actions/halfTime";
-import { doubleTime } from "@/actions/doubleTime";
+import { halfTime, doubleTime } from "@/actions/scaleNoteTime";
 import ImportAction from "./ImportAction";
 import { IoSaveOutline } from "react-icons/io5";
 
