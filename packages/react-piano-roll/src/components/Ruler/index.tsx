@@ -41,7 +41,7 @@ function RulerMarker({ x, children }: RulerMarkerProps) {
 
   return (
     <g>
-      <line x1={x} y1={5} x2={x} y2={rulerHeight} stroke="#232323" strokeWidth="1" />
+      <line x1={x} y1={5} x2={x} y2={rulerHeight} className={styles.line} />
       <text
         x={x + 5} // Adjust text position as needed
         y={13} // Adjust text position as needed

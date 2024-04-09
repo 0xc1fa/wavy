@@ -51,5 +51,7 @@ interface SelectionBarMarkerProps {
   height: number;
 }
 function SelectionBarMarker({ x, height }: SelectionBarMarkerProps) {
-  return <line x1={x} y1={0} x2={x} y2={height} stroke="#232323" strokeWidth="1" />;
+  return <line x1={x} y1={0} x2={x} y2={height} className={styles["line"]} />;
 }
+
+
