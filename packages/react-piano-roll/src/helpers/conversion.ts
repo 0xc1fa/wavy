@@ -168,14 +168,19 @@ export function inMarquee(
     ongoingPosition: { x: number; y: number };
   },
 ) {
-  const [selectedMinNoteNum, selectedMaxNoteNum] = [
-    getNoteNumFromOffsetY(numOfKeys, marquee.startingPosition.y),
-    getNoteNumFromOffsetY(numOfKeys, marquee.ongoingPosition.y),
-  ].sort((a, b) => a - b);
-  const [selectedMinTick, selectedMaxTick] = [
-    getTickFromOffsetX(scaleX, marquee.startingPosition.x),
-    getTickFromOffsetX(scaleX, marquee.ongoingPosition.x),
-  ].sort((a, b) => a - b);
+  function transformAndSortPositions(positions: [number, number], transformFn: (a: number, b: number) => number) {
+    return positions.map(transformFn).sort((a, b) => a - b);
+  }
+
+  const [selectedMinNoteNum, selectedMaxNoteNum] = transformAndSortPositions(
+    [marquee.startingPosition.y, marquee.ongoingPosition.y],
+    (pos) => getNoteNumFromOffsetY(numOfKeys, pos),
+  );
+
+  const [selectedMinTick, selectedMaxTick] = transformAndSortPositions(
+    [marquee.startingPosition.x, marquee.ongoingPosition.x],
+    (pos) => getTickFromOffsetX(scaleX, pos),
+  );
 
   return (
     note.noteNumber >= selectedMinNoteNum &&
