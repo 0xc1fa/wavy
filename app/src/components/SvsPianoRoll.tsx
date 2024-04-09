@@ -20,6 +20,7 @@ import ImportAction from "./ImportAction";
 import { IoSaveOutline } from "react-icons/io5";
 import { useLoadAudioSource } from "@/hooks/useLoadAudioSource";
 import { useFrequentAudioTimeupdate } from "@/hooks/useFrequentAudioTimeupdate";
+import { exportData } from "@/utils/exportData";
 
 export interface SvsPianoRollProps extends React.HTMLAttributes<HTMLDivElement> {}
 export default function SvsPianoRoll(props: SvsPianoRollProps) {
@@ -30,15 +31,6 @@ export default function SvsPianoRoll(props: SvsPianoRollProps) {
 
   useLoadAudioSource(audioRef, audioSource);
   useFrequentAudioTimeupdate(audioRef);
-
-  const exportData = (data: any) => {
-    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(JSON.stringify(data))}`;
-    const link = document.createElement("a");
-    link.href = jsonString;
-    link.download = "data.pianoroll";
-
-    link.click();
-  };
 
   return (
     <>
