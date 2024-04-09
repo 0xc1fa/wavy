@@ -7,10 +7,10 @@ export function scaleNoteTime(
     let selectedNotes = data.notes.filter((note) => note.isSelected).sort((a, b) => a.tick - b.tick);
     let unselectedNotes = data.notes.filter((note) => !note.isSelected);
     const startingTick = selectedNotes[0].tick;
-    for (let i = 0; i < selectedNotes.length; i++) {
+    selectedNotes.forEach((_, i) => {
       selectedNotes[i].tick = startingTick + (selectedNotes[i].tick - startingTick) * scale;
       selectedNotes[i].duration = selectedNotes[i].duration * scale;
-    }
+    });
     set({ notes: [...unselectedNotes, ...selectedNotes] });
   };
 }
