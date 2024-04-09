@@ -1,9 +1,10 @@
+import { getSelectedNotes, getUnselectedNotes, sortNotes } from "@/utils/notes";
 import { PianoRollData } from "react-piano-roll";
 
 export function moveNoteVertical(semitone: number) {
   return function (data: PianoRollData, set: (notes: Partial<PianoRollData>) => void) {
-    let selectedNotes = data.notes.filter((note) => note.isSelected).sort((a, b) => a.tick - b.tick);
-    let unselectedNotes = data.notes.filter((note) => !note.isSelected);
+    let selectedNotes = sortNotes(getSelectedNotes(data));
+    let unselectedNotes = getUnselectedNotes(data);
     for (let i = 0; i < selectedNotes.length; i++) {
       selectedNotes[i].noteNumber = selectedNotes[i].noteNumber + semitone;
     }
