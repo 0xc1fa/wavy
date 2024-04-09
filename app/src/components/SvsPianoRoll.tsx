@@ -18,6 +18,7 @@ import { useEffect, useRef } from "react";
 import { halfTime, doubleTime } from "@/actions/scaleNoteTime";
 import ImportAction from "./ImportAction";
 import { IoSaveOutline } from "react-icons/io5";
+import { useLoadAudioSource } from "@/hooks/useLoadAudioSource";
 
 export interface SvsPianoRollProps extends React.HTMLAttributes<HTMLDivElement> {}
 export default function SvsPianoRoll(props: SvsPianoRollProps) {
@@ -26,17 +27,7 @@ export default function SvsPianoRoll(props: SvsPianoRollProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const pianorollRef = useRef<MidiEditorHandle>(null);
 
-  useEffect(() => {
-    if (audioSource) {
-      if (audioRef.current?.paused) {
-        audioRef.current?.load();
-      } else {
-        audioRef.current?.pause();
-        audioRef.current?.load();
-        audioRef.current?.play();
-      }
-    }
-  }, [audioSource]);
+  useLoadAudioSource(audioRef, audioSource);
 
   useEffect(() => {
     const interval = setInterval(function () {
