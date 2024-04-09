@@ -21,6 +21,7 @@ import { IoSaveOutline } from "react-icons/io5";
 import { useLoadAudioSource } from "@/hooks/useLoadAudioSource";
 import { useFrequentAudioTimeupdate } from "@/hooks/useFrequentAudioTimeupdate";
 import { exportData } from "@/utils/exportData";
+import React from "react";
 
 export interface SvsPianoRollProps extends React.HTMLAttributes<HTMLDivElement> {}
 export default function SvsPianoRoll(props: SvsPianoRollProps) {
