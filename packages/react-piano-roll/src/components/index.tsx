@@ -15,7 +15,7 @@ import PianoKeyboard from "./PianoKeyboard";
 import { Provider as JotaiProvider, useAtom } from "jotai";
 import ActionBar, { ActionItem } from "./ActionButtons";
 import Menu from "./Menu";
-import { useHandleSpaceDown } from "./handlers/useHandleSpaceDown";
+import { usePlayKeyToggle } from "./handlers/usePlayKeyToggle";
 import { useEventListener } from "@/hooks/useEventListener";
 import { notesAtom } from "@/store/note";
 import theme from '../store/default-theme.module.css'
@@ -57,7 +57,7 @@ const MidiEditor = forwardRef<MidiEditorHandle, MidiEditorPropsWithDefaults>((pr
   const [notes] = useAtom(notesAtom);
   useScrollToNote(containerRef, props.initialScrollMiddleNote);
   useLeftAnchoredScale(containerRef);
-  useHandleSpaceDown(containerRef);
+  usePlayKeyToggle(containerRef);
 
   const paused = useRef(true);
   const [currentTime, setCurrentTime] = useState(0);

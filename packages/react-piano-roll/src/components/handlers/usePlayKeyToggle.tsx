@@ -1,7 +1,7 @@
 import { useEventListener } from "@/hooks/useEventListener";
 import { RefObject, useRef } from "react";
 
-export function useHandleSpaceDown<T extends HTMLElement>(ref: RefObject<T>) {
+export function usePlayKeyToggle<T extends HTMLElement>(ref: RefObject<T>) {
   const spaceDown = useRef(false);
   const isPlaying = useRef(false);
 
