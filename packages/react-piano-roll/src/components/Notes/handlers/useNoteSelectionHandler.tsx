@@ -3,18 +3,15 @@ import { getNoteObjectFromEvent } from "@/helpers/event";
 import { PianoRollNote } from "@/types";
 import { useAtom } from "jotai";
 import { create } from "mutative";
+import { useEventListener } from "@/hooks/useEventListener";
+import { RefObject } from "react";
 
-export function useHandleSetNoteSelection() {
+export function useNoteSelectionHandler<T extends HTMLElement>(ref: RefObject<T>) {
   const [notes] = useAtom(notesAtom);
   const [selectedNoteIds, setSelectedNoteIds] = useAtom(selectedNoteIdsAtom);
   const [, moveNoteAsLatestModified] = useAtom(moveNoteAsLatestModifiedAtom);
 
-  function handleSetNoteSelectionPD(event: React.PointerEvent<Element>) {
-    const noteClicked = getNoteObjectFromEvent(notes, event);
-    setNoteSelection(event, noteClicked);
-  }
-
-  const setNoteSelection = (event: React.PointerEvent<Element>, noteClicked: PianoRollNote | null) => {
+  const setNoteSelection = (event: PointerEvent, noteClicked: PianoRollNote | null) => {
     if (!noteClicked) {
       if (!event.shiftKey) {
         setSelectedNoteIds(new Set());
@@ -29,7 +26,8 @@ export function useHandleSetNoteSelection() {
     }
   };
 
-  return {
-    handleSetNoteSelectionPD,
-  };
+  useEventListener(ref, "pointerdown", (event: PointerEvent) => {
+    const noteClicked = getNoteObjectFromEvent(notes, event);
+    setNoteSelection(event, noteClicked);
+  });
 }

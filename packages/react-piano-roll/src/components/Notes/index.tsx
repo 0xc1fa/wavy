@@ -5,14 +5,13 @@ import styles from "./index.module.scss";
 import { useRef } from "react";
 import { useHandleDelete } from "./handlers/useHandleDelete";
 import { useClipboardKeyboardShortcut } from "./handlers/useClipboardKeyboardShortcut";
-import { useHandleSetNoteSelection } from "./handlers/useHandleSetNoteSelection";
+import { useNoteSelectionHandler } from "./handlers/useNoteSelectionHandler";
 import { useHandleSetVelocity } from "./handlers/useHandleSetVelocity";
 import { useAtomValue } from "jotai";
 import { notesAtom } from "@/store/note";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 
 export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
-  // const { pianoRollStore } = useStore();
   const notes = useAtomValue(notesAtom);
   const containerRef = useRef<HTMLDivElement>(null);
   const { loading } = useConfig();
@@ -20,12 +19,12 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
   useHandleDelete(containerRef);
   useClipboardKeyboardShortcut(containerRef);
 
-  const { handleSetNoteSelectionPD } = useHandleSetNoteSelection();
+  useNoteSelectionHandler(containerRef);
   const { handleSetVelocityPD, handleSetVelocityPM, handleSetVelocityPU } = useHandleSetVelocity();
 
   const handlers = {
     onPointerDown(event: React.PointerEvent) {
-      handleSetNoteSelectionPD(event);
+      // handleSetNoteSelectionPD(event);
       handleSetVelocityPD(event);
     },
     onPointerMove(event: React.PointerEvent) {
