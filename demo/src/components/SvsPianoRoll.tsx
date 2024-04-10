@@ -23,7 +23,6 @@ import { useFrequentAudioTimeupdate } from "@/hooks/useFrequentAudioTimeupdate";
 import { exportData } from "@/utils/exportData";
 import React from "react";
 
-
 export default function SvsPianoRoll() {
   const [audioSource, setAudioSource] = useBlobUrl();
   const [audioStatus, audioStatusDispatch] = useAudioStatus();

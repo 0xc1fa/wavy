@@ -95,21 +95,18 @@ function getHeaderChunk(format: MidiFormat, numOfTracks: number, ticksPerQuarter
 
 function getTrackChunk(data: PianoRollNote[]): number[] {
   const MTrk = [0x4d, 0x54, 0x72, 0x6b];
-  const noteStartEvents: AbsoluteTimedMidiChannelEvent[] = data
-    .slice()
-    .map((note) => ({
-      type: ChannelEventType.NoteOn,
-      noteNumber: note.noteNumber,
-      tick: note.tick,
-      velocity: note.velocity,
-    }));
-  const noteEndEvents: AbsoluteTimedMidiChannelEvent[] = data
-    .slice()    .map((note) => ({
-      type: ChannelEventType.NoteOff,
-      noteNumber: note.noteNumber,
-      tick: note.tick + note.duration,
-      velocity: 0,
-    }));
+  const noteStartEvents: AbsoluteTimedMidiChannelEvent[] = data.slice().map((note) => ({
+    type: ChannelEventType.NoteOn,
+    noteNumber: note.noteNumber,
+    tick: note.tick,
+    velocity: note.velocity,
+  }));
+  const noteEndEvents: AbsoluteTimedMidiChannelEvent[] = data.slice().map((note) => ({
+    type: ChannelEventType.NoteOff,
+    noteNumber: note.noteNumber,
+    tick: note.tick + note.duration,
+    velocity: 0,
+  }));
   const channelEvents = [...noteStartEvents, ...noteEndEvents].sort((a, b) => a.tick - b.tick);
   const timedChannelEvents = insertVLQEvents(channelEvents);
 

@@ -17,12 +17,12 @@ export function useHandleSetNoteSelection() {
   const setNoteSelection = (event: React.PointerEvent<Element>, noteClicked: PianoRollNote | null) => {
     if (!noteClicked) {
       if (!event.shiftKey) {
-        setSelectedNoteIds(new Set())
+        setSelectedNoteIds(new Set());
       }
     } else if (!selectedNoteIds.has(noteClicked.id) && !event.shiftKey) {
       setSelectedNoteIds(new Set([noteClicked.id]));
     } else {
-      setSelectedNoteIds(prev => create(prev, (draft) => draft.add(noteClicked.id)))
+      setSelectedNoteIds((prev) => create(prev, (draft) => draft.add(noteClicked.id)));
     }
     if (noteClicked) {
       moveNoteAsLatestModified(noteClicked.id);

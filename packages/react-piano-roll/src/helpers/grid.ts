@@ -34,7 +34,6 @@ export function getGridSeparationFactor(beatsPerBar: number, scaleX: number) {
   };
 }
 
-
 export function getGridBaseSeparation(gridSeparationFactor: ReturnType<typeof getGridSeparationFactor>) {
   return {
     bar: 4,

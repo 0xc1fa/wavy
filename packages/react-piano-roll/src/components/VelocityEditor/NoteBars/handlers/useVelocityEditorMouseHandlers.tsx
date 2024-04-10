@@ -27,7 +27,7 @@ export default function useVelocityEditorMouseHandlers() {
   const [mouseHandlerMode, setMouseHandlerMode] = useState(VelocityEditorMouseHandlerMode.SelectAndDrag);
   const notes = useAtomValue(notesAtom);
   const noteModificationBuffer = useAtomValue(noteModificationBufferAtom);
-  const [selectedNoteIds, setSelectedNoteIds] = useAtom(selectedNoteIdsAtom)
+  const [selectedNoteIds, setSelectedNoteIds] = useAtom(selectedNoteIdsAtom);
   const setNoteModificationBufferWithSelectedNote = useSetAtom(setNoteModificationBufferWithAllNotesAtom);
   const modifyingNote = useSetAtom(modifyingNotesAtom);
 
@@ -53,7 +53,7 @@ export default function useVelocityEditorMouseHandlers() {
           setSelectedNoteIds(new Set());
         }
         if (noteClicked.current !== null) {
-          setSelectedNoteIds(prev => create(prev, (draft) => draft.add(noteClicked.current!.id)));
+          setSelectedNoteIds((prev) => create(prev, (draft) => draft.add(noteClicked.current!.id)));
         }
       }
       setNoteModificationBufferWithSelectedNote({ initX: getRelativeX(event), initY: getRelativeY(event) });

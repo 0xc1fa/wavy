@@ -14,7 +14,7 @@ describe("useBlobUrl", () => {
   test("returns null without arguments", () => {
     const { result } = renderHook(() => useBlobUrl());
     expect(result.current[0]).toBeNull();
-  })
+  });
 
   test("returns null for null input", () => {
     const { result } = renderHook(() => useBlobUrl(null));
@@ -41,5 +41,4 @@ describe("useBlobUrl", () => {
     act(() => result.current[1](dummyBlob));
     expect(result.current[0]).toEqual({ blob: dummyBlob, url: "mockAudioUrl" });
   });
-
 });

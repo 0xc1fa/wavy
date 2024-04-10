@@ -15,7 +15,7 @@ const NoteBars: React.FC<Props> = ({ isDragging }) => {
   const notes = useAtomValue(notesAtom);
   const { scaleX } = useScaleX();
   const theme = useTheme();
-  const [selectedNoteIds] = useAtom(selectedNoteIdsAtom)
+  const [selectedNoteIds] = useAtom(selectedNoteIdsAtom);
 
   return (
     <div className={styles["note-bar-container"]} {...mouseHandlers}>
@@ -28,7 +28,9 @@ const NoteBars: React.FC<Props> = ({ isDragging }) => {
               "--marker-left": `${getOffsetXFromTick(scaleX, note.tick)}px`,
               "--marker-top": `${1 - note.velocity / 128}`,
               "--marker-width": `${getOffsetXFromTick(scaleX, note.duration)}px`,
-              "--marker-color": selectedNoteIds.has(note.id) ? theme.note.noteBackgroundColor : theme.note.noteBackgroundColor,
+              "--marker-color": selectedNoteIds.has(note.id)
+                ? theme.note.noteBackgroundColor
+                : theme.note.noteBackgroundColor,
               "--cursor": isDragging ? "grabbing" : "grab",
             } as React.CSSProperties
           }

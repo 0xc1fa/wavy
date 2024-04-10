@@ -1,6 +1,7 @@
 # react-piano-roll
 
 ## Bugs
+
 - Range indicator overlap piano keyboard
 - A small gap appear when the piano roll is scrolled all the way to the bottom
 - The onclick animation of piano keyboard is not working

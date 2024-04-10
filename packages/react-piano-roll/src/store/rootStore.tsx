@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { createContext, useContext } from "react";
 
-
 type Store = {
   bpm: number;
   scaleX: number;

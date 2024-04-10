@@ -19,9 +19,9 @@ export function useHandleScaleX(ref: RefObject<HTMLElement>) {
   };
 
   useEffect(() => {
-    ref.current?.addEventListener('wheel', handleScaleX)
+    ref.current?.addEventListener("wheel", handleScaleX);
     return () => {
-      ref.current?.removeEventListener('wheel', handleScaleX)
-    }
+      ref.current?.removeEventListener("wheel", handleScaleX);
+    };
   }, [tickRange]);
 }

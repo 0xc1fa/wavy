@@ -1,12 +1,4 @@
-import React, {
-  FC,
-  createContext,
-  useContext,
-  useRef,
-  useState,
-  useEffect,
-  useLayoutEffect,
-} from "react";
+import React, { FC, createContext, useContext, useRef, useState, useEffect, useLayoutEffect } from "react";
 
 type ScrollContextType = {
   scrollPercentage: number;
@@ -15,7 +7,7 @@ type ScrollContextType = {
 
 const ScrollSyncContext = createContext<ScrollContextType | undefined>(undefined);
 
-interface ScrollSync extends  FC<{ children: React.ReactNode }> {
+interface ScrollSync extends FC<{ children: React.ReactNode }> {
   Panel: FC<React.HTMLAttributes<HTMLDivElement>>;
 }
 const ScrollSync: ScrollSync = ({ children }) => {
@@ -51,7 +43,7 @@ const ScrollSyncPanel: FC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
       // ref.current.style.overflowY = "scroll";
     }
     isUserScrolling.current = true; // Reset flag after handling scroll
-  };
+  }
 
   useLayoutEffect(() => {
     const currentRef = ref.current;

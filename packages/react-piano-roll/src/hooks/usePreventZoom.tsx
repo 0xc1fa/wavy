@@ -17,11 +17,7 @@ export function enableZoom() {
 function usePreventZoom(scrollCheck = true, keyboardCheck = true) {
   useEffect(() => {
     const handleKeydown = (event: KeyboardEvent) => {
-      if (
-        keyboardCheck &&
-        event.ctrlKey &&
-        (event.keyCode in [61, 107, 173, 109, 187, 189])
-      ) {
+      if (keyboardCheck && event.ctrlKey && event.keyCode in [61, 107, 173, 109, 187, 189]) {
         event.preventDefault();
       }
     };

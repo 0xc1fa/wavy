@@ -17,7 +17,6 @@ export const selectedNoteIdsAtom = atom(new Set<PianoRollNote["id"]>());
 
 export const selectedNotesAtom = atom((get) => get(notesAtom).filter((note) => get(selectedNoteIdsAtom).has(note.id)));
 
-
 export const addNoteAtom = atom(null, (get, set, payload: { ticks: number; noteNum: number }) => {
   const notesHisotry = get(notesHistoryAtom);
   const newNote = createNote(

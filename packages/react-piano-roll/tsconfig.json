@@ -25,10 +25,10 @@
     "baseUrl": "src",
     "paths": {
       "@/*": ["*"],
-      "react/jsx-runtime": ["node_modules/react/jsx-runtime"],
-    },
+      "react/jsx-runtime": ["node_modules/react/jsx-runtime"]
+    }
   },
   "include": ["src"],
-  "plugins": [{ "name": "typescript-plugin-css-modules" }],
+  "plugins": [{ "name": "typescript-plugin-css-modules" }]
   //   "references": [{ "path": "./tsconfig.node.json" }]
 }

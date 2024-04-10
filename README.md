@@ -24,20 +24,19 @@ Wrap your component with `<PianorollProvider />` and then use `<Pianoroll />` in
 Inside main.js:
 
 ```tsx
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.tsx";
+import "./index.css";
 import { PianoRollProvider } from "react-piano-roll";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <PianorollProvider>
       <App />
     </PianorollProvider>
-  </React.StrictMode>
-  ,
-)
+  </React.StrictMode>,
+);
 ```
 
 Inside App.tsx:

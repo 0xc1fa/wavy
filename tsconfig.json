@@ -25,7 +25,7 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
     "baseUrl": ".",
-    "paths": {},
+    "paths": {}
   },
-  "exclude": ["**/.*/", "**/build", "**/node_modules", "docs/export"],
+  "exclude": ["**/.*/", "**/build", "**/node_modules", "docs/export"]
 }

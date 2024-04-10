@@ -67,11 +67,11 @@ export function useHandleMarqueeSelection() {
       const isInMarquee = inMarquee(numOfKeys, scaleX, note, {
         startingPosition: marqueePosition[0],
         ongoingPosition: marqueePosition[1],
-      })
+      });
       if (isInMarquee) {
-        setSelectedNoteIds(prev => create(prev, draft => draft.add(note.id)))
+        setSelectedNoteIds((prev) => create(prev, (draft) => draft.add(note.id)));
       }
-    })
+    });
   };
 
   const handleMarqueeSelectionPU: React.PointerEventHandler = (event) => {

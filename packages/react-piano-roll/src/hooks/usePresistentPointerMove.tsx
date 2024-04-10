@@ -54,7 +54,9 @@ type PointerPos = {
 
 export function usePresistentPointerMove<T extends HTMLElement>(): React.RefObject<T>;
 export function usePresistentPointerMove<T extends HTMLElement>(ref: React.RefObject<T>): undefined;
-export function usePresistentPointerMove<T extends HTMLElement>(ref?: React.RefObject<T>): React.RefObject<T> | undefined {
+export function usePresistentPointerMove<T extends HTMLElement>(
+  ref?: React.RefObject<T>,
+): React.RefObject<T> | undefined {
   const internalRef = useRef<T>(null);
   const usedRef = ref || internalRef;
 
@@ -73,7 +75,6 @@ export function usePresistentPointerMove<T extends HTMLElement>(ref?: React.RefO
       };
     }
   }, []);
-
 
   useEffect(() => {
     let frameId: number;
