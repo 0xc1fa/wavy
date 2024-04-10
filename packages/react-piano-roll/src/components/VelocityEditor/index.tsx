@@ -1,46 +1,60 @@
 import React, { useState } from "react";
 import styles from "./index.module.scss";
 import LaneGrids from "../LaneGrids";
-import useVelocityEditorMouseHandlers from "./NoteBars/handlers/useVelocityEditorMouseHandlers";
-import useTheme from "../../hooks/useTheme";
-import VelocityRuler from "./VelocityRuler";
-import { getOffsetXFromTick } from "@/helpers/conversion";
-import { useScaleX } from "@/contexts/ScaleXProvider";
+import VelocityRuler from "./VelocityRuler";;
 import NoteBars from "./NoteBars";
 
-export default function VelocityEditor() {
+function useVelocityEditorGeometry() {
   const [isDragging, setIsDragging] = useState(false);
-
   const [containerHeight, setContainerHeight] = useState(200);
   const [resizeBuffer, setResizeBuffer] = useState({
     initY: 0,
     initHeight: 0,
   });
 
-  const handlePointerDown: React.PointerEventHandler = (event) => {
+  return {
+    isDragging,
+    containerHeight,
+    resizeBuffer,
+    setIsDragging,
+    setContainerHeight,
+    setResizeBuffer,
+  }
+}
+
+function useHandlePointerDown(geometry: ReturnType<typeof useVelocityEditorGeometry>): React.PointerEventHandler {
+  return (event) => {
     event.currentTarget.setPointerCapture(event.pointerId);
-    setIsDragging(true);
-    setResizeBuffer({
+    geometry.setIsDragging(true);
+    geometry.setResizeBuffer({
       initY: event.clientY,
-      initHeight: containerHeight,
+      initHeight: geometry.containerHeight,
     });
   };
+};
 
-  const handlePointerMove: React.PointerEventHandler<HTMLDivElement> = (event) => {
-    if (isDragging) {
-      const newHeight = resizeBuffer.initHeight - (event.clientY - resizeBuffer.initY);
-      setContainerHeight(Math.max(50, Math.min(300, newHeight)));
+function useHandlePointerMove(geometry: ReturnType<typeof useVelocityEditorGeometry>): React.PointerEventHandler {
+  return (event) => {
+    if (geometry.isDragging) {
+      const newHeight = geometry.resizeBuffer.initHeight - (event.clientY - geometry.resizeBuffer.initY);
+      geometry.setContainerHeight(Math.max(50, Math.min(300, newHeight)));
     }
   };
+};
 
-  const handlePointerUp: React.PointerEventHandler = (event) => {
-    setIsDragging(false);
+function useHandlePointerUp(geometry: ReturnType<typeof useVelocityEditorGeometry>): React.PointerEventHandler {
+  return () => {
+    geometry.setIsDragging(false);
   };
+};
+
+export default function VelocityEditor() {
+  const geometry = useVelocityEditorGeometry();
 
   const resizeBarHandlers = {
-    onPointerDown: handlePointerDown,
-    onPointerMove: handlePointerMove,
-    onPointerUp: handlePointerUp,
+    onPointerDown: useHandlePointerDown(geometry),
+    onPointerMove: useHandlePointerMove(geometry),
+    onPointerUp: useHandlePointerUp(geometry),
   };
 
   return (
@@ -50,16 +64,16 @@ export default function VelocityEditor() {
         className={styles["inner-container"]}
         style={
           {
-            "--container-height": `${containerHeight}px`,
+            "--container-height": `${geometry.containerHeight}px`,
           } as React.CSSProperties
         }
       >
         <div className={styles["left-container"]}>
-          <VelocityRuler height={containerHeight} />
+          <VelocityRuler height={geometry.containerHeight} />
         </div>
         <div className={styles["right-container"]}>
           <LaneGrids />
-          <NoteBars isDragging={isDragging} />
+          <NoteBars isDragging={geometry.isDragging} />
         </div>
       </div>
     </div>
