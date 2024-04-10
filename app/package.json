@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "@midi-editor/app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -18,7 +18,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.0.1",
-    "react-piano-roll": "workspace:*"
+    "@midi-editor/react": "workspace:*"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.2",

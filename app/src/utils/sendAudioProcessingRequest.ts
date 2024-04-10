@@ -1,4 +1,4 @@
-import { PianoRollNote } from "react-piano-roll/dist/types";
+import { PianoRollNote } from "@midi-editor/react";
 
 export async function sendAudioProcessingRequest(bpm: number, notes: PianoRollNote[]) {
   const url = "http://127.0.0.1:8000/inference";

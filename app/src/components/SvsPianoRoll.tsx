@@ -1,6 +1,6 @@
 "use client";
 import { useBlobUrl } from "@/hooks/useBlobUrl";
-import { MidiEditorHandle, PianoRoll } from "react-piano-roll";
+import { MidiEditorHandle, PianoRoll } from "@midi-editor/react";
 import RenderAction from "./RenderAction";
 import { saveAs } from "file-saver";
 import { useAudioStatus } from "@/hooks/useAudioStatus";

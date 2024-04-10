@@ -69,6 +69,9 @@ importers:
 
   app:
     dependencies:
+      '@midi-editor/react':
+        specifier: workspace:*
+        version: link:../packages/react-piano-roll
       antd:
         specifier: ^5.15.3
         version: 5.16.1(react-dom@18.2.0)(react@18.2.0)
@@ -93,9 +96,6 @@ importers:
       react-icons:
         specifier: ^5.0.1
         version: 5.0.1(react@18.2.0)
-      react-piano-roll:
-        specifier: workspace:*
-        version: link:../packages/react-piano-roll
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.4.2

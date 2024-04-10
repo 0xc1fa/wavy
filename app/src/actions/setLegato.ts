@@ -1,5 +1,5 @@
 import { getSelectedNotes, getUnselectedNotes, sortNotes } from "@/utils/notes";
-import { PianoRollData } from "react-piano-roll";
+import { PianoRollData } from "@midi-editor/react";
 
 export function setLegato(data: PianoRollData, set: (notes: Partial<PianoRollData>) => void) {
   console.log("SetLegatoActionItem clicked");

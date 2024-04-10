@@ -1,7 +1,7 @@
 "use client";
 import { useBlobUrl } from "@/hooks/useBlobUrl";
 import { sendAudioProcessingRequest } from "@/utils/sendAudioProcessingRequest";
-import { PianoRoll, PianoRollData } from "react-piano-roll";
+import { PianoRoll, PianoRollData } from "@midi-editor/react";
 import { RxCheck } from "react-icons/rx";
 import { RxMagicWand } from "react-icons/rx";
 import { useAudioStatus } from "@/hooks/useAudioStatus";

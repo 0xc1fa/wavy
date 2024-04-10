@@ -1,5 +1,5 @@
 import { upOctave } from "./moveNoteVertical";
-import { PianoRollData } from "react-piano-roll";
+import { PianoRollData } from "@midi-editor/react";
 
 describe("moveNoteVertical", () => {
   it("should correctly move selected notes by a given semitone", () => {

@@ -1,8 +1,8 @@
 "use client";
-import { PianoRoll, PianoRollData } from "react-piano-roll";
+import { PianoRoll, PianoRollData } from "@midi-editor/react";
 import { RxOpenInNewWindow } from "react-icons/rx";
 import { ChangeEvent, useRef } from "react";
-import { PianoRollActionElement } from "react-piano-roll/dist/components/ActionButtons";
+import { PianoRollActionElement } from "@midi-editor/react";
 
 export default function ImportAction() {
   const actionRef = useRef<PianoRollActionElement>(null);

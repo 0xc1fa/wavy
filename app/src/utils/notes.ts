@@ -1,4 +1,4 @@
-import { PianoRollData } from "react-piano-roll";
+import { PianoRollData } from "@midi-editor/react";
 
 export function getSelectedNotes(data: PianoRollData) {
   return data.notes.filter((note) => note.isSelected);
