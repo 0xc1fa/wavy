@@ -9,7 +9,7 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
-    "@midi-editor/app#build": {
+    "@midi-editor/demo#build": {
       "dependsOn": ["^build", "^@midi-editor/react#build"],
       "outputs": [".next/**", "!.next/cache/**"]
     }
