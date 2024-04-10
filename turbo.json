@@ -2,8 +2,19 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "outputs": [".next/**", "!.next/cache/**"]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
     },
-    "type-check": {}
-  }
+    "@midi-editor/react#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "@midi-editor/app#build": {
+      "dependsOn": ["^build", "^@midi-editor/react#build"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    }
+  },
+  "globalDependencies": [
+    "tsconfig.json"
+  ]
 }
