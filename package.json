@@ -7,15 +7,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format-check": "prettier --check .",
     "format": "prettier --write .",
-    "test": "jest",
-    "watch": "yarn --cwd packages/react-piano-roll watch",
-    "next": "yarn --cwd apps/nextapp dev",
-    "dev": "npm-run-all --parallel watch next"
+    "test": "jest"
   },
-  "workspaces": [
-    "packages/*",
-    "app"
-  ],
   "devDependencies": {
     "@babel/core": "^7.24.4",
     "@babel/preset-env": "^7.24.4",
