@@ -1,7 +1,6 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
-// import { useStore } from "@/hooks/useStore";
+import { useEffect, useRef, useState } from "react";
 import styles from "./index.module.scss";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { bpmAtom } from "@/store/bpm";
 
 const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => {
@@ -9,7 +8,6 @@ const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => 
 };
 
 export default function TempoInfo() {
-  // const { pianoRollStore, dispatch } = useStore();
   const [bpm, setBpm] = useAtom(bpmAtom);
 
   const [isDragging, setIsDragging] = useState(false);
