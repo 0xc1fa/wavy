@@ -85,7 +85,8 @@ export function getWhiteKeyNumFromPosition(range: PitchRange, y: number) {
     if (isBlackKey(keyNum)) {
       continue;
     }
-    if (y >= currentY && y <= currentY + baseWhiteKeyWidth) {
+    const isWithinRange = y >= currentY && y <= currentY + baseWhiteKeyWidth;
+    if (isWithinRange) {
       return keyNum;
     }
     currentY += baseWhiteKeyWidth;
