@@ -1,5 +1,4 @@
 import { memo } from "react";
-import useTheme from "@/hooks/useTheme";
 import styles from "./index.module.scss";
 import { getGridBaseSeparation, getGridSeparationFactor, getNumOfGrid } from "@/helpers/grid";
 import { basePixelsPerBeat } from "@/constants";
@@ -8,7 +7,6 @@ import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 
 const LaneGrids: React.FC = memo(() => {
-  const theme = useTheme();
   const { tickRange, timeSignature } = useConfig();
 
   const { scaleX } = useScaleX();
@@ -22,12 +20,12 @@ const LaneGrids: React.FC = memo(() => {
     return [...Array(numberOfGrids[gridType]).keys()]
       .filter((index) => index % gridSeparationFactor[gridType] === 0 || gridType === "quavers")
       .map((index) => (
-        <GridLine key={index} x={index * basePixelsPerBeat * scale} color={theme.grid.color[gridType]} />
+        <GridLine key={index} x={index * basePixelsPerBeat * scale} className={styles[gridType]} />
       ));
   };
 
   return (
-    <svg className={styles["grid"]} width="100%" height="100%" preserveAspectRatio="none">
+    <svg className={styles["container"]} width="100%" height="100%" preserveAspectRatio="none">
       {gridSeparationFactor.quavers !== 1 ? gridLines("quavers") : []}
       {gridLines("quarter")}
       {gridLines("bar")}
@@ -37,11 +35,11 @@ const LaneGrids: React.FC = memo(() => {
 
 interface GridLineProps {
   x: number;
-  color: string;
+  className: string;
 }
 
-const GridLine: React.FC<GridLineProps> = ({ x, color }) => {
-  return <line x1={x} y1="0" x2={x} y2="100%" stroke={color} strokeWidth="1" preserveAspectRatio="none" />;
+const GridLine: React.FC<GridLineProps> = (props) => {
+  return <line x1={props.x} y1="0" x2={props.x} y2="100%" strokeWidth="1" preserveAspectRatio="none" className={props.className} />;
 };
 
 export default LaneGrids;

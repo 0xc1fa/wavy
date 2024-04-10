@@ -1,5 +1,3 @@
-import { memo } from "react";
-import useTheme from "../../hooks/useTheme";
 import styles from "./index.module.scss";
 import { MarqueePosition } from "../PianoRoll/handlers/useHandleMarqueeSelection";
 
@@ -7,7 +5,6 @@ interface SelectionMarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
   marqueePosition: MarqueePosition | null;
 }
 function SelectionMarquee({ marqueePosition, style }: SelectionMarqueeProps) {
-  const theme = useTheme();
 
   if (!marqueePosition) {
     return <div className={styles["marquee-container"]} />;
@@ -37,8 +34,8 @@ function SelectionMarquee({ marqueePosition, style }: SelectionMarqueeProps) {
             "--left": `${left}px`,
             "--width": `${width}px`,
             "--height": `${height}px`,
-            "--background-color": theme.selection.selectionAreaFillColor,
-            "--border-color": theme.selection.selectionAreaBorderColor,
+            "--background-color": 'var(--marquee-fill-color)',
+            "--border-color": 'var(--marquee-border-color)',
             ...style,
           } as React.CSSProperties
         }

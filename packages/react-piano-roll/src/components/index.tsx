@@ -9,8 +9,6 @@ import UpperSection from "./Sections/UpperSection";
 import PianoRoll from "./PianoRoll";
 import LowerSection from "./Sections/LowerSection";
 import { ScaleXProvider, useScaleX } from "@/contexts/ScaleXProvider";
-import PianoRollThemeContext from "@/contexts/piano-roll-theme-context";
-import { defaultPianoRollTheme } from "@/store/pianoRollTheme";
 import { BeatPerBar, BeatUnit } from "@/types/time-signature";
 import { useLeftAnchoredScale } from "@/components/handlers/useLeftAnchoredScale";
 import PianoKeyboard from "./PianoKeyboard";
@@ -20,6 +18,7 @@ import Menu from "./Menu";
 import { useHandleSpaceDown } from "./handlers/useHandleSpaceDown";
 import { useEventListener } from "@/hooks/useEventListener";
 import { notesAtom } from "@/store/note";
+import theme from '../store/default-theme.module.css'
 
 export interface MidiEditorProps {
   lyric?: boolean;
@@ -116,7 +115,7 @@ const MidiEditor = forwardRef<MidiEditorHandle, MidiEditorPropsWithDefaults>((pr
 
   return (
     <div
-      className={`${styles["container"]} piano-roll`}
+      className={`${styles["container"]} piano-roll ${theme.default}`}
       ref={containerRef}
       style={
         {
@@ -147,11 +146,9 @@ const MidiEditorWrapper = Object.assign(
     return (
       <JotaiProvider>
         <ConfigProvider value={newProps}>
-          <PianoRollThemeContext.Provider value={defaultPianoRollTheme()}>
-            <ScaleXProvider>
-              <MidiEditor {...newProps} ref={ref} />
-            </ScaleXProvider>
-          </PianoRollThemeContext.Provider>
+          <ScaleXProvider>
+            <MidiEditor {...newProps} ref={ref} />
+          </ScaleXProvider>
         </ConfigProvider>
       </JotaiProvider>
     );

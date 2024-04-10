@@ -2,7 +2,6 @@ import useVelocityEditorMouseHandlers from "./handlers/useVelocityEditorMouseHan
 import styles from "./index.module.scss";
 import { getOffsetXFromTick } from "@/helpers/conversion";
 import { useScaleX } from "@/contexts/ScaleXProvider";
-import useTheme from "@/hooks/useTheme";
 import { useAtom, useAtomValue } from "jotai";
 import { notesAtom, selectedNoteIdsAtom } from "@/store/note";
 
@@ -11,10 +10,8 @@ type Props = {
 };
 const NoteBars: React.FC<Props> = ({ isDragging }) => {
   const mouseHandlers = useVelocityEditorMouseHandlers();
-  // const { pianoRollStore } = useStore();
   const notes = useAtomValue(notesAtom);
   const { scaleX } = useScaleX();
-  const theme = useTheme();
   const [selectedNoteIds] = useAtom(selectedNoteIdsAtom);
 
   return (
@@ -28,9 +25,7 @@ const NoteBars: React.FC<Props> = ({ isDragging }) => {
               "--marker-left": `${getOffsetXFromTick(scaleX, note.tick)}px`,
               "--marker-top": `${1 - note.velocity / 128}`,
               "--marker-width": `${getOffsetXFromTick(scaleX, note.duration)}px`,
-              "--marker-color": selectedNoteIds.has(note.id)
-                ? theme.note.noteBackgroundColor
-                : theme.note.noteBackgroundColor,
+              "--marker-color": 'var(--note-background-color)',
               "--cursor": isDragging ? "grabbing" : "grab",
             } as React.CSSProperties
           }

@@ -1,5 +1,17 @@
-.grid {
+.container {
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+
+.bar {
+  stroke: var(--grid--primary-color);
+}
+
+.quarter {
+  stroke: var(--grid--secondary-color);
+}
+
+.quavers {
+  stroke: var(--grid--tertiary-color);
 }
