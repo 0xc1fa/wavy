@@ -10,7 +10,7 @@ import { memo, useImperativeHandle, useRef } from "react";
 import { useClipboardKeyboardShortcut } from "@/components/Notes/handlers/useClipboardKeyboardShortcut";
 import { useHandleUndoRedo } from "@/components/PianoRoll/handlers/useHandleUndoRedo";
 import { useHandleScaleX } from "@/components/PianoRoll/handlers/useHandleScaleX";
-import { useHandleMarqueeSelection } from "./handlers/useHandleMarqueeSelection";
+import { useMarqueeTouchHandler } from "./handlers/useMarqueeTouchHandler";
 import { useHandleRangeSelection } from "./handlers/useHandleRangeSelection";
 import ModeSelect from "../ActionButtons";
 
@@ -29,22 +29,18 @@ const PianoRoll: React.FC<Props> = memo((props) => {
   useClipboardKeyboardShortcut(containerRef);
   useHandleUndoRedo(containerRef);
   useHandleScaleX(containerRef);
-  const { marqueePosition, handleMarqueeSelectionPD, handleMarqueeSelectionPM, handleMarqueeSelectionPU } =
-    useHandleMarqueeSelection();
+  const { marqueeGeometry } = useMarqueeTouchHandler(containerRef);
   const { handleRangeSelectionPD, handleRangeSelectionPM } = useHandleRangeSelection();
   const handlers = {
     onPointerDown(event: React.PointerEvent) {
-      handleMarqueeSelectionPD(event);
       handleRangeSelectionPD(event);
       useHandleNoteCreationAndModificationPD(event);
     },
     onPointerMove(event: React.PointerEvent) {
-      handleMarqueeSelectionPM(event);
       handleRangeSelectionPM(event);
       useHandleNoteCreationAndModificationPM(event);
     },
     onPointerUp(event: React.PointerEvent) {
-      handleMarqueeSelectionPU(event);
       useHandleNoteCreationAndModificationPU(event);
     },
   };
@@ -54,7 +50,7 @@ const PianoRoll: React.FC<Props> = memo((props) => {
       <LaneGrids />
       <Marker />
       <Notes attachLyric={props.attachLyric} />
-      <SelectionMarquee marqueePosition={marqueePosition} />
+      <SelectionMarquee marqueePosition={marqueeGeometry} />
       {props.currentTime !== undefined && <Playhead currentTime={props.currentTime} />}
       <LanesBackground />
     </div>
