@@ -1,9 +1,8 @@
 import { useRef, useState } from "react";
-// import { useStore } from "@/hooks/useStore";
 import { getNotesFromOffsetX } from "@/helpers/conversion";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { PianoRollNote } from "@/types";
-import { getNoteIdFromEvent, getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
+import { getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { modifyingNotesAtom, notesAtom, selectedNoteIdsAtom } from "@/store/note";
 import {
@@ -18,13 +17,8 @@ enum VelocityEditorMouseHandlerMode {
   Pencil,
 }
 
-type Buffer = {
-  bufferedNotes: PianoRollNote[];
-  bufferedY: number;
-};
-
 export default function useVelocityEditorMouseHandlers() {
-  const [mouseHandlerMode, setMouseHandlerMode] = useState(VelocityEditorMouseHandlerMode.SelectAndDrag);
+  const [mouseHandlerMode] = useState(VelocityEditorMouseHandlerMode.SelectAndDrag);
   const notes = useAtomValue(notesAtom);
   const noteModificationBuffer = useAtomValue(noteModificationBufferAtom);
   const [selectedNoteIds, setSelectedNoteIds] = useAtom(selectedNoteIdsAtom);
@@ -34,68 +28,57 @@ export default function useVelocityEditorMouseHandlers() {
   const { scaleX } = useScaleX();
   const noteClicked = useRef<PianoRollNote | null>(null);
 
+  const handleNoteSelection = (event: React.PointerEvent) => {
+    if (!noteClicked.current) {
+      if (!event.shiftKey) setSelectedNoteIds(new Set());
+      return false;
+    }
+
+    if (!selectedNoteIds.has(noteClicked.current.id) && noteClicked.current !== null) {
+      if (!event.shiftKey) setSelectedNoteIds(new Set());
+      setSelectedNoteIds((prev) => create(prev, (draft) => draft.add(noteClicked.current!.id)));
+    }
+
+    setNoteModificationBufferWithSelectedNote({ initX: getRelativeX(event), initY: getRelativeY(event) });
+    return true; // Indicates a note was clicked and handled
+  };
+
   const onPointerDown: React.PointerEventHandler = (event) => {
     event.currentTarget.setPointerCapture(event.pointerId);
-
     noteClicked.current = getNoteObjectFromEvent(notes, event);
-    if (!noteClicked.current) {
-      if (!event.shiftKey) {
-        // unselectedAllNotes();
-        setSelectedNoteIds(new Set());
-      }
-      return;
-    }
-    if (mouseHandlerMode === VelocityEditorMouseHandlerMode.Pencil) {
-    } else if (mouseHandlerMode === VelocityEditorMouseHandlerMode.SelectAndDrag) {
-      if (selectedNoteIds.has(noteClicked.current.id)) {
-      } else {
-        if (!event.shiftKey) {
-          setSelectedNoteIds(new Set());
-        }
-        if (noteClicked.current !== null) {
-          setSelectedNoteIds((prev) => create(prev, (draft) => draft.add(noteClicked.current!.id)));
-        }
-      }
-      setNoteModificationBufferWithSelectedNote({ initX: getRelativeX(event), initY: getRelativeY(event) });
+
+    if (mouseHandlerMode === VelocityEditorMouseHandlerMode.SelectAndDrag) {
+      handleNoteSelection(event);
     }
   };
 
   const onPointerMove: React.PointerEventHandler = (event) => {
-    if (!noteClicked.current) {
-      return;
-    }
+    if (!noteClicked.current) return;
     const containerHeight = event.currentTarget.clientHeight;
     const relativeY = getRelativeY(event);
-    const initVelocity = getVelocityByRelativeY(containerHeight, noteModificationBuffer.initY);
-    const currentVelocity = getVelocityByRelativeY(containerHeight, relativeY);
-    const deltaVelocity = currentVelocity - initVelocity;
+    const deltaVelocity = getVelocityByRelativeY(containerHeight, relativeY) - getVelocityByRelativeY(containerHeight, noteModificationBuffer.initY);
+
+    let notesToUpdate = new Array<PianoRollNote>();
+
     if (mouseHandlerMode === VelocityEditorMouseHandlerMode.Pencil) {
-      const notesGot = getNotesFromOffsetX(scaleX, notes, event.clientX);
-      const newNote = notesGot.map((note) => ({
+      notesToUpdate = getNotesFromOffsetX(scaleX, notes, event.clientX).map((note) => ({
         ...note,
-        velocity: currentVelocity,
-        // isSelected: true,
+        velocity: selectedNoteIds.has(note.id) ?  getVelocityByRelativeY(containerHeight, relativeY) : note.velocity
       }));
-      modifyingNote(newNote);
     } else if (mouseHandlerMode === VelocityEditorMouseHandlerMode.SelectAndDrag) {
-      const newNote = noteModificationBuffer.notesSelected.map((note) => ({
-        ...note,
-        velocity: note.velocity + deltaVelocity,
-        // isSelected: true,
+      notesToUpdate = noteModificationBuffer.notesSelected.map((note) => ({
+        ...note, velocity: note.velocity + deltaVelocity
       }));
-      modifyingNote(newNote);
     }
+
+    modifyingNote(notesToUpdate);
   };
 
-  const onPointerUp: React.PointerEventHandler = (event) => {
+  const onPointerUp: React.PointerEventHandler = () => {
     noteClicked.current = null;
   };
 
-  return {
-    onPointerDown,
-    onPointerMove,
-    onPointerUp,
-  };
+  return { onPointerDown, onPointerMove, onPointerUp };
 }
 
 function getVelocityByRelativeY(containerHeight: number, relativeY: number): number {
