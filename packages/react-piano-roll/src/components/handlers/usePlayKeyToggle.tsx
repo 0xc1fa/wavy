@@ -14,7 +14,7 @@ export function usePlayKeyToggle<T extends HTMLElement>(ref: RefObject<T>) {
     isPlaying.current = !isPlaying.current;
   }
 
-  useEventListener("keydown", (event: KeyboardEvent) => {
+  useEventListener(ref, "keydown", (event: KeyboardEvent) => {
     if (event.code === "Space") {
       event.preventDefault();
       if (spaceDown.current) {
@@ -23,12 +23,12 @@ export function usePlayKeyToggle<T extends HTMLElement>(ref: RefObject<T>) {
       spaceDown.current = true;
       togglePlay();
     }
-  }, ref);
+  });
 
-  useEventListener("keyup", (event: KeyboardEvent) => {
+  useEventListener(ref, "keyup", (event: KeyboardEvent) => {
     if (event.code === "Space") {
       event.preventDefault();
       spaceDown.current = false;
     }
-  }, ref);
+  });
 }

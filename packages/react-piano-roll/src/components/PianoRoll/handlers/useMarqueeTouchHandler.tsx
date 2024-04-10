@@ -38,69 +38,57 @@ export function useMarqueeTouchHandler<T extends HTMLElement>(ref: RefObject<T>)
   const { numOfKeys } = useConfig().pitchRange;
   const { marqueeGeometry, clearMarquee, setMarqueeEndByEvent } = useMarqueeGeometry();
 
-  useEventListener(
-    "pointerdown",
-    (event: PointerEvent) => {
-      const noteClicked = getNoteObjectFromEvent(notes, event);
-      if (noteClicked || event.metaKey) {
-        return;
-      }
-      const eventCurrentTarget = event.currentTarget as T;
-      eventCurrentTarget.setPointerCapture(event.pointerId);
-      setMarqueeEndByEvent(event);
-    },
-    ref,
-  );
+  useEventListener(ref, "pointerdown", (event: PointerEvent) => {
+    const noteClicked = getNoteObjectFromEvent(notes, event);
+    if (noteClicked || event.metaKey) {
+      return;
+    }
+    const eventCurrentTarget = event.currentTarget as T;
+    eventCurrentTarget.setPointerCapture(event.pointerId);
+    setMarqueeEndByEvent(event);
+  });
 
-  useEventListener(
-    "pointermove",
-    (event: PointerEvent) => {
-      if (!marqueeGeometry) {
-        return;
-      }
+  useEventListener(ref, "pointermove", (event: PointerEvent) => {
+    if (!marqueeGeometry) {
+      return;
+    }
 
-      const bufferedNotes = noteModificationBuffer.notesSelected;
-      setMarqueeEndByEvent(event);
+    const bufferedNotes = noteModificationBuffer.notesSelected;
+    setMarqueeEndByEvent(event);
 
-      const newNotes = bufferedNotes.filter((note) =>
-        inMarquee(numOfKeys, scaleX, note, {
-          startingPosition: marqueeGeometry[0],
-          ongoingPosition: { x: getRelativeX(event), y: getRelativeY(event) },
-        }),
-      );
-      if (newNotes.length === 0) {
-        return;
-      }
+    const newNotes = bufferedNotes.filter((note) =>
+      inMarquee(numOfKeys, scaleX, note, {
+        startingPosition: marqueeGeometry[0],
+        ongoingPosition: { x: getRelativeX(event), y: getRelativeY(event) },
+      }),
+    );
+    if (newNotes.length === 0) {
+      return;
+    }
 
-      bufferedNotes.forEach((note) => {
-        const noteIsSelected = selectedNoteIds.has(note.id);
-        const isInMarquee = inMarquee(numOfKeys, scaleX, note, {
-          startingPosition: marqueeGeometry[0],
-          ongoingPosition: marqueeGeometry[1],
-        });
-        if (isInMarquee) {
-          setSelectedNoteIds((prev) => create(prev, (draft) => draft.add(note.id)));
-        }
+    bufferedNotes.forEach((note) => {
+      const noteIsSelected = selectedNoteIds.has(note.id);
+      const isInMarquee = inMarquee(numOfKeys, scaleX, note, {
+        startingPosition: marqueeGeometry[0],
+        ongoingPosition: marqueeGeometry[1],
       });
-    },
-    ref,
-  );
+      if (isInMarquee) {
+        setSelectedNoteIds((prev) => create(prev, (draft) => draft.add(note.id)));
+      }
+    });
+  });
 
-  useEventListener(
-    "pointerup",
-    (event) => {
-      if (!marqueeGeometry) {
-        return;
-      }
-      clearMarquee();
-      if (selectedNotes.length === 0) {
-        return;
-      }
-      let newSelectionRange = getSelectionRangeWithSelectedNotes(selectedNotes, selectionRange);
-      setSelectionTicks(newSelectionRange[1]);
-    },
-    ref,
-  );
+  useEventListener(ref, "pointerup", (event) => {
+    if (!marqueeGeometry) {
+      return;
+    }
+    clearMarquee();
+    if (selectedNotes.length === 0) {
+      return;
+    }
+    let newSelectionRange = getSelectionRangeWithSelectedNotes(selectedNotes, selectionRange);
+    setSelectionTicks(newSelectionRange[1]);
+  });
 
   return {
     marqueeGeometry,

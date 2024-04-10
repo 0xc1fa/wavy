@@ -18,7 +18,7 @@ import Menu from "./Menu";
 import { usePlayKeyToggle } from "./handlers/usePlayKeyToggle";
 import { useEventListener } from "@/hooks/useEventListener";
 import { notesAtom } from "@/store/note";
-import theme from '../store/default-theme.module.css'
+import theme from "../store/default-theme.module.css";
 
 export interface MidiEditorProps {
   lyric?: boolean;
@@ -63,23 +63,15 @@ const MidiEditor = forwardRef<MidiEditorHandle, MidiEditorPropsWithDefaults>((pr
   const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => props.onNoteUpdate?.(notes), [notes]);
-  useEventListener(
-    "play",
-    (event) => {
-      paused.current = false;
-      props.onPlay?.();
-    },
-    containerRef,
-  );
-  useEventListener(
-    "pause",
-    (event) => {
-      paused.current = true;
-      props.onPause?.();
-    },
-    containerRef,
-  );
-  useEventListener("timeupdate", (event) => props.onTimeUpdate?.(), containerRef);
+  useEventListener(containerRef, "play", (event) => {
+    paused.current = false;
+    props.onPlay?.();
+  });
+  useEventListener(containerRef, "pause", (event) => {
+    paused.current = true;
+    props.onPause?.();
+  });
+  useEventListener(containerRef, "timeupdate", (event) => props.onTimeUpdate?.());
 
   useImperativeHandle(
     ref,
