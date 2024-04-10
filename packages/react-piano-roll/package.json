@@ -12,8 +12,7 @@
   ],
   "scripts": {
     "build": "rm -rf build && rollup -c",
-    "watch": "rollup -c -w",
-    "test-ct": "playwright test -c playwright-ct.config.ts"
+    "watch": "rollup -c -w"
   },
   "author": "Chan Yat Fu",
   "license": "Apache-2.0",
