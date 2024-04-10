@@ -55,21 +55,37 @@ export const redoHistoryAtom = atom(null, (get, set) => {
   });
 });
 
+function getNearestHistoryNoteIds(nearestHistory: PianoRollHistoryItem): string[] {
+  return nearestHistory.note.map((note) => note.id);
+}
+
+function getNearestHistoryNoteIdMap(nearestHistory: PianoRollHistoryItem) {
+  return new Map(nearestHistory.note.map((note) => [note.id, note]));
+}
+
+function getNotesNotInTheNearestHistory(history: PianoRollHistoryItem, notes: PianoRollNote[]): PianoRollNote[] {
+  const nearestHistoryNoteId = new Set(getNearestHistoryNoteIds(history));
+  return notes.filter((note) => !nearestHistoryNoteId.has(note.id));
+}
+
+function getNotesRevertedToNearestHistory(history: PianoRollHistoryItem, notes: PianoRollNote[]): PianoRollNote[] {
+  const nearestHistoryNoteIdMap = getNearestHistoryNoteIdMap(history);
+  return notes.map((note) =>
+    nearestHistoryNoteIdMap.has(note.id) ? (nearestHistoryNoteIdMap.get(note.id) as PianoRollNote) : note,
+  );
+}
+
 function getPrevNoteHistory(notes: PianoRollNote[], history: NotesHistory): PianoRollNote[] {
   const nearestHistory = history.history[history.head];
   switch (nearestHistory.type) {
     case PianoRollHistoryItemType.ADD_NOTE: {
-      const toBeDeletedNoteIds = new Set(nearestHistory.note.map((note) => note.id));
-      return notes.filter((note) => !toBeDeletedNoteIds.has(note.id));
+      return getNotesNotInTheNearestHistory(nearestHistory, notes);
     }
     case PianoRollHistoryItemType.DELETE_NOTE: {
       return [...notes, ...nearestHistory.note];
     }
     case PianoRollHistoryItemType.MODIFY_NOTE: {
-      const modifiedNoteIds = new Map(nearestHistory.note.map((note) => [note.id, note]));
-      return notes.map((note) =>
-        modifiedNoteIds.has(note.id) ? (modifiedNoteIds.get(note.id) as PianoRollNote) : note,
-      );
+      return getNotesRevertedToNearestHistory(nearestHistory, notes);
     }
     default:
       throw Error("action not defined");
@@ -83,14 +99,10 @@ function getNextNoteHistory(notes: PianoRollNote[], history: NotesHistory): Pian
       return [...notes, ...nearestHistory.note];
     }
     case PianoRollHistoryItemType.DELETE_NOTE: {
-      const deletedNoteIds = new Set(nearestHistory.note.map((note) => note.id));
-      return notes.filter((note) => !deletedNoteIds.has(note.id));
+      return getNotesNotInTheNearestHistory(nearestHistory, notes);
     }
     case PianoRollHistoryItemType.MODIFY_NOTE: {
-      const modifiedNoteIds = new Map(nearestHistory.note.map((note) => [note.id, note]));
-      return notes.map((note) =>
-        modifiedNoteIds.has(note.id) ? (modifiedNoteIds.get(note.id) as PianoRollNote) : note,
-      );
+      return getNotesRevertedToNearestHistory(nearestHistory, notes);
     }
     default:
       throw Error("action not defined");
