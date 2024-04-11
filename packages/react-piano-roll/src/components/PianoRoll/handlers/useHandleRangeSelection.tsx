@@ -5,31 +5,31 @@ import { getTickFromOffsetX } from "@/helpers/conversion";
 import { getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
 import { getNearestGridTick } from "@/helpers/grid";
 import { useAtomValue, useSetAtom } from "jotai";
-// import { useStore } from "@/hooks/useStore";
 import { useRef } from "react";
+import { useEventListener } from "@/hooks/useEventListener";
 
-export function useHandleRangeSelection() {
-  // const { pianoRollStore, dispatch } = useStore();
+export function useHandleRangeSelection(ref: React.RefObject<HTMLElement>) {
   const notes = useAtomValue(notesAtom);
   const setSelectionRange = useSetAtom(selectionRangeAtom);
   const { scaleX } = useScaleX();
-
   const startingPositionX = useRef(0);
 
-  const handleRangeSelectionPD: React.PointerEventHandler = (event) => {
+  useEventListener(ref, "pointerdown", (event) => {
     const noteClicked = getNoteObjectFromEvent(notes, event);
     setSelectionRange(null);
     if (noteClicked || event.metaKey) {
       return;
     }
 
-    event.currentTarget.setPointerCapture(event.nativeEvent.pointerId);
+    const eventCurrentTarget = event.currentTarget as HTMLElement;
+    eventCurrentTarget.setPointerCapture(event.pointerId);
     const relativeX = getRelativeX(event);
     startingPositionX.current = relativeX;
-  };
+  });
 
-  const handleRangeSelectionPM: React.PointerEventHandler = (event) => {
-    const hasCapture = event.currentTarget.hasPointerCapture(event.pointerId);
+  useEventListener(ref, "pointermove", (event) => {
+    const eventCurrentTarget = event.currentTarget as HTMLElement;
+    const hasCapture = eventCurrentTarget.hasPointerCapture(event.pointerId);
     if (!hasCapture) {
       return;
     }
@@ -39,7 +39,5 @@ export function useHandleRangeSelection() {
       .map(getNearestGridTick.bind(null, scaleX))
       .sort((a, b) => a - b) as [number, number];
     setSelectionRange(snappedSelection);
-  };
-
-  return { handleRangeSelectionPD, handleRangeSelectionPM };
+  });
 }

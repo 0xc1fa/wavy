@@ -24,6 +24,7 @@ import {
 } from "@/store/note-modification-buffer";
 import { selectionTicksAtom } from "@/store/selection-ticks";
 import { lastModifiedDurationAtom } from "@/store/last-modified";
+import { useEventListener } from "@/hooks/useEventListener";
 
 export enum PianoRollLanesMouseHandlerMode {
   DragAndDrop,
@@ -53,7 +54,7 @@ export type NotesModificationBuffer = {
   initX: number;
 };
 
-export function useHandleNoteCreationAndModification() {
+export function useHandleNoteCreationAndModification(ref: React.RefObject<HTMLElement>) {
   const notes = useAtomValue(notesAtom);
   const noteModificationBuffer = useAtomValue(noteModificationBufferAtom);
 
@@ -77,7 +78,7 @@ export function useHandleNoteCreationAndModification() {
     document.body.style.cursor = cursorStyle;
   }, [cursorStyle]);
 
-  const useHandleNoteCreationAndModificationPD: React.PointerEventHandler = (event) => {
+  useEventListener(ref, "pointerdown", (event: PointerEvent) => {
     guardActive.current = DraggingGuardMode.UnderThreshold;
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
@@ -88,7 +89,7 @@ export function useHandleNoteCreationAndModification() {
       setMouseHandlerModeForNote(event, noteClicked);
       setNoteModificationBufferWithSelectedNotes({ initX: relativeX, initY: relativeY });
     } else if (event.metaKey) {
-      const { ticks, noteNum } = getTickAndNoteNumFromEvent(event.nativeEvent);
+      const { ticks, noteNum } = getTickAndNoteNumFromEvent(event);
       addNote({ ticks, noteNum });
       setSelectionTicks(ticks);
       setNoteModificationBufferWithSelectedNotes({ initX: relativeX, initY: relativeY });
@@ -99,9 +100,9 @@ export function useHandleNoteCreationAndModification() {
       setSelectionTicks(snappedSelection);
       setNoteModificationBufferWithAllNotes({ initX: relativeX, initY: relativeY });
     }
-  };
+  });
 
-  const useHandleNoteCreationAndModificationPM: React.PointerEventHandler = (event) => {
+  useEventListener(ref, "pointermove", (event: PointerEvent) => {
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
     const bufferedNotes = noteModificationBuffer.notesSelected;
@@ -111,7 +112,7 @@ export function useHandleNoteCreationAndModification() {
     const deltaPitch =
       getNoteNumFromOffsetY(numOfKeys, relativeY) - getNoteNumFromOffsetY(numOfKeys, noteModificationBuffer.initY);
 
-    currentPointerPos.current = { clientX: event.nativeEvent.clientX, clientY: event.nativeEvent.clientY };
+    currentPointerPos.current = { clientX: event.clientX, clientY: event.clientY };
     if (Math.abs(deltaTicks) > getTickInGrid(scaleX)) {
       guardActive.current = DraggingGuardMode.SnapToGrid;
     } else if (Math.abs(deltaTicks) > 96 && guardActive.current < DraggingGuardMode.FineTune) {
@@ -121,7 +122,7 @@ export function useHandleNoteCreationAndModification() {
     const noteClicked = _.last(bufferedNotes);
     switch (mouseHandlerMode) {
       case PianoRollLanesMouseHandlerMode.None:
-        updateCursorStyle(event.nativeEvent);
+        updateCursorStyle(event);
         break;
       case PianoRollLanesMouseHandlerMode.NotesTrimming: {
         let newNotes;
@@ -240,11 +241,11 @@ export function useHandleNoteCreationAndModification() {
         }
         break;
     }
-  };
+  });
 
-  const useHandleNoteCreationAndModificationPU: React.PointerEventHandler = () => {
+  useEventListener(ref, "pointerup", () => {
     setMouseHandlerMode(PianoRollLanesMouseHandlerMode.None);
-  };
+  });
 
   const updateCursorStyle = (e: PointerEvent) => {
     const target = e.currentTarget as HTMLElement;
@@ -268,7 +269,7 @@ export function useHandleNoteCreationAndModification() {
     return { ticks, noteNum };
   };
 
-  const setMouseHandlerModeForNote = (event: React.PointerEvent<Element>, noteClicked: PianoRollNote) => {
+  const setMouseHandlerModeForNote = (event: PointerEvent, noteClicked: PianoRollNote) => {
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
     if (isNoteRightMarginClicked(numOfKeys, scaleX, noteClicked!, [relativeX, relativeY])) {
@@ -282,18 +283,12 @@ export function useHandleNoteCreationAndModification() {
       })
     ) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.NotesTrimming);
-    } else if (event.nativeEvent.altKey) {
+    } else if (event.altKey) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.Vibrato);
-    } else if (event.nativeEvent.metaKey) {
+    } else if (event.metaKey) {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.Velocity);
     } else {
       setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
     }
-  };
-
-  return {
-    useHandleNoteCreationAndModificationPD,
-    useHandleNoteCreationAndModificationPM,
-    useHandleNoteCreationAndModificationPU,
   };
 }
