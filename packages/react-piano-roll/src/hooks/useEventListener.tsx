@@ -5,19 +5,17 @@ import type { RefObject } from 'react'
 export const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
-// MediaQueryList Event based useEventListener interface
-function useEventListener<K extends keyof MediaQueryListEventMap>(
-  element: RefObject<MediaQueryList>,
-  eventName: K,
-  handler: (event: MediaQueryListEventMap[K]) => void,
-  options?: boolean | AddEventListenerOptions,
-): void
 
-// Window Event based useEventListener interface
-function useEventListener<K extends keyof WindowEventMap>(
+type EventMap<T extends EventTarget> = T extends Window ? WindowEventMap :
+                                       T extends MediaQueryList ? MediaQueryListEventMap :
+                                       T extends HTMLElement ? HTMLElementEventMap :
+                                       T extends Document ? DocumentEventMap :
+                                       Record<string, Event>; // Default to a generic event map if none of the specified
+
+function useEventListener<T extends EventTarget, K extends keyof EventMap<T>>(
   element: RefObject<MediaQueryList>,
   eventName: K,
-  handler: (event: WindowEventMap[K]) => void,
+  handler: (event: EventMap<T>[K]) => void,
   options?: boolean | AddEventListenerOptions,
 ): void
 
