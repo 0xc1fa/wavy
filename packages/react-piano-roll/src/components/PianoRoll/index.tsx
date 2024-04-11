@@ -7,7 +7,7 @@ import SelectionMarquee from "@/components/SelectionMarquee";
 import Playhead from "@/components/Playhead";
 import LanesBackground from "@/components/LanesBackground";
 import { memo, useRef } from "react";
-import { useHandleUndoRedo } from "@/components/PianoRoll/handlers/useHandleUndoRedo";
+import { useUndoRedoHotkey } from "@/components/PianoRoll/handlers/useUndoRedoHotkey";
 import { useHandleScaleX } from "@/components/PianoRoll/handlers/useHandleScaleX";
 import { useMarqueeTouchHandler } from "./handlers/useMarqueeTouchHandler";
 import { useHandleRangeSelection } from "./handlers/useHandleRangeSelection";
@@ -19,7 +19,7 @@ type Props = {
 const PianoRoll: React.FC<Props> = memo((props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   useHandleNoteCreationAndModification(containerRef);
-  useHandleUndoRedo(containerRef);
+  useUndoRedoHotkey(containerRef);
   useHandleScaleX(containerRef);
   const { marqueeGeometry } = useMarqueeTouchHandler(containerRef);
   useHandleRangeSelection(containerRef);
