@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./index.module.scss";
 import { useAtom } from "jotai";
 import { bpmAtom } from "@/store/bpm";
+import { useHoldAndDragGesture } from "@/hooks/useHoldAndDragGesture";
+import { usePointerCapture } from "@/hooks/usePointerCapture";
 
 const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => {
   event?.currentTarget.focus();
@@ -9,8 +11,10 @@ const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => 
 
 export default function TempoInfo() {
   const [bpm, setBpm] = useAtom(bpmAtom);
+  const ref = useRef<HTMLInputElement>(null);
 
-  const [isDragging, setIsDragging] = useState(false);
+  const isDragging = useHoldAndDragGesture(ref);
+  usePointerCapture(ref);
   const [inintialY, setInitialY] = useState(0);
 
   const [inputValue, setInputValue] = useState(bpm.toString());
@@ -26,8 +30,6 @@ export default function TempoInfo() {
 
   const handlePointerDown: React.PointerEventHandler<HTMLInputElement> = (event) => {
     event.preventDefault();
-    event.currentTarget.setPointerCapture(event.pointerId);
-    setIsDragging(true);
     setInitialY(event.clientY);
     bufferedValue.current = inputValue;
   };
@@ -38,11 +40,6 @@ export default function TempoInfo() {
       const clampedValue = Math.max(40, Math.min(200, newValue));
       setInputValue(Math.round(clampedValue).toString());
     }
-  };
-
-  const handlePointerUp: React.PointerEventHandler<HTMLInputElement> = (event) => {
-    event.currentTarget.releasePointerCapture(event.pointerId);
-    setIsDragging(false);
   };
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
@@ -68,7 +65,7 @@ export default function TempoInfo() {
       onPointerDown={handlePointerDown}
       onDoubleClick={handleDoubleClick}
       onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
+      ref={ref}
     />
   );
 }
