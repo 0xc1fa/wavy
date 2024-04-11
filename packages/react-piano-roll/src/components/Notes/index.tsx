@@ -2,7 +2,7 @@ import NoteBlock from "./NoteBlock";
 import NoteLyric from "./NoteLyric";
 import styles from "./index.module.scss";
 import { useRef } from "react";
-import { useDeleteHotkey } from "./handlers/useHandleDelete";
+import { useDeleteHotkey } from "./handlers/useDeleteHotkey";
 import { useClipboardHotkey } from "./handlers/useClipboardHotkey";
 import { useNoteSelectionHandler } from "./handlers/useNoteSelectionHandler";
 import { useHandleSetVelocity } from "./handlers/useHandleSetVelocity";
