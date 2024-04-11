@@ -4,8 +4,8 @@ import styles from "./index.module.scss";
 import { useRef } from "react";
 import { useDeleteHotkey } from "./handlers/useDeleteHotkey";
 import { useClipboardHotkey } from "./handlers/useClipboardHotkey";
-import { useNoteSelectionHandler } from "./handlers/useNoteSelectionHandler";
-import { useHandleSetVelocity } from "./handlers/useHandleSetVelocity";
+import { useNoteSelectionGesture } from "./handlers/useNoteSelectionGesture";
+import { useVelocitySetterGesture } from "./handlers/useVelocitySetterGesture";
 import { useAtomValue } from "jotai";
 import { notesAtom } from "@/store/note";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
@@ -17,8 +17,8 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
 
   useDeleteHotkey(containerRef);
   useClipboardHotkey(containerRef);
-  useNoteSelectionHandler(containerRef);
-  useHandleSetVelocity(containerRef);
+  useNoteSelectionGesture(containerRef);
+  useVelocitySetterGesture(containerRef);
 
   return (
     <div className={styles["notes-container"]} ref={containerRef} tabIndex={0}>

@@ -10,7 +10,7 @@ import {
 import { lastModifiedVelocityAtom } from "@/store/last-modified";
 import { useEventListener } from "@/hooks/useEventListener";
 
-export function useHandleSetVelocity<T extends HTMLElement>(ref: RefObject<T>) {
+export function useVelocitySetterGesture<T extends HTMLElement>(ref: RefObject<T>) {
   const active = useRef(false);
   const [notes] = useAtom(notesAtom);
   const [noteModificationBuffer] = useAtom(noteModificationBufferAtom);

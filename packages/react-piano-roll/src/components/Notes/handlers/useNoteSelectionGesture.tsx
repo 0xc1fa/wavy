@@ -6,7 +6,7 @@ import { create } from "mutative";
 import { useEventListener } from "@/hooks/useEventListener";
 import { RefObject } from "react";
 
-export function useNoteSelectionHandler<T extends HTMLElement>(ref: RefObject<T>) {
+export function useNoteSelectionGesture<T extends HTMLElement>(ref: RefObject<T>) {
   const [notes] = useAtom(notesAtom);
   const [selectedNoteIds, setSelectedNoteIds] = useAtom(selectedNoteIdsAtom);
   const [, moveNoteAsLatestModified] = useAtom(moveNoteAsLatestModifiedAtom);
