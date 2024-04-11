@@ -1,5 +1,5 @@
 import styles from "./index.module.scss";
-import { CSSProperties, forwardRef, KeyboardEvent, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { CSSProperties, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { PianoRollNote } from "@/types/PianoRollNote";
 import type { PitchRange } from "@/types/piano-roll-range";
 import { baseCanvasWidth, baseCanvasHeight } from "@/helpers/conversion";
@@ -63,15 +63,15 @@ const MidiEditor = forwardRef<MidiEditorHandle, MidiEditorPropsWithDefaults>((pr
   const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => props.onNoteUpdate?.(notes), [notes]);
-  useEventListener(containerRef, "play", (event) => {
+  useEventListener(containerRef, "play", () => {
     paused.current = false;
     props.onPlay?.();
   });
-  useEventListener(containerRef, "pause", (event) => {
+  useEventListener(containerRef, "pause", () => {
     paused.current = true;
     props.onPause?.();
   });
-  useEventListener(containerRef, "timeupdate", (event) => props.onTimeUpdate?.());
+  useEventListener(containerRef, "timeupdate", () => props.onTimeUpdate?.());
 
   useImperativeHandle(
     ref,

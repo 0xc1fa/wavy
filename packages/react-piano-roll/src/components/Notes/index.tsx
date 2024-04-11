@@ -1,4 +1,3 @@
-// import { useStore } from "@/hooks/useStore";
 import NoteBlock from "./NoteBlock";
 import NoteLyric from "./NoteLyric";
 import styles from "./index.module.scss";
@@ -18,25 +17,11 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
 
   useHandleDelete(containerRef);
   useClipboardKeyboardShortcut(containerRef);
-
   useNoteSelectionHandler(containerRef);
-  const { handleSetVelocityPD, handleSetVelocityPM, handleSetVelocityPU } = useHandleSetVelocity();
-
-  const handlers = {
-    onPointerDown(event: React.PointerEvent) {
-      // handleSetNoteSelectionPD(event);
-      handleSetVelocityPD(event);
-    },
-    onPointerMove(event: React.PointerEvent) {
-      handleSetVelocityPM(event);
-    },
-    onPointerUp(event: React.PointerEvent) {
-      handleSetVelocityPU(event);
-    },
-  };
+  useHandleSetVelocity(containerRef);
 
   return (
-    <div className={styles["notes-container"]} ref={containerRef} tabIndex={0} {...handlers}>
+    <div className={styles["notes-container"]} ref={containerRef} tabIndex={0}>
       {notes.map((note) => (
         <div
           className={styles["note"]}

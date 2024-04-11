@@ -1,18 +1,16 @@
 import { getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
-// import { useStore } from "@/hooks/useStore";
-import { useRef } from "react";
+import { RefObject, useRef } from "react";
 import _ from "lodash";
 import { useAtom, useSetAtom } from "jotai";
 import { modifyingNotesAtom, notesAtom } from "@/store/note";
 import {
   noteModificationBufferAtom,
-  setNoteModificationBufferWithAllNotesAtom,
   setNoteModificationBufferWithSelectedNotesAtom,
 } from "@/store/note-modification-buffer";
 import { lastModifiedVelocityAtom } from "@/store/last-modified";
+import { useEventListener } from "@/hooks/useEventListener";
 
-export function useHandleSetVelocity() {
-  // const { pianoRollStore, dispatch } = useStore();
+export function useHandleSetVelocity<T extends HTMLElement>(ref: RefObject<T>) {
   const active = useRef(false);
   const [notes] = useAtom(notesAtom);
   const [noteModificationBuffer] = useAtom(noteModificationBufferAtom);
@@ -20,25 +18,30 @@ export function useHandleSetVelocity() {
   const [, modifyingNotes] = useAtom(modifyingNotesAtom);
   const setLastModifiedVelocityAtom = useSetAtom(lastModifiedVelocityAtom);
 
-  const handleSetVelocityPD: React.PointerEventHandler = (event) => {
+  useEventListener(ref, "pointerdown", (event: PointerEvent) => {
+    console.log("pointerdown");
     if (!event.metaKey) {
       return;
     }
+    event.preventDefault();
     const noteClicked = getNoteObjectFromEvent(notes, event);
+    console.log("noteClicked", noteClicked);
     if (!noteClicked) {
       return;
     }
     active.current = true;
-    event.currentTarget.setPointerCapture(event.nativeEvent.pointerId);
+    const eventCurrentTarget = event.currentTarget as HTMLElement;
+    eventCurrentTarget.setPointerCapture(event.pointerId);
     const relativeX = getRelativeX(event);
     const relativeY = getRelativeY(event);
     setNoteModificationBufferWithSelectedNotes({ initX: relativeX, initY: relativeY });
-  };
+  });
 
-  const handleSetVelocityPM: React.PointerEventHandler = (event) => {
+  useEventListener(ref, "pointermove", (event: PointerEvent) => {
     if (!active.current) {
       return;
     }
+    console.log("pointermove");
     const bufferedNotes = noteModificationBuffer.notesSelected;
     const noteClicked = _.last(bufferedNotes);
     const relativeY = getRelativeY(event);
@@ -49,15 +52,9 @@ export function useHandleSetVelocity() {
     }));
     modifyingNotes(newNotes);
     setLastModifiedVelocityAtom(noteClicked!.velocity - deltaY / 3);
-  };
+  });
 
-  const handleSetVelocityPU: React.PointerEventHandler = (event) => {
+  useEventListener(ref, "pointerup", () => {
     active.current = false;
-  };
-
-  return {
-    handleSetVelocityPD,
-    handleSetVelocityPM,
-    handleSetVelocityPU,
-  };
+  });
 }

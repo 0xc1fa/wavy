@@ -1,6 +1,4 @@
 import { RefObject, useRef, useState } from "react";
-import { getNotesFromOffsetX } from "@/helpers/conversion";
-import { useScaleX } from "@/contexts/ScaleXProvider";
 import { PianoRollNote } from "@/types";
 import { getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
@@ -82,7 +80,6 @@ export default function useVelocityEditorMouseHandlers<T extends HTMLElement>(re
   useEventListener(ref, "pointerup", (event) => {
     noteClicked.current = null;
   });
-
 }
 
 function getVelocityByRelativeY(containerHeight: number, relativeY: number): number {
