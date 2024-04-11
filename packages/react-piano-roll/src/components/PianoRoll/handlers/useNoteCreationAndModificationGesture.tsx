@@ -88,12 +88,6 @@ export function useNoteCreationAndModificationGesture(ref: React.RefObject<HTMLE
       setSelectionTicks(noteClicked.tick);
       setMouseHandlerModeForNote(event, noteClicked);
       setNoteModificationBufferWithSelectedNotes({ initX: relativeX, initY: relativeY });
-    } else if (event.metaKey) {
-      const { ticks, noteNum } = getTickAndNoteNumFromEvent(event);
-      addNote({ ticks, noteNum });
-      setSelectionTicks(ticks);
-      setNoteModificationBufferWithSelectedNotes({ initX: relativeX, initY: relativeY });
-      setMouseHandlerMode(PianoRollLanesMouseHandlerMode.DragAndDrop);
     } else {
       const selectionTicks = getTickFromOffsetX(scaleX, relativeX);
       const snappedSelection = getNearestGridTick(scaleX, selectionTicks);
