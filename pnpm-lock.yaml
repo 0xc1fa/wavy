@@ -178,6 +178,9 @@ importers:
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
+      zustand:
+        specifier: ^4.5.2
+        version: 4.5.2(@types/react@18.2.75)(react@18.2.0)
     devDependencies:
       '@playwright/experimental-ct-react':
         specifier: ^1.41.2
