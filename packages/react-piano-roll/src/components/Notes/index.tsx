@@ -20,7 +20,7 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
   return (
     <div className={styles["notes-container"]} ref={containerRef} tabIndex={0}>
       {notes.map((note) => (
-        <Note note={note} attachLyric={attachLyric} />
+        <Note note={note} attachLyric={attachLyric} key={note.id} />
       ))}
     </div>
   );
