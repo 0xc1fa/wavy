@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./index.module.scss";
 import { useAtom } from "jotai";
 import { bpmAtom } from "@/store/bpm";
-import { useHoldAndDragGesture } from "@/hooks/useHoldAndDragGesture";
+import { usePointerHoldDetector } from "@/hooks/usePointerHoldDetector";
 import { usePointerCapture } from "@/hooks/usePointerCapture";
 
 const handleDoubleClick: React.MouseEventHandler<HTMLInputElement> = (event) => {
@@ -13,7 +13,7 @@ export default function TempoInfo() {
   const [bpm, setBpm] = useAtom(bpmAtom);
   const ref = useRef<HTMLInputElement>(null);
 
-  const isDragging = useHoldAndDragGesture(ref);
+  const isDragging = usePointerHoldDetector(ref);
   usePointerCapture(ref);
   const [inintialY, setInitialY] = useState(0);
 

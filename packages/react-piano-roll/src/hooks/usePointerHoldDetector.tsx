@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useEventListener } from "./useEventListener";
 
-export function useHoldAndDragGesture(ref: React.RefObject<HTMLElement>) {
+export function usePointerHoldDetector(ref: React.RefObject<HTMLElement>) {
   const [isDragging, setIsDragging] = useState(false);
 
   useEventListener(ref, "pointerdown", (event) => {
