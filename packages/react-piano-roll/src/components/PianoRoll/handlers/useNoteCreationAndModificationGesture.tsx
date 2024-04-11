@@ -1,22 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { PianoRollNote } from "@/types/PianoRollNote";
 import _ from "lodash";
 import { getGridOffsetOfTick, getNearestAnchor, getNearestGridTick, getTickInGrid } from "@/helpers/grid";
 import {
-  getNoteFromPosition,
-  getNoteNumFromEvent,
   getNoteNumFromOffsetY,
-  getTickFromEvent,
   getTickFromOffsetX,
   isNoteLeftMarginClicked,
   isNoteRightMarginClicked,
-  roundDownTickToNearestGrid,
 } from "@/helpers/conversion";
 import { useConfig } from "@/contexts/PianoRollConfigProvider";
 import { useScaleX } from "@/contexts/ScaleXProvider";
 import { getNoteObjectFromEvent, getRelativeX, getRelativeY } from "@/helpers/event";
 import { useAtomValue, useSetAtom } from "jotai";
-import { addNoteAtom, modifyingNotesAtom, notesAtom } from "@/store/note";
+import { modifyingNotesAtom, notesAtom } from "@/store/note";
 import {
   noteModificationBufferAtom,
   setNoteModificationBufferWithAllNotesAtom,
@@ -58,7 +54,6 @@ export function useNoteCreationAndModificationGesture(ref: React.RefObject<HTMLE
   const notes = useAtomValue(notesAtom);
   const noteModificationBuffer = useAtomValue(noteModificationBufferAtom);
 
-  const addNote = useSetAtom(addNoteAtom);
   const setSelectionTicks = useSetAtom(selectionTicksAtom);
   const setNoteModificationBufferWithSelectedNotes = useSetAtom(setNoteModificationBufferWithSelectedNotesAtom);
   const setNoteModificationBufferWithAllNotes = useSetAtom(setNoteModificationBufferWithAllNotesAtom);
@@ -68,15 +63,10 @@ export function useNoteCreationAndModificationGesture(ref: React.RefObject<HTMLE
   const { scaleX } = useScaleX();
   const { numOfKeys } = useConfig().pitchRange;
 
-  const [cursorStyle, setCursorStyle] = useState<"default" | "col-resize">("default");
   const [mouseHandlerMode, setMouseHandlerMode] = useState(PianoRollLanesMouseHandlerMode.None);
   const guardActive = useRef(DraggingGuardMode.UnderThreshold);
 
   const currentPointerPos = useRef({ clientX: 0, clientY: 0 });
-
-  useEffect(() => {
-    document.body.style.cursor = cursorStyle;
-  }, [cursorStyle]);
 
   useEventListener(ref, "pointerdown", (event: PointerEvent) => {
     guardActive.current = DraggingGuardMode.UnderThreshold;
@@ -115,9 +105,6 @@ export function useNoteCreationAndModificationGesture(ref: React.RefObject<HTMLE
 
     const noteClicked = _.last(bufferedNotes);
     switch (mouseHandlerMode) {
-      case PianoRollLanesMouseHandlerMode.None:
-        updateCursorStyle(event);
-        break;
       case PianoRollLanesMouseHandlerMode.NotesTrimming: {
         let newNotes;
         if (guardActive.current === DraggingGuardMode.SnapToGrid) {
@@ -240,28 +227,6 @@ export function useNoteCreationAndModificationGesture(ref: React.RefObject<HTMLE
   useEventListener(ref, "pointerup", () => {
     setMouseHandlerMode(PianoRollLanesMouseHandlerMode.None);
   });
-
-  const updateCursorStyle = (e: PointerEvent) => {
-    const target = e.currentTarget as HTMLElement;
-    const noteHovered = getNoteFromPosition(scaleX, numOfKeys, notes, [e.offsetX, e.offsetY]);
-    const isBoundaryHovered =
-      noteHovered &&
-      (isNoteLeftMarginClicked(numOfKeys, scaleX, noteHovered, {
-        x: e.offsetX,
-        y: e.offsetY,
-      }) ||
-        isNoteRightMarginClicked(numOfKeys, scaleX, noteHovered, {
-          x: e.offsetX,
-          y: e.offsetY,
-        }));
-    setCursorStyle(isBoundaryHovered ? "col-resize" : "default");
-  };
-
-  const getTickAndNoteNumFromEvent = (e: PointerEvent) => {
-    const noteNum = getNoteNumFromEvent(numOfKeys, e);
-    const ticks = roundDownTickToNearestGrid(getTickFromEvent(scaleX, e), scaleX);
-    return { ticks, noteNum };
-  };
 
   const setMouseHandlerModeForNote = (event: PointerEvent, noteClicked: PianoRollNote) => {
     const relativeX = getRelativeX(event);

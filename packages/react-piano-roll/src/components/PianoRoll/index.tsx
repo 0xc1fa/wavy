@@ -12,6 +12,7 @@ import { useZoomGesture } from "@/components/PianoRoll/handlers/useZoomGesture";
 import { useMarqueeGesture } from "./handlers/useMarqueeGesture";
 import { useRangeSelectionGesture } from "./handlers/useRangeSelectionGesture";
 import { useNoteCreationGesture } from "./handlers/useNoteCreationGesture";
+import { useCursorStyleUpdater } from "./handlers/useCursorStyleUpdater";
 
 type Props = {
   attachLyric: boolean;
@@ -19,6 +20,7 @@ type Props = {
 };
 const PianoRoll: React.FC<Props> = memo((props) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  useCursorStyleUpdater(containerRef);
   useNoteCreationGesture(containerRef);
   useNoteCreationAndModificationGesture(containerRef);
   useUndoRedoHotkey(containerRef);
