@@ -8,7 +8,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useRef } from "react";
 import { useEventListener } from "@/hooks/useEventListener";
 
-export function useHandleRangeSelection(ref: React.RefObject<HTMLElement>) {
+export function useRangeSelectionGesture(ref: React.RefObject<HTMLElement>) {
   const notes = useAtomValue(notesAtom);
   const setSelectionRange = useSetAtom(selectionRangeAtom);
   const { scaleX } = useScaleX();

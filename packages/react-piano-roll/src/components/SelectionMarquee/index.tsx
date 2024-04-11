@@ -1,5 +1,5 @@
 import styles from "./index.module.scss";
-import { MarqueePosition } from "../PianoRoll/handlers/useMarqueeTouchHandler";
+import { MarqueePosition } from "../PianoRoll/handlers/useMarqueeGesture";
 
 interface SelectionMarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
   marqueePosition: MarqueePosition | null;

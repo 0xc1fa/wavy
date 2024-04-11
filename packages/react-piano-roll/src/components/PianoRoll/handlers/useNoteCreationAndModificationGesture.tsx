@@ -54,7 +54,7 @@ export type NotesModificationBuffer = {
   initX: number;
 };
 
-export function useHandleNoteCreationAndModification(ref: React.RefObject<HTMLElement>) {
+export function useNoteCreationAndModificationGesture(ref: React.RefObject<HTMLElement>) {
   const notes = useAtomValue(notesAtom);
   const noteModificationBuffer = useAtomValue(noteModificationBufferAtom);
 

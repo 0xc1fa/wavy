@@ -27,7 +27,7 @@ function useMarqueeGeometry() {
   return { marqueeGeometry, setMarqueeEndByEvent, clearMarquee: () => setMarqueeGeometry(null) };
 }
 
-export function useMarqueeTouchHandler<T extends HTMLElement>(ref: RefObject<T>) {
+export function useMarqueeGesture<T extends HTMLElement>(ref: RefObject<T>) {
   const notes = useAtomValue(notesAtom);
   const selectedNotes = useAtomValue(selectedNotesAtom);
   const selectionRange = useAtomValue(selectionRangeAtom);

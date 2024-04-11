@@ -1,4 +1,4 @@
-import { useHandleNoteCreationAndModification } from "./handlers/useHandleNoteCreationAndModification";
+import { useNoteCreationAndModificationGesture } from "./handlers/useNoteCreationAndModificationGesture";
 import styles from "./index.module.scss";
 import LaneGrids from "@/components/LaneGrids";
 import Marker from "@/components/Marker";
@@ -8,9 +8,9 @@ import Playhead from "@/components/Playhead";
 import LanesBackground from "@/components/LanesBackground";
 import { memo, useRef } from "react";
 import { useUndoRedoHotkey } from "@/components/PianoRoll/handlers/useUndoRedoHotkey";
-import { useHandleScaleX } from "@/components/PianoRoll/handlers/useHandleScaleX";
-import { useMarqueeTouchHandler } from "./handlers/useMarqueeTouchHandler";
-import { useHandleRangeSelection } from "./handlers/useHandleRangeSelection";
+import { useZoomGesture } from "@/components/PianoRoll/handlers/useZoomGesture";
+import { useMarqueeGesture } from "./handlers/useMarqueeGesture";
+import { useRangeSelectionGesture } from "./handlers/useRangeSelectionGesture";
 
 type Props = {
   attachLyric: boolean;
@@ -18,11 +18,11 @@ type Props = {
 };
 const PianoRoll: React.FC<Props> = memo((props) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  useHandleNoteCreationAndModification(containerRef);
+  useNoteCreationAndModificationGesture(containerRef);
   useUndoRedoHotkey(containerRef);
-  useHandleScaleX(containerRef);
-  const { marqueeGeometry } = useMarqueeTouchHandler(containerRef);
-  useHandleRangeSelection(containerRef);
+  useZoomGesture(containerRef);
+  const { marqueeGeometry } = useMarqueeGesture(containerRef);
+  useRangeSelectionGesture(containerRef);
 
   return (
     <div className={styles["pianoroll-lane"]} tabIndex={0} ref={containerRef}>

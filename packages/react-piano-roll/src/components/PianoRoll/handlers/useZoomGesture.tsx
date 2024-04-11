@@ -3,7 +3,7 @@ import { useScaleX } from "@/contexts/ScaleXProvider";
 import { baseCanvasWidth } from "@/helpers/conversion";
 import { RefObject, useEffect } from "react";
 
-export function useHandleScaleX(ref: RefObject<HTMLElement>) {
+export function useZoomGesture(ref: RefObject<HTMLElement>) {
   const { setScaleX } = useScaleX();
   const { tickRange } = useConfig();
 
