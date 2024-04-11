@@ -14,21 +14,8 @@ export interface RenderActionProps {
 }
 export default function RenderAction(props: RenderActionProps) {
   const renderAudio = (data: PianoRollData) => {
-    console.log("RenderActionItem clicked");
     props.setAudioStatus("RENDERING_REQUESTED");
-    sendAudioProcessingRequest(
-      data.bpm,
-      data.notes
-        .filter((note) => note.lyric)
-        .map((note) => ({
-          ...note,
-          time: note.tick,
-          duration: note.duration,
-          lyric: note.lyric,
-          noteNumber: note.noteNumber,
-        }))
-        .sort((a, b) => a.tick - b.tick),
-    ).then((res) => {
+    sendRenderingRequestWithData(data).then((res) => {
       if (!res) {
         props.setAudioStatus("RENDERING_FAILED");
         return;
@@ -46,5 +33,21 @@ export default function RenderAction(props: RenderActionProps) {
         <RxMagicWand style={{ animation: props.audioStatus.rendering ? "wiggle 2s infinite" : "" }} />
       )}
     </PianoRoll.Action>
+  );
+}
+
+function sendRenderingRequestWithData(data: PianoRollData) {
+  return sendAudioProcessingRequest(
+    data.bpm,
+    data.notes
+      .filter((note) => note.lyric)
+      .map((note) => ({
+        ...note,
+        time: note.tick,
+        duration: note.duration,
+        lyric: note.lyric,
+        noteNumber: note.noteNumber,
+      }))
+      .sort((a, b) => a.tick - b.tick),
   );
 }
