@@ -18,7 +18,7 @@ import Menu from "./Menu";
 import { usePlayKeyToggle } from "./handlers/usePlayKeyToggle";
 import { useEventListener } from "@/hooks/useEventListener";
 import { notesAtom } from "@/store/note";
-import theme from "../store/default-theme.module.css";
+import theme from "../theme.module.css";
 
 export interface MidiEditorProps {
   lyric?: boolean;
