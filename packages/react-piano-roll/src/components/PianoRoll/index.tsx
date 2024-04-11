@@ -7,7 +7,7 @@ import SelectionMarquee from "@/components/SelectionMarquee";
 import Playhead from "@/components/Playhead";
 import LanesBackground from "@/components/LanesBackground";
 import { memo, useImperativeHandle, useRef } from "react";
-import { useClipboardKeyboardShortcut } from "@/components/Notes/handlers/useClipboardKeyboardShortcut";
+// import { useClipboardHotkey } from "@/components/Notes/handlers/useClipboardHotkey";
 import { useHandleUndoRedo } from "@/components/PianoRoll/handlers/useHandleUndoRedo";
 import { useHandleScaleX } from "@/components/PianoRoll/handlers/useHandleScaleX";
 import { useMarqueeTouchHandler } from "./handlers/useMarqueeTouchHandler";
@@ -26,7 +26,6 @@ const PianoRoll: React.FC<Props> = memo((props) => {
   } = useHandleNoteCreationAndModification();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useClipboardKeyboardShortcut(containerRef);
   useHandleUndoRedo(containerRef);
   useHandleScaleX(containerRef);
   const { marqueeGeometry } = useMarqueeTouchHandler(containerRef);

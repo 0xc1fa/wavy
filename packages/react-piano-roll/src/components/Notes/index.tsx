@@ -2,8 +2,8 @@ import NoteBlock from "./NoteBlock";
 import NoteLyric from "./NoteLyric";
 import styles from "./index.module.scss";
 import { useRef } from "react";
-import { useHandleDelete } from "./handlers/useHandleDelete";
-import { useClipboardKeyboardShortcut } from "./handlers/useClipboardKeyboardShortcut";
+import { useDeleteHotkey } from "./handlers/useHandleDelete";
+import { useClipboardHotkey } from "./handlers/useClipboardHotkey";
 import { useNoteSelectionHandler } from "./handlers/useNoteSelectionHandler";
 import { useHandleSetVelocity } from "./handlers/useHandleSetVelocity";
 import { useAtomValue } from "jotai";
@@ -15,8 +15,8 @@ export default function Notes({ attachLyric }: { attachLyric?: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { loading } = useConfig();
 
-  useHandleDelete(containerRef);
-  useClipboardKeyboardShortcut(containerRef);
+  useDeleteHotkey(containerRef);
+  useClipboardHotkey(containerRef);
   useNoteSelectionHandler(containerRef);
   useHandleSetVelocity(containerRef);
 
