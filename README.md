@@ -1,7 +1,5 @@
 # React MIDI Editor
 
-[![Code Climate maintainability](https://codeclimate.com/github/chanyatfu/react-midi-editor/badges/gpa.svg)](https://codeclimate.com/github/chanyatfu/react-midi-editor)
-
 React MIDI Editor is a comprehensive component library for building a piano roll interface in React applications. It offers extensive functionalities, including:
 
 - Note manipulation: creation, dragging, and deletion
@@ -12,7 +10,7 @@ React MIDI Editor is a comprehensive component library for building a piano roll
 
 ## Demo
 
-![pianoroll](https://github.com/chanyatfu/react-piano-roll/assets/45863731/9500026e-d8c0-44e8-912f-6f35fce22082)
+![editor-demo](https://github.com/chanyatfu/wavy/assets/45863731/3472af1d-c721-47e0-8b49-50ba18a7ef2b)
 
 ## Usage Examples
 
