@@ -1,13 +1,13 @@
-# Wavy
+# 🌊 Wavy
 
 Wavy lets you create music directly in your browser, inspired by the visual representation of notes as ocean waves.
 
-## Demo
+## 🎥 Demo
 
 ![editor-demo](https://github.com/chanyatfu/wavy/assets/45863731/3472af1d-c721-47e0-8b49-50ba18a7ef2b)
 
 
-## Functionalities
+## ⌨️ Functionalities
 Wavy offers extensive functionalities, including:
 
 - Note manipulation: creation, dragging, and deletion
