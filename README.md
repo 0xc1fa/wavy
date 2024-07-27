@@ -4,8 +4,7 @@ Wavy lets you create music directly in your browser, inspired by the visual repr
 
 ## 🎥 Demo
 
-![demo-video](https://github.com/chanyatfu/wavy/assets/45863731/0270569c-99af-49a0-9be3-629cd99e0043)
-
+[![demo-video](https://github.com/chanyatfu/wavy/assets/45863731/0270569c-99af-49a0-9be3-629cd99e0043)](https://www.youtube.com/embed/uQ2K_xgbq7g)
 
 ## ⌨️ Functionalities
 Wavy offers extensive functionalities, including:
